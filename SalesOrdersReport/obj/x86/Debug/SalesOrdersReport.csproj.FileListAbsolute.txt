@@ -1,0 +1,11 @@
+H:\ProductEx\VS2010\SalesOrdersReport\bin\Debug\SalesOrdersReport.exe
+H:\ProductEx\VS2010\SalesOrdersReport\bin\Debug\SalesOrdersReport.pdb
+H:\ProductEx\VS2010\SalesOrdersReport\obj\x86\Debug\SalesOrdersReport.MainForm.resources
+H:\ProductEx\VS2010\SalesOrdersReport\obj\x86\Debug\SalesOrdersReport.Properties.Resources.resources
+H:\ProductEx\VS2010\SalesOrdersReport\obj\x86\Debug\SalesOrdersReport.csproj.GenerateResource.Cache
+H:\ProductEx\VS2010\SalesOrdersReport\obj\x86\Debug\SalesOrdersReport.exe
+H:\ProductEx\VS2010\SalesOrdersReport\obj\x86\Debug\SalesOrdersReport.pdb
+H:\ProductEx\VS2010\SalesOrdersReport\obj\x86\Debug\SalesOrdersReport.AddNewOrderSheetForm.resources
+H:\ProductEx\VS2010\SalesOrdersReport\obj\x86\Debug\SalesOrdersReport.csproj.ResolveComReference.cache
+H:\ProductEx\VS2010\SalesOrdersReport\obj\x86\Debug\SalesOrdersReport.CreateSellerInvoice.resources
+H:\ProductEx\VS2010\SalesOrdersReport\bin\Debug\SalesOrdersReport.exe.config
