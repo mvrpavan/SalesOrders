@@ -144,7 +144,7 @@ namespace SalesOrdersReport
                     xlRange.Font.Bold = true;
                     xlRange.Interior.Color = Color.FromArgb(141, 180, 226);
 
-                    xlWorkSheet.Cells[StartRow - 3, StartCol + 4 + i].Value = drItems[i]["Price"].ToString();
+                    xlWorkSheet.Cells[StartRow - 3, StartCol + 4 + i].Value = drItems[i]["SellingPrice"].ToString();
                 }
                 #endregion
 

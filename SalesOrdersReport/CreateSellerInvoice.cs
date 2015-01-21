@@ -297,9 +297,9 @@ namespace SalesOrdersReport
                         xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 1].Value = SlNo;
                         xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 2].Value = drItems[ListItemIndexes[j]]["ItemName"].ToString();
                         xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 3].Value = Quantity;
-                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 4].Value = drItems[ListItemIndexes[j]]["Price"].ToString();
+                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 4].Value = drItems[ListItemIndexes[j]]["SellingPrice"].ToString();
                         xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 4].NumberFormat = "#,##0.00";
-                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 5].Value = Double.Parse(drItems[ListItemIndexes[j]]["Price"].ToString()) * Quantity;
+                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 5].Value = Double.Parse(drItems[ListItemIndexes[j]]["SellingPrice"].ToString()) * Quantity;
                         xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 5].NumberFormat = "#,##0.00";
 
                         TotalQuantity += Quantity;
@@ -382,9 +382,9 @@ namespace SalesOrdersReport
                         xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 2].Value = drItems[i]["ItemName"].ToString();
                         xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 3].Value = drItems[i]["VendorName"].ToString();
                         xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 4].Value = drItems[i]["Quantity"].ToString();
-                        xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].Value = drItems[i]["Price"].ToString();
+                        xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].Value = drItems[i]["PurchasePrice"].ToString();
                         xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].NumberFormat = "#,##0.00";
-                        xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].Value = Double.Parse(drItems[i]["Quantity"].ToString()) * Double.Parse(drItems[i]["Price"].ToString());
+                        xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].Value = Double.Parse(drItems[i]["Quantity"].ToString()) * Double.Parse(drItems[i]["PurchasePrice"].ToString());
                         xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].NumberFormat = "#,##0.00";
                         Total += Double.Parse(xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].Value.ToString());
                     }
