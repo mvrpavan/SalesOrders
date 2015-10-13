@@ -136,14 +136,16 @@ namespace SalesOrdersReport
                     drItems[i]["Quantity"] = 0;
                 }
 
-                dtSellerMaster.Columns.Add("Quantity", Type.GetType("System.Double"));
-                dtSellerMaster.Columns.Add("Total", Type.GetType("System.Double"));
+                //dtSellerMaster.Columns.Add("Quantity", Type.GetType("System.Double"));
+                //dtSellerMaster.Columns.Add("Total", Type.GetType("System.Double"));
+                dtSellerMaster.Columns.Add("Quantity", Type.GetType("System.String"));
+                dtSellerMaster.Columns.Add("Total", Type.GetType("System.String"));
                 DataRow[] drSellers = dtSellerMaster.Select("", "SlNo asc");
-                for (int i = 0; i < drSellers.Length; i++)
-                {
-                    drSellers[i]["Quantity"] = 0;
-                    drSellers[i]["Total"] = 0;
-                }
+                //for (int i = 0; i < drSellers.Length; i++)
+                //{
+                //    drSellers[i]["Quantity"] = 0;
+                //    drSellers[i]["Total"] = 0;
+                //}
 
                 String SelectedDateTimeString = dateTimeInvoice.Value.ToString("dd-MM-yyyy");
 
@@ -207,8 +209,7 @@ namespace SalesOrdersReport
                 #endregion
 
                 #region Print Invoice Sheet for each Seller
-                Double Quantity, Total, TotalQuantity;
-                //Excel.Workbook xlWorkbook = xlApp.Workbooks.Add();
+                Double Quantity, Total;//, TotalQuantity;
 
                 xlSalesOrderWorksheet.Copy();
                 Excel.Workbook xlWorkbook = xlApp.Workbooks[2];
@@ -222,6 +223,8 @@ namespace SalesOrdersReport
                 Int32 ValidItemCount = ListItemIndexes.Where(s => (s >= 0)).ToList().Count;
                 Int32 ProgressBarCount = (ValidSellerCount * ValidItemCount + drSellers.Length + drItems.Length + 2);
                 Int32 Counter = 0;
+                Int32 SlNoColNum = 1, ItemNameColNum = 2, OrdQtyColNum = 3, SalQtyColNum = 4, PriceColNum = 5, TotalColNum = 6;
+                Int32 SalesTotalRowOffset = 1 + CommonFunctions.InvoiceAppendRowsAtBottom, OldBalanceRowOffset = 2 + CommonFunctions.InvoiceAppendRowsAtBottom, TotalCostRowOffset = 3 + CommonFunctions.InvoiceAppendRowsAtBottom;
                 for (int i = 0; i < ListSellerIndexes.Count; i++)
                 {
                     if (ListSellerIndexes[i] < 0) continue;
@@ -236,7 +239,7 @@ namespace SalesOrdersReport
 
                     #region Print Invoice Items
                     Int32 SlNo = 0;
-                    Total = 0; TotalQuantity = 0;
+                    Total = 0; //TotalQuantity = 0;
 
                     #region Print Invoice Header
                     Excel.Range xlRange = xlWorkSheet.Cells[1 + InvoiceHeaderStartRow, 1];
@@ -248,40 +251,41 @@ namespace SalesOrdersReport
                     //xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
 
                     Int32 CustDetailsStartRow = 1 + InvoiceHeaderStartRow;
-                    xlRange = xlWorkSheet.Cells[CustDetailsStartRow, 1];
+                    xlRange = xlWorkSheet.Cells[CustDetailsStartRow, SlNoColNum];
                     xlRange.Value = "Customer Name";
                     xlRange.WrapText = true;
                     xlRange.Font.Bold = true;
-                    xlWorkSheet.Cells[CustDetailsStartRow, 2].Value = drSellers[ListSellerIndexes[i]]["SellerName"].ToString();
+                    xlWorkSheet.Cells[CustDetailsStartRow, SlNoColNum + 1].Value = drSellers[ListSellerIndexes[i]]["SellerName"].ToString();
 
-                    xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 1, 1];
+                    xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 1, SlNoColNum];
                     xlRange.Value = "Phone";
                     xlRange.Font.Bold = true;
-                    xlWorkSheet.Cells[1 + CustDetailsStartRow, 2].Value = drSellers[ListSellerIndexes[i]]["Phone"].ToString();
+                    xlWorkSheet.Cells[1 + CustDetailsStartRow, SlNoColNum + 1].Value = drSellers[ListSellerIndexes[i]]["Phone"].ToString();
 
-                    xlRange = xlWorkSheet.Cells[CustDetailsStartRow, 4];
+                    xlRange = xlWorkSheet.Cells[CustDetailsStartRow, TotalColNum - 1];
                     xlRange.Value = "Date";
                     xlRange.Font.Bold = true;
-                    xlWorkSheet.Cells[CustDetailsStartRow, 5].Value = DateTime.Today.ToString("dd-MMM-yyyy");
+                    xlWorkSheet.Cells[CustDetailsStartRow, TotalColNum].Value = DateTime.Today.ToString("dd-MMM-yyyy");
 
-                    xlRange = xlWorkSheet.Cells[1 + CustDetailsStartRow, 4];
+                    xlRange = xlWorkSheet.Cells[1 + CustDetailsStartRow, TotalColNum - 1];
                     xlRange.Value = "Invoice#";
                     xlRange.Font.Bold = true;
-                    xlWorkSheet.Cells[1 + CustDetailsStartRow, 5].Value = InvoiceNumber;
+                    xlWorkSheet.Cells[1 + CustDetailsStartRow, TotalColNum].Value = InvoiceNumber;
                     InvoiceNumber++;
 
-                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow, 1], xlWorkSheet.Cells[1 + CustDetailsStartRow, 5]];
+                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow, 1], xlWorkSheet.Cells[1 + CustDetailsStartRow, TotalColNum]];
                     xlRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic);
                     xlRange.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle = Excel.XlLineStyle.xlContinuous;
                     xlRange.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
                     #endregion
 
-                    xlWorkSheet.Cells[InvoiceStartRow + 1, 1].Value = "Sl.No.";
-                    xlWorkSheet.Cells[InvoiceStartRow + 1, 2].Value = "Item Name";
-                    xlWorkSheet.Cells[InvoiceStartRow + 1, 3].Value = "Quantity";
-                    xlWorkSheet.Cells[InvoiceStartRow + 1, 4].Value = "Price";
-                    xlWorkSheet.Cells[InvoiceStartRow + 1, 5].Value = "Total";
-                    xlWorkSheet.Range[xlWorkSheet.Cells[InvoiceStartRow + 1, 1], xlWorkSheet.Cells[InvoiceStartRow + 1, 5]].Font.Bold = true;
+                    xlWorkSheet.Cells[InvoiceStartRow + 1, SlNoColNum].Value = "Sl.No.";
+                    xlWorkSheet.Cells[InvoiceStartRow + 1, ItemNameColNum].Value = "Item Name";
+                    xlWorkSheet.Cells[InvoiceStartRow + 1, OrdQtyColNum].Value = "Order Quantity";
+                    xlWorkSheet.Cells[InvoiceStartRow + 1, SalQtyColNum].Value = "Sales Quantity";
+                    xlWorkSheet.Cells[InvoiceStartRow + 1, PriceColNum].Value = "Price";
+                    xlWorkSheet.Cells[InvoiceStartRow + 1, TotalColNum].Value = "Total";
+                    xlWorkSheet.Range[xlWorkSheet.Cells[InvoiceStartRow + 1, SlNoColNum], xlWorkSheet.Cells[InvoiceStartRow + 1, TotalColNum]].Font.Bold = true;
 
                     for (int j = 0; j < ListItemIndexes.Count; j++)
                     {
@@ -294,36 +298,87 @@ namespace SalesOrdersReport
                         drItems[ListItemIndexes[j]]["Quantity"] = Double.Parse(drItems[ListItemIndexes[j]]["Quantity"].ToString()) + Quantity;
 
                         SlNo++;
-                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 1].Value = SlNo;
-                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 2].Value = drItems[ListItemIndexes[j]]["ItemName"].ToString();
-                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 3].Value = Quantity;
-                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 4].Value = drItems[ListItemIndexes[j]]["SellingPrice"].ToString();
-                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 4].NumberFormat = "#,##0.00";
-                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 5].Value = Double.Parse(drItems[ListItemIndexes[j]]["SellingPrice"].ToString()) * Quantity;
-                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 5].NumberFormat = "#,##0.00";
+                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, SlNoColNum].Value = SlNo;
+                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, ItemNameColNum].Value = drItems[ListItemIndexes[j]]["ItemName"].ToString();
+                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, OrdQtyColNum].Value = Quantity;
+                        if (chkBoxUseOrdQty.Checked == true) xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, SalQtyColNum].Value = Quantity;
+                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, PriceColNum].Value = drItems[ListItemIndexes[j]]["SellingPrice"].ToString();
+                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, PriceColNum].NumberFormat = "#,##0.00";
+                        //xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, TotalColNum].Value = Double.Parse(drItems[ListItemIndexes[j]]["SellingPrice"].ToString()) * Quantity;
+                        Excel.Range xlRangeSaleQty = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, SalQtyColNum];
+                        Excel.Range xlRangePrice = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, PriceColNum];
+                        Excel.Range xlRangeTotal = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, TotalColNum];
+                        xlRangeTotal.Formula = "=(" + xlRangeSaleQty.Address[false, false] + "*" + xlRangePrice.Address[false, false] + ")";
+                        xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, TotalColNum].NumberFormat = "#,##0.00";
 
-                        TotalQuantity += Quantity;
-                        Total += Double.Parse(xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, 5].Value.ToString());
+                        //TotalQuantity += Quantity;
+                        //Total += Double.Parse(xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, TotalColNum].Value.ToString());
                     }
-                    drSellers[ListSellerIndexes[i]]["Total"] = Total;
-                    drSellers[ListSellerIndexes[i]]["Quantity"] = TotalQuantity;
+                    //drSellers[ListSellerIndexes[i]]["Total"] = Total;
+                    //drSellers[ListSellerIndexes[i]]["Quantity"] = TotalQuantity;
+                    Excel.Range xlRangeSaleQtyFrom = xlWorkSheet.Cells[1 + InvoiceStartRow + 1, SalQtyColNum];
+                    Excel.Range xlRangeSaleQtyTo = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset - 1, SalQtyColNum];
+                    Excel.Range xlRangeTotalCost = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + TotalCostRowOffset, TotalColNum];
+                    drSellers[ListSellerIndexes[i]]["Total"] = "='" + xlWorkSheet.Name + "'!" + xlRangeTotalCost.Address[false, false];
+                    drSellers[ListSellerIndexes[i]]["Quantity"] = "=Sum('" + xlWorkSheet.Name + "'!" + xlRangeSaleQtyFrom.Address[false, false] + ":" + xlRangeSaleQtyTo.Address[false, false] + ")";
 
-                    xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 2, 4];
-                    xlRange.Value = "Total";
+                    #region Sales Total Row
+                    xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum - 1];
+                    xlRange.Value = "Sales Total";
                     xlRange.Font.Bold = true;
 
-                    xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 2, 5];
-                    xlRange.Value = Total;
+                    xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum];
+                    Excel.Range xlRangeSalesTotalFrom = xlWorkSheet.Cells[1 + InvoiceStartRow + 1, TotalColNum];
+                    Excel.Range xlRangeSalesTotalTo = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset - 1, TotalColNum];
+                    xlRange.Formula = "=Sum(" + xlRangeSalesTotalFrom.Address[false, false] + ":" + xlRangeSalesTotalTo.Address[false, false] + ")";
                     xlRange.Font.Bold = true;
                     xlRange.NumberFormat = "#,##0.00";
 
-                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[SlNo + InvoiceStartRow + 2, 1], xlWorkSheet.Cells[SlNo + InvoiceStartRow + 2, 4]];
+                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, 1], xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum - 1]];
                     xlRange.Font.Bold = true;
                     xlRange.Merge();
                     xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
                     xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+                    #endregion
 
-                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[InvoiceStartRow + 1, 1], xlWorkSheet.Cells[SlNo + InvoiceStartRow + 2, 5]];
+                    #region Old Balance Row
+                    xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + OldBalanceRowOffset, TotalColNum - 1];
+                    xlRange.Value = "Old Balance";
+                    xlRange.Font.Bold = true;
+
+                    xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + OldBalanceRowOffset, TotalColNum];
+                    xlRange.Value = drSellers[ListSellerIndexes[i]]["OldBalance"].ToString();
+                    xlRange.Font.Bold = true;
+                    xlRange.NumberFormat = "#,##0.00";
+
+                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + OldBalanceRowOffset, 1], xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + OldBalanceRowOffset, TotalColNum - 1]];
+                    xlRange.Font.Bold = true;
+                    xlRange.Merge();
+                    xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+                    #endregion
+
+                    #region Total Cost Row
+                    xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + TotalCostRowOffset, TotalColNum - 1];
+                    xlRange.Value = "Total";
+                    xlRange.Font.Bold = true;
+
+                    xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + TotalCostRowOffset, TotalColNum];
+                    //xlRange.Value = Total;
+                    Excel.Range xlRangeTotalFrom = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum];
+                    Excel.Range xlRangeTotalTo = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + OldBalanceRowOffset, TotalColNum];
+                    xlRange.Formula = "=Sum(" + xlRangeTotalFrom.Address[false, false] + ":" + xlRangeTotalTo.Address[false, false] + ")";
+                    xlRange.Font.Bold = true;
+                    xlRange.NumberFormat = "#,##0.00";
+
+                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + TotalCostRowOffset, 1], xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + TotalCostRowOffset, TotalColNum - 1]];
+                    xlRange.Font.Bold = true;
+                    xlRange.Merge();
+                    xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+                    #endregion
+
+                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[InvoiceStartRow + 1, 1], xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + TotalCostRowOffset, TotalColNum]];
                     xlRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic);
                     xlRange.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle = Excel.XlLineStyle.xlContinuous;
                     xlRange.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
@@ -354,9 +409,14 @@ namespace SalesOrdersReport
                         xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 1].Value = drSellers[i]["SlNo"].ToString();
                         xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 2].Value = drSellers[i]["SellerName"].ToString();
                         xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 3].Value = drSellers[i]["Phone"].ToString();
-                        xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 4].Value = drSellers[i]["Quantity"].ToString();
-                        xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].Value = drSellers[i]["Total"].ToString();
-                        xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].NumberFormat = "#,##0.00";
+                        //xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 4].Value = drSellers[i]["Quantity"].ToString();
+                        //xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].Value = drSellers[i]["Total"].ToString();
+                        //xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].NumberFormat = "#,##0.00";
+                        Excel.Range xlRangeQty = xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 4];
+                        xlRangeQty.Formula = drSellers[i]["Quantity"].ToString();
+                        Excel.Range xlRangeTotal = xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5];
+                        xlRangeTotal.Formula = drSellers[i]["Total"].ToString();
+                        xlRangeTotal.NumberFormat = "#,##0.00";
                     }
                     xlSellerSummaryWorkSheet.UsedRange.Columns.AutoFit();
                     AddPageHeaderAndFooter(ref xlSellerSummaryWorkSheet, "Sellerwise Summary");

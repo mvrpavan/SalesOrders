@@ -49,6 +49,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.lblProgress = new System.Windows.Forms.Label();
+            this.chkBoxUseOrdQty = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -226,11 +227,22 @@
             this.lblProgress.TabIndex = 16;
             this.lblProgress.Text = "0%";
             // 
+            // chkBoxUseOrdQty
+            // 
+            this.chkBoxUseOrdQty.AutoSize = true;
+            this.chkBoxUseOrdQty.Location = new System.Drawing.Point(252, 86);
+            this.chkBoxUseOrdQty.Name = "chkBoxUseOrdQty";
+            this.chkBoxUseOrdQty.Size = new System.Drawing.Size(138, 17);
+            this.chkBoxUseOrdQty.TabIndex = 3;
+            this.chkBoxUseOrdQty.Text = "Use Order Qty For Total";
+            this.chkBoxUseOrdQty.UseVisualStyleBackColor = true;
+            // 
             // CreateSellerInvoice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 353);
+            this.Controls.Add(this.chkBoxUseOrdQty);
             this.Controls.Add(this.lblProgress);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.txtBoxInvoiceStartNumber);
@@ -276,5 +288,6 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Label lblProgress;
+        private System.Windows.Forms.CheckBox chkBoxUseOrdQty;
     }
 }

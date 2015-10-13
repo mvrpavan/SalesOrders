@@ -18,7 +18,7 @@ namespace SalesOrdersReport
             InitializeComponent();
             btnNewOrderSheet.Enabled = false;
             btnCreateEachSellerInvoice.Enabled = false;
-            this.Text = CommonFunctions.ProductTitle;
+            this.Text = CommonFunctions.ProductTitleText;
         }
 
         private void btnMasterFileBrowse_Click(object sender, EventArgs e)

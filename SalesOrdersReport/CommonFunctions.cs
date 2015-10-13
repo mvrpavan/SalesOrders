@@ -10,14 +10,15 @@ namespace SalesOrdersReport
 {
     class CommonFunctions
     {
-        public static String ProductTitle, InvoiceTitle;
-        public static Int32 InvoiceRowsFromTop;
+        public static String ProductTitleText, InvoiceTitleText;
+        public static Int32 InvoiceRowsFromTop, InvoiceAppendRowsAtBottom;
 
         public static void Initialize()
         {
-            ProductTitle = System.Configuration.ConfigurationManager.AppSettings["ProductTitle"];
-            InvoiceTitle = System.Configuration.ConfigurationManager.AppSettings["InvoiceTitle"];
+            ProductTitleText = System.Configuration.ConfigurationManager.AppSettings["ProductTitleText"];
+            InvoiceTitleText = System.Configuration.ConfigurationManager.AppSettings["InvoiceTitleText"];
             InvoiceRowsFromTop = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["InvoiceRowsFromTop"]);
+            InvoiceAppendRowsAtBottom = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["InvoiceAppendRowsAtBottom"]);
         }
 
         public static void ShowErrorDialog(String Method, Exception ex)
