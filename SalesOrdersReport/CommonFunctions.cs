@@ -10,7 +10,7 @@ namespace SalesOrdersReport
 {
     class CommonFunctions
     {
-        public static String ProductTitleText, InvoiceTitleText;
+        public static String ProductTitleText, InvoiceTitleText, InvoiceHeaderTitle, InvoiceHeaderSubTitle, InvoiceAddress, InvoicePhoneNumber, InvoiceMailID;
         public static Int32 InvoiceRowsFromTop, InvoiceAppendRowsAtBottom;
 
         public static void Initialize()
@@ -19,6 +19,11 @@ namespace SalesOrdersReport
             InvoiceTitleText = System.Configuration.ConfigurationManager.AppSettings["InvoiceTitleText"];
             InvoiceRowsFromTop = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["InvoiceRowsFromTop"]);
             InvoiceAppendRowsAtBottom = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["InvoiceAppendRowsAtBottom"]);
+            InvoiceHeaderTitle = System.Configuration.ConfigurationManager.AppSettings["InvoiceHeaderTitle"];
+            InvoiceHeaderSubTitle = System.Configuration.ConfigurationManager.AppSettings["InvoiceHeaderSubTitle"];
+            InvoiceAddress = System.Configuration.ConfigurationManager.AppSettings["InvoiceAddress"];
+            InvoicePhoneNumber = System.Configuration.ConfigurationManager.AppSettings["InvoicePhoneNumber"];
+            InvoiceMailID = System.Configuration.ConfigurationManager.AppSettings["InvoiceMailID"];
         }
 
         public static void ShowErrorDialog(String Method, Exception ex)

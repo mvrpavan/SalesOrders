@@ -76,6 +76,8 @@ namespace SalesOrdersReport
 
         private void btnCreateInvoice_Click(object sender, EventArgs e)
         {
+            //backgroundWorker1_DoWork(null, null);
+            //return;
             // Start the BackgroundWorker.
             backgroundWorker1.RunWorkerAsync();
             backgroundWorker1.WorkerReportsProgress = true;
@@ -180,7 +182,7 @@ namespace SalesOrdersReport
 
                 #region Identify Sellers in SalesOrderSheet
                 List<Int32> ListSellerIndexes = new List<Int32>();
-                Int32 RowCount = xlSalesOrderWorksheet.UsedRange.Rows.Count;
+                Int32 RowCount = xlSalesOrderWorksheet.UsedRange.Rows.Count + 1;
                 for (int i = StartRow + 1; i <= RowCount; i++)
                 {
                     if (xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value == null) continue;
@@ -196,7 +198,7 @@ namespace SalesOrdersReport
 
                     String SellerName = xlSalesOrderWorksheet.Cells[i, StartColumn + 2].Value;
                     Int32 SellerIndex = -1;
-                    for (int j = 0; j < drItems.Length; j++)
+                    for (int j = 0; j < drSellers.Length; j++)
                     {
                         if (drSellers[j]["SellerName"].ToString().Equals(SellerName, StringComparison.InvariantCultureIgnoreCase))
                         {
@@ -385,7 +387,7 @@ namespace SalesOrdersReport
                     #endregion
 
                     xlWorkSheet.UsedRange.Columns.AutoFit();
-                    AddPageHeaderAndFooter(ref xlWorkSheet, "Invoice");
+                    AddPageHeaderAndFooter(ref xlWorkSheet, CommonFunctions.InvoiceHeaderSubTitle);
                 }
                 #endregion
 
@@ -512,11 +514,11 @@ namespace SalesOrdersReport
                 xlWorksheet.PageSetup.Application.PrintCommunication = false;*/
 
                 xlWorksheet.PageSetup.LeftHeader = "";
-                xlWorksheet.PageSetup.CenterHeader = "\n&\"Gill Sans MT,Bold\"&18&K088DA5Kerala Vegetables\n&\"Gill Sans MT,Regular\"&16&K000000" + PageHeaderTitle;
+                xlWorksheet.PageSetup.CenterHeader = "\n&\"Gill Sans MT,Bold\"&18&K088DA5" + CommonFunctions.InvoiceHeaderTitle + "\n&\"Gill Sans MT,Regular\"&16&K000000" + PageHeaderTitle;
                 xlWorksheet.PageSetup.RightHeader = "&G";
                 xlWorksheet.PageSetup.CenterFooter = "&\"Gill Sans MT,Bold\"&16&KF5A158Lap Business Group"
-                        + "\n&\"Gill Sans MT,Italic\"&14&K088DA5No.8, 2nd Main Road, Ganganagar Extn., R.T.Nagar, Bangalore-560032"
-                        + "\nCell : +91 7044037919 Email : lapbusinessgroup@gmail.com";
+                        + "\n&\"Gill Sans MT,Italic\"&14&K088DA5" + CommonFunctions.InvoiceAddress
+                        + "\nCell : " + CommonFunctions.InvoicePhoneNumber + " Email : " + CommonFunctions.InvoiceMailID;
                 if (xlWorksheet.PageSetup.Pages.Count > 1)
                     xlWorksheet.PageSetup.RightFooter = "&P";
                 xlWorksheet.PageSetup.PrintGridlines = true;
