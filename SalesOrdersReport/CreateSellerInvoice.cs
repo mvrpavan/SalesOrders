@@ -401,8 +401,9 @@ namespace SalesOrdersReport
                     xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 2].Value = "Seller Name";
                     xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 3].Value = "Phone";
                     xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 4].Value = "Total Quantity";
-                    xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 5].Value = "Total Amount";
-                    Excel.Range xlRange1 = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 1], xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 5]];
+                    xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 5].Value = "Old Balance";
+                    xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 6].Value = "Total Amount";
+                    Excel.Range xlRange1 = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 1], xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 6]];
                     xlRange1.Font.Bold = true;
 
                     for (int i = 0; i < drSellers.Length; i++)
@@ -416,7 +417,10 @@ namespace SalesOrdersReport
                         //xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].NumberFormat = "#,##0.00";
                         Excel.Range xlRangeQty = xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 4];
                         xlRangeQty.Formula = drSellers[i]["Quantity"].ToString();
-                        Excel.Range xlRangeTotal = xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5];
+                        Excel.Range xlRangeOldBalance = xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5];
+                        xlRangeOldBalance.Formula = ((Math.Abs(Double.Parse(drSellers[i]["OldBalance"].ToString())) > 1E-5) ? drSellers[i]["OldBalance"].ToString() : "");
+                        xlRangeOldBalance.NumberFormat = "#,##0.00";
+                        Excel.Range xlRangeTotal = xlSellerSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6];
                         xlRangeTotal.Formula = drSellers[i]["Total"].ToString();
                         xlRangeTotal.NumberFormat = "#,##0.00";
                     }
