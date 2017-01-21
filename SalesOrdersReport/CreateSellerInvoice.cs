@@ -27,6 +27,9 @@ namespace SalesOrdersReport
                 progressBar1.Maximum = 100;
                 progressBar1.Step = 1;
                 progressBar1.Value = 0;
+
+                String[] Values = CommonFunctions.GetSaveFileEntry("InvoiceNumber");
+                if (Values != null) txtBoxInvoiceStartNumber.Text = Values[0];
             }
             catch (Exception ex)
             {
@@ -474,6 +477,11 @@ namespace SalesOrdersReport
                 xlWorkbook.Sheets[SelectedDateTimeString].Delete();
                 xlApp.DisplayAlerts = true;
 
+                #region Write InvoiceNumber to File
+                CommonFunctions.UpdateSaveFileEntry("InvoiceNumber", new String[] { InvoiceNumber.ToString() });
+                txtBoxInvoiceStartNumber.Text = InvoiceNumber.ToString();
+                #endregion
+
                 backgroundWorker1.ReportProgress(((ProgressBarCount - 1) * 100) / ProgressBarCount);
                 xlWorkbook.SaveAs(txtBoxOutputFolder.Text + "\\Invoice_" + SelectedDateTimeString + ".xlsx");
                 xlWorkbook.Close();
@@ -593,6 +601,18 @@ namespace SalesOrdersReport
 
             // Set the text.
             lblProgress.Text = e.ProgressPercentage.ToString() + "%";
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            progressBar1.Value = 0;
+            lblProgress.Text = "";
+            btnCancel.Focus();
+        }
+
+        private void CreateSellerInvoice_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CommonFunctions.WriteToSaveFile();
         }
     }
 }

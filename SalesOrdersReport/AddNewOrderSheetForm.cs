@@ -36,6 +36,10 @@ namespace SalesOrdersReport
                 ListColors.Add(Color.FromArgb(255, 178, 102));
                 ListColors.Add(Color.FromArgb(255, 153, 153));
                 ListColors.Add(Color.FromArgb(51, 255, 153));
+
+                prgrssBarProcess.Maximum = 100;
+                prgrssBarProcess.Step = 1;
+                prgrssBarProcess.Value = 0;
             }
             catch (Exception ex)
             {
@@ -68,6 +72,12 @@ namespace SalesOrdersReport
 
         private void btnCreateOrderSheet_Click(object sender, EventArgs e)
         {
+            backgroundWorker1.RunWorkerAsync();
+            backgroundWorker1.WorkerReportsProgress = true;
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
             Excel.Application xlApp = new Excel.Application();
             try
             {
@@ -87,8 +97,9 @@ namespace SalesOrdersReport
                 HeaderItems.Add("Name");
                 HeaderItems.Add("Contact Details");
                 DataRow[] drItems = dtItemMaster.Select("", "SlNo asc");
+                Int32 ProgressBarCount = HeaderItems.Count + (drItems.Length * 2) + dtSellerMaster.Rows.Count;
 
-                Int32 StartRow = 5, StartCol = 1;
+                Int32 StartRow = 5, StartCol = 1, Counter = 0;
                 for (int i = 0; i < HeaderItems.Count; i++)
                 {
                     Excel.Range xlRange = xlWorkSheet.Cells[StartRow, StartCol + i];
@@ -97,6 +108,8 @@ namespace SalesOrdersReport
                         xlRange.Orientation = 90;
                     xlRange.Font.Bold = true;
                     xlRange.Interior.Color = Color.FromArgb(242, 220, 219);
+                    Counter++;
+                    backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
                 }
 
                 for (int i = 0; i < drItems.Length; i++)
@@ -109,6 +122,8 @@ namespace SalesOrdersReport
                         xlRange.Interior.Color = ListColors[ListVendors.IndexOf(drItems[i]["VendorName"].ToString()) % ListColors.Count];
                     else
                         xlRange.Interior.Color = Color.FromArgb(242, 220, 219);
+                    Counter++;
+                    backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
                 }
                 #endregion
 
@@ -123,6 +138,8 @@ namespace SalesOrdersReport
 
                     xlWorkSheet.Cells[StartRow + i + 1, StartCol + 2].Value = drSellers[i]["SellerName"].ToString();
                     xlWorkSheet.Cells[StartRow + i + 1, StartCol + 3].Value = ((drSellers[i]["Phone"] == DBNull.Value) ? "" : drSellers[i]["Phone"].ToString());
+                    Counter++;
+                    backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
                 }
                 #endregion
 
@@ -145,15 +162,19 @@ namespace SalesOrdersReport
                     xlRange.Interior.Color = Color.FromArgb(141, 180, 226);
 
                     xlWorkSheet.Cells[StartRow - 3, StartCol + 4 + i].Value = drItems[i]["SellingPrice"].ToString();
+                    Counter++;
+                    backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
                 }
                 #endregion
 
                 xlWorkSheet.UsedRange.Columns.AutoFit();
 
+                backgroundWorker1.ReportProgress(((ProgressBarCount - 1) * 100) / ProgressBarCount);
                 xlWorkbook.SaveAs(txtBoxOutputFolder.Text + "\\SalesOrder_" + xlWorkSheet.Name + ".xlsx");
                 xlWorkbook.Close();
 
                 CommonFunctions.ReleaseCOMObject(xlWorkbook);
+                backgroundWorker1.ReportProgress(100);
                 MessageBox.Show("Created Sales Order Sheet Successfully", "Status", MessageBoxButtons.OK);
             }
             catch (Exception ex)
@@ -165,6 +186,22 @@ namespace SalesOrdersReport
                 xlApp.Quit();
                 CommonFunctions.ReleaseCOMObject(xlApp);
             }
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            // Change the value of the ProgressBar to the BackgroundWorker progress.
+            prgrssBarProcess.Value = e.ProgressPercentage;
+
+            // Set the text.
+            lblProgress.Text = e.ProgressPercentage.ToString() + "%";
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            prgrssBarProcess.Value = 0;
+            lblProgress.Text = "";
+            btnCancel.Focus();
         }
     }
 }

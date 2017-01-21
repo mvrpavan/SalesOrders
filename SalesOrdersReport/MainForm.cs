@@ -19,6 +19,8 @@ namespace SalesOrdersReport
             btnNewOrderSheet.Enabled = false;
             btnCreateEachSellerInvoice.Enabled = false;
             this.Text = CommonFunctions.ProductTitleText;
+
+            CommonFunctions.LoadSaveFile();
         }
 
         private void btnMasterFileBrowse_Click(object sender, EventArgs e)
@@ -42,6 +44,11 @@ namespace SalesOrdersReport
         {
             CreateSellerInvoice ObjInvoiceForm = new CreateSellerInvoice(this);
             ObjInvoiceForm.ShowDialog(this);
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CommonFunctions.WriteToSaveFile();
         }
     }
 }

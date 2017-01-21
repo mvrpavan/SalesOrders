@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using System.Data.OleDb;
+using System.IO;
 
 namespace SalesOrdersReport
 {
@@ -82,6 +83,94 @@ namespace SalesOrdersReport
             {
                 Console.WriteLine("Error Occured in CommonFunctions.ReturnDataTableFromExcelWorksheet()");
                 throw;
+            }
+        }
+        #endregion
+
+        #region "Save file related Methods"
+        static Dictionary<String, String[]> DictSaveFileEntries = new Dictionary<String, String[]>();
+        static String SaveFilePath = AppDomain.CurrentDomain.BaseDirectory + "\\ApplicationSaveFile.txt";
+        static Boolean SaveFileEntryModified = false;
+        public static void LoadSaveFile()
+        {
+            try
+            {
+                if (!File.Exists(SaveFilePath)) return;
+
+                StreamReader srSaveFile = new StreamReader(SaveFilePath);
+
+                while (!srSaveFile.EndOfStream)
+                {
+                    String tmpLine = srSaveFile.ReadLine().Trim();
+                    if (String.IsNullOrEmpty(tmpLine)) continue;
+
+                    String[] Tokens = tmpLine.Split('\t');
+                    if (Tokens.Length < 2) continue;
+
+                    String Key = Tokens[0].Trim().ToUpper();
+                    String[] Value = new String[Tokens.Length - 1];
+                    Array.Copy(Tokens, 1, Value, 0, Value.Length);
+                    if (DictSaveFileEntries.ContainsKey(Key))
+                        DictSaveFileEntries[Key] = Value;
+                    else
+                        DictSaveFileEntries.Add(Key, Value);
+                }
+                srSaveFile.Close();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("LoadSaveFile", ex);
+            }
+        }
+
+        public static void UpdateSaveFileEntry(String Key, String[] Value)
+        {
+            try
+            {
+                if (DictSaveFileEntries.ContainsKey(Key.Trim().ToUpper()))
+                    DictSaveFileEntries[Key.Trim().ToUpper()] = Value;
+                else
+                    DictSaveFileEntries.Add(Key.Trim().ToUpper(), Value);
+
+                SaveFileEntryModified = true;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("UpdateSaveFileEntry", ex);
+            }
+        }
+
+        public static String[] GetSaveFileEntry(String Key)
+        {
+            try
+            {
+                if (DictSaveFileEntries.ContainsKey(Key.Trim().ToUpper()))
+                    return DictSaveFileEntries[Key.Trim().ToUpper()];
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("GetSaveFileEntry", ex);
+            }
+            return null;
+        }
+
+        public static void WriteToSaveFile()
+        {
+            try
+            {
+                if (!SaveFileEntryModified) return;
+
+                StreamWriter swSaveFile = new StreamWriter(SaveFilePath);
+
+                foreach (var Pair in DictSaveFileEntries)
+                {
+                    swSaveFile.WriteLine(Pair.Key + '\t' + String.Join("\t", Pair.Value));
+                }
+                swSaveFile.Close();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("WriteToSaveFile", ex);
             }
         }
         #endregion
