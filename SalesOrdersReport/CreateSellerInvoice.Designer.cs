@@ -38,19 +38,18 @@
             this.txtBoxOutputFolder = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radBtnOrderFromOtherFile = new System.Windows.Forms.RadioButton();
-            this.radBtnOrderFromMasterFile = new System.Windows.Forms.RadioButton();
             this.txtBoxOtherFile = new System.Windows.Forms.TextBox();
             this.btnBrowseOtherFile = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtBoxInvoiceStartNumber = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.lblProgress = new System.Windows.Forms.Label();
             this.chkBoxUseOrdQty = new System.Windows.Forms.CheckBox();
-            this.groupBox1.SuspendLayout();
+            this.label4 = new System.Windows.Forms.Label();
+            this.chkBoxCreateInvoice = new System.Windows.Forms.CheckBox();
+            this.chkBoxCreateQuotation = new System.Windows.Forms.CheckBox();
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -74,7 +73,7 @@
             this.chkBoxCreateSummary.AutoSize = true;
             this.chkBoxCreateSummary.Checked = true;
             this.chkBoxCreateSummary.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxCreateSummary.Location = new System.Drawing.Point(50, 85);
+            this.chkBoxCreateSummary.Location = new System.Drawing.Point(50, 60);
             this.chkBoxCreateSummary.Name = "chkBoxCreateSummary";
             this.chkBoxCreateSummary.Size = new System.Drawing.Size(134, 17);
             this.chkBoxCreateSummary.TabIndex = 2;
@@ -83,7 +82,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(275, 247);
+            this.btnCancel.Location = new System.Drawing.Point(275, 235);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(124, 42);
             this.btnCancel.TabIndex = 7;
@@ -93,7 +92,7 @@
             // 
             // btnCreateInvoice
             // 
-            this.btnCreateInvoice.Location = new System.Drawing.Point(95, 247);
+            this.btnCreateInvoice.Location = new System.Drawing.Point(95, 235);
             this.btnCreateInvoice.Name = "btnCreateInvoice";
             this.btnCreateInvoice.Size = new System.Drawing.Size(124, 42);
             this.btnCreateInvoice.TabIndex = 6;
@@ -103,7 +102,7 @@
             // 
             // btnOutFolderBrowse
             // 
-            this.btnOutFolderBrowse.Location = new System.Drawing.Point(378, 201);
+            this.btnOutFolderBrowse.Location = new System.Drawing.Point(378, 189);
             this.btnOutFolderBrowse.Name = "btnOutFolderBrowse";
             this.btnOutFolderBrowse.Size = new System.Drawing.Size(75, 23);
             this.btnOutFolderBrowse.TabIndex = 5;
@@ -113,7 +112,7 @@
             // 
             // txtBoxOutputFolder
             // 
-            this.txtBoxOutputFolder.Location = new System.Drawing.Point(122, 203);
+            this.txtBoxOutputFolder.Location = new System.Drawing.Point(122, 191);
             this.txtBoxOutputFolder.Name = "txtBoxOutputFolder";
             this.txtBoxOutputFolder.Size = new System.Drawing.Size(250, 20);
             this.txtBoxOutputFolder.TabIndex = 4;
@@ -121,61 +120,22 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(40, 206);
+            this.label2.Location = new System.Drawing.Point(40, 194);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Save File Path";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.radBtnOrderFromOtherFile);
-            this.groupBox1.Controls.Add(this.radBtnOrderFromMasterFile);
-            this.groupBox1.Controls.Add(this.txtBoxOtherFile);
-            this.groupBox1.Controls.Add(this.btnBrowseOtherFile);
-            this.groupBox1.Location = new System.Drawing.Point(50, 109);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(403, 77);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Choose Order Sheet from";
-            // 
-            // radBtnOrderFromOtherFile
-            // 
-            this.radBtnOrderFromOtherFile.AutoSize = true;
-            this.radBtnOrderFromOtherFile.Location = new System.Drawing.Point(6, 43);
-            this.radBtnOrderFromOtherFile.Name = "radBtnOrderFromOtherFile";
-            this.radBtnOrderFromOtherFile.Size = new System.Drawing.Size(70, 17);
-            this.radBtnOrderFromOtherFile.TabIndex = 1;
-            this.radBtnOrderFromOtherFile.Text = "Other File";
-            this.radBtnOrderFromOtherFile.UseVisualStyleBackColor = true;
-            this.radBtnOrderFromOtherFile.CheckedChanged += new System.EventHandler(this.radBtnOrderFromOtherFile_CheckedChanged);
-            // 
-            // radBtnOrderFromMasterFile
-            // 
-            this.radBtnOrderFromMasterFile.AutoSize = true;
-            this.radBtnOrderFromMasterFile.Checked = true;
-            this.radBtnOrderFromMasterFile.Location = new System.Drawing.Point(7, 20);
-            this.radBtnOrderFromMasterFile.Name = "radBtnOrderFromMasterFile";
-            this.radBtnOrderFromMasterFile.Size = new System.Drawing.Size(76, 17);
-            this.radBtnOrderFromMasterFile.TabIndex = 0;
-            this.radBtnOrderFromMasterFile.TabStop = true;
-            this.radBtnOrderFromMasterFile.Text = "Master File";
-            this.radBtnOrderFromMasterFile.UseVisualStyleBackColor = true;
-            this.radBtnOrderFromMasterFile.CheckedChanged += new System.EventHandler(this.radBtnOrderFromMasterFile_CheckedChanged);
-            // 
             // txtBoxOtherFile
             // 
-            this.txtBoxOtherFile.Enabled = false;
-            this.txtBoxOtherFile.Location = new System.Drawing.Point(82, 43);
+            this.txtBoxOtherFile.Location = new System.Drawing.Point(122, 150);
             this.txtBoxOtherFile.Name = "txtBoxOtherFile";
-            this.txtBoxOtherFile.Size = new System.Drawing.Size(229, 20);
+            this.txtBoxOtherFile.Size = new System.Drawing.Size(250, 20);
             this.txtBoxOtherFile.TabIndex = 0;
             // 
             // btnBrowseOtherFile
             // 
-            this.btnBrowseOtherFile.Enabled = false;
-            this.btnBrowseOtherFile.Location = new System.Drawing.Point(322, 41);
+            this.btnBrowseOtherFile.Location = new System.Drawing.Point(378, 148);
             this.btnBrowseOtherFile.Name = "btnBrowseOtherFile";
             this.btnBrowseOtherFile.Size = new System.Drawing.Size(75, 23);
             this.btnBrowseOtherFile.TabIndex = 1;
@@ -186,23 +146,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(47, 55);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(82, 13);
-            this.label3.TabIndex = 13;
-            this.label3.Text = "Invoice Number";
-            // 
-            // txtBoxInvoiceStartNumber
-            // 
-            this.txtBoxInvoiceStartNumber.Location = new System.Drawing.Point(132, 52);
-            this.txtBoxInvoiceStartNumber.Name = "txtBoxInvoiceStartNumber";
-            this.txtBoxInvoiceStartNumber.Size = new System.Drawing.Size(87, 20);
-            this.txtBoxInvoiceStartNumber.TabIndex = 1;
-            this.txtBoxInvoiceStartNumber.Text = "1";
             // 
             // progressBar1
             // 
@@ -231,38 +174,93 @@
             // chkBoxUseOrdQty
             // 
             this.chkBoxUseOrdQty.AutoSize = true;
-            this.chkBoxUseOrdQty.Location = new System.Drawing.Point(252, 86);
+            this.chkBoxUseOrdQty.Location = new System.Drawing.Point(252, 61);
             this.chkBoxUseOrdQty.Name = "chkBoxUseOrdQty";
             this.chkBoxUseOrdQty.Size = new System.Drawing.Size(138, 17);
             this.chkBoxUseOrdQty.TabIndex = 3;
             this.chkBoxUseOrdQty.Text = "Use Order Qty For Total";
             this.chkBoxUseOrdQty.UseVisualStyleBackColor = true;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(40, 153);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(83, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Order Sheet File";
+            // 
+            // chkBoxCreateInvoice
+            // 
+            this.chkBoxCreateInvoice.AutoSize = true;
+            this.chkBoxCreateInvoice.Checked = true;
+            this.chkBoxCreateInvoice.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkBoxCreateInvoice.Location = new System.Drawing.Point(50, 94);
+            this.chkBoxCreateInvoice.Name = "chkBoxCreateInvoice";
+            this.chkBoxCreateInvoice.Size = new System.Drawing.Size(95, 17);
+            this.chkBoxCreateInvoice.TabIndex = 3;
+            this.chkBoxCreateInvoice.Text = "Create Invoice";
+            this.chkBoxCreateInvoice.UseVisualStyleBackColor = true;
+            this.chkBoxCreateInvoice.CheckedChanged += new System.EventHandler(this.chkBoxCreateInvoice_CheckedChanged);
+            // 
+            // chkBoxCreateQuotation
+            // 
+            this.chkBoxCreateQuotation.AutoSize = true;
+            this.chkBoxCreateQuotation.Checked = true;
+            this.chkBoxCreateQuotation.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkBoxCreateQuotation.Location = new System.Drawing.Point(50, 117);
+            this.chkBoxCreateQuotation.Name = "chkBoxCreateQuotation";
+            this.chkBoxCreateQuotation.Size = new System.Drawing.Size(106, 17);
+            this.chkBoxCreateQuotation.TabIndex = 3;
+            this.chkBoxCreateQuotation.Text = "Create Quotation";
+            this.chkBoxCreateQuotation.UseVisualStyleBackColor = true;
+            this.chkBoxCreateQuotation.CheckedChanged += new System.EventHandler(this.chkBoxCreateQuotation_CheckedChanged);
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(95, 315);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(0, 13);
+            this.lblStatus.TabIndex = 17;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(54, 314);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(40, 13);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "Status:";
+            // 
             // CreateSellerInvoice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 353);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.lblStatus);
+            this.Controls.Add(this.chkBoxCreateQuotation);
+            this.Controls.Add(this.chkBoxCreateInvoice);
             this.Controls.Add(this.chkBoxUseOrdQty);
             this.Controls.Add(this.lblProgress);
+            this.Controls.Add(this.txtBoxOtherFile);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.txtBoxInvoiceStartNumber);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.btnBrowseOtherFile);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnCreateInvoice);
             this.Controls.Add(this.btnOutFolderBrowse);
             this.Controls.Add(this.txtBoxOutputFolder);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.chkBoxCreateSummary);
             this.Controls.Add(this.dateTimeInvoice);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "CreateSellerInvoice";
             this.Text = "Generate Invoice";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CreateSellerInvoice_FormClosing);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,17 +277,17 @@
         private System.Windows.Forms.TextBox txtBoxOutputFolder;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radBtnOrderFromMasterFile;
-        private System.Windows.Forms.RadioButton radBtnOrderFromOtherFile;
         private System.Windows.Forms.TextBox txtBoxOtherFile;
         private System.Windows.Forms.Button btnBrowseOtherFile;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txtBoxInvoiceStartNumber;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Label lblProgress;
         private System.Windows.Forms.CheckBox chkBoxUseOrdQty;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox chkBoxCreateInvoice;
+        private System.Windows.Forms.CheckBox chkBoxCreateQuotation;
+        private System.Windows.Forms.Label lblStatus;
+        private System.Windows.Forms.Label label3;
     }
 }

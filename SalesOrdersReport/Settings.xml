@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <Application>
+    <MainFormTitle>Ceren Sales Orders Software</MainFormTitle>
+    <LogoFileName>CerenLogo.png</LogoFileName>
+    <LogoImageHeight>80</LogoImageHeight>
+    <ReportRowsFromTop>7</ReportRowsFromTop>
+    <ReportAppendRowsAtBottom>7</ReportAppendRowsAtBottom>
+  </Application>
+  <Invoice>
+    <HeaderTitle>Bakery</HeaderTitle>
+    <HeaderSubTitle>Invoice</HeaderSubTitle>
+    <HeaderTitleColor>-16744448</HeaderTitleColor>
+    <HeaderSubTitleColor>-16777216</HeaderSubTitleColor>
+    <FooterTitle>Ceren Business Group</FooterTitle>
+    <FooterTitleColor>-65408</FooterTitleColor>
+    <FooterTextColor>-16777216</FooterTextColor>
+    <Address>No.8, 2nd Main Road, Ganganagar Extn., R.T.Nagar, Bangalore-560032</Address>
+    <PhoneNumber>
+    </PhoneNumber>
+    <EMailID>lapbusinessgroup123@gmail.com</EMailID>
+    <TINNumber>1234567890</TINNumber>
+    <LastInvoiceNumber>274</LastInvoiceNumber>
+    <VATPercent>5.5</VATPercent>
+  </Invoice>
+  <Quotation>
+    <HeaderTitle>Bakery</HeaderTitle>
+    <HeaderSubTitle>Invoice</HeaderSubTitle>
+    <HeaderTitleColor>-65536</HeaderTitleColor>
+    <HeaderSubTitleColor>-16777216</HeaderSubTitleColor>
+    <FooterTitle>Quotation Footer</FooterTitle>
+    <FooterTitleColor>-16777216</FooterTitleColor>
+    <FooterTextColor>-16777216</FooterTextColor>
+    <Address>No.8, 2nd Main Road, Ganganagar Extn., R.T.Nagar, Bangalore-560032</Address>
+    <PhoneNumber>+91 7044037919678</PhoneNumber>
+    <EMailID>lapbusinessgroup345@gmail.com</EMailID>
+    <TINNumber>1234567890</TINNumber>
+    <LastQuotationNumber>89</LastQuotationNumber>
+  </Quotation>
+</Settings>

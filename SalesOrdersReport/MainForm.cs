@@ -18,9 +18,7 @@ namespace SalesOrdersReport
             InitializeComponent();
             btnNewOrderSheet.Enabled = false;
             btnCreateEachSellerInvoice.Enabled = false;
-            this.Text = CommonFunctions.ProductTitleText;
-
-            CommonFunctions.LoadSaveFile();
+            this.Text = CommonFunctions.MainFormTitleText;
         }
 
         private void btnMasterFileBrowse_Click(object sender, EventArgs e)
@@ -48,7 +46,18 @@ namespace SalesOrdersReport
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            CommonFunctions.WriteToSaveFile();
+            CommonFunctions.WriteToSettingsFile();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SettingsForm ObjSettingsForm = new SettingsForm();
+            ObjSettingsForm.ShowDialog(this);
         }
     }
 }

@@ -35,6 +35,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnNewOrderSheet = new System.Windows.Forms.Button();
             this.btnCreateEachSellerInvoice = new System.Windows.Forms.Button();
+            this.menuStripMainForm = new System.Windows.Forms.MenuStrip();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStripMainForm.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -87,6 +91,33 @@
             this.btnCreateEachSellerInvoice.UseVisualStyleBackColor = true;
             this.btnCreateEachSellerInvoice.Click += new System.EventHandler(this.btnCreateEachSellerInvoice_Click);
             // 
+            // menuStripMainForm
+            // 
+            this.menuStripMainForm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem,
+            this.exitToolStripMenuItem});
+            this.menuStripMainForm.Location = new System.Drawing.Point(0, 0);
+            this.menuStripMainForm.Name = "menuStripMainForm";
+            this.menuStripMainForm.Size = new System.Drawing.Size(490, 24);
+            this.menuStripMainForm.TabIndex = 4;
+            this.menuStripMainForm.Text = "menuStripMainForm";
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("settingsToolStripMenuItem.Image")));
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -97,10 +128,15 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtBoxFileName);
             this.Controls.Add(this.btnMasterFileBrowse);
+            this.Controls.Add(this.menuStripMainForm);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
+            this.MainMenuStrip = this.menuStripMainForm;
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.menuStripMainForm.ResumeLayout(false);
+            this.menuStripMainForm.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -114,6 +150,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnNewOrderSheet;
         private System.Windows.Forms.Button btnCreateEachSellerInvoice;
+        private System.Windows.Forms.MenuStrip menuStripMainForm;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 
     }
 }

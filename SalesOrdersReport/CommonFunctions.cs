@@ -6,25 +6,32 @@ using System.Windows.Forms;
 using System.Data;
 using System.Data.OleDb;
 using System.IO;
+using System.Xml;
+using System.Drawing;
 
 namespace SalesOrdersReport
 {
+    class SettingDetails
+    {
+        public String Name, InnerText, XPath;
+        public String[] Values;
+    }
+
+    class ReportSettings
+    {
+        public String HeaderTitle, HeaderSubTitle, FooterTitle, Address, PhoneNumber, EMailID, VATPercent, TINNumber;
+        public Int32 LastNumber;
+        public Color HeaderTitleColor, HeaderSubTitleColor, FooterTitleColor, FooterTextColor;
+    }
+
     class CommonFunctions
     {
-        public static String ProductTitleText, InvoiceTitleText, InvoiceHeaderTitle, InvoiceHeaderSubTitle, InvoiceAddress, InvoicePhoneNumber, InvoiceMailID;
-        public static Int32 InvoiceRowsFromTop, InvoiceAppendRowsAtBottom;
+        public static String MainFormTitleText, LogoFileName;
+        public static Int32 ReportRowsFromTop, ReportAppendRowsAtBottom, LogoImageHeight;
 
         public static void Initialize()
         {
-            ProductTitleText = System.Configuration.ConfigurationManager.AppSettings["ProductTitleText"];
-            InvoiceTitleText = System.Configuration.ConfigurationManager.AppSettings["InvoiceTitleText"];
-            InvoiceRowsFromTop = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["InvoiceRowsFromTop"]);
-            InvoiceAppendRowsAtBottom = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["InvoiceAppendRowsAtBottom"]);
-            InvoiceHeaderTitle = System.Configuration.ConfigurationManager.AppSettings["InvoiceHeaderTitle"];
-            InvoiceHeaderSubTitle = System.Configuration.ConfigurationManager.AppSettings["InvoiceHeaderSubTitle"];
-            InvoiceAddress = System.Configuration.ConfigurationManager.AppSettings["InvoiceAddress"];
-            InvoicePhoneNumber = System.Configuration.ConfigurationManager.AppSettings["InvoicePhoneNumber"];
-            InvoiceMailID = System.Configuration.ConfigurationManager.AppSettings["InvoiceMailID"];
+            LoadSettingsFile();
         }
 
         public static void ShowErrorDialog(String Method, Exception ex)
@@ -87,92 +94,223 @@ namespace SalesOrdersReport
         }
         #endregion
 
-        #region "Save file related Methods"
-        static Dictionary<String, String[]> DictSaveFileEntries = new Dictionary<String, String[]>();
-        static String SaveFilePath = AppDomain.CurrentDomain.BaseDirectory + "\\ApplicationSaveFile.txt";
-        static Boolean SaveFileEntryModified = false;
-        public static void LoadSaveFile()
+        #region "Settings file related methods"
+        static Dictionary<String, SettingDetails> DictSettingsFileEntries = new Dictionary<String, SettingDetails>();
+        static String SettingsFilePath = AppDomain.CurrentDomain.BaseDirectory + "\\Settings.xml";
+        static Boolean SettingsFileEntryModified = false;
+        public static XmlDocument SettingXmlDoc;
+        public static ReportSettings InvoiceSettings, QuotationSettings;
+
+        public static void LoadSettingsFile()
         {
             try
             {
-                if (!File.Exists(SaveFilePath)) return;
+                if (!File.Exists(SettingsFilePath)) return;
 
-                StreamReader srSaveFile = new StreamReader(SaveFilePath);
+                SettingXmlDoc = new XmlDocument();
+                SettingXmlDoc.Load(SettingsFilePath);
 
-                while (!srSaveFile.EndOfStream)
+                XmlNode SettingsNode;
+                XMLFileUtils.GetChildNode(SettingXmlDoc, "Settings", out SettingsNode);
+
+                XmlNode ApplicationNode;
+                XMLFileUtils.GetChildNode(SettingsNode, "Application", out ApplicationNode);
+                foreach (XmlNode item in ApplicationNode.ChildNodes)
                 {
-                    String tmpLine = srSaveFile.ReadLine().Trim();
-                    if (String.IsNullOrEmpty(tmpLine)) continue;
-
-                    String[] Tokens = tmpLine.Split('\t');
-                    if (Tokens.Length < 2) continue;
-
-                    String Key = Tokens[0].Trim().ToUpper();
-                    String[] Value = new String[Tokens.Length - 1];
-                    Array.Copy(Tokens, 1, Value, 0, Value.Length);
-                    if (DictSaveFileEntries.ContainsKey(Key))
-                        DictSaveFileEntries[Key] = Value;
-                    else
-                        DictSaveFileEntries.Add(Key, Value);
+                    if (item.NodeType == XmlNodeType.CDATA || item.NodeType == XmlNodeType.Comment) continue;
+                    if (!String.IsNullOrEmpty(item.InnerText)) AddKeyValueToDictionarySettings("//Settings/Application/" + item.Name, item.InnerText);
+                    foreach (XmlAttribute Attribute in item.Attributes)
+                    {
+                        if (Attribute.NodeType == XmlNodeType.CDATA || Attribute.NodeType == XmlNodeType.Comment) continue;
+                        AddKeyValueToDictionarySettings("//Settings/Application/" + item.Name + "/@" + Attribute.Name, Attribute.Value);
+                    }
                 }
-                srSaveFile.Close();
+
+                XmlNode InvoiceNode;
+                XMLFileUtils.GetChildNode(SettingsNode, "Invoice", out InvoiceNode);
+                foreach (XmlNode item in InvoiceNode.ChildNodes)
+                {
+                    if (item.NodeType == XmlNodeType.CDATA || item.NodeType == XmlNodeType.Comment) continue;
+                    if (!String.IsNullOrEmpty(item.InnerText)) AddKeyValueToDictionarySettings("//Settings/Invoice/" + item.Name, item.InnerText);
+                    foreach (XmlAttribute Attribute in item.Attributes)
+                    {
+                        if (Attribute.NodeType == XmlNodeType.CDATA || Attribute.NodeType == XmlNodeType.Comment) continue;
+                        AddKeyValueToDictionarySettings("//Settings/Invoice/" + item.Name + "/@" + Attribute.Name, Attribute.Value);
+                    }
+                }
+
+                XmlNode QuotationNode;
+                XMLFileUtils.GetChildNode(SettingsNode, "Quotation", out QuotationNode);
+                foreach (XmlNode item in QuotationNode.ChildNodes)
+                {
+                    if (item.NodeType == XmlNodeType.CDATA || item.NodeType == XmlNodeType.Comment) continue;
+                    if (!String.IsNullOrEmpty(item.InnerText)) AddKeyValueToDictionarySettings("//Settings/Quotation/" + item.Name, item.InnerText);
+                    foreach (XmlAttribute Attribute in item.Attributes)
+                    {
+                        if (Attribute.NodeType == XmlNodeType.CDATA || Attribute.NodeType == XmlNodeType.Comment) continue;
+                        AddKeyValueToDictionarySettings("//Settings/Quotation/" + item.Name + "/@" + Attribute.Name, Attribute.Value);
+                    }
+                }
+
+                SetAllParameters();
             }
             catch (Exception ex)
             {
-                ShowErrorDialog("LoadSaveFile", ex);
+                ShowErrorDialog("LoadSettingsFile", ex);
             }
         }
 
-        public static void UpdateSaveFileEntry(String Key, String[] Value)
+        public static Color GetColor(String ColorArgb)
+        {
+            if (String.IsNullOrEmpty(ColorArgb))
+                return Color.Black;
+            else
+                return Color.FromArgb(Int32.Parse(ColorArgb));
+        }
+
+        private static void SetAllParameters()
         {
             try
             {
-                if (DictSaveFileEntries.ContainsKey(Key.Trim().ToUpper()))
-                    DictSaveFileEntries[Key.Trim().ToUpper()] = Value;
+                #region Set all Parameters
+                MainFormTitleText = GetSettingsFileEntry("//Settings/Application/MainFormTitle").InnerText;
+                ReportRowsFromTop = Int32.Parse(GetSettingsFileEntry("//Settings/Application/ReportRowsFromTop").InnerText);
+                ReportAppendRowsAtBottom = Int32.Parse(GetSettingsFileEntry("//Settings/Application/ReportAppendRowsAtBottom").InnerText);
+                LogoFileName = GetSettingsFileEntry("//Settings/Application/LogoFileName").InnerText;
+                LogoImageHeight = Int32.Parse(GetSettingsFileEntry("//Settings/Application/LogoImageHeight").InnerText);
+
+                //Invoice Settings
+                InvoiceSettings = new ReportSettings();
+                InvoiceSettings.HeaderTitle = GetSettingsFileEntry("//Settings/Invoice/HeaderTitle").InnerText;
+                InvoiceSettings.HeaderSubTitle = GetSettingsFileEntry("//Settings/Invoice/HeaderSubTitle").InnerText;
+                InvoiceSettings.HeaderTitleColor = GetColor(GetSettingsFileEntry("//Settings/Invoice/HeaderTitleColor").InnerText);
+                InvoiceSettings.HeaderSubTitleColor = GetColor(GetSettingsFileEntry("//Settings/Invoice/HeaderSubTitleColor").InnerText);
+                InvoiceSettings.FooterTitle = GetSettingsFileEntry("//Settings/Invoice/FooterTitle").InnerText;
+                InvoiceSettings.FooterTitleColor = GetColor(GetSettingsFileEntry("//Settings/Invoice/FooterTitleColor").InnerText);
+                InvoiceSettings.FooterTextColor = GetColor(GetSettingsFileEntry("//Settings/Invoice/FooterTextColor").InnerText);
+                InvoiceSettings.Address = GetSettingsFileEntry("//Settings/Invoice/Address").InnerText;
+                InvoiceSettings.PhoneNumber = GetSettingsFileEntry("//Settings/Invoice/PhoneNumber").InnerText;
+                InvoiceSettings.EMailID = GetSettingsFileEntry("//Settings/Invoice/EMailID").InnerText;
+                InvoiceSettings.VATPercent = GetSettingsFileEntry("//Settings/Invoice/VATPercent").InnerText;
+                InvoiceSettings.TINNumber = GetSettingsFileEntry("//Settings/Invoice/TINNumber").InnerText;
+                if (String.IsNullOrEmpty(GetSettingsFileEntry("//Settings/Invoice/LastInvoiceNumber").InnerText))
+                    InvoiceSettings.LastNumber = 0;
                 else
-                    DictSaveFileEntries.Add(Key.Trim().ToUpper(), Value);
+                    InvoiceSettings.LastNumber = Int32.Parse(GetSettingsFileEntry("//Settings/Invoice/LastInvoiceNumber").InnerText);
 
-                SaveFileEntryModified = true;
+                //Quotation Settings
+                QuotationSettings = new ReportSettings();
+                QuotationSettings.HeaderTitle = GetSettingsFileEntry("//Settings/Quotation/HeaderTitle").InnerText;
+                QuotationSettings.HeaderSubTitle = GetSettingsFileEntry("//Settings/Quotation/HeaderSubTitle").InnerText;
+                QuotationSettings.HeaderTitleColor = GetColor(GetSettingsFileEntry("//Settings/Quotation/HeaderTitleColor").InnerText);
+                QuotationSettings.HeaderSubTitleColor = GetColor(GetSettingsFileEntry("//Settings/Quotation/HeaderSubTitleColor").InnerText);
+                QuotationSettings.FooterTitle = GetSettingsFileEntry("//Settings/Quotation/FooterTitle").InnerText;
+                QuotationSettings.FooterTitleColor = GetColor(GetSettingsFileEntry("//Settings/Quotation/FooterTitleColor").InnerText);
+                QuotationSettings.FooterTextColor = GetColor(GetSettingsFileEntry("//Settings/Quotation/FooterTextColor").InnerText);
+                QuotationSettings.Address = GetSettingsFileEntry("//Settings/Quotation/Address").InnerText;
+                QuotationSettings.PhoneNumber = GetSettingsFileEntry("//Settings/Quotation/PhoneNumber").InnerText;
+                QuotationSettings.EMailID = GetSettingsFileEntry("//Settings/Quotation/EMailID").InnerText;
+                QuotationSettings.TINNumber = GetSettingsFileEntry("//Settings/Quotation/TINNumber").InnerText;
+                if (String.IsNullOrEmpty(GetSettingsFileEntry("//Settings/Quotation/LastQuotationNumber").InnerText))
+                    QuotationSettings.LastNumber = 0;
+                else
+                    QuotationSettings.LastNumber = Int32.Parse(GetSettingsFileEntry("//Settings/Quotation/LastQuotationNumber").InnerText);
+                #endregion
             }
             catch (Exception ex)
             {
-                ShowErrorDialog("UpdateSaveFileEntry", ex);
+                ShowErrorDialog("CommonFunctions.SetAllParameters(", ex);
             }
         }
 
-        public static String[] GetSaveFileEntry(String Key)
+        static void AddKeyValueToDictionarySettings(String XPath, String Value)
         {
             try
             {
-                if (DictSaveFileEntries.ContainsKey(Key.Trim().ToUpper()))
-                    return DictSaveFileEntries[Key.Trim().ToUpper()];
-            }
-            catch (Exception ex)
-            {
-                ShowErrorDialog("GetSaveFileEntry", ex);
-            }
-            return null;
-        }
-
-        public static void WriteToSaveFile()
-        {
-            try
-            {
-                if (!SaveFileEntryModified) return;
-
-                StreamWriter swSaveFile = new StreamWriter(SaveFilePath);
-
-                foreach (var Pair in DictSaveFileEntries)
+                if (DictSettingsFileEntries.ContainsKey(XPath.Trim().ToUpper()))
                 {
-                    swSaveFile.WriteLine(Pair.Key + '\t' + String.Join("\t", Pair.Value));
+                    DictSettingsFileEntries[XPath.ToUpper()].InnerText = Value;
+                    DictSettingsFileEntries[XPath.ToUpper()].Values = Value.Split('|');
                 }
-                swSaveFile.Close();
+                else
+                {
+                    SettingDetails tmpSettingDetails = new SettingDetails();
+                    tmpSettingDetails.XPath = XPath;
+                    tmpSettingDetails.Name = XPath.Substring(XPath.LastIndexOf('/') + 1).Replace("@", "");
+                    tmpSettingDetails.InnerText = Value;
+                    tmpSettingDetails.Values = Value.Split('|');
+                    DictSettingsFileEntries.Add(XPath.Trim().ToUpper(), tmpSettingDetails);
+                }
             }
             catch (Exception ex)
             {
-                ShowErrorDialog("WriteToSaveFile", ex);
+                ShowErrorDialog("AddKeyValueToDictionarySettings", ex);
+            }
+        }
+
+        public static void UpdateSettingsFileEntry(String Key, String Value)
+        {
+            try
+            {
+                AddKeyValueToDictionarySettings(Key, Value);
+
+                SettingsFileEntryModified = true;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("UpdateSettingsFileEntry", ex);
+            }
+        }
+
+        public static SettingDetails GetSettingsFileEntry(String Key)
+        {
+            try
+            {
+                if (DictSettingsFileEntries.ContainsKey(Key.Trim().ToUpper()))
+                    return DictSettingsFileEntries[Key.Trim().ToUpper()];
+                else
+                {
+                    SettingDetails tmpSettingDetails = new SettingDetails();
+                    tmpSettingDetails.Values = new String[0];
+                    tmpSettingDetails.InnerText = "";
+                    return tmpSettingDetails;
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("GetSettingsFileEntry", ex);
+                return null;
+            }
+        }
+
+        public static void WriteToSettingsFile()
+        {
+            try
+            {
+                if (!SettingsFileEntryModified) return;
+
+                foreach (KeyValuePair<String, SettingDetails> item in DictSettingsFileEntries)
+                {
+                    if (item.Key.Contains('@'))
+                    {
+                        XMLFileUtils.SetAttributeValueInXMLFile(SettingsFilePath, item.Value.XPath, item.Value.InnerText);
+                    }
+                    else
+                    {
+                        XMLFileUtils.SetElementValueInXMLFile(SettingsFilePath, item.Value.XPath, item.Value.InnerText);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("WriteToSettingsFile", ex);
             }
         }
         #endregion
+
+        public static string GetColorHexCode(Color color)
+        {
+            return ColorTranslator.ToHtml(color).Replace("#", "");
+        }
     }
 }
