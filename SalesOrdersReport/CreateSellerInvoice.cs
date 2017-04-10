@@ -264,7 +264,7 @@ namespace SalesOrdersReport
                 Double Quantity;//, Total;//, TotalQuantity;
 
                 Int32 InvoiceHeaderStartRow = 0; //CommonFunctions.ReportRowsFromTop;
-                Int32 InvoiceStartRow = InvoiceHeaderStartRow + 5;
+                Int32 InvoiceStartRow = InvoiceHeaderStartRow + 5;// ((EnumReportType == ReportType.INVOICE) ? InvoiceHeaderStartRow + 5 : InvoiceHeaderStartRow + 4);
                 Int32 InvoiceNumber = CurrReportSettings.LastNumber + 1;
                 Int32 ValidSellerCount = ListSellerIndexes.Where(s => (s >= 0)).ToList().Count;
                 Int32 ValidItemCount = ListItemIndexes.Where(s => (s >= 0)).ToList().Count;
@@ -317,16 +317,26 @@ namespace SalesOrdersReport
                     xlRange.WrapText = true;
                     if (drSellers[ListSellerIndexes[i]]["Address"].ToString().Length >= 25) xlRange.EntireColumn.ColumnWidth = 25;
 
-                    xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum];
-                    xlRange.Value = "TIN#";
-                    xlRange.WrapText = true;
-                    xlRange.Font.Bold = true;
-                    xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum + 1].Value = drSellers[ListSellerIndexes[i]]["TINNumber"].ToString();
+                    if (EnumReportType == ReportType.INVOICE)
+                    {
+                        xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum];
+                        xlRange.Value = "TIN#";
+                        xlRange.WrapText = true;
+                        xlRange.Font.Bold = true;
+                        xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum + 1].Value = drSellers[ListSellerIndexes[i]]["TINNumber"].ToString();
 
-                    xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 3, SlNoColNum];
-                    xlRange.Value = "Phone";
-                    xlRange.Font.Bold = true;
-                    xlWorkSheet.Cells[CustDetailsStartRow + 3, SlNoColNum + 1].Value = drSellers[ListSellerIndexes[i]]["Phone"].ToString();
+                        xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 3, SlNoColNum];
+                        xlRange.Value = "Phone";
+                        xlRange.Font.Bold = true;
+                        xlWorkSheet.Cells[CustDetailsStartRow + 3, SlNoColNum + 1].Value = drSellers[ListSellerIndexes[i]]["Phone"].ToString();
+                    }
+                    else
+                    {
+                        xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum];
+                        xlRange.Value = "Phone";
+                        xlRange.Font.Bold = true;
+                        xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum + 1].Value = drSellers[ListSellerIndexes[i]]["Phone"].ToString();
+                    }
 
                     xlRange = xlWorkSheet.Cells[CustDetailsStartRow, TotalColNum - 1];
                     xlRange.Value = "Date";
@@ -429,7 +439,7 @@ namespace SalesOrdersReport
 
                     if (PrintVATPercent)
                     {
-                        #region Old Balance Row
+                        #region VAT Percent Row
                         xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + OldBalanceRowOffset, TotalColNum - 1];
                         xlRange.Value = "VAT Percent " + CurrReportSettings.VATPercent + "%";
                         xlRange.Font.Bold = true;
@@ -671,7 +681,7 @@ namespace SalesOrdersReport
                     xlWorksheet.PageSetup.RightFooter = "&P";
                 xlWorksheet.PageSetup.PrintGridlines = true;
                 xlWorksheet.PageSetup.CenterHorizontally = true;
-                xlWorksheet.PageSetup.TopMargin = xlWorksheet.PageSetup.Application.InchesToPoints(1.75);
+                xlWorksheet.PageSetup.TopMargin = xlWorksheet.PageSetup.Application.InchesToPoints(1.5);
                 xlWorksheet.PageSetup.BottomMargin = xlWorksheet.PageSetup.Application.InchesToPoints(1.5);
                 xlWorksheet.PageSetup.FooterMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.25);
                 xlWorksheet.PageSetup.HeaderMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.25);
