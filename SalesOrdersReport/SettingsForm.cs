@@ -107,50 +107,58 @@ namespace SalesOrdersReport
 
         private void btnFooterTitleColorInv_Click(object sender, EventArgs e)
         {
-            colorDialogSettings.ShowDialog(this);
-            txtBoxFooterTitleColorInv.BackColor = colorDialogSettings.Color;
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                txtBoxFooterTitleColorInv.BackColor = colorDialogSettings.Color;
         }
 
         private void btnFooterTextColorInv_Click(object sender, EventArgs e)
         {
-            colorDialogSettings.ShowDialog(this);
-            txtBoxFooterTextColorInv.BackColor = colorDialogSettings.Color;
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                txtBoxFooterTextColorInv.BackColor = colorDialogSettings.Color;
         }
 
         private void btnHeaderTitleColorInv_Click(object sender, EventArgs e)
         {
-            colorDialogSettings.ShowDialog(this);
-            txtBoxHeaderTitleColorInv.BackColor = colorDialogSettings.Color;
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                txtBoxHeaderTitleColorInv.BackColor = colorDialogSettings.Color;
         }
 
         private void btnHeaderSubTitleColorInv_Click(object sender, EventArgs e)
         {
-            colorDialogSettings.ShowDialog(this);
-            txtBoxHeaderSubTitleColorInv.BackColor = colorDialogSettings.Color;
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                txtBoxHeaderSubTitleColorInv.BackColor = colorDialogSettings.Color;
         }
 
         private void btnFooterTitleColorQuot_Click(object sender, EventArgs e)
         {
-            colorDialogSettings.ShowDialog(this);
-            txtBoxFooterTitleColorQuot.BackColor = colorDialogSettings.Color;
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                txtBoxFooterTitleColorQuot.BackColor = colorDialogSettings.Color;
         }
 
         private void btnFooterTextColorQuot_Click(object sender, EventArgs e)
         {
-            colorDialogSettings.ShowDialog(this);
-            txtBoxFooterTextColorQuot.BackColor = colorDialogSettings.Color;
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                txtBoxFooterTextColorQuot.BackColor = colorDialogSettings.Color;
         }
 
         private void btnHeaderTitleColorQuot_Click(object sender, EventArgs e)
         {
-            colorDialogSettings.ShowDialog(this);
-            txtBoxHeaderTitleColorQuot.BackColor = colorDialogSettings.Color;
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                txtBoxHeaderTitleColorQuot.BackColor = colorDialogSettings.Color;
         }
 
         private void btnHeaderSubTitleColorQuot_Click(object sender, EventArgs e)
         {
-            colorDialogSettings.ShowDialog(this);
-            txtBoxHeaderSubTitleColorQuot.BackColor = colorDialogSettings.Color;
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                txtBoxHeaderSubTitleColorQuot.BackColor = colorDialogSettings.Color;
         }
     }
 }
