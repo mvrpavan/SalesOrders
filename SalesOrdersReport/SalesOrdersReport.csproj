@@ -160,7 +160,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\CerenLogo.png" />
-    <Content Include="Settings.xml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

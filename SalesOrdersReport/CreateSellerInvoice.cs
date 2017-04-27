@@ -265,7 +265,7 @@ namespace SalesOrdersReport
 
                 Int32 InvoiceHeaderStartRow = 0; //CommonFunctions.ReportRowsFromTop;
                 Int32 InvoiceStartRow = InvoiceHeaderStartRow + 5;// ((EnumReportType == ReportType.INVOICE) ? InvoiceHeaderStartRow + 5 : InvoiceHeaderStartRow + 4);
-                Int32 InvoiceNumber = CurrReportSettings.LastNumber + 1;
+                Int32 InvoiceNumber = CurrReportSettings.LastNumber;
                 Int32 ValidSellerCount = ListSellerIndexes.Where(s => (s >= 0)).ToList().Count;
                 Int32 ValidItemCount = ListItemIndexes.Where(s => (s >= 0)).ToList().Count;
                 //Int32 ProgressBarCount = (ValidSellerCount * ValidItemCount + drSellers.Length + drItems.Length + 2);
@@ -343,11 +343,11 @@ namespace SalesOrdersReport
                     xlRange.Font.Bold = true;
                     xlWorkSheet.Cells[CustDetailsStartRow, TotalColNum].Value = DateTime.Today.ToString("dd-MMM-yyyy");
 
+                    InvoiceNumber++;
                     xlRange = xlWorkSheet.Cells[1 + CustDetailsStartRow, TotalColNum - 1];
                     xlRange.Value = BillNumberText;
                     xlRange.Font.Bold = true;
                     xlWorkSheet.Cells[CustDetailsStartRow + 1, TotalColNum].Value = InvoiceNumber;
-                    InvoiceNumber++;
 
                     xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow, 1], xlWorkSheet.Cells[CustDetailsStartRow + 3, TotalColNum]];
                     xlRange.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic);
