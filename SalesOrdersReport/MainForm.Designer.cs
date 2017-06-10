@@ -106,16 +106,21 @@
             // 
             this.settingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("settingsToolStripMenuItem.Image")));
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.ShortcutKeyDisplayString = "Alt + S";
+            this.settingsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.S)));
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
-            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Text = "&Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.ShortcutKeyDisplayString = "Alt + x";
+            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
-            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.ToolTipText = "Close Application";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // MainForm
@@ -129,6 +134,7 @@
             this.Controls.Add(this.txtBoxFileName);
             this.Controls.Add(this.btnMasterFileBrowse);
             this.Controls.Add(this.menuStripMainForm);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStripMainForm;

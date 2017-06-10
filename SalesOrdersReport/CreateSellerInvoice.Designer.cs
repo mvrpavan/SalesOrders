@@ -82,6 +82,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(275, 235);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(124, 42);
@@ -174,7 +175,7 @@
             // chkBoxUseOrdQty
             // 
             this.chkBoxUseOrdQty.AutoSize = true;
-            this.chkBoxUseOrdQty.Location = new System.Drawing.Point(252, 61);
+            this.chkBoxUseOrdQty.Location = new System.Drawing.Point(250, 60);
             this.chkBoxUseOrdQty.Name = "chkBoxUseOrdQty";
             this.chkBoxUseOrdQty.Size = new System.Drawing.Size(138, 17);
             this.chkBoxUseOrdQty.TabIndex = 3;
@@ -237,6 +238,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(484, 353);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblStatus);
@@ -256,10 +258,13 @@
             this.Controls.Add(this.chkBoxCreateSummary);
             this.Controls.Add(this.dateTimeInvoice);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "CreateSellerInvoice";
+            this.ShowInTaskbar = false;
             this.Text = "Generate Invoice";
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CreateSellerInvoice_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -183,7 +183,7 @@
             this.btnFooterTextColorInv.Location = new System.Drawing.Point(388, 106);
             this.btnFooterTextColorInv.Name = "btnFooterTextColorInv";
             this.btnFooterTextColorInv.Size = new System.Drawing.Size(28, 23);
-            this.btnFooterTextColorInv.TabIndex = 2;
+            this.btnFooterTextColorInv.TabIndex = 8;
             this.btnFooterTextColorInv.UseVisualStyleBackColor = true;
             this.btnFooterTextColorInv.Click += new System.EventHandler(this.btnFooterTextColorInv_Click);
             // 
@@ -193,7 +193,7 @@
             this.btnHeaderSubTitleColorInv.Location = new System.Drawing.Point(388, 54);
             this.btnHeaderSubTitleColorInv.Name = "btnHeaderSubTitleColorInv";
             this.btnHeaderSubTitleColorInv.Size = new System.Drawing.Size(28, 23);
-            this.btnHeaderSubTitleColorInv.TabIndex = 2;
+            this.btnHeaderSubTitleColorInv.TabIndex = 4;
             this.btnHeaderSubTitleColorInv.UseVisualStyleBackColor = true;
             this.btnHeaderSubTitleColorInv.Click += new System.EventHandler(this.btnHeaderSubTitleColorInv_Click);
             // 
@@ -213,7 +213,7 @@
             this.btnFooterTitleColorInv.Location = new System.Drawing.Point(388, 80);
             this.btnFooterTitleColorInv.Name = "btnFooterTitleColorInv";
             this.btnFooterTitleColorInv.Size = new System.Drawing.Size(28, 23);
-            this.btnFooterTitleColorInv.TabIndex = 2;
+            this.btnFooterTitleColorInv.TabIndex = 6;
             this.btnFooterTitleColorInv.UseVisualStyleBackColor = true;
             this.btnFooterTitleColorInv.Click += new System.EventHandler(this.btnFooterTitleColorInv_Click);
             // 
@@ -223,56 +223,56 @@
             this.txtBoxAddressInv.Multiline = true;
             this.txtBoxAddressInv.Name = "txtBoxAddressInv";
             this.txtBoxAddressInv.Size = new System.Drawing.Size(204, 51);
-            this.txtBoxAddressInv.TabIndex = 1;
+            this.txtBoxAddressInv.TabIndex = 7;
             // 
             // txtBoxLastInvoiceNumberInv
             // 
             this.txtBoxLastInvoiceNumberInv.Location = new System.Drawing.Point(178, 269);
             this.txtBoxLastInvoiceNumberInv.Name = "txtBoxLastInvoiceNumberInv";
             this.txtBoxLastInvoiceNumberInv.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxLastInvoiceNumberInv.TabIndex = 1;
+            this.txtBoxLastInvoiceNumberInv.TabIndex = 13;
             // 
             // txtBoxTINNumberInv
             // 
             this.txtBoxTINNumberInv.Location = new System.Drawing.Point(178, 243);
             this.txtBoxTINNumberInv.Name = "txtBoxTINNumberInv";
             this.txtBoxTINNumberInv.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxTINNumberInv.TabIndex = 1;
+            this.txtBoxTINNumberInv.TabIndex = 12;
             // 
             // txtBoxVATPercentInv
             // 
             this.txtBoxVATPercentInv.Location = new System.Drawing.Point(178, 217);
             this.txtBoxVATPercentInv.Name = "txtBoxVATPercentInv";
             this.txtBoxVATPercentInv.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxVATPercentInv.TabIndex = 1;
+            this.txtBoxVATPercentInv.TabIndex = 11;
             // 
             // txtBoxEMailIDInv
             // 
             this.txtBoxEMailIDInv.Location = new System.Drawing.Point(178, 191);
             this.txtBoxEMailIDInv.Name = "txtBoxEMailIDInv";
             this.txtBoxEMailIDInv.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxEMailIDInv.TabIndex = 1;
+            this.txtBoxEMailIDInv.TabIndex = 10;
             // 
             // txtBoxPhoneNumberInv
             // 
             this.txtBoxPhoneNumberInv.Location = new System.Drawing.Point(178, 165);
             this.txtBoxPhoneNumberInv.Name = "txtBoxPhoneNumberInv";
             this.txtBoxPhoneNumberInv.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxPhoneNumberInv.TabIndex = 1;
+            this.txtBoxPhoneNumberInv.TabIndex = 9;
             // 
             // txtBoxFooterTitleInv
             // 
             this.txtBoxFooterTitleInv.Location = new System.Drawing.Point(178, 82);
             this.txtBoxFooterTitleInv.Name = "txtBoxFooterTitleInv";
             this.txtBoxFooterTitleInv.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxFooterTitleInv.TabIndex = 1;
+            this.txtBoxFooterTitleInv.TabIndex = 5;
             // 
             // txtBoxHeaderSubTitleInv
             // 
             this.txtBoxHeaderSubTitleInv.Location = new System.Drawing.Point(178, 56);
             this.txtBoxHeaderSubTitleInv.Name = "txtBoxHeaderSubTitleInv";
             this.txtBoxHeaderSubTitleInv.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxHeaderSubTitleInv.TabIndex = 1;
+            this.txtBoxHeaderSubTitleInv.TabIndex = 3;
             // 
             // txtBoxHeaderTitleInv
             // 
@@ -423,7 +423,7 @@
             this.btnHeaderSubTitleColorQuot.Location = new System.Drawing.Point(388, 54);
             this.btnHeaderSubTitleColorQuot.Name = "btnHeaderSubTitleColorQuot";
             this.btnHeaderSubTitleColorQuot.Size = new System.Drawing.Size(28, 23);
-            this.btnHeaderSubTitleColorQuot.TabIndex = 27;
+            this.btnHeaderSubTitleColorQuot.TabIndex = 4;
             this.btnHeaderSubTitleColorQuot.UseVisualStyleBackColor = true;
             this.btnHeaderSubTitleColorQuot.Click += new System.EventHandler(this.btnHeaderSubTitleColorQuot_Click);
             // 
@@ -433,7 +433,7 @@
             this.btnHeaderTitleColorQuot.Location = new System.Drawing.Point(388, 28);
             this.btnHeaderTitleColorQuot.Name = "btnHeaderTitleColorQuot";
             this.btnHeaderTitleColorQuot.Size = new System.Drawing.Size(28, 23);
-            this.btnHeaderTitleColorQuot.TabIndex = 28;
+            this.btnHeaderTitleColorQuot.TabIndex = 2;
             this.btnHeaderTitleColorQuot.UseVisualStyleBackColor = true;
             this.btnHeaderTitleColorQuot.Click += new System.EventHandler(this.btnHeaderTitleColorQuot_Click);
             // 
@@ -461,7 +461,7 @@
             this.btnFooterTextColorQuot.Location = new System.Drawing.Point(388, 106);
             this.btnFooterTextColorQuot.Name = "btnFooterTextColorQuot";
             this.btnFooterTextColorQuot.Size = new System.Drawing.Size(28, 23);
-            this.btnFooterTextColorQuot.TabIndex = 23;
+            this.btnFooterTextColorQuot.TabIndex = 8;
             this.btnFooterTextColorQuot.UseVisualStyleBackColor = true;
             this.btnFooterTextColorQuot.Click += new System.EventHandler(this.btnFooterTextColorQuot_Click);
             // 
@@ -471,7 +471,7 @@
             this.btnFooterTitleColorQuot.Location = new System.Drawing.Point(388, 80);
             this.btnFooterTitleColorQuot.Name = "btnFooterTitleColorQuot";
             this.btnFooterTitleColorQuot.Size = new System.Drawing.Size(28, 23);
-            this.btnFooterTitleColorQuot.TabIndex = 24;
+            this.btnFooterTitleColorQuot.TabIndex = 6;
             this.btnFooterTitleColorQuot.UseVisualStyleBackColor = true;
             this.btnFooterTitleColorQuot.Click += new System.EventHandler(this.btnFooterTitleColorQuot_Click);
             // 
@@ -481,56 +481,56 @@
             this.txtBoxAddressQuot.Multiline = true;
             this.txtBoxAddressQuot.Name = "txtBoxAddressQuot";
             this.txtBoxAddressQuot.Size = new System.Drawing.Size(204, 51);
-            this.txtBoxAddressQuot.TabIndex = 16;
+            this.txtBoxAddressQuot.TabIndex = 7;
             // 
             // txtBoxLastQuotationNumberQuot
             // 
             this.txtBoxLastQuotationNumberQuot.Location = new System.Drawing.Point(178, 243);
             this.txtBoxLastQuotationNumberQuot.Name = "txtBoxLastQuotationNumberQuot";
             this.txtBoxLastQuotationNumberQuot.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxLastQuotationNumberQuot.TabIndex = 17;
+            this.txtBoxLastQuotationNumberQuot.TabIndex = 12;
             // 
             // txtBoxTINNumberQuot
             // 
             this.txtBoxTINNumberQuot.Location = new System.Drawing.Point(178, 217);
             this.txtBoxTINNumberQuot.Name = "txtBoxTINNumberQuot";
             this.txtBoxTINNumberQuot.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxTINNumberQuot.TabIndex = 14;
+            this.txtBoxTINNumberQuot.TabIndex = 11;
             // 
             // txtBoxEMailIDQuot
             // 
             this.txtBoxEMailIDQuot.Location = new System.Drawing.Point(178, 191);
             this.txtBoxEMailIDQuot.Name = "txtBoxEMailIDQuot";
             this.txtBoxEMailIDQuot.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxEMailIDQuot.TabIndex = 18;
+            this.txtBoxEMailIDQuot.TabIndex = 10;
             // 
             // txtBoxPhoneNumberQuot
             // 
             this.txtBoxPhoneNumberQuot.Location = new System.Drawing.Point(178, 165);
             this.txtBoxPhoneNumberQuot.Name = "txtBoxPhoneNumberQuot";
             this.txtBoxPhoneNumberQuot.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxPhoneNumberQuot.TabIndex = 21;
+            this.txtBoxPhoneNumberQuot.TabIndex = 9;
             // 
             // txtBoxFooterTitleQuot
             // 
             this.txtBoxFooterTitleQuot.Location = new System.Drawing.Point(178, 82);
             this.txtBoxFooterTitleQuot.Name = "txtBoxFooterTitleQuot";
             this.txtBoxFooterTitleQuot.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxFooterTitleQuot.TabIndex = 19;
+            this.txtBoxFooterTitleQuot.TabIndex = 5;
             // 
             // txtBoxHeaderSubTitleQuot
             // 
             this.txtBoxHeaderSubTitleQuot.Location = new System.Drawing.Point(178, 56);
             this.txtBoxHeaderSubTitleQuot.Name = "txtBoxHeaderSubTitleQuot";
             this.txtBoxHeaderSubTitleQuot.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxHeaderSubTitleQuot.TabIndex = 20;
+            this.txtBoxHeaderSubTitleQuot.TabIndex = 3;
             // 
             // txtBoxHeaderTitleQuot
             // 
             this.txtBoxHeaderTitleQuot.Location = new System.Drawing.Point(178, 30);
             this.txtBoxHeaderTitleQuot.Name = "txtBoxHeaderTitleQuot";
             this.txtBoxHeaderTitleQuot.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxHeaderTitleQuot.TabIndex = 13;
+            this.txtBoxHeaderTitleQuot.TabIndex = 1;
             // 
             // label11
             // 
@@ -609,17 +609,18 @@
             this.btnApplySettings.Location = new System.Drawing.Point(162, 394);
             this.btnApplySettings.Name = "btnApplySettings";
             this.btnApplySettings.Size = new System.Drawing.Size(97, 23);
-            this.btnApplySettings.TabIndex = 0;
+            this.btnApplySettings.TabIndex = 13;
             this.btnApplySettings.Text = "Apply Settings";
             this.btnApplySettings.UseVisualStyleBackColor = true;
             this.btnApplySettings.Click += new System.EventHandler(this.btnApplySettings_Click);
             // 
             // btnClose
             // 
+            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnClose.Location = new System.Drawing.Point(309, 394);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
-            this.btnClose.TabIndex = 1;
+            this.btnClose.TabIndex = 14;
             this.btnClose.Text = "Cancel";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnCancel_Click);
@@ -628,13 +629,16 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(585, 429);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tabControlSettings);
             this.Controls.Add(this.btnApplySettings);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "SettingsForm";
+            this.ShowInTaskbar = false;
             this.Text = "Settings";
             this.tabControlSettings.ResumeLayout(false);
             this.tabPageInvoice.ResumeLayout(false);

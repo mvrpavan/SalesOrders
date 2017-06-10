@@ -152,6 +152,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(261, 259);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(124, 42);
@@ -186,6 +187,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(486, 347);
             this.Controls.Add(this.lblProgress);
             this.Controls.Add(this.prgrssBarProcess);
@@ -198,10 +200,13 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dateTimeOrderSheet);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "AddNewOrderSheetForm";
+            this.ShowInTaskbar = false;
             this.Text = "Add New Order Sheet";
+            this.TopMost = true;
             this.grpBoxOrderSheet.ResumeLayout(false);
             this.grpBoxOrderSheet.PerformLayout();
             this.ResumeLayout(false);

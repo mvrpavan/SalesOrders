@@ -52,6 +52,9 @@
     <ApplicationIcon>
     </ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>SalesOrdersReport.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -160,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\CerenLogo.png" />
+    <Content Include="Settings.xml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
