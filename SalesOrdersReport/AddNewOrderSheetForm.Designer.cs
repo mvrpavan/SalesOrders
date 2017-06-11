@@ -73,29 +73,29 @@
             this.chkBoxMarkVendors.Name = "chkBoxMarkVendors";
             this.chkBoxMarkVendors.Size = new System.Drawing.Size(138, 17);
             this.chkBoxMarkVendors.TabIndex = 1;
-            this.chkBoxMarkVendors.Text = "Mark Vendors For Items";
+            this.chkBoxMarkVendors.Text = "&Mark Vendors For Items";
             this.chkBoxMarkVendors.UseVisualStyleBackColor = true;
             // 
             // radBtnExistingBook
             // 
             this.radBtnExistingBook.AutoSize = true;
-            this.radBtnExistingBook.Checked = true;
             this.radBtnExistingBook.Location = new System.Drawing.Point(6, 29);
             this.radBtnExistingBook.Name = "radBtnExistingBook";
             this.radBtnExistingBook.Size = new System.Drawing.Size(143, 17);
-            this.radBtnExistingBook.TabIndex = 0;
-            this.radBtnExistingBook.TabStop = true;
-            this.radBtnExistingBook.Text = "New Sheet in Master File";
+            this.radBtnExistingBook.TabIndex = 2;
+            this.radBtnExistingBook.Text = "New &Sheet in Master File";
             this.radBtnExistingBook.UseVisualStyleBackColor = true;
             // 
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
+            this.radioButton2.Checked = true;
             this.radioButton2.Location = new System.Drawing.Point(6, 52);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(95, 17);
-            this.radioButton2.TabIndex = 1;
-            this.radioButton2.Text = "New Excel File";
+            this.radioButton2.TabIndex = 3;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "New &Excel File";
             this.radioButton2.UseVisualStyleBackColor = true;
             // 
             // grpBoxOrderSheet
@@ -124,15 +124,15 @@
             this.txtBoxOutputFolder.Location = new System.Drawing.Point(108, 203);
             this.txtBoxOutputFolder.Name = "txtBoxOutputFolder";
             this.txtBoxOutputFolder.Size = new System.Drawing.Size(250, 20);
-            this.txtBoxOutputFolder.TabIndex = 3;
+            this.txtBoxOutputFolder.TabIndex = 4;
             // 
             // btnOutFolderBrowse
             // 
             this.btnOutFolderBrowse.Location = new System.Drawing.Point(364, 201);
             this.btnOutFolderBrowse.Name = "btnOutFolderBrowse";
             this.btnOutFolderBrowse.Size = new System.Drawing.Size(75, 23);
-            this.btnOutFolderBrowse.TabIndex = 4;
-            this.btnOutFolderBrowse.Text = "Browse";
+            this.btnOutFolderBrowse.TabIndex = 5;
+            this.btnOutFolderBrowse.Text = "&Browse";
             this.btnOutFolderBrowse.UseVisualStyleBackColor = true;
             this.btnOutFolderBrowse.Click += new System.EventHandler(this.btnOutFolderBrowse_Click);
             // 
@@ -145,8 +145,8 @@
             this.btnCreateOrderSheet.Location = new System.Drawing.Point(81, 259);
             this.btnCreateOrderSheet.Name = "btnCreateOrderSheet";
             this.btnCreateOrderSheet.Size = new System.Drawing.Size(124, 42);
-            this.btnCreateOrderSheet.TabIndex = 5;
-            this.btnCreateOrderSheet.Text = "Create Order Sheet";
+            this.btnCreateOrderSheet.TabIndex = 6;
+            this.btnCreateOrderSheet.Text = "Create &Order Sheet";
             this.btnCreateOrderSheet.UseVisualStyleBackColor = true;
             this.btnCreateOrderSheet.Click += new System.EventHandler(this.btnCreateOrderSheet_Click);
             // 
@@ -156,16 +156,16 @@
             this.btnCancel.Location = new System.Drawing.Point(261, 259);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(124, 42);
-            this.btnCancel.TabIndex = 6;
-            this.btnCancel.Text = "Close Window";
+            this.btnCancel.TabIndex = 7;
+            this.btnCancel.Text = "&Close Window";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // prgrssBarProcess
             // 
-            this.prgrssBarProcess.Location = new System.Drawing.Point(330, 312);
+            this.prgrssBarProcess.Location = new System.Drawing.Point(331, 320);
             this.prgrssBarProcess.Name = "prgrssBarProcess";
-            this.prgrssBarProcess.Size = new System.Drawing.Size(100, 23);
+            this.prgrssBarProcess.Size = new System.Drawing.Size(100, 14);
             this.prgrssBarProcess.TabIndex = 7;
             // 
             // lblProgress
@@ -185,6 +185,7 @@
             // 
             // AddNewOrderSheetForm
             // 
+            this.AcceptButton = this.btnCreateOrderSheet;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
@@ -205,8 +206,8 @@
             this.MaximizeBox = false;
             this.Name = "AddNewOrderSheetForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add New Order Sheet";
-            this.TopMost = true;
             this.grpBoxOrderSheet.ResumeLayout(false);
             this.grpBoxOrderSheet.PerformLayout();
             this.ResumeLayout(false);

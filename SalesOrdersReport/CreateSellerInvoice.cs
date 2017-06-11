@@ -278,10 +278,10 @@ namespace SalesOrdersReport
                 for (int i = 0; i < ListSellerIndexes.Count; i++)
                 {
                     if (ListSellerIndexes[i] < 0) continue;
-                    Counter++;
+                    //Counter++;
                     SellerCount++;
                     lblStatus.Text = "Creating " + ReportTypeName + " for Seller " + SellerCount + " of " + ValidSellerCount;
-                    backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
+                    //backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
                     Excel.Worksheet xlWorkSheet = xlWorkbook.Worksheets.Add(Type.Missing, xlWorkbook.Sheets[xlWorkbook.Sheets.Count]);
                     String SheetName = drSellers[ListSellerIndexes[i]]["SellerName"].ToString().Replace(":", "").
                                             Replace("\\", "").Replace("/", "").
@@ -352,9 +352,7 @@ namespace SalesOrdersReport
                     drSellers[ListSellerIndexes[i]]["InvoiceNumber"] = InvoiceNumber;
 
                     xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow, 1], xlWorkSheet.Cells[CustDetailsStartRow + 3, TotalColNum]];
-                    xlRange.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic);
-                    xlRange.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle = Excel.XlLineStyle.xlContinuous;
-                    xlRange.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
+                    SetAllBorders(xlRange);
                     #endregion
 
                     xlWorkSheet.Cells[InvoiceStartRow + 1, SlNoColNum].Value = "Sl.No.";
@@ -481,9 +479,7 @@ namespace SalesOrdersReport
                     #endregion
 
                     xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[InvoiceStartRow + 1, 1], xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + TotalCostRowOffset, TotalColNum]];
-                    xlRange.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic);
-                    xlRange.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle = Excel.XlLineStyle.xlContinuous;
-                    xlRange.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
+                    SetAllBorders(xlRange);
                     #endregion
 
                     xlWorkSheet.UsedRange.Columns.AutoFit();
@@ -513,7 +509,6 @@ namespace SalesOrdersReport
                 backgroundWorker1.ReportProgress(100);
                 xlWorkbook.SaveAs(SaveFileName);
                 xlWorkbook.Close();
-                //backgroundWorker1.ReportProgress(100);
                 lblStatus.Text = "Completed creation of " + ReportTypeName + "s for all Sellers";
 
                 CommonFunctions.ReleaseCOMObject(xlWorkbook);
@@ -523,6 +518,25 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("CreateSellerReport", ex);
                 xlApp.Quit();
                 CommonFunctions.ReleaseCOMObject(xlApp);
+            }
+        }
+
+        private static void SetAllBorders(Excel.Range xlRange)
+        {
+            try
+            {
+                xlRange.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic);
+                xlRange.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle = Excel.XlLineStyle.xlContinuous;
+                xlRange.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
+                xlRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
+                xlRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
+                xlRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
+                xlRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CreateSellerReport", ex);
+                throw ex;
             }
         }
 
@@ -640,7 +654,8 @@ namespace SalesOrdersReport
                     xlRangeNetSale.Formula = "=" + xlRangeSale.Address[false, false] + "-" + xlRangeCancel.Address[false, false] + "-" + xlRangeReturn.Address[false, false] + "-" + xlRangeDiscount.Address[false, false];
                     xlRangeNetSale.NumberFormat = "#,##0.00";
                     CurrCol++; Excel.Range xlRangeOldBalance = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    xlRangeOldBalance.Formula = ((Math.Abs(Double.Parse(drSellers[i]["OldBalance"].ToString())) > 1E-5) ? drSellers[i]["OldBalance"].ToString() : "");
+                    //xlRangeOldBalance.Formula = ((Math.Abs(Double.Parse(drSellers[i]["OldBalance"].ToString())) > 1E-5) ? drSellers[i]["OldBalance"].ToString() : "");
+                    xlRangeOldBalance.Value = drSellers[i]["OldBalance"].ToString();
                     xlRangeOldBalance.NumberFormat = "#,##0.00";
                     CurrCol++; Excel.Range xlRangeCash = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     xlRangeCash.NumberFormat = "#,##0.00";
@@ -663,9 +678,7 @@ namespace SalesOrdersReport
                 }
 
                 xlRange = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 1], xlSellerSummaryWorkSheet.Cells[CurrRow + 1, LastCol]];
-                xlRange.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic);
-                xlRange.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle = Excel.XlLineStyle.xlContinuous;
-                xlRange.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
+                SetAllBorders(xlRange);
 
                 xlSellerSummaryWorkSheet.UsedRange.Columns.AutoFit();
 
@@ -689,51 +702,58 @@ namespace SalesOrdersReport
         {
             try
             {
-                xlWorksheet.PageSetup.RightHeaderPicture.Filename = AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.LogoFileName;
-                xlWorksheet.PageSetup.RightHeaderPicture.ColorType = Microsoft.Office.Core.MsoPictureColorType.msoPictureAutomatic;
-                xlWorksheet.PageSetup.RightHeaderPicture.CropBottom = 0;
-                xlWorksheet.PageSetup.RightHeaderPicture.CropLeft = 0;
-                xlWorksheet.PageSetup.RightHeaderPicture.CropRight = 0;
-                xlWorksheet.PageSetup.RightHeaderPicture.CropTop = 0;
-                xlWorksheet.PageSetup.RightHeaderPicture.LockAspectRatio = Microsoft.Office.Core.MsoTriState.msoTrue;
-                xlWorksheet.PageSetup.RightHeaderPicture.Height = CommonFunctions.LogoImageHeight;
-                //xlWorksheet.PageSetup.RightHeaderPicture.Width = 30;
-                //xlWorksheet.PageSetup.Application.PrintCommunication = false;
-                //xlWorksheet.PageSetup.PrintArea = "";
-                /*xlWorksheet.PageSetup.PrintTitleRows = "";
-                xlWorksheet.PageSetup.PrintTitleColumns = "";
+                if (!String.IsNullOrEmpty(CommonFunctions.LogoFileName))
+                {
+                    xlWorksheet.PageSetup.RightHeaderPicture.Filename = AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.LogoFileName;
+                    xlWorksheet.PageSetup.RightHeaderPicture.ColorType = Microsoft.Office.Core.MsoPictureColorType.msoPictureAutomatic;
+                    xlWorksheet.PageSetup.RightHeaderPicture.CropBottom = 0;
+                    xlWorksheet.PageSetup.RightHeaderPicture.CropLeft = 0;
+                    xlWorksheet.PageSetup.RightHeaderPicture.CropRight = 0;
+                    xlWorksheet.PageSetup.RightHeaderPicture.CropTop = 0;
+                    xlWorksheet.PageSetup.RightHeaderPicture.LockAspectRatio = Microsoft.Office.Core.MsoTriState.msoTrue;
+                    xlWorksheet.PageSetup.RightHeaderPicture.Height = CommonFunctions.LogoImageHeight;
+                    //xlWorksheet.PageSetup.RightHeaderPicture.Width = 30;
+                    //xlWorksheet.PageSetup.Application.PrintCommunication = false;
+                    //xlWorksheet.PageSetup.PrintArea = "";
+                    /*xlWorksheet.PageSetup.PrintTitleRows = "";
+                    xlWorksheet.PageSetup.PrintTitleColumns = "";
 
-                xlWorksheet.PageSetup.Application.PrintCommunication = true;
-                xlWorksheet.PageSetup.PrintArea = "";
-                xlWorksheet.PageSetup.Application.PrintCommunication = false;*/
+                    xlWorksheet.PageSetup.Application.PrintCommunication = true;
+                    xlWorksheet.PageSetup.PrintArea = "";
+                    xlWorksheet.PageSetup.Application.PrintCommunication = false;*/
+                }
 
                 xlWorksheet.PageSetup.LeftHeader = "";
-                xlWorksheet.PageSetup.CenterHeader = "\n&\"Gill Sans MT,Bold\"&18&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.HeaderTitleColor) + CurrReportSettings.HeaderTitle;
-                xlWorksheet.PageSetup.CenterHeader += "\n&\"Gill Sans MT,Regular\"&16&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.HeaderSubTitleColor) + PageHeaderTitle;
+                //xlWorksheet.PageSetup.CenterHeader = "\n&\"Gill Sans MT,Bold\"&12&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.HeaderTitleColor) + CurrReportSettings.HeaderTitle;
+                xlWorksheet.PageSetup.CenterHeader = "\n&\"Arial,Bold\"&16&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.HeaderTitleColor) + CurrReportSettings.HeaderTitle;
+                if (!String.IsNullOrEmpty(PageHeaderTitle))
+                {
+                    xlWorksheet.PageSetup.CenterHeader += "\n&\"Arial,Regular\"&14&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.HeaderSubTitleColor) + PageHeaderTitle;
+                }
                 xlWorksheet.PageSetup.CenterHeader += "\n\n";
                 xlWorksheet.PageSetup.RightHeader = "&G";
                 xlWorksheet.PageSetup.CenterFooter = "";
                 if (!String.IsNullOrEmpty(CurrReportSettings.FooterTitle))
                 {
-                    xlWorksheet.PageSetup.CenterFooter = "\n&\"Gill Sans MT,Bold\"&16&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.FooterTitleColor) + CurrReportSettings.FooterTitle;
+                    xlWorksheet.PageSetup.CenterFooter += "\n&\"Arial,Bold\"&14&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.FooterTitleColor) + CurrReportSettings.FooterTitle;
                 }
                 if (!String.IsNullOrEmpty(CurrReportSettings.Address))
                 {
-                    xlWorksheet.PageSetup.CenterFooter += "\n&\"Gill Sans MT,Italic\"&14&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.FooterTextColor) + CurrReportSettings.Address;
+                    xlWorksheet.PageSetup.CenterFooter += "\n&\"Arial,Italic\"&10&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.FooterTextColor) + CurrReportSettings.Address;
                 }
                 if (!String.IsNullOrEmpty(CurrReportSettings.TINNumber))
                 {
-                    xlWorksheet.PageSetup.CenterFooter += "\nTIN Number : " + CurrReportSettings.TINNumber;
+                    xlWorksheet.PageSetup.CenterFooter += "\nTIN#:" + CurrReportSettings.TINNumber;
                 }
                 if (!String.IsNullOrEmpty(CurrReportSettings.PhoneNumber))
                 {
-                    xlWorksheet.PageSetup.CenterFooter += "\nPhone : " + CurrReportSettings.PhoneNumber;
+                    xlWorksheet.PageSetup.CenterFooter += "\nPhone:" + CurrReportSettings.PhoneNumber;
                 }
                 if (!String.IsNullOrEmpty(CurrReportSettings.EMailID))
                 {
                     if (String.IsNullOrEmpty(CurrReportSettings.PhoneNumber)) xlWorksheet.PageSetup.CenterFooter += "\n";
-                    else xlWorksheet.PageSetup.CenterFooter += " ";
-                    xlWorksheet.PageSetup.CenterFooter += "Email : " + CurrReportSettings.EMailID;
+                    else xlWorksheet.PageSetup.CenterFooter += " | ";
+                    xlWorksheet.PageSetup.CenterFooter += "Email:" + CurrReportSettings.EMailID;
                 }
                 if (xlWorksheet.PageSetup.Pages.Count > 1)
                     xlWorksheet.PageSetup.RightFooter = "&P";
@@ -791,10 +811,10 @@ namespace SalesOrdersReport
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // Change the value of the ProgressBar to the BackgroundWorker progress.
-            progressBar1.Value = e.ProgressPercentage;
+            progressBar1.Value = Math.Min(e.ProgressPercentage, 100);
 
             // Set the text.
-            lblProgress.Text = e.ProgressPercentage.ToString() + "%";
+            lblProgress.Text = Math.Min(e.ProgressPercentage, 100).ToString() + "%";
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

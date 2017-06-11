@@ -8,33 +8,35 @@
     <ReportAppendRowsAtBottom>7</ReportAppendRowsAtBottom>
   </Application>
   <Invoice>
-    <HeaderTitle>Bakery</HeaderTitle>
-    <HeaderSubTitle>Invoice</HeaderSubTitle>
-    <HeaderTitleColor>-16744448</HeaderTitleColor>
-    <HeaderSubTitleColor>-16777216</HeaderSubTitleColor>
+    <HeaderTitle>Invoice</HeaderTitle>
+    <HeaderSubTitle>
+    </HeaderSubTitle>
+    <HeaderTitleColor>-6927541</HeaderTitleColor>
+    <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
     <FooterTitle>Ceren Business Group</FooterTitle>
-    <FooterTitleColor>-65408</FooterTitleColor>
-    <FooterTextColor>-16777216</FooterTextColor>
-    <Address>No.8, 2nd Main Road, Ganganagar Extn., R.T.Nagar, Bangalore-560032</Address>
-    <PhoneNumber>
-    </PhoneNumber>
-    <EMailID>lapbusinessgroup123@gmail.com</EMailID>
-    <TINNumber>1234567890</TINNumber>
-    <LastInvoiceNumber>274</LastInvoiceNumber>
+    <FooterTitleColor>-6960825</FooterTitleColor>
+    <FooterTextColor>-6927541</FooterTextColor>
+    <Address>No.40, 5th Main, 6th Cross, Krishnappa Block, Ganganagar Extn., RT Nagar, Bangalore-560032</Address>
+    <PhoneNumber>+917022037919</PhoneNumber>
+    <EMailID>cerenbusinessgroup@gmail.com</EMailID>
+    <TINNumber>29271403793</TINNumber>
+    <LastInvoiceNumber>135</LastInvoiceNumber>
     <VATPercent>5.5</VATPercent>
   </Invoice>
   <Quotation>
-    <HeaderTitle>Bakery</HeaderTitle>
-    <HeaderSubTitle>Invoice</HeaderSubTitle>
-    <HeaderTitleColor>-65536</HeaderTitleColor>
-    <HeaderSubTitleColor>-16777216</HeaderSubTitleColor>
-    <FooterTitle>Quotation Footer</FooterTitle>
-    <FooterTitleColor>-16777216</FooterTitleColor>
-    <FooterTextColor>-16777216</FooterTextColor>
-    <Address>No.8, 2nd Main Road, Ganganagar Extn., R.T.Nagar, Bangalore-560032</Address>
-    <PhoneNumber>+91 7044037919678</PhoneNumber>
-    <EMailID>lapbusinessgroup345@gmail.com</EMailID>
-    <TINNumber>1234567890</TINNumber>
-    <LastQuotationNumber>89</LastQuotationNumber>
+    <HeaderTitle>Order Quotation</HeaderTitle>
+    <HeaderSubTitle>
+    </HeaderSubTitle>
+    <HeaderTitleColor>-6927541</HeaderTitleColor>
+    <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
+    <FooterTitle>Ceren Business Group</FooterTitle>
+    <FooterTitleColor>-6960825</FooterTitleColor>
+    <FooterTextColor>-6927541</FooterTextColor>
+    <Address>No.40, 5th Main, 6th Cross, Krishnappa Block, Ganganagar Extn., RT Nagar, Bangalore-560032</Address>
+    <PhoneNumber>+917022037919</PhoneNumber>
+    <EMailID>cerenbusinessgroup@gmail.com</EMailID>
+    <TINNumber>
+    </TINNumber>
+    <LastQuotationNumber>103</LastQuotationNumber>
   </Quotation>
 </Settings>

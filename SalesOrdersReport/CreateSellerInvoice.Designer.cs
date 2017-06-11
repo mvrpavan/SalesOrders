@@ -65,7 +65,7 @@
             // 
             this.dateTimeInvoice.Location = new System.Drawing.Point(122, 22);
             this.dateTimeInvoice.Name = "dateTimeInvoice";
-            this.dateTimeInvoice.Size = new System.Drawing.Size(331, 20);
+            this.dateTimeInvoice.Size = new System.Drawing.Size(257, 20);
             this.dateTimeInvoice.TabIndex = 0;
             // 
             // chkBoxCreateSummary
@@ -76,52 +76,52 @@
             this.chkBoxCreateSummary.Location = new System.Drawing.Point(50, 60);
             this.chkBoxCreateSummary.Name = "chkBoxCreateSummary";
             this.chkBoxCreateSummary.Size = new System.Drawing.Size(134, 17);
-            this.chkBoxCreateSummary.TabIndex = 2;
-            this.chkBoxCreateSummary.Text = "Create Summary Sheet";
+            this.chkBoxCreateSummary.TabIndex = 1;
+            this.chkBoxCreateSummary.Text = "Create &Summary Sheet";
             this.chkBoxCreateSummary.UseVisualStyleBackColor = true;
             // 
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(275, 235);
+            this.btnCancel.Location = new System.Drawing.Point(259, 216);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(124, 42);
-            this.btnCancel.TabIndex = 7;
-            this.btnCancel.Text = "Close Window";
+            this.btnCancel.TabIndex = 10;
+            this.btnCancel.Text = "&Close Window";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnCreateInvoice
             // 
-            this.btnCreateInvoice.Location = new System.Drawing.Point(95, 235);
+            this.btnCreateInvoice.Location = new System.Drawing.Point(79, 216);
             this.btnCreateInvoice.Name = "btnCreateInvoice";
             this.btnCreateInvoice.Size = new System.Drawing.Size(124, 42);
-            this.btnCreateInvoice.TabIndex = 6;
-            this.btnCreateInvoice.Text = "Generate Invoice";
+            this.btnCreateInvoice.TabIndex = 9;
+            this.btnCreateInvoice.Text = "&Generate Invoice";
             this.btnCreateInvoice.UseVisualStyleBackColor = true;
             this.btnCreateInvoice.Click += new System.EventHandler(this.btnCreateInvoice_Click);
             // 
             // btnOutFolderBrowse
             // 
-            this.btnOutFolderBrowse.Location = new System.Drawing.Point(378, 189);
+            this.btnOutFolderBrowse.Location = new System.Drawing.Point(385, 170);
             this.btnOutFolderBrowse.Name = "btnOutFolderBrowse";
             this.btnOutFolderBrowse.Size = new System.Drawing.Size(75, 23);
-            this.btnOutFolderBrowse.TabIndex = 5;
-            this.btnOutFolderBrowse.Text = "Browse";
+            this.btnOutFolderBrowse.TabIndex = 8;
+            this.btnOutFolderBrowse.Text = "B&rowse";
             this.btnOutFolderBrowse.UseVisualStyleBackColor = true;
             this.btnOutFolderBrowse.Click += new System.EventHandler(this.btnOutFolderBrowse_Click);
             // 
             // txtBoxOutputFolder
             // 
-            this.txtBoxOutputFolder.Location = new System.Drawing.Point(122, 191);
+            this.txtBoxOutputFolder.Location = new System.Drawing.Point(129, 172);
             this.txtBoxOutputFolder.Name = "txtBoxOutputFolder";
             this.txtBoxOutputFolder.Size = new System.Drawing.Size(250, 20);
-            this.txtBoxOutputFolder.TabIndex = 4;
+            this.txtBoxOutputFolder.TabIndex = 7;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(40, 194);
+            this.label2.Location = new System.Drawing.Point(47, 175);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 13);
             this.label2.TabIndex = 7;
@@ -129,18 +129,18 @@
             // 
             // txtBoxOtherFile
             // 
-            this.txtBoxOtherFile.Location = new System.Drawing.Point(122, 150);
+            this.txtBoxOtherFile.Location = new System.Drawing.Point(129, 131);
             this.txtBoxOtherFile.Name = "txtBoxOtherFile";
             this.txtBoxOtherFile.Size = new System.Drawing.Size(250, 20);
-            this.txtBoxOtherFile.TabIndex = 0;
+            this.txtBoxOtherFile.TabIndex = 5;
             // 
             // btnBrowseOtherFile
             // 
-            this.btnBrowseOtherFile.Location = new System.Drawing.Point(378, 148);
+            this.btnBrowseOtherFile.Location = new System.Drawing.Point(385, 129);
             this.btnBrowseOtherFile.Name = "btnBrowseOtherFile";
             this.btnBrowseOtherFile.Size = new System.Drawing.Size(75, 23);
-            this.btnBrowseOtherFile.TabIndex = 1;
-            this.btnBrowseOtherFile.Text = "Browse";
+            this.btnBrowseOtherFile.TabIndex = 6;
+            this.btnBrowseOtherFile.Text = "&Browse";
             this.btnBrowseOtherFile.UseVisualStyleBackColor = true;
             this.btnBrowseOtherFile.Click += new System.EventHandler(this.btnBrowseOtherFile_Click);
             // 
@@ -150,9 +150,9 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(335, 315);
+            this.progressBar1.Location = new System.Drawing.Point(341, 291);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(100, 23);
+            this.progressBar1.Size = new System.Drawing.Size(100, 13);
             this.progressBar1.TabIndex = 15;
             this.progressBar1.UseWaitCursor = true;
             // 
@@ -166,7 +166,7 @@
             // 
             this.lblProgress.AutoSize = true;
             this.lblProgress.BackColor = System.Drawing.Color.Transparent;
-            this.lblProgress.Location = new System.Drawing.Point(445, 321);
+            this.lblProgress.Location = new System.Drawing.Point(447, 291);
             this.lblProgress.Name = "lblProgress";
             this.lblProgress.Size = new System.Drawing.Size(21, 13);
             this.lblProgress.TabIndex = 16;
@@ -178,14 +178,14 @@
             this.chkBoxUseOrdQty.Location = new System.Drawing.Point(250, 60);
             this.chkBoxUseOrdQty.Name = "chkBoxUseOrdQty";
             this.chkBoxUseOrdQty.Size = new System.Drawing.Size(138, 17);
-            this.chkBoxUseOrdQty.TabIndex = 3;
-            this.chkBoxUseOrdQty.Text = "Use Order Qty For Total";
+            this.chkBoxUseOrdQty.TabIndex = 2;
+            this.chkBoxUseOrdQty.Text = "&Use Order Qty For Total";
             this.chkBoxUseOrdQty.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(40, 153);
+            this.label4.Location = new System.Drawing.Point(47, 134);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(83, 13);
             this.label4.TabIndex = 7;
@@ -200,7 +200,7 @@
             this.chkBoxCreateInvoice.Name = "chkBoxCreateInvoice";
             this.chkBoxCreateInvoice.Size = new System.Drawing.Size(95, 17);
             this.chkBoxCreateInvoice.TabIndex = 3;
-            this.chkBoxCreateInvoice.Text = "Create Invoice";
+            this.chkBoxCreateInvoice.Text = "Create &Invoice";
             this.chkBoxCreateInvoice.UseVisualStyleBackColor = true;
             this.chkBoxCreateInvoice.CheckedChanged += new System.EventHandler(this.chkBoxCreateInvoice_CheckedChanged);
             // 
@@ -209,18 +209,18 @@
             this.chkBoxCreateQuotation.AutoSize = true;
             this.chkBoxCreateQuotation.Checked = true;
             this.chkBoxCreateQuotation.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxCreateQuotation.Location = new System.Drawing.Point(50, 117);
+            this.chkBoxCreateQuotation.Location = new System.Drawing.Point(250, 94);
             this.chkBoxCreateQuotation.Name = "chkBoxCreateQuotation";
             this.chkBoxCreateQuotation.Size = new System.Drawing.Size(106, 17);
-            this.chkBoxCreateQuotation.TabIndex = 3;
-            this.chkBoxCreateQuotation.Text = "Create Quotation";
+            this.chkBoxCreateQuotation.TabIndex = 4;
+            this.chkBoxCreateQuotation.Text = "Create &Quotation";
             this.chkBoxCreateQuotation.UseVisualStyleBackColor = true;
             this.chkBoxCreateQuotation.CheckedChanged += new System.EventHandler(this.chkBoxCreateQuotation_CheckedChanged);
             // 
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(95, 315);
+            this.lblStatus.Location = new System.Drawing.Point(93, 291);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(0, 13);
             this.lblStatus.TabIndex = 17;
@@ -228,7 +228,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(54, 314);
+            this.label3.Location = new System.Drawing.Point(47, 291);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(40, 13);
             this.label3.TabIndex = 18;
@@ -236,10 +236,11 @@
             // 
             // CreateSellerInvoice
             // 
+            this.AcceptButton = this.btnCreateInvoice;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(484, 353);
+            this.ClientSize = new System.Drawing.Size(484, 332);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.chkBoxCreateQuotation);
@@ -263,8 +264,8 @@
             this.MaximizeBox = false;
             this.Name = "CreateSellerInvoice";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Generate Invoice";
-            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CreateSellerInvoice_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
