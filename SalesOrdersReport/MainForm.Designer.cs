@@ -38,6 +38,7 @@
             this.menuStripMainForm = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblVersion = new System.Windows.Forms.Label();
             this.menuStripMainForm.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -123,11 +124,22 @@
             this.exitToolStripMenuItem.ToolTipText = "Close Application";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // lblVersion
+            // 
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.lblVersion.Location = new System.Drawing.Point(436, 364);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(42, 13);
+            this.lblVersion.TabIndex = 5;
+            this.lblVersion.Text = "Version";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(490, 386);
+            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.btnCreateEachSellerInvoice);
             this.Controls.Add(this.btnNewOrderSheet);
             this.Controls.Add(this.label1);
@@ -159,6 +171,7 @@
         private System.Windows.Forms.MenuStrip menuStripMainForm;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.Label lblVersion;
 
     }
 }

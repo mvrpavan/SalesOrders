@@ -19,6 +19,7 @@ namespace SalesOrdersReport
             btnNewOrderSheet.Enabled = false;
             btnCreateEachSellerInvoice.Enabled = false;
             this.Text = CommonFunctions.MainFormTitleText;
+            lblVersion.Text = Application.ProductVersion;
         }
 
         private void btnMasterFileBrowse_Click(object sender, EventArgs e)

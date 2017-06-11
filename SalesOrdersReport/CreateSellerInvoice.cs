@@ -446,7 +446,8 @@ namespace SalesOrdersReport
 
                         xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + OldBalanceRowOffset, TotalColNum];
                         Excel.Range xlSalesTotal = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum];
-                        xlRange.Value = Double.Parse(xlSalesTotal.Value2.ToString()) * (Double.Parse(CurrReportSettings.VATPercent) / 100.0);
+                        //xlRange.Value = Double.Parse(xlSalesTotal.Value2.ToString()) * (Double.Parse(CurrReportSettings.VATPercent) / 100.0);
+                        xlRange.Formula = "=" + xlSalesTotal.Address[false, false] + "*" + CurrReportSettings.VATPercent + "/100";
                         xlRange.Font.Bold = true;
                         xlRange.NumberFormat = "#,##0.00";
 
