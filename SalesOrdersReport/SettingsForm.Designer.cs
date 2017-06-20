@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.tabControlSettings = new System.Windows.Forms.TabControl();
+            this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.ddlSummaryLocation = new System.Windows.Forms.ComboBox();
+            this.lblSummaryLocation = new System.Windows.Forms.Label();
             this.tabPageInvoice = new System.Windows.Forms.TabPage();
             this.txtBoxFooterTextColorInv = new System.Windows.Forms.TextBox();
             this.txtBoxHeaderSubTitleColorInv = new System.Windows.Forms.TextBox();
@@ -86,12 +89,14 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.colorDialogSettings = new System.Windows.Forms.ColorDialog();
             this.tabControlSettings.SuspendLayout();
+            this.tabPageGeneral.SuspendLayout();
             this.tabPageInvoice.SuspendLayout();
             this.tabPageQuotation.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlSettings
             // 
+            this.tabControlSettings.Controls.Add(this.tabPageGeneral);
             this.tabControlSettings.Controls.Add(this.tabPageInvoice);
             this.tabControlSettings.Controls.Add(this.tabPageQuotation);
             this.tabControlSettings.Location = new System.Drawing.Point(12, 12);
@@ -100,6 +105,37 @@
             this.tabControlSettings.ShowToolTips = true;
             this.tabControlSettings.Size = new System.Drawing.Size(561, 376);
             this.tabControlSettings.TabIndex = 0;
+            // 
+            // tabPageGeneral
+            // 
+            this.tabPageGeneral.Controls.Add(this.ddlSummaryLocation);
+            this.tabPageGeneral.Controls.Add(this.lblSummaryLocation);
+            this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
+            this.tabPageGeneral.Name = "tabPageGeneral";
+            this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageGeneral.Size = new System.Drawing.Size(553, 350);
+            this.tabPageGeneral.TabIndex = 3;
+            this.tabPageGeneral.Text = "General";
+            this.tabPageGeneral.ToolTipText = "General Settings";
+            this.tabPageGeneral.UseVisualStyleBackColor = true;
+            // 
+            // ddlSummaryLocation
+            // 
+            this.ddlSummaryLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlSummaryLocation.FormattingEnabled = true;
+            this.ddlSummaryLocation.Location = new System.Drawing.Point(247, 32);
+            this.ddlSummaryLocation.Name = "ddlSummaryLocation";
+            this.ddlSummaryLocation.Size = new System.Drawing.Size(121, 21);
+            this.ddlSummaryLocation.TabIndex = 3;
+            // 
+            // lblSummaryLocation
+            // 
+            this.lblSummaryLocation.AutoSize = true;
+            this.lblSummaryLocation.Location = new System.Drawing.Point(72, 35);
+            this.lblSummaryLocation.Name = "lblSummaryLocation";
+            this.lblSummaryLocation.Size = new System.Drawing.Size(94, 13);
+            this.lblSummaryLocation.TabIndex = 2;
+            this.lblSummaryLocation.Text = "Summary Location";
             // 
             // tabPageInvoice
             // 
@@ -641,6 +677,8 @@
             this.ShowInTaskbar = false;
             this.Text = "Settings";
             this.tabControlSettings.ResumeLayout(false);
+            this.tabPageGeneral.ResumeLayout(false);
+            this.tabPageGeneral.PerformLayout();
             this.tabPageInvoice.ResumeLayout(false);
             this.tabPageInvoice.PerformLayout();
             this.tabPageQuotation.ResumeLayout(false);
@@ -707,5 +745,8 @@
         private System.Windows.Forms.TextBox txtBoxHeaderTitleColorQuot;
         private System.Windows.Forms.Button btnHeaderSubTitleColorQuot;
         private System.Windows.Forms.Button btnHeaderTitleColorQuot;
+        private System.Windows.Forms.TabPage tabPageGeneral;
+        private System.Windows.Forms.ComboBox ddlSummaryLocation;
+        private System.Windows.Forms.Label lblSummaryLocation;
     }
 }

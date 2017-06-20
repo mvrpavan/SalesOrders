@@ -21,6 +21,12 @@ namespace SalesOrdersReport
         {
             try
             {
+                //Load General Settings from CommonFunctions Module
+                ddlSummaryLocation.Items.Clear();
+                ddlSummaryLocation.Items.Add("Invoice");
+                ddlSummaryLocation.Items.Add("Quotation");
+                ddlSummaryLocation.SelectedIndex = CommonFunctions.GeneralSettings.SummaryLocation;
+
                 //Load Invoice Settings from CommonFunctions Module
                 txtBoxHeaderTitleInv.Text = CommonFunctions.InvoiceSettings.HeaderTitle;
                 txtBoxHeaderSubTitleInv.Text = CommonFunctions.InvoiceSettings.HeaderSubTitle;
@@ -65,6 +71,9 @@ namespace SalesOrdersReport
         {
             try
             {
+                //Apply General Settings to CommonFunctions Module
+                CommonFunctions.UpdateSettingsFileEntry("//Settings/General/SummaryLocation", ddlSummaryLocation.SelectedIndex.ToString());
+
                 //Apply Invoice Settings to CommonFunctions Module
                 CommonFunctions.UpdateSettingsFileEntry("//Settings/Invoice/HeaderTitle", txtBoxHeaderTitleInv.Text);
                 CommonFunctions.UpdateSettingsFileEntry("//Settings/Invoice/HeaderSubTitle", txtBoxHeaderSubTitleInv.Text);

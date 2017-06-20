@@ -24,6 +24,11 @@ namespace SalesOrdersReport
         public Color HeaderTitleColor, HeaderSubTitleColor, FooterTitleColor, FooterTextColor;
     }
 
+    class GeneralSettings
+    {
+        public Int32 SummaryLocation = 0;
+    }
+
     class CommonFunctions
     {
         public static String MainFormTitleText, LogoFileName;
@@ -100,6 +105,7 @@ namespace SalesOrdersReport
         static Boolean SettingsFileEntryModified = false;
         public static XmlDocument SettingXmlDoc;
         public static ReportSettings InvoiceSettings, QuotationSettings;
+        public static GeneralSettings GeneralSettings;
 
         public static void LoadSettingsFile()
         {
@@ -123,6 +129,19 @@ namespace SalesOrdersReport
                     {
                         if (Attribute.NodeType == XmlNodeType.CDATA || Attribute.NodeType == XmlNodeType.Comment) continue;
                         AddKeyValueToDictionarySettings("//Settings/Application/" + item.Name + "/@" + Attribute.Name, Attribute.Value);
+                    }
+                }
+
+                XmlNode GeneralNode;
+                XMLFileUtils.GetChildNode(SettingsNode, "General", out GeneralNode);
+                foreach (XmlNode item in GeneralNode.ChildNodes)
+                {
+                    if (item.NodeType == XmlNodeType.CDATA || item.NodeType == XmlNodeType.Comment) continue;
+                    if (!String.IsNullOrEmpty(item.InnerText)) AddKeyValueToDictionarySettings("//Settings/General/" + item.Name, item.InnerText);
+                    foreach (XmlAttribute Attribute in item.Attributes)
+                    {
+                        if (Attribute.NodeType == XmlNodeType.CDATA || Attribute.NodeType == XmlNodeType.Comment) continue;
+                        AddKeyValueToDictionarySettings("//Settings/General/" + item.Name + "/@" + Attribute.Name, Attribute.Value);
                     }
                 }
 
@@ -178,6 +197,10 @@ namespace SalesOrdersReport
                 ReportAppendRowsAtBottom = Int32.Parse(GetSettingsFileEntry("//Settings/Application/ReportAppendRowsAtBottom").InnerText);
                 LogoFileName = GetSettingsFileEntry("//Settings/Application/LogoFileName").InnerText;
                 LogoImageHeight = Int32.Parse(GetSettingsFileEntry("//Settings/Application/LogoImageHeight").InnerText);
+
+                //General Settings
+                GeneralSettings = new GeneralSettings();
+                GeneralSettings.SummaryLocation = Int32.Parse(GetSettingsFileEntry("//Settings/General/SummaryLocation").InnerText);
 
                 //Invoice Settings
                 InvoiceSettings = new ReportSettings();

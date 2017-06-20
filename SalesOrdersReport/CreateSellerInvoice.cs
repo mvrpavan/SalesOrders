@@ -233,7 +233,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                Boolean PrintVATPercent = false, PrintOldBalance = false;
+                Boolean PrintVATPercent = false, PrintOldBalance = false, CreateSummary = false;
                 ReportSettings CurrReportSettings = null;
                 String ReportTypeName = "", BillNumberText = "", SaveFileName = "", LastNumberKey = "";
                 switch (EnumReportType)
@@ -245,6 +245,7 @@ namespace SalesOrdersReport
                         BillNumberText = "Invoice#";
                         SaveFileName = txtBoxOutputFolder.Text + "\\Invoice_" + SelectedDateTimeString + ".xlsx";
                         LastNumberKey = "//Settings/Invoice/LastInvoiceNumber";
+                        if (CommonFunctions.GeneralSettings.SummaryLocation == 0) CreateSummary = true;
                         break;
                     case ReportType.QUOTATION:
                         CurrReportSettings = CommonFunctions.QuotationSettings;
@@ -253,6 +254,7 @@ namespace SalesOrdersReport
                         BillNumberText = "Quotation#";
                         SaveFileName = txtBoxOutputFolder.Text + "\\Quotation_" + SelectedDateTimeString + ".xlsx";
                         LastNumberKey = "//Settings/Quotation/LastQuotationNumber";
+                        if (CommonFunctions.GeneralSettings.SummaryLocation == 1) CreateSummary = true;
                         break;
                     default:
                         return;
@@ -395,7 +397,11 @@ namespace SalesOrdersReport
                     Excel.Range xlRangeSaleQtyFrom = xlWorkSheet.Cells[1 + InvoiceStartRow + 1, SalQtyColNum];
                     Excel.Range xlRangeSaleQtyTo = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset - 1, SalQtyColNum];
                     Excel.Range xlRangeTotalCost = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + TotalCostRowOffset, TotalColNum];
-                    drSellers[ListSellerIndexes[i]]["Total"] = "='" + xlWorkSheet.Name + "'!" + xlRangeTotalCost.Address[false, false];
+                    Excel.Range xlRangeSaleTotal = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum];
+                    if (EnumReportType == ReportType.INVOICE)
+                        drSellers[ListSellerIndexes[i]]["Total"] = "='" + xlWorkSheet.Name + "'!" + xlRangeTotalCost.Address[false, false];
+                    else if (EnumReportType == ReportType.QUOTATION)
+                        drSellers[ListSellerIndexes[i]]["Total"] = "='" + xlWorkSheet.Name + "'!" + xlRangeSaleTotal.Address[false, false];
                     drSellers[ListSellerIndexes[i]]["Quantity"] = "=Sum('" + xlWorkSheet.Name + "'!" + xlRangeSaleQtyFrom.Address[false, false] + ":" + xlRangeSaleQtyTo.Address[false, false] + ")";
 
                     #region Sales Total Row
@@ -488,7 +494,7 @@ namespace SalesOrdersReport
                 }
                 #endregion
 
-                if (chkBoxCreateSummary.Checked && !SummaryPrinted)
+                if (chkBoxCreateSummary.Checked && !SummaryPrinted && CreateSummary)
                 {
                     CreateSellerSummarySheet(drSellers, xlWorkbook, CurrReportSettings);
                     CreateItemSummarySheet(drItems, xlWorkbook, CurrReportSettings);

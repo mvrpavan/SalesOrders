@@ -7,6 +7,9 @@
     <ReportRowsFromTop>7</ReportRowsFromTop>
     <ReportAppendRowsAtBottom>7</ReportAppendRowsAtBottom>
   </Application>
+  <General>
+    <SummaryLocation>0</SummaryLocation>
+  </General>
   <Invoice>
     <HeaderTitle>Invoice</HeaderTitle>
     <HeaderSubTitle>
