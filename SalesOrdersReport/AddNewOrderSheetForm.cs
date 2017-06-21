@@ -175,7 +175,7 @@ namespace SalesOrdersReport
 
                 CommonFunctions.ReleaseCOMObject(xlWorkbook);
                 backgroundWorker1.ReportProgress(100);
-                MessageBox.Show("Created Sales Order Sheet Successfully", "Status", MessageBoxButtons.OK);
+                MessageBox.Show(this, "Created Sales Order Sheet Successfully", "Status", MessageBoxButtons.OK);
             }
             catch (Exception ex)
             {

@@ -33,10 +33,13 @@ namespace SalesOrdersReport
     {
         public static String MainFormTitleText, LogoFileName;
         public static Int32 ReportRowsFromTop, ReportAppendRowsAtBottom, LogoImageHeight;
+        public static List<String> ListLines, ListSelectedSellers;
 
         public static void Initialize()
         {
             LoadSettingsFile();
+
+            ListSelectedSellers = new List<String>();
         }
 
         public static void ShowErrorDialog(String Method, Exception ex)

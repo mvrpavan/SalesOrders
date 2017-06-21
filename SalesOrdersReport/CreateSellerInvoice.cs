@@ -18,9 +18,10 @@ namespace SalesOrdersReport
     public partial class CreateSellerInvoice : Form
     {
         Form MainForm = null;
-        String MasterFilePath;
+        public String MasterFilePath;
         Excel.Application xlApp;
         Boolean SummaryPrinted = false;
+        CheckState PrevAllLinesCheckState = CheckState.Indeterminate;
 
         public CreateSellerInvoice(Form ParentForm)
         {
@@ -36,6 +37,8 @@ namespace SalesOrdersReport
                 progressBar1.Value = 0;
 
                 lblStatus.Text = "";
+                CommonFunctions.ListSelectedSellers.Clear();
+                FillLineFromOrderMaster();
             }
             catch (Exception ex)
             {
@@ -83,6 +86,55 @@ namespace SalesOrdersReport
             return null;
         }
 
+        private void FillLineFromOrderMaster()
+        {
+            try
+            {
+                CommonFunctions.ListLines = new List<String>();
+                DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", MasterFilePath, "*");
+                Boolean ContainsBlanks = false;
+                for (int i = 0; i < dtSellerMaster.Rows.Count; i++)
+                {
+                    DataRow dtRow = dtSellerMaster.Rows[i];
+                    String Line = dtRow["Line"].ToString().Replace("<", "").Replace(">", "").ToUpper();
+                    if (Line.Trim().Length == 0) ContainsBlanks = true;
+                    else if (!CommonFunctions.ListLines.Contains(Line)) CommonFunctions.ListLines.Add(Line);
+                }
+
+                CommonFunctions.ListLines.Sort();
+                CommonFunctions.ListLines.Insert(0, "<All>");
+                if (ContainsBlanks) CommonFunctions.ListLines.Add("<Blanks>");
+
+                chkListBoxLine.Items.Clear();
+                for (int i = 0; i < CommonFunctions.ListLines.Count; i++)
+                {
+                    chkListBoxLine.Items.Add(CommonFunctions.ListLines[i], true);
+                }
+
+                PrevAllLinesCheckState = CheckState.Checked;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("FillLineFromOrderMaster", ex);
+            }
+        }
+
+        public void UpdateSelectedSellersList()
+        {
+            try
+            {
+                listBoxSellers.Items.Clear();
+                for (int i = 0; i < CommonFunctions.ListSelectedSellers.Count; i++)
+                {
+                    listBoxSellers.Items.Add(CommonFunctions.ListSelectedSellers[i]);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("UpdateSelectedSellersList", ex);
+            }
+        }
+
         private void btnCreateInvoice_Click(object sender, EventArgs e)
         {
             //backgroundWorker1_DoWork(null, null);
@@ -122,6 +174,17 @@ namespace SalesOrdersReport
                 DataTable dtItemMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("ItemMaster", MasterFilePath, "*");
                 DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", MasterFilePath, "*");
                 List<String> ListVendors = dtItemMaster.AsEnumerable().Select(s => s.Field<String>("VendorName")).Distinct().ToList();
+                String[] SelectedLine = new String[chkListBoxLine.CheckedItems.Count];
+                chkListBoxLine.CheckedItems.CopyTo(SelectedLine, 0);
+
+                if (SelectedLine.Length == 0 && CommonFunctions.ListSelectedSellers.Count == 0)
+                {
+                    btnCancel.Enabled = true;
+                    btnCreateInvoice.Enabled = true;
+                    MessageBox.Show(this, "No Line/Sellers are selected\nUnable to create Invoice/Quoation", "Status", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    lblStatus.Text = "Select any Line/Sellers";
+                    return;
+                }
 
                 dtItemMaster.Columns.Add("Quantity", Type.GetType("System.Double"));
                 DataRow[] drItems = dtItemMaster.Select("", "SlNo asc");
@@ -169,15 +232,6 @@ namespace SalesOrdersReport
                 {
                     if (xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value == null) continue;
                     if (xlSalesOrderWorksheet.Cells[i, StartColumn + 2].Value == null) continue;
-
-                    Excel.Range CountCell = xlSalesOrderWorksheet.Cells[i, StartColumn + 1];
-                    Double CountItems = Double.Parse(CountCell.Value.ToString());
-                    if (CountItems <= 1E-6)
-                    {
-                        ListSellerIndexes.Add(-1);
-                        continue;
-                    }
-
                     String SellerName = xlSalesOrderWorksheet.Cells[i, StartColumn + 2].Value;
                     Int32 SellerIndex = -1;
                     for (int j = 0; j < drSellers.Length; j++)
@@ -188,6 +242,24 @@ namespace SalesOrdersReport
                             break;
                         }
                     }
+
+                    String Line = drSellers[SellerIndex]["Line"].ToString().Replace("<", "").Replace(">", "").ToUpper();
+                    if (Line.Trim().Length == 0) Line = "<Blanks>";
+
+                    if (!SelectedLine.Contains(Line) && !CommonFunctions.ListSelectedSellers.Contains(SellerName))
+                    {
+                        ListSellerIndexes.Add(-1);
+                        continue;
+                    }
+
+                    Excel.Range CountCell = xlSalesOrderWorksheet.Cells[i, StartColumn + 1];
+                    Double CountItems = Double.Parse(CountCell.Value.ToString());
+                    if (CountItems <= 1E-6)
+                    {
+                        ListSellerIndexes.Add(-1);
+                        continue;
+                    }
+
                     ListSellerIndexes.Add(SellerIndex);
                 }
                 #endregion
@@ -214,8 +286,7 @@ namespace SalesOrdersReport
 
                 btnCancel.Enabled = true;
                 btnCreateInvoice.Enabled = true;
-                //if (xlWorkbook != null) CommonFunctions.ReleaseCOMObject(xlWorkbook);
-                MessageBox.Show("Invoice/Quotation generated sucessfully", "Status", MessageBoxButtons.OK);
+                MessageBox.Show(this, "Invoice/Quotation generated sucessfully", "Status", MessageBoxButtons.OK);
                 lblStatus.Text = "Click \"Close Window\" to close this window";
             }
             catch (Exception ex)
@@ -260,8 +331,6 @@ namespace SalesOrdersReport
                         return;
                 }
                 Excel.Worksheet xlSalesOrderWorksheet = xlWorkbook.Sheets[1];
-
-                //txtBoxInvoiceStartNumber.Text = CurrReportSettings.LastNumber.ToString();
 
                 #region Print Invoice Sheet for each Seller
                 Double Quantity;//, Total;//, TotalQuantity;
@@ -846,6 +915,52 @@ namespace SalesOrdersReport
         {
             if (chkBoxCreateQuotation.Checked) return;
             else if (!chkBoxCreateInvoice.Checked) chkBoxCreateInvoice.Checked = true;
+        }
+
+        private void chkListBoxLine_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (chkListBoxLine.SelectedIndex == 0)
+                {
+                    CheckState checkstate = chkListBoxLine.GetItemCheckState(0);
+                    if (PrevAllLinesCheckState != checkstate)
+                    {
+                        for (int i = 1; i < chkListBoxLine.Items.Count; i++)
+                        {
+                            chkListBoxLine.SetItemCheckState(i, checkstate);
+                        }
+                    }
+                }
+                else if (chkListBoxLine.GetItemCheckState(chkListBoxLine.SelectedIndex) == CheckState.Unchecked)
+                {
+                    chkListBoxLine.SetItemCheckState(0, CheckState.Unchecked);
+                }
+                else if (chkListBoxLine.CheckedItems.Count == chkListBoxLine.Items.Count - 1)
+                {
+                    chkListBoxLine.SetItemCheckState(0, CheckState.Checked);
+                }
+
+                PrevAllLinesCheckState = chkListBoxLine.GetItemCheckState(0);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("chkListBoxLine_SelectedIndexChanged", ex);
+            }
+        }
+
+        private void btnAddSeller_Click(object sender, EventArgs e)
+        {
+            SellerList ObjSellersListForm = new SellerList(this);
+            ObjSellersListForm.ShowDialog(this);
+        }
+
+        private void chkListBoxLine_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == ' ')
+            {
+                chkListBoxLine_SelectedIndexChanged(null, null);
+            }
         }
     }
 }

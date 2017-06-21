@@ -127,6 +127,24 @@
     <value>326, 16</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnAddSeller.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAALUSURBVDhPbZLrS1NhHMfPQk33wlZhphUZEREVtuY2L3P3
+        7Wxz6jY1LYLE6EX0F/QmIoIomGmWMk6gkEoXKbrRjYy9ULLMwMs2t+kKo5x5IejNmOf59fwedRb0sC88
+        fL/fz/ecsXGpI+G4rNxMifzCQYXrE++rn64M18cqE0z07v5s8x29dFghzc+ScBtWmdShRp5xm7R62CLU
+        RZ3JY9NOkYKkIVbFhHf0MKsesQo7+Fzp+gh98nZDjtQdsPlrow6xdspB6qYryNmvjfBo6T70Ld6Fpi8N
+        gB5m2PEEbf586+pIZs5GScWQUfBEbGJN1E5qpuxAi9A93wlJkmRqi3sBfSbawa5z2CRk5WVKuEPn9yvc
+        k3zSHeGJO8oDipagZ6ELRCLCMlmGm/Fm5q3lrBvmk4UXDyg4flDnq45YRFfUmhrwRG3QQ98AB1A4gB5m
+        LiYrQcb+Ue/jKsPmcFXEQppix1mxPd4CHfFWGPo9CIQQNtD/6w3zMGub9cLJqRpABlnOOWlKVIXN5OXS
+        U/Z9RfrKCBEmkhpZ0TLr9Mx3ATLIco6gIUEv5MXCk38GVkb+P9A91wnIIMvxo9qwPaQnp0L10BZrhlux
+        FmiPtcL7xYEU/Pbna+ZhdiPmhYaQC5BBlit/rvTxwXLRFtISe0hHAx04QgbomhNST77+4yr19CxDYRcZ
+        3Su1j9t7ZrfCMqpJWgIaYg1qAMUHtdC5OoA/o/f7Feat5dhFZt+5AgWXLkuXlD0uEkzjpaJpooyYA2VY
+        gNuzHez7oq59uwxm6mGGHexqnimFjK0Z9H9MPzJ5tlTbr/Ibx0pE40QJMQVKyYmgB+7N9ELvzB3wBOyA
+        HmbY0b5T+bcoZVJkVw6OHMmWFvfJBf2IOqkfU4uG8WJiHKcAFd7Rw6zkoVzYXLTpL3jtUCNdliYpaNyp
+        UD0o9JUPKMPaD6oECu/qvkLfntO7FBlb0iTrMMf9Ad6lRtA/R7nqAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAoAMDAAAAEACACoDgAApgAAACAgAAABAAgAqAgAAE4PAAAQEAAAAQAIAGgFAAD2FwAAAAAAAAEA
