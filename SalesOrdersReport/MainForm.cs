@@ -16,8 +16,11 @@ namespace SalesOrdersReport
             CommonFunctions.Initialize();
 
             InitializeComponent();
+
             btnNewOrderSheet.Enabled = false;
             btnCreateEachSellerInvoice.Enabled = false;
+            btnUpdateOrderMaster.Enabled = false;
+
             this.Text = CommonFunctions.MainFormTitleText;
             lblVersion.Text = Application.ProductVersion;
         }
@@ -30,6 +33,7 @@ namespace SalesOrdersReport
                 txtBoxFileName.Text = openFileDialog1.FileName;
                 btnNewOrderSheet.Enabled = true;
                 btnCreateEachSellerInvoice.Enabled = true;
+                btnUpdateOrderMaster.Enabled = true;
             }
         }
 
@@ -59,6 +63,12 @@ namespace SalesOrdersReport
         {
             SettingsForm ObjSettingsForm = new SettingsForm();
             ObjSettingsForm.ShowDialog(this);
+        }
+
+        private void btnUpdateOrderMaster_Click(object sender, EventArgs e)
+        {
+            UpdateOrderMasterForm ObjUpdateOrderMasterForm = new UpdateOrderMasterForm(this);
+            ObjUpdateOrderMasterForm.ShowDialog(this);
         }
     }
 }

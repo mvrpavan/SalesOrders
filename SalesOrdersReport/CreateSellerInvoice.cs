@@ -69,23 +69,6 @@ namespace SalesOrdersReport
             }
         }
 
-        private Excel.Worksheet GetWorksheet(Excel.Workbook ObjWorkbook, String Sheetname)
-        {
-            try
-            {
-                for (int i = 1; i <= ObjWorkbook.Sheets.Count; i++)
-                {
-                    if (ObjWorkbook.Worksheets[i].Name.Equals(Sheetname, StringComparison.InvariantCultureIgnoreCase))
-                        return ObjWorkbook.Worksheets[i];
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("GetWorksheet", ex);
-            }
-            return null;
-        }
-
         private void FillLineFromOrderMaster()
         {
             try
@@ -203,7 +186,7 @@ namespace SalesOrdersReport
                 String SalesOrderFile = txtBoxOtherFile.Text;
 
                 Excel.Workbook xlSalesOrderWorkbook = xlApp.Workbooks.Open(SalesOrderFile);
-                Excel.Worksheet xlSalesOrderWorksheet = GetWorksheet(xlSalesOrderWorkbook, SelectedDateTimeString);
+                Excel.Worksheet xlSalesOrderWorksheet = CommonFunctions.GetWorksheet(xlSalesOrderWorkbook, SelectedDateTimeString);
                 Int32 StartRow = 5, StartColumn = 1;
 
                 #region Identify Items in SalesOrderSheet
@@ -242,6 +225,8 @@ namespace SalesOrdersReport
                             break;
                         }
                     }
+
+                    if (SellerIndex < 0) continue;
 
                     String Line = drSellers[SellerIndex]["Line"].ToString().Replace("<", "").Replace(">", "").ToUpper();
                     if (Line.Trim().Length == 0) Line = "<Blanks>";
@@ -286,7 +271,7 @@ namespace SalesOrdersReport
 
                 btnCancel.Enabled = true;
                 btnCreateInvoice.Enabled = true;
-                MessageBox.Show(this, "Invoice/Quotation generated sucessfully", "Status", MessageBoxButtons.OK);
+                MessageBox.Show(this, "Invoice/Quotation generated successfully", "Status", MessageBoxButtons.OK);
                 lblStatus.Text = "Click \"Close Window\" to close this window";
             }
             catch (Exception ex)
