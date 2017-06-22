@@ -39,6 +39,7 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblVersion = new System.Windows.Forms.Label();
+            this.btnUpdateOrderMaster = new System.Windows.Forms.Button();
             this.menuStripMainForm.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,7 +53,7 @@
             this.btnMasterFileBrowse.Name = "btnMasterFileBrowse";
             this.btnMasterFileBrowse.Size = new System.Drawing.Size(75, 23);
             this.btnMasterFileBrowse.TabIndex = 1;
-            this.btnMasterFileBrowse.Text = "Browse";
+            this.btnMasterFileBrowse.Text = "&Browse";
             this.btnMasterFileBrowse.UseVisualStyleBackColor = true;
             this.btnMasterFileBrowse.Click += new System.EventHandler(this.btnMasterFileBrowse_Click);
             // 
@@ -76,19 +77,19 @@
             // 
             this.btnNewOrderSheet.Location = new System.Drawing.Point(112, 119);
             this.btnNewOrderSheet.Name = "btnNewOrderSheet";
-            this.btnNewOrderSheet.Size = new System.Drawing.Size(263, 73);
+            this.btnNewOrderSheet.Size = new System.Drawing.Size(263, 51);
             this.btnNewOrderSheet.TabIndex = 2;
-            this.btnNewOrderSheet.Text = "Add New Order Sheet";
+            this.btnNewOrderSheet.Text = "Add &New Order Sheet";
             this.btnNewOrderSheet.UseVisualStyleBackColor = true;
             this.btnNewOrderSheet.Click += new System.EventHandler(this.btnNewOrderSheet_Click);
             // 
             // btnCreateEachSellerInvoice
             // 
-            this.btnCreateEachSellerInvoice.Location = new System.Drawing.Point(112, 217);
+            this.btnCreateEachSellerInvoice.Location = new System.Drawing.Point(112, 189);
             this.btnCreateEachSellerInvoice.Name = "btnCreateEachSellerInvoice";
-            this.btnCreateEachSellerInvoice.Size = new System.Drawing.Size(263, 73);
+            this.btnCreateEachSellerInvoice.Size = new System.Drawing.Size(263, 51);
             this.btnCreateEachSellerInvoice.TabIndex = 3;
-            this.btnCreateEachSellerInvoice.Text = "Create Invoice for each Seller";
+            this.btnCreateEachSellerInvoice.Text = "Create &Invoice for each Seller";
             this.btnCreateEachSellerInvoice.UseVisualStyleBackColor = true;
             this.btnCreateEachSellerInvoice.Click += new System.EventHandler(this.btnCreateEachSellerInvoice_Click);
             // 
@@ -134,12 +135,23 @@
             this.lblVersion.TabIndex = 5;
             this.lblVersion.Text = "Version";
             // 
+            // btnUpdateOrderMaster
+            // 
+            this.btnUpdateOrderMaster.Location = new System.Drawing.Point(112, 259);
+            this.btnUpdateOrderMaster.Name = "btnUpdateOrderMaster";
+            this.btnUpdateOrderMaster.Size = new System.Drawing.Size(263, 51);
+            this.btnUpdateOrderMaster.TabIndex = 4;
+            this.btnUpdateOrderMaster.Text = "Update &Order Master";
+            this.btnUpdateOrderMaster.UseVisualStyleBackColor = true;
+            this.btnUpdateOrderMaster.Click += new System.EventHandler(this.btnUpdateOrderMaster_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(490, 386);
             this.Controls.Add(this.lblVersion);
+            this.Controls.Add(this.btnUpdateOrderMaster);
             this.Controls.Add(this.btnCreateEachSellerInvoice);
             this.Controls.Add(this.btnNewOrderSheet);
             this.Controls.Add(this.label1);
@@ -152,6 +164,7 @@
             this.MainMenuStrip = this.menuStripMainForm;
             this.MaximizeBox = false;
             this.Name = "MainForm";
+            this.Text = "Main Form";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStripMainForm.ResumeLayout(false);
             this.menuStripMainForm.PerformLayout();
@@ -172,6 +185,7 @@
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Label lblVersion;
+        private System.Windows.Forms.Button btnUpdateOrderMaster;
 
     }
 }

@@ -8,6 +8,7 @@ using System.Data.OleDb;
 using System.IO;
 using System.Xml;
 using System.Drawing;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace SalesOrdersReport
 {
@@ -34,9 +35,14 @@ namespace SalesOrdersReport
         public static String MainFormTitleText, LogoFileName;
         public static Int32 ReportRowsFromTop, ReportAppendRowsAtBottom, LogoImageHeight;
         public static List<String> ListLines, ListSelectedSellers;
+        public static String AppDataFolder;
 
         public static void Initialize()
         {
+            AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SalesOrders";
+            if (!Directory.Exists(AppDataFolder)) Directory.CreateDirectory(AppDataFolder);
+            SettingsFilePath = CommonFunctions.AppDataFolder + @"\Settings.xml";
+
             LoadSettingsFile();
 
             ListSelectedSellers = new List<String>();
@@ -66,7 +72,7 @@ namespace SalesOrdersReport
         }
 
         #region "Get DataTable from Worksheet of an Excel file "
-        public static DataTable ReturnDataTableFromExcelWorksheet(String SheetName, String FilePath, String ColumnNames)
+        public static DataTable ReturnDataTableFromExcelWorksheet(String SheetName, String FilePath, String ColumnNames, String UsedRange = "")
         {
             try
             {
@@ -84,7 +90,7 @@ namespace SalesOrdersReport
                 }
 
                 //strConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + FilePath + ";Extended Properties=Excel 14.0";
-                strCommandText = "Select " + ColumnNames + " from [" + SheetName + "$]";
+                strCommandText = "Select " + ColumnNames + " from [" + SheetName + "$" + UsedRange + "]";
                 conOleDbCon = new OleDbConnection(strConnectionString);
                 cmdCommand = new OleDbCommand(strCommandText, conOleDbCon);
                 conOleDbCon.Open();
@@ -97,14 +103,31 @@ namespace SalesOrdersReport
             catch (Exception)
             {
                 Console.WriteLine("Error Occured in CommonFunctions.ReturnDataTableFromExcelWorksheet()");
-                throw;
+                return null;
             }
+        }
+
+        public static Excel.Worksheet GetWorksheet(Excel.Workbook ObjWorkbook, String Sheetname)
+        {
+            try
+            {
+                for (int i = 1; i <= ObjWorkbook.Sheets.Count; i++)
+                {
+                    if (ObjWorkbook.Worksheets[i].Name.Equals(Sheetname, StringComparison.InvariantCultureIgnoreCase))
+                        return ObjWorkbook.Worksheets[i];
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CommonFunctions.GetWorksheet", ex);
+            }
+            return null;
         }
         #endregion
 
         #region "Settings file related methods"
         static Dictionary<String, SettingDetails> DictSettingsFileEntries = new Dictionary<String, SettingDetails>();
-        static String SettingsFilePath = AppDomain.CurrentDomain.BaseDirectory + "\\Settings.xml";
+        static String SettingsFilePath;
         static Boolean SettingsFileEntryModified = false;
         public static XmlDocument SettingXmlDoc;
         public static ReportSettings InvoiceSettings, QuotationSettings;
@@ -114,7 +137,10 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (!File.Exists(SettingsFilePath)) return;
+                if (!File.Exists(SettingsFilePath))
+                {
+                    File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\Settings.xml", SettingsFilePath, false);
+                }
 
                 SettingXmlDoc = new XmlDocument();
                 SettingXmlDoc.Load(SettingsFilePath);
