@@ -17,27 +17,32 @@ namespace SalesOrdersReport
 
     public partial class CreateSellerInvoice : Form
     {
-        Form MainForm = null;
         public String MasterFilePath;
         Excel.Application xlApp;
         Boolean SummaryPrinted = false;
         CheckState PrevAllLinesCheckState = CheckState.Indeterminate;
+        ToolStripProgressBar ToolStripProgressBarMainForm;
+        ToolStripLabel ToolStripProgressBarStatus;
 
-        public CreateSellerInvoice(Form ParentForm)
+        public CreateSellerInvoice()
         {
             try
             {
                 InitializeComponent();
-                MainForm = ParentForm;
-                MasterFilePath = MainForm.Controls["txtBoxFileName"].Text;
+                MasterFilePath = CommonFunctions.MasterFilePath;
                 txtBoxOutputFolder.Text = System.IO.Path.GetDirectoryName(MasterFilePath);
 
-                progressBar1.Maximum = 100;
-                progressBar1.Step = 1;
-                progressBar1.Value = 0;
+                ToolStripProgressBarMainForm = CommonFunctions.ToolStripProgressBarMainForm;
+                ToolStripProgressBarStatus = CommonFunctions.ToolStripProgressBarMainFormStatus;
+
+                ToolStripProgressBarMainForm.Maximum = 100;
+                ToolStripProgressBarMainForm.Step = 1;
+                ToolStripProgressBarMainForm.Value = 0;
+                ToolStripProgressBarStatus.Text = "";
 
                 lblStatus.Text = "";
                 CommonFunctions.ListSelectedSellers.Clear();
+
                 FillLineFromOrderMaster();
             }
             catch (Exception ex)
@@ -291,26 +296,26 @@ namespace SalesOrdersReport
             {
                 Boolean PrintVATPercent = false, PrintOldBalance = false, CreateSummary = false;
                 ReportSettings CurrReportSettings = null;
-                String ReportTypeName = "", BillNumberText = "", SaveFileName = "", LastNumberKey = "";
+                String ReportTypeName = "", BillNumberText = "", SaveFileName = "";//, LastNumberKey = "";
                 switch (EnumReportType)
                 {
                     case ReportType.INVOICE:
-                        CurrReportSettings = CommonFunctions.InvoiceSettings;
+                        CurrReportSettings = CommonFunctions.ObjInvoiceSettings;
                         ReportTypeName = "Invoice";
                         PrintVATPercent = true;
                         BillNumberText = "Invoice#";
                         SaveFileName = txtBoxOutputFolder.Text + "\\Invoice_" + SelectedDateTimeString + ".xlsx";
-                        LastNumberKey = "//Settings/Invoice/LastInvoiceNumber";
-                        if (CommonFunctions.GeneralSettings.SummaryLocation == 0) CreateSummary = true;
+                        //LastNumberKey = "//Settings/Invoice/LastInvoiceNumber";
+                        if (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0) CreateSummary = true;
                         break;
                     case ReportType.QUOTATION:
-                        CurrReportSettings = CommonFunctions.QuotationSettings;
+                        CurrReportSettings = CommonFunctions.ObjQuotationSettings;
                         ReportTypeName = "Quotation";
                         PrintOldBalance = true;
                         BillNumberText = "Quotation#";
                         SaveFileName = txtBoxOutputFolder.Text + "\\Quotation_" + SelectedDateTimeString + ".xlsx";
-                        LastNumberKey = "//Settings/Quotation/LastQuotationNumber";
-                        if (CommonFunctions.GeneralSettings.SummaryLocation == 1) CreateSummary = true;
+                        //LastNumberKey = "//Settings/Quotation/LastQuotationNumber";
+                        if (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1) CreateSummary = true;
                         break;
                     default:
                         return;
@@ -329,7 +334,7 @@ namespace SalesOrdersReport
                 Int32 ProgressBarCount = (ValidSellerCount * ValidItemCount);
                 Int32 Counter = 0;
                 Int32 SlNoColNum = 1, ItemNameColNum = 2, OrdQtyColNum = 3, SalQtyColNum = 4, PriceColNum = 5, TotalColNum = 6;
-                Int32 SalesTotalRowOffset = 1 + CommonFunctions.ReportAppendRowsAtBottom, OldBalanceRowOffset = 2 + CommonFunctions.ReportAppendRowsAtBottom, TotalCostRowOffset = 3 + CommonFunctions.ReportAppendRowsAtBottom;
+                Int32 SalesTotalRowOffset = 1 + CommonFunctions.ObjApplicationSettings.ReportAppendRowsAtBottom, OldBalanceRowOffset = 2 + CommonFunctions.ObjApplicationSettings.ReportAppendRowsAtBottom, TotalCostRowOffset = 3 + CommonFunctions.ObjApplicationSettings.ReportAppendRowsAtBottom;
                 Int32 SellerCount = 0;
                 for (int i = 0; i < ListSellerIndexes.Count; i++)
                 {
@@ -562,7 +567,7 @@ namespace SalesOrdersReport
                 FirstWorksheet.Select();
 
                 #region Write InvoiceNumber to Settings File
-                CommonFunctions.UpdateSettingsFileEntry(LastNumberKey, InvoiceNumber.ToString());
+                //CommonFunctions.UpdateSettingsFileEntry(LastNumberKey, InvoiceNumber.ToString());
                 CurrReportSettings.LastNumber = InvoiceNumber;
                 #endregion
 
@@ -763,16 +768,16 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (!String.IsNullOrEmpty(CommonFunctions.LogoFileName))
+                if (!String.IsNullOrEmpty(CommonFunctions.ObjApplicationSettings.LogoFileName))
                 {
-                    xlWorksheet.PageSetup.RightHeaderPicture.Filename = AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.LogoFileName;
+                    xlWorksheet.PageSetup.RightHeaderPicture.Filename = AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.ObjApplicationSettings.LogoFileName;
                     xlWorksheet.PageSetup.RightHeaderPicture.ColorType = Microsoft.Office.Core.MsoPictureColorType.msoPictureAutomatic;
                     xlWorksheet.PageSetup.RightHeaderPicture.CropBottom = 0;
                     xlWorksheet.PageSetup.RightHeaderPicture.CropLeft = 0;
                     xlWorksheet.PageSetup.RightHeaderPicture.CropRight = 0;
                     xlWorksheet.PageSetup.RightHeaderPicture.CropTop = 0;
                     xlWorksheet.PageSetup.RightHeaderPicture.LockAspectRatio = Microsoft.Office.Core.MsoTriState.msoTrue;
-                    xlWorksheet.PageSetup.RightHeaderPicture.Height = CommonFunctions.LogoImageHeight;
+                    xlWorksheet.PageSetup.RightHeaderPicture.Height = CommonFunctions.ObjApplicationSettings.LogoImageHeight;
                     //xlWorksheet.PageSetup.RightHeaderPicture.Width = 30;
                     //xlWorksheet.PageSetup.Application.PrintCommunication = false;
                     //xlWorksheet.PageSetup.PrintArea = "";
@@ -872,22 +877,17 @@ namespace SalesOrdersReport
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // Change the value of the ProgressBar to the BackgroundWorker progress.
-            progressBar1.Value = Math.Min(e.ProgressPercentage, 100);
+            ToolStripProgressBarMainForm.Value = Math.Min(e.ProgressPercentage, 100);
 
             // Set the text.
-            lblProgress.Text = Math.Min(e.ProgressPercentage, 100).ToString() + "%";
+            ToolStripProgressBarStatus.Text = Math.Min(e.ProgressPercentage, 100).ToString() + "%";
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            progressBar1.Value = 0;
-            lblProgress.Text = "";
+            ToolStripProgressBarMainForm.Value = 0;
+            ToolStripProgressBarStatus.Text = "";
             btnCancel.Focus();
-        }
-
-        private void CreateSellerInvoice_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            CommonFunctions.WriteToSettingsFile();
         }
 
         private void chkBoxCreateInvoice_CheckedChanged(object sender, EventArgs e)

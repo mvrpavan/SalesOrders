@@ -44,7 +44,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;RELEASE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -69,6 +69,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
     <Compile Include="AddNewOrderSheetForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +82,12 @@
       <DependentUpon>AddNewOrderSheetForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CommonFunctions.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CreateSellerInvoice.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,11 +95,17 @@
       <DependentUpon>CreateSellerInvoice.cs</DependentUpon>
     </Compile>
     <Compile Include="ItemMaster.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="ManageProductLineForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="ManageProductLineForm.Designer.cs">
+      <DependentUpon>ManageProductLineForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrderMasterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OrderMasterForm.Designer.cs">
+      <DependentUpon>OrderMasterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,6 +115,7 @@
     <Compile Include="SellerList.Designer.cs">
       <DependentUpon>SellerList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,14 +129,23 @@
       <DependentUpon>UpdateOrderMasterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="XMLFileUtils.cs" />
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddNewOrderSheetForm.resx">
       <DependentUpon>AddNewOrderSheetForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CreateSellerInvoice.resx">
       <DependentUpon>CreateSellerInvoice.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <EmbeddedResource Include="ManageProductLineForm.resx">
+      <DependentUpon>ManageProductLineForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OrderMasterForm.resx">
+      <DependentUpon>OrderMasterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -127,6 +155,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="SellerList.resx">
       <DependentUpon>SellerList.cs</DependentUpon>
@@ -181,7 +210,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\CerenLogo.png" />
-    <Content Include="Settings.xml" />
+    <None Include="Images\Settings.png" />
+    <None Include="Images\Close_Black.png" />
+    <None Include="Images\Close_Black_VerySmall.png" />
+    <None Include="Resources\database-5-16.ico" />
+    <Content Include="Settings.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -12,40 +12,35 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace SalesOrdersReport
 {
-    class SettingDetails
-    {
-        public String Name, InnerText, XPath;
-        public String[] Values;
-    }
-
-    class ReportSettings
-    {
-        public String HeaderTitle, HeaderSubTitle, FooterTitle, Address, PhoneNumber, EMailID, VATPercent, TINNumber;
-        public Int32 LastNumber;
-        public Color HeaderTitleColor, HeaderSubTitleColor, FooterTitleColor, FooterTextColor;
-    }
-
-    class GeneralSettings
-    {
-        public Int32 SummaryLocation = 0;
-    }
-
     class CommonFunctions
     {
-        public static String MainFormTitleText, LogoFileName;
-        public static Int32 ReportRowsFromTop, ReportAppendRowsAtBottom, LogoImageHeight;
+        public static List<ProductLine> ListProductLines;
+        public static Int32 SelectedProductLineIndex;
         public static List<String> ListLines, ListSelectedSellers;
         public static String AppDataFolder;
+        public static String MasterFilePath;
+        public static ToolStripProgressBar ToolStripProgressBarMainForm;
+        public static ToolStripLabel ToolStripProgressBarMainFormStatus;
 
         public static void Initialize()
         {
-            AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SalesOrders";
-            if (!Directory.Exists(AppDataFolder)) Directory.CreateDirectory(AppDataFolder);
-            SettingsFilePath = CommonFunctions.AppDataFolder + @"\Settings.xml";
+            try
+            {
+                AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SalesOrders";
+                if (!Directory.Exists(AppDataFolder)) Directory.CreateDirectory(AppDataFolder);
+                SettingsFilePath = CommonFunctions.AppDataFolder + @"\Settings.xml";
 
-            LoadSettingsFile();
+                ListProductLines = new List<ProductLine>();
+                SelectedProductLineIndex = 1;
 
-            ListSelectedSellers = new List<String>();
+                LoadSettingsFile();
+
+                ListSelectedSellers = new List<String>();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.Initialize()", ex);
+            }
         }
 
         public static void ShowErrorDialog(String Method, Exception ex)
@@ -126,12 +121,13 @@ namespace SalesOrdersReport
         #endregion
 
         #region "Settings file related methods"
-        static Dictionary<String, SettingDetails> DictSettingsFileEntries = new Dictionary<String, SettingDetails>();
+        static XmlDocument SettingXmlDoc;
         static String SettingsFilePath;
         static Boolean SettingsFileEntryModified = false;
-        public static XmlDocument SettingXmlDoc;
-        public static ReportSettings InvoiceSettings, QuotationSettings;
-        public static GeneralSettings GeneralSettings;
+        static XmlNode ProductLinesNode;
+        public static ApplicationSettings ObjApplicationSettings;
+        public static GeneralSettings ObjGeneralSettings;
+        public static ReportSettings ObjInvoiceSettings, ObjQuotationSettings;
 
         public static void LoadSettingsFile()
         {
@@ -150,61 +146,75 @@ namespace SalesOrdersReport
 
                 XmlNode ApplicationNode;
                 XMLFileUtils.GetChildNode(SettingsNode, "Application", out ApplicationNode);
-                foreach (XmlNode item in ApplicationNode.ChildNodes)
+                ObjApplicationSettings = new ApplicationSettings();
+                ObjApplicationSettings.ReadSettingsFromNode(ApplicationNode);
+
+                ListProductLines.Clear();
+                XMLFileUtils.GetChildNode(SettingsNode, "ProductLines", out ProductLinesNode);
+                foreach (XmlNode item in ProductLinesNode.ChildNodes)
                 {
                     if (item.NodeType == XmlNodeType.CDATA || item.NodeType == XmlNodeType.Comment) continue;
-                    if (!String.IsNullOrEmpty(item.InnerText)) AddKeyValueToDictionarySettings("//Settings/Application/" + item.Name, item.InnerText);
-                    foreach (XmlAttribute Attribute in item.Attributes)
+                    ProductLine ObjProductLine = new ProductLine();
+                    if (ObjProductLine.LoadDetailsFromNode(item))
                     {
-                        if (Attribute.NodeType == XmlNodeType.CDATA || Attribute.NodeType == XmlNodeType.Comment) continue;
-                        AddKeyValueToDictionarySettings("//Settings/Application/" + item.Name + "/@" + Attribute.Name, Attribute.Value);
+                        ListProductLines.Add(ObjProductLine);
                     }
                 }
 
-                XmlNode GeneralNode;
-                XMLFileUtils.GetChildNode(SettingsNode, "General", out GeneralNode);
-                foreach (XmlNode item in GeneralNode.ChildNodes)
-                {
-                    if (item.NodeType == XmlNodeType.CDATA || item.NodeType == XmlNodeType.Comment) continue;
-                    if (!String.IsNullOrEmpty(item.InnerText)) AddKeyValueToDictionarySettings("//Settings/General/" + item.Name, item.InnerText);
-                    foreach (XmlAttribute Attribute in item.Attributes)
-                    {
-                        if (Attribute.NodeType == XmlNodeType.CDATA || Attribute.NodeType == XmlNodeType.Comment) continue;
-                        AddKeyValueToDictionarySettings("//Settings/General/" + item.Name + "/@" + Attribute.Name, Attribute.Value);
-                    }
-                }
+                SelectProductLine(SelectedProductLineIndex);
 
-                XmlNode InvoiceNode;
-                XMLFileUtils.GetChildNode(SettingsNode, "Invoice", out InvoiceNode);
-                foreach (XmlNode item in InvoiceNode.ChildNodes)
-                {
-                    if (item.NodeType == XmlNodeType.CDATA || item.NodeType == XmlNodeType.Comment) continue;
-                    if (!String.IsNullOrEmpty(item.InnerText)) AddKeyValueToDictionarySettings("//Settings/Invoice/" + item.Name, item.InnerText);
-                    foreach (XmlAttribute Attribute in item.Attributes)
-                    {
-                        if (Attribute.NodeType == XmlNodeType.CDATA || Attribute.NodeType == XmlNodeType.Comment) continue;
-                        AddKeyValueToDictionarySettings("//Settings/Invoice/" + item.Name + "/@" + Attribute.Name, Attribute.Value);
-                    }
-                }
-
-                XmlNode QuotationNode;
-                XMLFileUtils.GetChildNode(SettingsNode, "Quotation", out QuotationNode);
-                foreach (XmlNode item in QuotationNode.ChildNodes)
-                {
-                    if (item.NodeType == XmlNodeType.CDATA || item.NodeType == XmlNodeType.Comment) continue;
-                    if (!String.IsNullOrEmpty(item.InnerText)) AddKeyValueToDictionarySettings("//Settings/Quotation/" + item.Name, item.InnerText);
-                    foreach (XmlAttribute Attribute in item.Attributes)
-                    {
-                        if (Attribute.NodeType == XmlNodeType.CDATA || Attribute.NodeType == XmlNodeType.Comment) continue;
-                        AddKeyValueToDictionarySettings("//Settings/Quotation/" + item.Name + "/@" + Attribute.Name, Attribute.Value);
-                    }
-                }
-
-                SetAllParameters();
+                SettingXmlDoc.NodeChanged += new XmlNodeChangedEventHandler(SettingXmlDoc_NodeChanged);
             }
             catch (Exception ex)
             {
-                ShowErrorDialog("LoadSettingsFile", ex);
+                ShowErrorDialog("CommonFunctions.LoadSettingsFile()", ex);
+            }
+        }
+
+        static void SettingXmlDoc_NodeChanged(object sender, XmlNodeChangedEventArgs e)
+        {
+            try
+            {
+                if (e.OldValue.Equals(e.NewValue)) return;
+                SettingsFileEntryModified = true;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.SettingXmlDoc_NodeChanged()", ex);
+            }
+        }
+
+        public static void SelectProductLine(Int32 Index)
+        {
+            try
+            {
+                SelectedProductLineIndex = Index;
+
+                ObjGeneralSettings = ListProductLines[SelectedProductLineIndex].ObjSettings.GeneralSettings;
+                ObjInvoiceSettings = ListProductLines[SelectedProductLineIndex].ObjSettings.InvoiceSettings;
+                ObjQuotationSettings = ListProductLines[SelectedProductLineIndex].ObjSettings.QuotationSettings;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.SelectProductLine()", ex);
+                throw;
+            }
+        }
+
+        public static void AddNewProductLine(String Name, Int32 UseSettingsOfProductLineIndex)
+        {
+            try
+            {
+                XmlNode ProductLineNode = ListProductLines[UseSettingsOfProductLineIndex].ProductLineNode.CloneNode(true);
+                ProductLine ObjProductLine = new ProductLine();
+                XMLFileUtils.SetAttributeValue(ProductLineNode, "Name", Name);
+                ObjProductLine.LoadDetailsFromNode(ProductLineNode);
+                ListProductLines.Add(ObjProductLine);
+                ProductLinesNode.AppendChild(ProductLineNode);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.AddNewProductLine()", ex);
             }
         }
 
@@ -216,146 +226,26 @@ namespace SalesOrdersReport
                 return Color.FromArgb(Int32.Parse(ColorArgb));
         }
 
-        private static void SetAllParameters()
-        {
-            try
-            {
-                #region Set all Parameters
-                MainFormTitleText = GetSettingsFileEntry("//Settings/Application/MainFormTitle").InnerText;
-                ReportRowsFromTop = Int32.Parse(GetSettingsFileEntry("//Settings/Application/ReportRowsFromTop").InnerText);
-                ReportAppendRowsAtBottom = Int32.Parse(GetSettingsFileEntry("//Settings/Application/ReportAppendRowsAtBottom").InnerText);
-                LogoFileName = GetSettingsFileEntry("//Settings/Application/LogoFileName").InnerText;
-                LogoImageHeight = Int32.Parse(GetSettingsFileEntry("//Settings/Application/LogoImageHeight").InnerText);
-
-                //General Settings
-                GeneralSettings = new GeneralSettings();
-                GeneralSettings.SummaryLocation = Int32.Parse(GetSettingsFileEntry("//Settings/General/SummaryLocation").InnerText);
-
-                //Invoice Settings
-                InvoiceSettings = new ReportSettings();
-                InvoiceSettings.HeaderTitle = GetSettingsFileEntry("//Settings/Invoice/HeaderTitle").InnerText;
-                InvoiceSettings.HeaderSubTitle = GetSettingsFileEntry("//Settings/Invoice/HeaderSubTitle").InnerText;
-                InvoiceSettings.HeaderTitleColor = GetColor(GetSettingsFileEntry("//Settings/Invoice/HeaderTitleColor").InnerText);
-                InvoiceSettings.HeaderSubTitleColor = GetColor(GetSettingsFileEntry("//Settings/Invoice/HeaderSubTitleColor").InnerText);
-                InvoiceSettings.FooterTitle = GetSettingsFileEntry("//Settings/Invoice/FooterTitle").InnerText;
-                InvoiceSettings.FooterTitleColor = GetColor(GetSettingsFileEntry("//Settings/Invoice/FooterTitleColor").InnerText);
-                InvoiceSettings.FooterTextColor = GetColor(GetSettingsFileEntry("//Settings/Invoice/FooterTextColor").InnerText);
-                InvoiceSettings.Address = GetSettingsFileEntry("//Settings/Invoice/Address").InnerText;
-                InvoiceSettings.PhoneNumber = GetSettingsFileEntry("//Settings/Invoice/PhoneNumber").InnerText;
-                InvoiceSettings.EMailID = GetSettingsFileEntry("//Settings/Invoice/EMailID").InnerText;
-                InvoiceSettings.VATPercent = GetSettingsFileEntry("//Settings/Invoice/VATPercent").InnerText;
-                InvoiceSettings.TINNumber = GetSettingsFileEntry("//Settings/Invoice/TINNumber").InnerText;
-                if (String.IsNullOrEmpty(GetSettingsFileEntry("//Settings/Invoice/LastInvoiceNumber").InnerText))
-                    InvoiceSettings.LastNumber = 0;
-                else
-                    InvoiceSettings.LastNumber = Int32.Parse(GetSettingsFileEntry("//Settings/Invoice/LastInvoiceNumber").InnerText);
-
-                //Quotation Settings
-                QuotationSettings = new ReportSettings();
-                QuotationSettings.HeaderTitle = GetSettingsFileEntry("//Settings/Quotation/HeaderTitle").InnerText;
-                QuotationSettings.HeaderSubTitle = GetSettingsFileEntry("//Settings/Quotation/HeaderSubTitle").InnerText;
-                QuotationSettings.HeaderTitleColor = GetColor(GetSettingsFileEntry("//Settings/Quotation/HeaderTitleColor").InnerText);
-                QuotationSettings.HeaderSubTitleColor = GetColor(GetSettingsFileEntry("//Settings/Quotation/HeaderSubTitleColor").InnerText);
-                QuotationSettings.FooterTitle = GetSettingsFileEntry("//Settings/Quotation/FooterTitle").InnerText;
-                QuotationSettings.FooterTitleColor = GetColor(GetSettingsFileEntry("//Settings/Quotation/FooterTitleColor").InnerText);
-                QuotationSettings.FooterTextColor = GetColor(GetSettingsFileEntry("//Settings/Quotation/FooterTextColor").InnerText);
-                QuotationSettings.Address = GetSettingsFileEntry("//Settings/Quotation/Address").InnerText;
-                QuotationSettings.PhoneNumber = GetSettingsFileEntry("//Settings/Quotation/PhoneNumber").InnerText;
-                QuotationSettings.EMailID = GetSettingsFileEntry("//Settings/Quotation/EMailID").InnerText;
-                QuotationSettings.TINNumber = GetSettingsFileEntry("//Settings/Quotation/TINNumber").InnerText;
-                if (String.IsNullOrEmpty(GetSettingsFileEntry("//Settings/Quotation/LastQuotationNumber").InnerText))
-                    QuotationSettings.LastNumber = 0;
-                else
-                    QuotationSettings.LastNumber = Int32.Parse(GetSettingsFileEntry("//Settings/Quotation/LastQuotationNumber").InnerText);
-                #endregion
-            }
-            catch (Exception ex)
-            {
-                ShowErrorDialog("CommonFunctions.SetAllParameters(", ex);
-            }
-        }
-
-        static void AddKeyValueToDictionarySettings(String XPath, String Value)
-        {
-            try
-            {
-                if (DictSettingsFileEntries.ContainsKey(XPath.Trim().ToUpper()))
-                {
-                    DictSettingsFileEntries[XPath.ToUpper()].InnerText = Value;
-                    DictSettingsFileEntries[XPath.ToUpper()].Values = Value.Split('|');
-                }
-                else
-                {
-                    SettingDetails tmpSettingDetails = new SettingDetails();
-                    tmpSettingDetails.XPath = XPath;
-                    tmpSettingDetails.Name = XPath.Substring(XPath.LastIndexOf('/') + 1).Replace("@", "");
-                    tmpSettingDetails.InnerText = Value;
-                    tmpSettingDetails.Values = Value.Split('|');
-                    DictSettingsFileEntries.Add(XPath.Trim().ToUpper(), tmpSettingDetails);
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorDialog("AddKeyValueToDictionarySettings", ex);
-            }
-        }
-
-        public static void UpdateSettingsFileEntry(String Key, String Value)
-        {
-            try
-            {
-                AddKeyValueToDictionarySettings(Key, Value);
-
-                SettingsFileEntryModified = true;
-            }
-            catch (Exception ex)
-            {
-                ShowErrorDialog("UpdateSettingsFileEntry", ex);
-            }
-        }
-
-        public static SettingDetails GetSettingsFileEntry(String Key)
-        {
-            try
-            {
-                if (DictSettingsFileEntries.ContainsKey(Key.Trim().ToUpper()))
-                    return DictSettingsFileEntries[Key.Trim().ToUpper()];
-                else
-                {
-                    SettingDetails tmpSettingDetails = new SettingDetails();
-                    tmpSettingDetails.Values = new String[0];
-                    tmpSettingDetails.InnerText = "";
-                    return tmpSettingDetails;
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorDialog("GetSettingsFileEntry", ex);
-                return null;
-            }
-        }
-
         public static void WriteToSettingsFile()
         {
             try
             {
-                if (!SettingsFileEntryModified) return;
+                if (SettingXmlDoc == null) return;
 
-                foreach (KeyValuePair<String, SettingDetails> item in DictSettingsFileEntries)
+                ObjApplicationSettings.UpdateSettingsToNode();
+                for (int i = 0; i < ListProductLines.Count; i++)
                 {
-                    if (item.Key.Contains('@'))
-                    {
-                        XMLFileUtils.SetAttributeValueInXMLFile(SettingsFilePath, item.Value.XPath, item.Value.InnerText);
-                    }
-                    else
-                    {
-                        XMLFileUtils.SetElementValueInXMLFile(SettingsFilePath, item.Value.XPath, item.Value.InnerText);
-                    }
+                    ListProductLines[i].ObjSettings.UpdateSettingsToNode();
                 }
+
+                if (!SettingsFileEntryModified) return;
+                SettingXmlDoc.Save(SettingsFilePath);
+
+                SettingsFileEntryModified = false;
             }
             catch (Exception ex)
             {
-                ShowErrorDialog("WriteToSettingsFile", ex);
+                ShowErrorDialog("CommonFunctions.WriteToSettingsFile()", ex);
             }
         }
         #endregion

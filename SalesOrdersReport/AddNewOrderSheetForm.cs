@@ -12,17 +12,17 @@ namespace SalesOrdersReport
 {
     public partial class AddNewOrderSheetForm : Form
     {
-        Form MainForm = null;
         String MasterFilePath;
         List<Color> ListColors;
+        ToolStripProgressBar ToolStripProgressBarMainForm;
+        ToolStripLabel ToolStripProgressBarStatus;
 
-        public AddNewOrderSheetForm(Form ParentForm)
+        public AddNewOrderSheetForm()
         {
             try
             {
                 InitializeComponent();
-                MainForm = ParentForm;
-                MasterFilePath = MainForm.Controls["txtBoxFileName"].Text;
+                MasterFilePath = CommonFunctions.MasterFilePath;
                 txtBoxOutputFolder.Text = System.IO.Path.GetDirectoryName(MasterFilePath);
                 
                 ListColors = new List<Color>();
@@ -37,9 +37,13 @@ namespace SalesOrdersReport
                 ListColors.Add(Color.FromArgb(255, 153, 153));
                 ListColors.Add(Color.FromArgb(51, 255, 153));
 
-                prgrssBarProcess.Maximum = 100;
-                prgrssBarProcess.Step = 1;
-                prgrssBarProcess.Value = 0;
+                ToolStripProgressBarMainForm = CommonFunctions.ToolStripProgressBarMainForm;
+                ToolStripProgressBarStatus = CommonFunctions.ToolStripProgressBarMainFormStatus;
+
+                ToolStripProgressBarMainForm.Maximum = 100;
+                ToolStripProgressBarMainForm.Step = 1;
+                ToolStripProgressBarMainForm.Value = 0;
+                ToolStripProgressBarStatus.Text = "";
             }
             catch (Exception ex)
             {
@@ -191,16 +195,16 @@ namespace SalesOrdersReport
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // Change the value of the ProgressBar to the BackgroundWorker progress.
-            prgrssBarProcess.Value = e.ProgressPercentage;
+            ToolStripProgressBarMainForm.Value = e.ProgressPercentage;
 
             // Set the text.
-            lblProgress.Text = e.ProgressPercentage.ToString() + "%";
+            ToolStripProgressBarStatus.Text = e.ProgressPercentage.ToString() + "%";
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            prgrssBarProcess.Value = 0;
-            lblProgress.Text = "";
+            ToolStripProgressBarMainForm.Value = 0;
+            ToolStripProgressBarStatus.Text = "";
             btnCancel.Focus();
         }
     }

@@ -12,17 +12,24 @@ namespace SalesOrdersReport
 {
     public partial class UpdateOrderMasterForm : Form
     {
-        MainForm ObjMainForm;
         String OrderMasterFilePath, SellerSummaryFilePath;
+        ToolStripProgressBar ToolStripProgressBarMainForm;
+        ToolStripLabel ToolStripProgressBarStatus;
 
-        public UpdateOrderMasterForm(MainForm _ObjMainForm)
+        public UpdateOrderMasterForm()
         {
             InitializeComponent();
 
-            ObjMainForm = _ObjMainForm;
-            OrderMasterFilePath = ObjMainForm.Controls["txtBoxFileName"].Text;
+            OrderMasterFilePath = CommonFunctions.MasterFilePath;
             lblStatus.Text = "";
-            lblProgress.Text = "0%";
+
+            ToolStripProgressBarMainForm = CommonFunctions.ToolStripProgressBarMainForm;
+            ToolStripProgressBarStatus = CommonFunctions.ToolStripProgressBarMainFormStatus;
+
+            ToolStripProgressBarMainForm.Maximum = 100;
+            ToolStripProgressBarMainForm.Step = 1;
+            ToolStripProgressBarMainForm.Value = 0;
+            ToolStripProgressBarStatus.Text = "";
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -89,8 +96,8 @@ namespace SalesOrdersReport
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // Change the value of the ProgressBar to the BackgroundWorker progress.
-            prgsBarUpdate.Value = Math.Min(e.ProgressPercentage, 100);
-            lblProgress.Text = Math.Min(e.ProgressPercentage, 100).ToString() + "%";
+            ToolStripProgressBarMainForm.Value = Math.Min(e.ProgressPercentage, 100);
+            ToolStripProgressBarStatus.Text = Math.Min(e.ProgressPercentage, 100).ToString() + "%";
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

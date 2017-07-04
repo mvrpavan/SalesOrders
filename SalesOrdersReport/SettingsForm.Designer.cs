@@ -88,6 +88,8 @@
             this.btnApplySettings = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.colorDialogSettings = new System.Windows.Forms.ColorDialog();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cmbBoxProductLines = new System.Windows.Forms.ComboBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.tabPageInvoice.SuspendLayout();
@@ -99,21 +101,22 @@
             this.tabControlSettings.Controls.Add(this.tabPageGeneral);
             this.tabControlSettings.Controls.Add(this.tabPageInvoice);
             this.tabControlSettings.Controls.Add(this.tabPageQuotation);
-            this.tabControlSettings.Location = new System.Drawing.Point(12, 12);
+            this.tabControlSettings.Location = new System.Drawing.Point(12, 42);
             this.tabControlSettings.Name = "tabControlSettings";
             this.tabControlSettings.SelectedIndex = 0;
             this.tabControlSettings.ShowToolTips = true;
-            this.tabControlSettings.Size = new System.Drawing.Size(561, 376);
+            this.tabControlSettings.Size = new System.Drawing.Size(547, 331);
             this.tabControlSettings.TabIndex = 0;
             // 
             // tabPageGeneral
             // 
+            this.tabPageGeneral.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.tabPageGeneral.Controls.Add(this.ddlSummaryLocation);
             this.tabPageGeneral.Controls.Add(this.lblSummaryLocation);
             this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneral.Size = new System.Drawing.Size(553, 350);
+            this.tabPageGeneral.Size = new System.Drawing.Size(539, 305);
             this.tabPageGeneral.TabIndex = 3;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.ToolTipText = "General Settings";
@@ -170,7 +173,7 @@
             this.tabPageInvoice.Location = new System.Drawing.Point(4, 22);
             this.tabPageInvoice.Name = "tabPageInvoice";
             this.tabPageInvoice.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInvoice.Size = new System.Drawing.Size(553, 350);
+            this.tabPageInvoice.Size = new System.Drawing.Size(539, 305);
             this.tabPageInvoice.TabIndex = 1;
             this.tabPageInvoice.Tag = "";
             this.tabPageInvoice.Text = "Invoice";
@@ -428,7 +431,7 @@
             this.tabPageQuotation.Location = new System.Drawing.Point(4, 22);
             this.tabPageQuotation.Name = "tabPageQuotation";
             this.tabPageQuotation.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageQuotation.Size = new System.Drawing.Size(553, 350);
+            this.tabPageQuotation.Size = new System.Drawing.Size(539, 305);
             this.tabPageQuotation.TabIndex = 2;
             this.tabPageQuotation.Tag = "";
             this.tabPageQuotation.Text = "Quotation";
@@ -661,12 +664,33 @@
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(147, 16);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(67, 13);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Product Line";
+            // 
+            // cmbBoxProductLines
+            // 
+            this.cmbBoxProductLines.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxProductLines.FormattingEnabled = true;
+            this.cmbBoxProductLines.Location = new System.Drawing.Point(220, 13);
+            this.cmbBoxProductLines.Name = "cmbBoxProductLines";
+            this.cmbBoxProductLines.Size = new System.Drawing.Size(120, 21);
+            this.cmbBoxProductLines.TabIndex = 16;
+            this.cmbBoxProductLines.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProductLines_SelectedIndexChanged);
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(585, 429);
+            this.ClientSize = new System.Drawing.Size(573, 431);
+            this.Controls.Add(this.cmbBoxProductLines);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tabControlSettings);
             this.Controls.Add(this.btnApplySettings);
@@ -675,6 +699,7 @@
             this.MaximizeBox = false;
             this.Name = "SettingsForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.tabControlSettings.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
@@ -684,6 +709,7 @@
             this.tabPageQuotation.ResumeLayout(false);
             this.tabPageQuotation.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -748,5 +774,7 @@
         private System.Windows.Forms.TabPage tabPageGeneral;
         private System.Windows.Forms.ComboBox ddlSummaryLocation;
         private System.Windows.Forms.Label lblSummaryLocation;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox cmbBoxProductLines;
     }
 }

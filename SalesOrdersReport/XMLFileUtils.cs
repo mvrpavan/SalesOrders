@@ -52,6 +52,55 @@ namespace SalesOrdersReport
             }
         }
 
+        public static Boolean GetChildNodeValue(XmlNode Node, String ChildNodeName, out String Value)
+        {
+            Value = null;
+            try
+            {
+                if (!Node.HasChildNodes) return false;
+
+                foreach (XmlElement Element in Node.ChildNodes)
+                {
+                    if (Element.Name.Equals(ChildNodeName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (String.IsNullOrEmpty(Element.InnerText)) return false;
+                        Value = Element.InnerText;
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("XMLFileUtils.GetChildNodeValue", ex);
+                return true;
+            }
+        }
+
+        public static Boolean SetChildNodeValue(XmlNode Node, String ChildNodeName, String Value)
+        {
+            try
+            {
+                if (!Node.HasChildNodes) return false;
+
+                foreach (XmlElement Element in Node.ChildNodes)
+                {
+                    if (Element.Name.Equals(ChildNodeName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (String.IsNullOrEmpty(Element.InnerText)) return false;
+                        Element.InnerText = Value;
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("XMLFileUtils.SetChildNodeValue", ex);
+                return true;
+            }
+        }
+
         public static XmlNode AddChildNodeToNodeRecusrive(XmlNode CurrentNode, String ChildNodeXPath)
         {
             try
@@ -141,6 +190,39 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("XMLFileUtils.SetAttributeValueInXMLFile", ex);
+                return false;
+            }
+        }
+
+        public static Boolean SetAttributeValue(XmlNode Node, String AttributeName, String Value)
+        {
+            try
+            {
+                XmlAttribute AttributeElement = null;
+                if (Node.Attributes != null)
+                {
+                    foreach (XmlAttribute item in Node.Attributes)
+                    {
+                        if (item.Name.Equals(AttributeName, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            AttributeElement = item;
+                            break;
+                        }
+                    }
+                }
+
+                if (AttributeElement == null)
+                {
+                    AttributeElement = Node.OwnerDocument.CreateAttribute(AttributeName);
+                    Node.Attributes.Append(AttributeElement);
+                }
+                AttributeElement.Value = Value;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("XMLFileUtils.SetAttributeValue", ex);
                 return false;
             }
         }

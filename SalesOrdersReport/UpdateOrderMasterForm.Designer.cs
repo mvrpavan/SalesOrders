@@ -36,8 +36,6 @@
             this.btnBrowse = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.prgsBarUpdate = new System.Windows.Forms.ProgressBar();
-            this.lblProgress = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
@@ -100,23 +98,6 @@
             this.lblStatus.TabIndex = 5;
             this.lblStatus.Text = "Status";
             // 
-            // prgsBarUpdate
-            // 
-            this.prgsBarUpdate.Location = new System.Drawing.Point(315, 117);
-            this.prgsBarUpdate.Name = "prgsBarUpdate";
-            this.prgsBarUpdate.Size = new System.Drawing.Size(100, 13);
-            this.prgsBarUpdate.Step = 1;
-            this.prgsBarUpdate.TabIndex = 6;
-            // 
-            // lblProgress
-            // 
-            this.lblProgress.AutoSize = true;
-            this.lblProgress.Location = new System.Drawing.Point(421, 117);
-            this.lblProgress.Name = "lblProgress";
-            this.lblProgress.Size = new System.Drawing.Size(75, 13);
-            this.lblProgress.TabIndex = 7;
-            this.lblProgress.Text = "ProgBarStatus";
-            // 
             // btnClose
             // 
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -141,8 +122,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(461, 151);
-            this.Controls.Add(this.lblProgress);
-            this.Controls.Add(this.prgsBarUpdate);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnBrowse);
@@ -171,8 +150,6 @@
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblStatus;
-        private System.Windows.Forms.ProgressBar prgsBarUpdate;
-        private System.Windows.Forms.Label lblProgress;
         private System.Windows.Forms.Button btnClose;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }

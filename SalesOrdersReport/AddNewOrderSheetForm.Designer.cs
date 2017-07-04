@@ -41,8 +41,6 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.btnCreateOrderSheet = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.prgrssBarProcess = new System.Windows.Forms.ProgressBar();
-            this.lblProgress = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.grpBoxOrderSheet.SuspendLayout();
             this.SuspendLayout();
@@ -161,22 +159,6 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // prgrssBarProcess
-            // 
-            this.prgrssBarProcess.Location = new System.Drawing.Point(331, 320);
-            this.prgrssBarProcess.Name = "prgrssBarProcess";
-            this.prgrssBarProcess.Size = new System.Drawing.Size(100, 14);
-            this.prgrssBarProcess.TabIndex = 7;
-            // 
-            // lblProgress
-            // 
-            this.lblProgress.AutoSize = true;
-            this.lblProgress.Location = new System.Drawing.Point(437, 321);
-            this.lblProgress.Name = "lblProgress";
-            this.lblProgress.Size = new System.Drawing.Size(21, 13);
-            this.lblProgress.TabIndex = 8;
-            this.lblProgress.Text = "0%";
-            // 
             // backgroundWorker1
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
@@ -190,8 +172,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(486, 347);
-            this.Controls.Add(this.lblProgress);
-            this.Controls.Add(this.prgrssBarProcess);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnCreateOrderSheet);
             this.Controls.Add(this.btnOutFolderBrowse);
@@ -229,8 +209,6 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Button btnCreateOrderSheet;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.ProgressBar prgrssBarProcess;
-        private System.Windows.Forms.Label lblProgress;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

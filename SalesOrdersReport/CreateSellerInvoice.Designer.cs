@@ -41,9 +41,7 @@
             this.txtBoxOtherFile = new System.Windows.Forms.TextBox();
             this.btnBrowseOtherFile = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.lblProgress = new System.Windows.Forms.Label();
             this.chkBoxUseOrdQty = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.chkBoxCreateInvoice = new System.Windows.Forms.CheckBox();
@@ -153,29 +151,11 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(341, 374);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(100, 13);
-            this.progressBar1.TabIndex = 15;
-            this.progressBar1.UseWaitCursor = true;
-            // 
             // backgroundWorker1
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            // 
-            // lblProgress
-            // 
-            this.lblProgress.AutoSize = true;
-            this.lblProgress.BackColor = System.Drawing.Color.Transparent;
-            this.lblProgress.Location = new System.Drawing.Point(447, 374);
-            this.lblProgress.Name = "lblProgress";
-            this.lblProgress.Size = new System.Drawing.Size(21, 13);
-            this.lblProgress.TabIndex = 16;
-            this.lblProgress.Text = "0%";
             // 
             // chkBoxUseOrdQty
             // 
@@ -227,8 +207,9 @@
             this.lblStatus.AutoSize = true;
             this.lblStatus.Location = new System.Drawing.Point(93, 374);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(0, 13);
+            this.lblStatus.Size = new System.Drawing.Size(37, 13);
             this.lblStatus.TabIndex = 17;
+            this.lblStatus.Text = "Status";
             // 
             // label3
             // 
@@ -310,9 +291,7 @@
             this.Controls.Add(this.chkBoxCreateQuotation);
             this.Controls.Add(this.chkBoxCreateInvoice);
             this.Controls.Add(this.chkBoxUseOrdQty);
-            this.Controls.Add(this.lblProgress);
             this.Controls.Add(this.txtBoxOtherFile);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.btnBrowseOtherFile);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnAddSeller);
@@ -332,7 +311,7 @@
             this.Name = "CreateSellerInvoice";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CreateSellerInvoice_FormClosing);
+            this.Text = "Create Seller Invoice";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -352,9 +331,7 @@
         private System.Windows.Forms.TextBox txtBoxOtherFile;
         private System.Windows.Forms.Button btnBrowseOtherFile;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private System.Windows.Forms.Label lblProgress;
         private System.Windows.Forms.CheckBox chkBoxUseOrdQty;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox chkBoxCreateInvoice;
