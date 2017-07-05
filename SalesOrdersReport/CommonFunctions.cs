@@ -45,7 +45,7 @@ namespace SalesOrdersReport
 
         public static void ShowErrorDialog(String Method, Exception ex)
         {
-            MessageBox.Show("Following Error Occured in " + Method + "():\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+            MessageBox.Show("Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
         }
 
         public static void ReleaseCOMObject(object obj)
@@ -128,6 +128,8 @@ namespace SalesOrdersReport
         public static ApplicationSettings ObjApplicationSettings;
         public static GeneralSettings ObjGeneralSettings;
         public static ReportSettings ObjInvoiceSettings, ObjQuotationSettings;
+        public static ProductMaster ObjProductMaster;
+        public static SellerMaster ObjSellerMaster;
 
         public static void LoadSettingsFile()
         {
@@ -184,15 +186,26 @@ namespace SalesOrdersReport
             }
         }
 
-        public static void SelectProductLine(Int32 Index)
+        public static void SelectProductLine(Int32 Index, Boolean Temporary = false)
         {
             try
             {
-                SelectedProductLineIndex = Index;
+                ProductLine CurrProductLine;
+                if (Temporary)
+                {
+                    CurrProductLine = ListProductLines[Index];
+                }
+                else
+                {
+                    SelectedProductLineIndex = Index;
+                    CurrProductLine = ListProductLines[SelectedProductLineIndex];
+                }
 
-                ObjGeneralSettings = ListProductLines[SelectedProductLineIndex].ObjSettings.GeneralSettings;
-                ObjInvoiceSettings = ListProductLines[SelectedProductLineIndex].ObjSettings.InvoiceSettings;
-                ObjQuotationSettings = ListProductLines[SelectedProductLineIndex].ObjSettings.QuotationSettings;
+                ObjGeneralSettings = CurrProductLine.ObjSettings.GeneralSettings;
+                ObjInvoiceSettings = CurrProductLine.ObjSettings.InvoiceSettings;
+                ObjQuotationSettings = CurrProductLine.ObjSettings.QuotationSettings;
+                ObjProductMaster = CurrProductLine.ObjProductMaster;
+                ObjSellerMaster = CurrProductLine.ObjSellerMaster;
             }
             catch (Exception ex)
             {
@@ -238,7 +251,7 @@ namespace SalesOrdersReport
                     ListProductLines[i].ObjSettings.UpdateSettingsToNode();
                 }
 
-                if (!SettingsFileEntryModified) return;
+                //if (!SettingsFileEntryModified) return;
                 SettingXmlDoc.Save(SettingsFilePath);
 
                 SettingsFileEntryModified = false;

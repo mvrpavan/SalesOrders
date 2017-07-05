@@ -24,7 +24,7 @@
         <PhoneNumber>1234567890</PhoneNumber>
         <EMailID>a@gmail.com</EMailID>
         <TINNumber>1234567890</TINNumber>
-        <LastInvoiceNumber>0</LastInvoiceNumber>
+        <LastNumber>0</LastNumber>
         <VATPercent>5.5</VATPercent>
       </Invoice>
       <Quotation>
@@ -39,7 +39,7 @@
         <PhoneNumber>1234567890</PhoneNumber>
         <EMailID>a@gmail.com</EMailID>
         <TINNumber></TINNumber>
-        <LastQuotationNumber>0</LastQuotationNumber>
+        <LastNumber>0</LastNumber>
       </Quotation>
     </ProductLine>
     <ProductLine Name="Vegetables">
@@ -59,7 +59,7 @@
         <PhoneNumber>+917022037919</PhoneNumber>
         <EMailID>cerenbusinessgroup@gmail.com</EMailID>
         <TINNumber>29271403793</TINNumber>
-        <LastInvoiceNumber>135</LastInvoiceNumber>
+        <LastNumber>135</LastNumber>
         <VATPercent>5.5</VATPercent>
       </Invoice>
       <Quotation>
@@ -76,7 +76,7 @@
         <EMailID>cerenbusinessgroup@gmail.com</EMailID>
         <TINNumber>
         </TINNumber>
-        <LastQuotationNumber>103</LastQuotationNumber>
+        <LastNumber>103</LastNumber>
       </Quotation>
     </ProductLine>
     <ProductLine Name="Bakery">
@@ -96,7 +96,7 @@
         <PhoneNumber>+917022037919</PhoneNumber>
         <EMailID>cerenbusinessgroup@gmail.com</EMailID>
         <TINNumber>29271403793</TINNumber>
-        <LastInvoiceNumber>135</LastInvoiceNumber>
+        <LastNumber>135</LastNumber>
         <VATPercent>5.5</VATPercent>
       </Invoice>
       <Quotation>
@@ -113,7 +113,7 @@
         <EMailID>cerenbusinessgroup@gmail.com</EMailID>
         <TINNumber>
         </TINNumber>
-        <LastQuotationNumber>103</LastQuotationNumber>
+        <LastNumber>103</LastNumber>
       </Quotation>
     </ProductLine>
   </ProductLines>

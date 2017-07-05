@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Xml;
+using System.Data;
 
 namespace SalesOrdersReport
 {
@@ -72,7 +73,7 @@ namespace SalesOrdersReport
                 XMLFileUtils.GetChildNodeValue(SettingsNode, "VATPercent", out VATPercent);
                 XMLFileUtils.GetChildNodeValue(SettingsNode, "TINNumber", out TINNumber);
 
-                if (XMLFileUtils.GetChildNodeValue(SettingsNode, "LastInvoiceNumber", out Value)) LastNumber = Int32.Parse(Value);
+                if (XMLFileUtils.GetChildNodeValue(SettingsNode, "LastNumber", out Value)) LastNumber = Int32.Parse(Value);
 
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "HeaderTitleColor", out Value)) HeaderTitleColor = CommonFunctions.GetColor(Value);
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "HeaderSubTitleColor", out Value)) HeaderSubTitleColor = CommonFunctions.GetColor(Value);
@@ -98,7 +99,7 @@ namespace SalesOrdersReport
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "VATPercent", VATPercent);
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "TINNumber", TINNumber);
 
-                XMLFileUtils.SetChildNodeValue(SettingsNode, "LastInvoiceNumber", LastNumber.ToString());
+                XMLFileUtils.SetChildNodeValue(SettingsNode, "LastNumber", LastNumber.ToString());
 
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "HeaderTitleColor", HeaderTitleColor.ToArgb().ToString());
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "HeaderSubTitleColor", HeaderSubTitleColor.ToArgb().ToString());
@@ -140,42 +141,6 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("GeneralSettings.UpdateSettingsToNode()", ex);
-            }
-        }
-    }
-
-    class ProductLine
-    {
-        public String Name;
-        public Settings ObjSettings;
-        public XmlNode ProductLineNode;
-
-        public Boolean LoadDetailsFromNode(System.Xml.XmlNode ProductLineNode)
-        {
-            try
-            {
-                this.ProductLineNode = ProductLineNode;
-                XMLFileUtils.GetAttributeValue(ProductLineNode, "Name", out Name);
-
-                ObjSettings = new Settings();
-                XmlNode GeneralNode;
-                XMLFileUtils.GetChildNode(ProductLineNode, "General", out GeneralNode);
-                ObjSettings.LoadSettingsFromNode(GeneralNode);
-
-                XmlNode InvoiceNode;
-                XMLFileUtils.GetChildNode(ProductLineNode, "Invoice", out InvoiceNode);
-                ObjSettings.LoadSettingsFromNode(InvoiceNode);
-
-                XmlNode QuotationNode;
-                XMLFileUtils.GetChildNode(ProductLineNode, "Quotation", out QuotationNode);
-                ObjSettings.LoadSettingsFromNode(QuotationNode);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("ProductLine.LoadDetailsFromNode()", ex);
-                return false;
             }
         }
     }

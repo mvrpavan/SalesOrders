@@ -319,6 +319,9 @@ namespace SalesOrdersReport
             {
                 if (toolStripComboBoxProductLine.SelectedIndex + 1 == CommonFunctions.SelectedProductLineIndex) return;
 
+                MasterSheetSelected = false;
+                toolStripOrderMasterPath.Text = "";
+
                 if (toolStripComboBoxProductLine.SelectedItem.ToString().Equals("<Create New>"))
                 {
                     ManageProductLineForm ObjManageProductLineForm = new ManageProductLineForm();

@@ -31,6 +31,17 @@ namespace SalesOrdersReport
         private void btnOK_Click(object sender, EventArgs e)
         {
             CommonFunctions.MasterFilePath = txtBoxMasterFilePath.Text;
+
+            DataTable dtProductMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("ItemMaster", CommonFunctions.MasterFilePath, "*");
+            DataTable dtPriceGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("PriceGroupMaster", CommonFunctions.MasterFilePath, "*");
+            CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex].LoadProductMaster(dtProductMaster, dtPriceGroupMaster);
+
+            DataTable dtDiscountGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("DiscountGroupMaster", CommonFunctions.MasterFilePath, "*");
+            DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", CommonFunctions.MasterFilePath, "*");
+            CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex].LoadSellerMaster(dtSellerMaster, dtDiscountGroupMaster);
+
+            CommonFunctions.SelectProductLine(CommonFunctions.SelectedProductLineIndex);
+
             this.Close();
         }
 

@@ -189,12 +189,24 @@ namespace SalesOrdersReport
             try
             {
                 if (cmbBoxProductLines.SelectedIndex + 1 == CommonFunctions.SelectedProductLineIndex) return;
-                CommonFunctions.SelectProductLine(Int32.Parse((cmbBoxProductLines.SelectedIndex + 1).ToString()));
+                CommonFunctions.SelectProductLine(Int32.Parse((cmbBoxProductLines.SelectedIndex + 1).ToString()), true);
                 LoadSettings();
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("SettingsForm.cmbBoxProductLines_SelectedIndexChanged()", ex);
+            }
+        }
+
+        private void SettingsForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            try
+            {
+                CommonFunctions.SelectProductLine(CommonFunctions.SelectedProductLineIndex, false);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("SettingsForm.SettingsForm_FormClosed()", ex);
             }
         }
     }
