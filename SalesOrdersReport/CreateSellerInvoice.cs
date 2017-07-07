@@ -194,12 +194,12 @@ namespace SalesOrdersReport
 
                 Excel.Workbook xlSalesOrderWorkbook = xlApp.Workbooks.Open(SalesOrderFile);
                 Excel.Worksheet xlSalesOrderWorksheet = CommonFunctions.GetWorksheet(xlSalesOrderWorkbook, SelectedDateTimeString);
-                Int32 StartRow = 5, StartColumn = 1;
+                Int32 StartRow = 5, StartColumn = 1, DetailsCount = 5;
 
                 #region Identify Items in SalesOrderSheet
                 List<Int32> ListItemIndexes = new List<Int32>();
                 Int32 ColumnCount = xlSalesOrderWorksheet.UsedRange.Columns.Count;
-                for (int i = StartColumn + 4; i <= ColumnCount; i++)
+                for (int i = StartColumn + DetailsCount; i <= ColumnCount; i++)
                 {
                     String ItemName = xlSalesOrderWorksheet.Cells[StartRow, i].Value;
                     Int32 ItemIndex = -1;
@@ -298,7 +298,7 @@ namespace SalesOrdersReport
             {
                 Boolean PrintVATPercent = false, PrintOldBalance = false, CreateSummary = false;
                 ReportSettings CurrReportSettings = null;
-                String ReportTypeName = "", BillNumberText = "", SaveFileName = "";//, LastNumberKey = "";
+                String ReportTypeName = "", BillNumberText = "", SaveFileName = "";
                 switch (EnumReportType)
                 {
                     case ReportType.INVOICE:
@@ -307,7 +307,6 @@ namespace SalesOrdersReport
                         PrintVATPercent = true;
                         BillNumberText = "Invoice#";
                         SaveFileName = txtBoxOutputFolder.Text + "\\Invoice_" + SelectedDateTimeString + ".xlsx";
-                        //LastNumberKey = "//Settings/Invoice/LastInvoiceNumber";
                         if (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0) CreateSummary = true;
                         break;
                     case ReportType.QUOTATION:
@@ -316,7 +315,6 @@ namespace SalesOrdersReport
                         PrintOldBalance = true;
                         BillNumberText = "Quotation#";
                         SaveFileName = txtBoxOutputFolder.Text + "\\Quotation_" + SelectedDateTimeString + ".xlsx";
-                        //LastNumberKey = "//Settings/Quotation/LastQuotationNumber";
                         if (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1) CreateSummary = true;
                         break;
                     default:
@@ -332,20 +330,17 @@ namespace SalesOrdersReport
                 Int32 InvoiceNumber = CurrReportSettings.LastNumber;
                 Int32 ValidSellerCount = ListSellerIndexes.Where(s => (s >= 0)).ToList().Count;
                 Int32 ValidItemCount = ListItemIndexes.Where(s => (s >= 0)).ToList().Count;
-                //Int32 ProgressBarCount = (ValidSellerCount * ValidItemCount + drSellers.Length + drItems.Length + 2);
                 Int32 ProgressBarCount = (ValidSellerCount * ValidItemCount);
                 Int32 Counter = 0;
                 Int32 SlNoColNum = 1, ItemNameColNum = 2, OrdQtyColNum = 3, SalQtyColNum = 4, PriceColNum = 5, TotalColNum = 6;
                 Int32 ReportAppendRowsAtBottom = CommonFunctions.ObjApplicationSettings.ReportAppendRowsAtBottom;
                 Int32 SalesTotalRowOffset = 1 + ReportAppendRowsAtBottom, DiscountRowOffset = 2 + ReportAppendRowsAtBottom, OldBalanceRowOffset = 3 + ReportAppendRowsAtBottom, TotalCostRowOffset = 4 + ReportAppendRowsAtBottom;
-                Int32 SellerCount = 0;
+                Int32 SellerCount = 0, SalesOrderDetailsCount = 5;
                 for (int i = 0; i < ListSellerIndexes.Count; i++)
                 {
                     if (ListSellerIndexes[i] < 0) continue;
-                    //Counter++;
                     SellerCount++;
                     lblStatus.Text = "Creating " + ReportTypeName + " for Seller " + SellerCount + " of " + ValidSellerCount;
-                    //backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
                     Excel.Worksheet xlWorkSheet = xlWorkbook.Worksheets.Add(Type.Missing, xlWorkbook.Sheets[xlWorkbook.Sheets.Count]);
                     String SheetName = drSellers[ListSellerIndexes[i]]["SellerName"].ToString().Replace(":", "").
                                             Replace("\\", "").Replace("/", "").
@@ -357,16 +352,9 @@ namespace SalesOrdersReport
 
                     #region Print Invoice Items
                     Int32 SlNo = 0;
-                    //Total = 0; //TotalQuantity = 0;
 
                     #region Print Invoice Header
                     Excel.Range xlRange = xlWorkSheet.Cells[1 + InvoiceHeaderStartRow, 1];
-                    //xlRange.Value = CommonFunctions.InvoiceTitle;
-                    //xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[1 + InvoiceHeaderStartRow, 1], xlWorkSheet.Cells[2 + InvoiceHeaderStartRow, 5]];
-                    //xlRange.Font.Bold = true;
-                    //xlRange.Merge();
-                    //xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-                    //xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
 
                     Int32 CustDetailsStartRow = 1 + InvoiceHeaderStartRow;
                     xlRange = xlWorkSheet.Cells[CustDetailsStartRow, SlNoColNum];
@@ -434,9 +422,9 @@ namespace SalesOrdersReport
                         if (ListItemIndexes[j] < 0) continue;
                         Counter++;
                         backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
-                        if (xlSalesOrderWorksheet.Cells[StartRow + 1 + i, StartColumn + 4 + j].Value == null) continue;
+                        if (xlSalesOrderWorksheet.Cells[StartRow + 1 + i, StartColumn + SalesOrderDetailsCount + j].Value == null) continue;
 
-                        Quantity = Double.Parse(xlSalesOrderWorksheet.Cells[StartRow + 1 + i, StartColumn + 4 + j].Value.ToString());
+                        Quantity = Double.Parse(xlSalesOrderWorksheet.Cells[StartRow + 1 + i, StartColumn + SalesOrderDetailsCount + j].Value.ToString());
                         drItems[ListItemIndexes[j]]["Quantity"] = Double.Parse(drItems[ListItemIndexes[j]]["Quantity"].ToString()) + Quantity;
 
                         SlNo++;
@@ -444,7 +432,6 @@ namespace SalesOrdersReport
                         xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, ItemNameColNum].Value = drItems[ListItemIndexes[j]]["ItemName"].ToString();
                         xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, OrdQtyColNum].Value = Quantity;
                         if (chkBoxUseOrdQty.Checked == true) xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, SalQtyColNum].Value = Quantity;
-                        //xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, PriceColNum].Value = drItems[ListItemIndexes[j]]["SellingPrice"].ToString();
                         xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, PriceColNum].Value = CommonFunctions.ObjProductMaster.GetPriceForProduct(drItems[ListItemIndexes[j]]["ItemName"].ToString(), ObjCurrentSeller.PriceGroupIndex);
                         xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, PriceColNum].NumberFormat = "#,##0.00";
                         Excel.Range xlRangeSaleQty = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, SalQtyColNum];
@@ -452,9 +439,6 @@ namespace SalesOrdersReport
                         Excel.Range xlRangeTotal = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, TotalColNum];
                         xlRangeTotal.Formula = "=(" + xlRangeSaleQty.Address[false, false] + "*" + xlRangePrice.Address[false, false] + ")";
                         xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, TotalColNum].NumberFormat = "#,##0.00";
-
-                        //TotalQuantity += Quantity;
-                        //Total += Double.Parse(xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, TotalColNum].Value.ToString());
                     }
 
                     Excel.Range xlRangeSaleQtyFrom = xlWorkSheet.Cells[1 + InvoiceStartRow + 1, SalQtyColNum];
@@ -564,7 +548,7 @@ namespace SalesOrdersReport
                     Excel.Range xlRangeSalesTotal = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum];
                     Excel.Range xlRangeDiscount = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + DiscountRowOffset, TotalColNum];
                     Excel.Range xlRangeOldBalance = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + OldBalanceRowOffset, TotalColNum];
-                    xlRange.Formula = "=" + xlRangeSalesTotal.Address[false, false] + "+" + xlRangeOldBalance.Address[false, false] + "-" + xlRangeDiscount.Address[false, false];
+                    xlRange.Formula = "=Round(" + xlRangeSalesTotal.Address[false, false] + "+" + xlRangeOldBalance.Address[false, false] + "-" + xlRangeDiscount.Address[false, false] + ", 0)";
                     xlRange.Font.Bold = true;
                     xlRange.NumberFormat = "#,##0.00";
 
@@ -598,11 +582,9 @@ namespace SalesOrdersReport
                 FirstWorksheet.Select();
 
                 #region Write InvoiceNumber to Settings File
-                //CommonFunctions.UpdateSettingsFileEntry(LastNumberKey, InvoiceNumber.ToString());
                 CurrReportSettings.LastNumber = InvoiceNumber;
                 #endregion
 
-                //backgroundWorker1.ReportProgress(((ProgressBarCount - 1) * 100) / ProgressBarCount);
                 backgroundWorker1.ReportProgress(100);
                 xlWorkbook.SaveAs(SaveFileName);
                 xlWorkbook.Close();
@@ -658,7 +640,6 @@ namespace SalesOrdersReport
 
                 for (int i = 0; i < drItems.Length; i++)
                 {
-                    //backgroundWorker1.ReportProgress(((i + ValidSellerCount * ValidItemCount + drSellers.Length) * 100) / ProgressBarCount);
                     xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 1].Value = drItems[i]["SlNo"].ToString();
                     xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 2].Value = drItems[i]["ItemName"].ToString();
                     xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 3].Value = drItems[i]["VendorName"].ToString();
@@ -739,8 +720,6 @@ namespace SalesOrdersReport
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = SellersCount;
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = drSellers[i]["InvoiceNumber"].ToString();
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = drSellers[i]["SellerName"].ToString();
-                    //CurrCol++; Excel.Range xlRangeQty = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    //xlRangeQty.Formula = drSellers[i]["Quantity"].ToString();
                     CurrCol++; Excel.Range xlRangeSale = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     xlRangeSale.Formula = drSellers[i]["Total"].ToString();
                     xlRangeSale.NumberFormat = "#,##0.00";
@@ -751,11 +730,11 @@ namespace SalesOrdersReport
                     CurrCol++; Excel.Range xlRangeNetSale = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     xlRangeDiscount.Formula = drSellers[i]["TotalDiscount"].ToString();
                     if (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0) xlRangeTotalTax.Formula = drSellers[i]["TotalTax"].ToString();
-                    xlRangeNetSale.Formula = "=" + xlRangeSale.Address[false, false]
+                    xlRangeNetSale.Formula = "=Round(" + xlRangeSale.Address[false, false]
                                                 + "-" + xlRangeCancel.Address[false, false] 
                                                 + "-" + xlRangeReturn.Address[false, false] 
                                                 + "-" + xlRangeDiscount.Address[false, false]
-                                                + "+" + xlRangeTotalTax.Address[false, false];
+                                                + "+" + xlRangeTotalTax.Address[false, false] + ", 0)";
                     xlRangeNetSale.NumberFormat = "#,##0.00";
                     CurrCol++; Excel.Range xlRangeOldBalance = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     xlRangeOldBalance.Value = drSellers[i]["OldBalance"].ToString();
@@ -769,7 +748,7 @@ namespace SalesOrdersReport
                 xlRange.Font.Bold = true;
                 xlRange.Font.Color = Color.Red;
 
-                for (int i = 4; i <= 10; i++)
+                for (int i = 4; i <= LastCol; i++)
                 {
                     CurrCol = i;
                     Excel.Range xlRangeTotal = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];

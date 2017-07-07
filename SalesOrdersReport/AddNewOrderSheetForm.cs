@@ -99,6 +99,7 @@ namespace SalesOrdersReport
                 HeaderItems.Add("Sl.No.");
                 HeaderItems.Add("Total Items");
                 HeaderItems.Add("Name");
+                HeaderItems.Add("Line");
                 HeaderItems.Add("Contact Details");
                 DataRow[] drItems = dtItemMaster.Select("", "SlNo asc");
                 Int32 ProgressBarCount = HeaderItems.Count + (drItems.Length * 2) + dtSellerMaster.Rows.Count;
@@ -108,7 +109,7 @@ namespace SalesOrdersReport
                 {
                     Excel.Range xlRange = xlWorkSheet.Cells[StartRow, StartCol + i];
                     xlRange.Value = HeaderItems[i];
-                    if (!(HeaderItems[i].Equals("Name") || HeaderItems[i].Equals("Contact Details")))
+                    if (!(HeaderItems[i].Equals("Name") || HeaderItems[i].Equals("Contact Details") || HeaderItems[i].Equals("Line")))
                         xlRange.Orientation = 90;
                     xlRange.Font.Bold = true;
                     xlRange.Interior.Color = Color.FromArgb(242, 220, 219);
@@ -136,12 +137,13 @@ namespace SalesOrdersReport
                 for (int i = 0; i < drSellers.Length; i++)
                 {
                     xlWorkSheet.Cells[StartRow + i + 1, StartCol].Value = (i + 1);
-                    Excel.Range xlRange1 = xlWorkSheet.Cells[StartRow + i + 1, StartCol + 4];
-                    Excel.Range xlRange2 = xlWorkSheet.Cells[StartRow + i + 1, StartCol + 4 + drItems.Length - 1];
+                    Excel.Range xlRange1 = xlWorkSheet.Cells[StartRow + i + 1, StartCol + HeaderItems.Count];
+                    Excel.Range xlRange2 = xlWorkSheet.Cells[StartRow + i + 1, StartCol + HeaderItems.Count + drItems.Length - 1];
                     xlWorkSheet.Cells[StartRow + i + 1, StartCol + 1].Formula = "=Count(" + xlRange1.Address[false, false] + ":" + xlRange2.Address[false, false] + ")";
 
                     xlWorkSheet.Cells[StartRow + i + 1, StartCol + 2].Value = drSellers[i]["SellerName"].ToString();
-                    xlWorkSheet.Cells[StartRow + i + 1, StartCol + 3].Value = ((drSellers[i]["Phone"] == DBNull.Value) ? "" : drSellers[i]["Phone"].ToString());
+                    xlWorkSheet.Cells[StartRow + i + 1, StartCol + 3].Value = drSellers[i]["Line"].ToString();
+                    xlWorkSheet.Cells[StartRow + i + 1, StartCol + 4].Value = ((drSellers[i]["Phone"] == DBNull.Value) ? "" : drSellers[i]["Phone"].ToString());
                     Counter++;
                     backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
                 }
@@ -153,19 +155,23 @@ namespace SalesOrdersReport
                 tmpxlRange.Value = "Total Quantity";
                 tmpxlRange.Font.Bold = true;
                 tmpxlRange.Interior.Color = Color.FromArgb(141, 180, 226);
-                xlWorkSheet.Cells[StartRow - 2, StartCol].Interior.Color = Color.FromArgb(141, 180, 226);
-                xlWorkSheet.Cells[StartRow - 2, StartCol + 1].Interior.Color = Color.FromArgb(141, 180, 226);
-                xlWorkSheet.Cells[StartRow - 2, StartCol + 3].Interior.Color = Color.FromArgb(141, 180, 226);
+                for (int i = 0; i < HeaderItems.Count; i++)
+                {
+                    xlWorkSheet.Cells[StartRow - 2, StartCol + i].Interior.Color = Color.FromArgb(141, 180, 226);
+                }
+                //xlWorkSheet.Cells[StartRow - 2, StartCol].Interior.Color = Color.FromArgb(141, 180, 226);
+                //xlWorkSheet.Cells[StartRow - 2, StartCol + 1].Interior.Color = Color.FromArgb(141, 180, 226);
+                //xlWorkSheet.Cells[StartRow - 2, StartCol + 3].Interior.Color = Color.FromArgb(141, 180, 226);
                 for (int i = 0; i < drItems.Length; i++)
                 {
-                    Excel.Range xlRange1 = xlWorkSheet.Cells[StartRow + 1, StartCol + 4 + i];
-                    Excel.Range xlRange2 = xlWorkSheet.Cells[StartRow + drSellers.Length, StartCol + 4 + i];
-                    Excel.Range xlRange = xlWorkSheet.Cells[StartRow - 2, StartCol + 4 + i];
+                    Excel.Range xlRange1 = xlWorkSheet.Cells[StartRow + 1, StartCol + HeaderItems.Count + i];
+                    Excel.Range xlRange2 = xlWorkSheet.Cells[StartRow + drSellers.Length, StartCol + HeaderItems.Count + i];
+                    Excel.Range xlRange = xlWorkSheet.Cells[StartRow - 2, StartCol + HeaderItems.Count + i];
                     xlRange.Formula = "=Sum(" + xlRange1.Address[false, false] + ":" + xlRange2.Address[false, false] + ")";
                     xlRange.Font.Bold = true;
                     xlRange.Interior.Color = Color.FromArgb(141, 180, 226);
 
-                    xlWorkSheet.Cells[StartRow - 3, StartCol + 4 + i].Value = drItems[i]["SellingPrice"].ToString();
+                    xlWorkSheet.Cells[StartRow - 3, StartCol + HeaderItems.Count + i].Value = drItems[i]["SellingPrice"].ToString();
                     Counter++;
                     backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
                 }

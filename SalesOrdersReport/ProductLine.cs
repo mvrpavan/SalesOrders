@@ -15,7 +15,7 @@ namespace SalesOrdersReport
         public ProductMaster ObjProductMaster;
         public SellerMaster ObjSellerMaster;
 
-        public Boolean LoadDetailsFromNode(System.Xml.XmlNode ProductLineNode)
+        public Boolean LoadDetailsFromNode(XmlNode ProductLineNode)
         {
             try
             {

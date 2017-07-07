@@ -116,7 +116,7 @@ namespace SalesOrdersReport
                 CurrSettings.LastNumber = Int32.Parse(txtBoxLastQuotationNumberQuot.Text);
 
                 CommonFunctions.WriteToSettingsFile();      //Save to Settings.xml file
-                CommonFunctions.LoadSettingsFile();         //Reload from Settings.xml file
+                //CommonFunctions.LoadSettingsFile();         //Reload from Settings.xml file
                 this.Close();
             }
             catch (Exception ex)
