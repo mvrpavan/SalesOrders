@@ -157,5 +157,18 @@ namespace SalesOrdersReport
             }
             return null;
         }
+
+        public List<String> GetSellerList()
+        {
+            try
+            {
+                return ListSellerDetails.Select(e => e.SellerName).ToList();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("SellerMaster.GetSellerList()", ex);
+            }
+            return null;
+        }
     }
 }

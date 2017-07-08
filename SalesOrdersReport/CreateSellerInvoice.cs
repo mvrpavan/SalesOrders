@@ -600,7 +600,7 @@ namespace SalesOrdersReport
             }
         }
 
-        private static void SetAllBorders(Excel.Range xlRange)
+        public static void SetAllBorders(Excel.Range xlRange)
         {
             try
             {
@@ -780,7 +780,7 @@ namespace SalesOrdersReport
             }
         }
 
-        private void AddPageHeaderAndFooter(ref Excel.Worksheet xlWorksheet, String PageHeaderTitle, ReportSettings CurrReportSettings)
+        private static void AddPageHeaderAndFooter(ref Excel.Worksheet xlWorksheet, String PageHeaderTitle, ReportSettings CurrReportSettings)
         {
             try
             {

@@ -114,6 +114,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SellerDetails.cs" />
+    <Compile Include="SellerHistoryReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SellerHistoryReportForm.Designer.cs">
+      <DependentUpon>SellerHistoryReportForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SellerList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -162,6 +168,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SellerHistoryReportForm.resx">
+      <DependentUpon>SellerHistoryReportForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SellerList.resx">
       <DependentUpon>SellerList.cs</DependentUpon>
     </EmbeddedResource>

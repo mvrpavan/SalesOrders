@@ -178,7 +178,7 @@
             this.updateStockToolStripMenuItem});
             this.productToolStripMenuItem.Name = "productToolStripMenuItem";
             this.productToolStripMenuItem.Size = new System.Drawing.Size(61, 23);
-            this.productToolStripMenuItem.Text = "P&roduct";
+            this.productToolStripMenuItem.Text = "&Product";
             // 
             // priceGroupsToolStripMenuItem
             // 
@@ -243,9 +243,9 @@
             // reportsToolStripMenuItem
             // 
             this.reportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.vendorHistoryToolStripMenuItem,
             this.sellerHistoryToolStripMenuItem,
-            this.productStockToolStripMenuItem});
+            this.productStockToolStripMenuItem,
+            this.vendorHistoryToolStripMenuItem});
             this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
             this.reportsToolStripMenuItem.Size = new System.Drawing.Size(59, 23);
             this.reportsToolStripMenuItem.Text = "&Reports";

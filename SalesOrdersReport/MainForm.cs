@@ -33,7 +33,7 @@ namespace SalesOrdersReport
 
             productToolStripMenuItem.Visible = true;
             vendorToolStripMenuItem.Visible = false;
-            reportsToolStripMenuItem.Visible = false;
+            //reportsToolStripMenuItem.Visible = false;
         }
 
         void LoadProductLines()
@@ -291,7 +291,17 @@ namespace SalesOrdersReport
 
         private void sellerHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (!IsValidToOpenForm()) return;
 
+                SellerHistoryReportForm ObjSellerHistoryReportForm = new SellerHistoryReportForm();
+                SetChildFormProperties(ObjSellerHistoryReportForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.sellerHistoryToolStripMenuItem_Click()", ex);
+            }
         }
 
         private void productStockToolStripMenuItem_Click(object sender, EventArgs e)
