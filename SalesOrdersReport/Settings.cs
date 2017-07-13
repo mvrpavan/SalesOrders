@@ -90,6 +90,8 @@ namespace SalesOrdersReport
         {
             try
             {
+                if (SettingsNode == null) return;
+
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "HeaderTitle", HeaderTitle);
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "HeaderSubTitle", HeaderSubTitle);
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "FooterTitle", FooterTitle);
@@ -147,7 +149,7 @@ namespace SalesOrdersReport
 
     class Settings
     {
-        public ReportSettings InvoiceSettings, QuotationSettings;
+        public ReportSettings InvoiceSettings, QuotationSettings, PurchaseOrderSettings;
         public GeneralSettings GeneralSettings;
 
         public Settings()
@@ -155,6 +157,7 @@ namespace SalesOrdersReport
             GeneralSettings = new GeneralSettings();
             InvoiceSettings = new ReportSettings();
             QuotationSettings = new ReportSettings();
+            PurchaseOrderSettings = new ReportSettings();
         }
 
         public void LoadSettingsFromNode(XmlNode Node)
@@ -172,6 +175,9 @@ namespace SalesOrdersReport
                     case "QUOTATION":
                         QuotationSettings.ReadSettingsFromNode(Node);
                         break;
+                    case "PURCHASEORDER":
+                        PurchaseOrderSettings.ReadSettingsFromNode(Node);
+                        break;
                     default: break;
                 }
             }
@@ -188,6 +194,7 @@ namespace SalesOrdersReport
                 GeneralSettings.UpdateSettingsToNode();
                 InvoiceSettings.UpdateSettingsToNode();
                 QuotationSettings.UpdateSettingsToNode();
+                PurchaseOrderSettings.UpdateSettingsToNode();
             }
             catch (Exception ex)
             {

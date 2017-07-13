@@ -13,9 +13,7 @@ namespace SalesOrdersReport
 {
     public partial class UpdateOrderMasterForm : Form
     {
-        String OrderMasterFilePath, SellerSummaryFilePath;
-        ToolStripProgressBar ToolStripProgressBarMainForm;
-        ToolStripLabel ToolStripProgressBarStatus;
+        String OrderMasterFilePath, SellerSummaryFilePath, SellerHistoryFilePath, ProductInventoryFilePath, ProductStockHistoryFilePath;
 
         public UpdateOrderMasterForm()
         {
@@ -24,19 +22,14 @@ namespace SalesOrdersReport
             OrderMasterFilePath = CommonFunctions.MasterFilePath;
             lblStatus.Text = "";
 
-            ToolStripProgressBarMainForm = CommonFunctions.ToolStripProgressBarMainForm;
-            ToolStripProgressBarStatus = CommonFunctions.ToolStripProgressBarMainFormStatus;
-
-            ToolStripProgressBarMainForm.Maximum = 100;
-            ToolStripProgressBarMainForm.Step = 1;
-            ToolStripProgressBarMainForm.Value = 0;
-            ToolStripProgressBarStatus.Text = "";
+            CommonFunctions.ResetProgressBar();
 
             chkBoxUpdSellerMaster.Checked = true;
-            chkBoxUpdSellerHistory.Checked = false;
-            txtBoxSellerHistoryFile.Enabled = false;
-            btnBrowsSellerHistory.Enabled = false;
-            lblSellerHistoryFile.Enabled = false;
+            chkBoxUpdSellerHistory.Checked = true;
+            chkBoxUpdProductSales.Checked = true;
+            groupBoxHistoryUpdate.Enabled = false;
+            btnUpdate.Enabled = false;
+            FileDialgSellerSummary.Multiselect = false;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -56,9 +49,14 @@ namespace SalesOrdersReport
         {
             try
             {
-                SellerSummaryFilePath = txtBoxSellerSummaryFile.Text;
-                //UpdateOrderMasterFile();
+                SellerSummaryFilePath = txtBoxSellerSummaryFile.Text.Trim();
+                SellerHistoryFilePath = txtBoxSellerHistoryFile.Text.Trim();
+                ProductInventoryFilePath = txtBoxProductInventoryFile.Text.Trim();
+                ProductStockHistoryFilePath = txtBoxProductStockHistoryFile.Text.Trim();
+
+                //UpdateSellerMaster();
                 // Start the BackgroundWorker.
+                ReportProgress = backgroundWorker1.ReportProgress;
                 backgroundWorker1.RunWorkerAsync();
                 backgroundWorker1.WorkerReportsProgress = true;
             }
@@ -72,13 +70,18 @@ namespace SalesOrdersReport
         {
             try
             {
-                FileDialgSellerSummary.Multiselect = false;
-                FileDialgSellerSummary.FileName = OrderMasterFilePath;
+                FileDialgSellerSummary.FileName = "Invoice File";
                 DialogResult dlgResult = FileDialgSellerSummary.ShowDialog();
 
                 if (dlgResult == System.Windows.Forms.DialogResult.OK)
                 {
                     txtBoxSellerSummaryFile.Text = FileDialgSellerSummary.FileName;
+                    SellerSummaryFilePath = txtBoxSellerSummaryFile.Text;
+                    txtBoxSellerHistoryFile.Text = Path.GetDirectoryName(SellerSummaryFilePath) + @"\SellerHistory.xlsx";
+                    txtBoxProductInventoryFile.Text = Path.GetDirectoryName(SellerSummaryFilePath) + @"\ProductInventory.xlsx";
+                    txtBoxProductStockHistoryFile.Text = Path.GetDirectoryName(SellerSummaryFilePath) + @"\ProductStockHistory.xlsx";
+                    groupBoxHistoryUpdate.Enabled = true;
+                    btnUpdate.Enabled = true;
                 }
             }
             catch (Exception ex)
@@ -87,8 +90,110 @@ namespace SalesOrdersReport
             }
         }
 
+        private void btnBrowsSellerHistory_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FileDialgSellerSummary.FileName = "SellerHistory.xlsx";
+                DialogResult dlgResult = FileDialgSellerSummary.ShowDialog();
+
+                if (dlgResult == System.Windows.Forms.DialogResult.OK)
+                {
+                    txtBoxSellerHistoryFile.Text = FileDialgSellerSummary.FileName;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.btnBrowsSellerHistory_Click()", ex);
+            }
+        }
+
+        private void btnBrowseProductInvFile_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FileDialgSellerSummary.FileName = "ProductInventory.xlsx";
+                DialogResult dlgResult = FileDialgSellerSummary.ShowDialog();
+
+                if (dlgResult == System.Windows.Forms.DialogResult.OK)
+                {
+                    txtBoxProductInventoryFile.Text = FileDialgSellerSummary.FileName;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.btnBrowseProductInvFile_Click()", ex);
+            }
+        }
+
+        private void btnBrowseProductStockHistoryFile_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FileDialgSellerSummary.FileName = "ProductStockHistory.xlsx";
+                DialogResult dlgResult = FileDialgSellerSummary.ShowDialog();
+
+                if (dlgResult == System.Windows.Forms.DialogResult.OK)
+                {
+                    txtBoxProductStockHistoryFile.Text = FileDialgSellerSummary.FileName;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.btnBrowseProductStockHistoryFile_Click()", ex);
+            }
+        }
+
+        private void chkBoxUpdSellerMaster_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!chkBoxUpdSellerHistory.Checked && !chkBoxUpdSellerMaster.Checked && !chkBoxUpdProductSales.Checked)
+                    chkBoxUpdSellerHistory.Checked = true;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.chkBoxUpdSellerMaster_CheckedChanged()", ex);
+            }
+        }
+
+        private void chkBoxUpdSellerHistory_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!chkBoxUpdSellerHistory.Checked && !chkBoxUpdSellerMaster.Checked && !chkBoxUpdProductSales.Checked)
+                    chkBoxUpdProductSales.Checked = true;
+                lblSellerHistoryFile.Enabled = chkBoxUpdSellerHistory.Checked;
+                txtBoxSellerHistoryFile.Enabled = chkBoxUpdSellerHistory.Checked;
+                btnBrowseSellerHistory.Enabled = chkBoxUpdSellerHistory.Checked;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.chkBoxUpdSellerHistory_CheckedChanged()", ex);
+            }
+        }
+
+        private void chkBoxUpdProductSales_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!chkBoxUpdSellerHistory.Checked && !chkBoxUpdSellerMaster.Checked && !chkBoxUpdProductSales.Checked)
+                    chkBoxUpdSellerMaster.Checked = true;
+                lblProductInventoryFile.Enabled = chkBoxUpdProductSales.Checked;
+                txtBoxProductInventoryFile.Enabled = chkBoxUpdProductSales.Checked;
+                btnBrowseProductInvFile.Enabled = chkBoxUpdProductSales.Checked;
+                lblProductStockHistoryFile.Enabled = chkBoxUpdProductSales.Checked;
+                txtBoxProductStockHistoryFile.Enabled = chkBoxUpdProductSales.Checked;
+                btnBrowseProductStockHistoryFile.Enabled = chkBoxUpdProductSales.Checked;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.chkBoxUpdProductSales_CheckedChanged()", ex);
+            }
+        }
+
         delegate void ReportProgressDel(Int32 ProgressState);
-        ReportProgressDel ReportProgress;
+        ReportProgressDel ReportProgress = null;
 
         private void ReportProgressFunc(Int32 ProgressState)
         {
@@ -100,9 +205,8 @@ namespace SalesOrdersReport
         {
             btnUpdate.Enabled = false;
             btnClose.Enabled = false;
-            
-            ReportProgress = backgroundWorker1.ReportProgress;
-            UpdateOrderMasterFile();
+
+            UpdateSellerMaster();
             
             btnUpdate.Enabled = true;
             btnClose.Enabled = true;
@@ -110,17 +214,16 @@ namespace SalesOrdersReport
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            // Change the value of the ProgressBar to the BackgroundWorker progress.
-            ToolStripProgressBarMainForm.Value = Math.Min(e.ProgressPercentage, 100);
-            ToolStripProgressBarStatus.Text = Math.Min(e.ProgressPercentage, 100).ToString() + "%";
+            CommonFunctions.UpdateProgressBar(e.ProgressPercentage);
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            CommonFunctions.ResetProgressBar();
             btnClose.Focus();
         }
 
-        private void UpdateOrderMasterFile()
+        private void UpdateSellerMaster()
         {
             Excel.Application xlApp = new Excel.Application();
 
@@ -134,34 +237,13 @@ namespace SalesOrdersReport
 
                 if (chkBoxUpdSellerHistory.Checked)
                 {
-                    if (txtBoxSellerHistoryFile.Text.Trim().Length == 0)
-                    {
-                        String SellerHistoryFilePath = Path.GetDirectoryName(SellerSummaryFilePath) + @"\SellerHistory.xlsx";
-                        if (File.Exists(SellerHistoryFilePath))
-                        {
-                            DialogResult result = MessageBox.Show(this, "\"" + SellerHistoryFilePath + "\" already exist.\nDo you want to append Seller History to this file?\nYes - Append to it\nNo - Backup it & Create new",
-                                                    "Seller History", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                            switch (result)
-                            {
-                                case DialogResult.Cancel: return;
-                                case DialogResult.No:
-                                    String BackupFilePath = Path.GetDirectoryName(SellerSummaryFilePath) + @"\SellerHistory.bkp.xlsx";
-                                    if (File.Exists(BackupFilePath)) File.Delete(BackupFilePath);
-                                    File.Move(SellerHistoryFilePath, BackupFilePath);
-                                    break;
-                                case DialogResult.Yes:
-                                    txtBoxSellerHistoryFile.Text = SellerHistoryFilePath;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }
+                    if (!CommonFunctions.ValidateFile_Overwrite_TakeBackup(this, Path.GetDirectoryName(SellerSummaryFilePath), ref SellerHistoryFilePath, "SellerHistory.xlsx", "Seller History")) return;
+                    txtBoxSellerHistoryFile.Text = SellerHistoryFilePath;
                 }
 
                 ReportProgressFunc(0);
 
-                lblStatus.Text = "Reading SellerSummary File...";
+                lblStatus.Text = "Reading Seller Summary...";
                 DataTable dtSellerSummary = CommonFunctions.ReturnDataTableFromExcelWorksheet("Seller Summary", SellerSummaryFilePath, "*", "A2:K100000");
                 if (dtSellerSummary == null)
                 {
@@ -178,65 +260,13 @@ namespace SalesOrdersReport
                 Excel.Workbook xlSellerSummaryWorkbook = xlApp.Workbooks.Open(SellerSummaryFilePath);
                 Excel.Worksheet xlSellerSummaryWorksheet = CommonFunctions.GetWorksheet(xlSellerSummaryWorkbook, "Seller Summary");
                 DateTime SummaryCreationDate = DateTime.Parse(xlSellerSummaryWorksheet.Cells[1, 2].Value.ToString());
+                xlSellerSummaryWorkbook.Close();
 
                 if (chkBoxUpdSellerMaster.Checked)
                 {
-
-                    Excel.Workbook xlOrderMasterWorkbook = xlApp.Workbooks.Open(OrderMasterFilePath);
-                    Excel.Worksheet xlSellerMasterWorksheet = CommonFunctions.GetWorksheet(xlOrderMasterWorkbook, "SellerMaster");
-
-                    Int32 RowCount = xlSellerMasterWorksheet.UsedRange.Rows.Count + 1;
-                    Int32 ColumnCount = xlSellerMasterWorksheet.UsedRange.Columns.Count;
-                    Int32 StartRow = 1, StartColumn = 1, OldBalanceColIndex = -1;
-                    for (int i = 0; i < ColumnCount; i++)
-                    {
-                        if (xlSellerMasterWorksheet.Cells[StartRow, StartColumn + i].Value == null) continue;
-                        String ColName = xlSellerMasterWorksheet.Cells[StartRow, StartColumn + i].Value;
-                        if (ColName.Equals("OldBalance", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            OldBalanceColIndex = StartColumn + i;
-                            break;
-                        }
-                    }
-                    if (OldBalanceColIndex < 0)
-                    {
-                        xlSellerMasterWorksheet.Cells[StartRow, ColumnCount + 1].Value = "OldBalance";
-                        ColumnCount++;
-                        OldBalanceColIndex = ColumnCount;
-                    }
-
-                    lblStatus.Text = "Processing OrderMaster File...";
-                    Int32 ProgressBarCount = drSellers.Length, CurrSellerCount = 0;
-                    for (int i = StartRow + 1; i <= RowCount; i++)
-                    {
-                        if (xlSellerMasterWorksheet.Cells[i, StartColumn + 1].Value == null) continue;
-                        String SellerName = xlSellerMasterWorksheet.Cells[i, StartColumn + 1].Value;
-                        Int32 SellerIndex = -1;
-                        for (int j = 0; j < drSellers.Length; j++)
-                        {
-                            if (drSellers[j]["Seller Name"].ToString().Equals(SellerName, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                SellerIndex = j;
-                                break;
-                            }
-                        }
-
-                        if (SellerIndex < 0) continue;
-                        CurrSellerCount++;
-
-                        xlSellerMasterWorksheet.Cells[i, OldBalanceColIndex].Value = drSellers[SellerIndex]["Balance"];
-
-                        ReportProgressFunc((CurrSellerCount * 100) / ProgressBarCount);
-                        lblStatus.Text = "Updated " + CurrSellerCount + " of " + ProgressBarCount + " Sellers data in OrderMaster";
-                    }
-
-                    ReportProgressFunc(100);
-
-                    xlOrderMasterWorkbook.Save();
-                    xlOrderMasterWorkbook.Close();
-
-                    MessageBox.Show(this, "Updated OrderMaster file successfully", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    lblStatus.Text = "Completed updating OrderMaster";
+                    lblStatus.Text = "Updating Seller Master file";
+                    UpdateSellerMasterData(xlApp, drSellers);
+                    lblStatus.Text = "Completed updating Seller Master file";
                 }
 
                 if (chkBoxUpdSellerHistory.Checked)
@@ -245,10 +275,17 @@ namespace SalesOrdersReport
                     UpdateSellerHistory(xlApp, drSellers, SummaryCreationDate);
                     lblStatus.Text = "Completed updating Seller History file";
                 }
+
+                if (chkBoxUpdProductSales.Checked)
+                {
+                    lblStatus.Text = "Updating Product Sales file";
+                    UpdateProductData(xlApp, drSellers, SummaryCreationDate);
+                    lblStatus.Text = "Completed updating Product Sales file";
+                }
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.UpdateOrderMasterFile()", ex);
+                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.UpdateSellerMaster()", ex);
             }
             finally
             {
@@ -257,7 +294,73 @@ namespace SalesOrdersReport
             }
         }
 
-        void UpdateSellerHistory(Excel.Application xlApp, DataRow[] drSellers, DateTime SummaryCreationDate)
+        private void UpdateSellerMasterData(Excel.Application xlApp, DataRow[] drSellers)
+        {
+            try
+            {
+                Excel.Workbook xlOrderMasterWorkbook = xlApp.Workbooks.Open(OrderMasterFilePath);
+                Excel.Worksheet xlSellerMasterWorksheet = CommonFunctions.GetWorksheet(xlOrderMasterWorkbook, "SellerMaster");
+
+                Int32 RowCount = xlSellerMasterWorksheet.UsedRange.Rows.Count + 1;
+                Int32 ColumnCount = xlSellerMasterWorksheet.UsedRange.Columns.Count;
+                Int32 StartRow = 1, StartColumn = 1, OldBalanceColIndex = -1;
+                for (int i = 0; i < ColumnCount; i++)
+                {
+                    if (xlSellerMasterWorksheet.Cells[StartRow, StartColumn + i].Value == null) continue;
+                    String ColName = xlSellerMasterWorksheet.Cells[StartRow, StartColumn + i].Value;
+                    if (ColName.Equals("OldBalance", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        OldBalanceColIndex = StartColumn + i;
+                        break;
+                    }
+                }
+                if (OldBalanceColIndex < 0)
+                {
+                    xlSellerMasterWorksheet.Cells[StartRow, ColumnCount + 1].Value = "OldBalance";
+                    ColumnCount++;
+                    OldBalanceColIndex = ColumnCount;
+                }
+
+                lblStatus.Text = "Processing SellerMaster...";
+                Int32 ProgressBarCount = drSellers.Length, CurrSellerCount = 0;
+                for (int i = StartRow + 1; i <= RowCount; i++)
+                {
+                    if (xlSellerMasterWorksheet.Cells[i, StartColumn + 1].Value == null) continue;
+                    String SellerName = xlSellerMasterWorksheet.Cells[i, StartColumn + 1].Value;
+                    Int32 SellerIndex = -1;
+                    for (int j = 0; j < drSellers.Length; j++)
+                    {
+                        if (drSellers[j]["Seller Name"].ToString().Equals(SellerName, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            SellerIndex = j;
+                            break;
+                        }
+                    }
+
+                    if (SellerIndex < 0) continue;
+                    CurrSellerCount++;
+
+                    xlSellerMasterWorksheet.Cells[i, OldBalanceColIndex].Value = drSellers[SellerIndex]["Balance"];
+
+                    ReportProgressFunc((CurrSellerCount * 100) / ProgressBarCount);
+                    lblStatus.Text = "Updated " + CurrSellerCount + " of " + ProgressBarCount + " Sellers data in OrderMaster";
+                }
+
+                ReportProgressFunc(100);
+
+                xlOrderMasterWorkbook.Save();
+                xlOrderMasterWorkbook.Close();
+
+                MessageBox.Show(this, "Updated Seller Master successfully", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.UpdateSellerMasterData()", ex);
+                throw;
+            }
+        }
+
+        private void UpdateSellerHistory(Excel.Application xlApp, DataRow[] drSellers, DateTime SummaryCreationDate)
         {
             try
             {
@@ -267,14 +370,11 @@ namespace SalesOrdersReport
                 Excel.Worksheet xlSellerHistoryWorksheet;
 
                 Int32 ProgressBarCount = drSellers.Length, CurrSellerCount = 0;
-                String SellerHistoryFilePath = txtBoxSellerHistoryFile.Text.Trim();
-                Boolean SellerHistoryFileExists = true;
+                Boolean SellerHistoryFileExists = File.Exists(SellerHistoryFilePath);
+                List<String> ListSellerKeys;
                 String[] Header = new String[] { "Create Date", "Update Date", "Bill#", "Seller Name", "Sale", "Cancel", "Return", "Discount", "Total Tax", "Net Sale", "OB", "Cash", "Balance" };
-                if (String.IsNullOrEmpty(SellerHistoryFilePath) || !File.Exists(SellerHistoryFilePath))
+                if (!SellerHistoryFileExists)
                 {
-                    SellerHistoryFilePath = Path.GetDirectoryName(SellerSummaryFilePath) + @"\SellerHistory.xlsx";
-                    SellerHistoryFileExists = false;
-
                     xlSellerHistoryWorkbook = xlApp.Workbooks.Add();
                     xlSellerHistoryWorksheet = xlSellerHistoryWorkbook.Worksheets.Add();
                     xlSellerHistoryWorksheet.Name = "Seller History";
@@ -285,7 +385,7 @@ namespace SalesOrdersReport
 
                     Excel.Range xlRange1 = xlSellerHistoryWorksheet.Range[xlSellerHistoryWorksheet.Cells[1, 1], xlSellerHistoryWorksheet.Cells[1, Header.Length]];
                     xlRange1.Font.Bold = true;
-                    CreateSellerInvoice.SetAllBorders(xlRange1);
+                    SellerInvoiceForm.SetAllBorders(xlRange1);
                     xlSellerHistoryWorkbook.SaveAs(SellerHistoryFilePath);
 
                     Excel.Worksheet xlSheet = CommonFunctions.GetWorksheet(xlSellerHistoryWorkbook, "Sheet1");
@@ -294,9 +394,16 @@ namespace SalesOrdersReport
                     if (xlSheet != null) xlSheet.Delete();
                     xlSheet = CommonFunctions.GetWorksheet(xlSellerHistoryWorkbook, "Sheet3");
                     if (xlSheet != null) xlSheet.Delete();
+
+                    ListSellerKeys = new List<String>();
                 }
                 else
                 {
+                    DataTable dtSellerHistory = CommonFunctions.ReturnDataTableFromExcelWorksheet("Seller History", SellerHistoryFilePath, "[Create Date], [Bill#], [Seller Name]");
+                    ListSellerKeys = dtSellerHistory.AsEnumerable().Select(s => s.Field<DateTime>("Create Date").ToString("dd-MMM-yyyy")
+                                                + "||" + s.Field<Double>("Bill#").ToString()
+                                                + "||" + s.Field<String>("Seller Name").Trim().ToUpper()).Distinct().ToList();
+
                     xlSellerHistoryWorkbook = xlApp.Workbooks.Open(SellerHistoryFilePath);
                     xlSellerHistoryWorksheet = CommonFunctions.GetWorksheet(xlSellerHistoryWorkbook, "Seller History");
                 }
@@ -311,6 +418,9 @@ namespace SalesOrdersReport
                     DataRow dtRow = drSellers[i];
                     if (dtRow[0] == DBNull.Value) continue;
                     if (String.IsNullOrEmpty(dtRow[0].ToString())) continue;
+                    if (ListSellerKeys.Contains(SummaryCreationDate.ToString("dd-MMM-yyyy")
+                                            + "||" + dtRow["Bill#"].ToString().Trim().ToUpper()
+                                            + "||" + dtRow["Seller Name"].ToString().Trim().ToUpper())) continue;
                     LastRow++;
 
                     xlSellerHistoryWorksheet.Cells[StartRow + i, StartColumn].Value = SummaryCreationDate.ToString("dd-MMM-yyyy");
@@ -327,7 +437,7 @@ namespace SalesOrdersReport
                 ReportProgressFunc(100);
 
                 Excel.Range xlRange = xlSellerHistoryWorksheet.Range[xlSellerHistoryWorksheet.Cells[StartRow - 1, StartColumn], xlSellerHistoryWorksheet.Cells[StartRow + LastRow - 1, StartColumn + Header.Length - 1]];
-                CreateSellerInvoice.SetAllBorders(xlRange);
+                SellerInvoiceForm.SetAllBorders(xlRange);
 
                 xlSellerHistoryWorkbook.Save();
                 xlSellerHistoryWorkbook.Close();
@@ -335,11 +445,11 @@ namespace SalesOrdersReport
                 String Message;
                 if (SellerHistoryFileExists)
                 {
-                    Message = "Sellery History file is updated with Seller Summary details";
+                    Message = "Seller History file is updated with Seller Summary details";
                 }
                 else
                 {
-                    Message = "Sellery History file is updated with Seller Summary details\n";
+                    Message = "Seller History file is updated with Seller Summary details\n";
                     Message += "Seller History files is created at " + SellerHistoryFilePath;
                 }
                 MessageBox.Show(this, Message, "Seller History", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -351,49 +461,46 @@ namespace SalesOrdersReport
             }
         }
 
-        private void btnBrowsSellerHistory_Click(object sender, EventArgs e)
+        private void UpdateProductData(Excel.Application xlApp, DataRow[] drSellers, DateTime SummaryCreationDate)
         {
             try
             {
-                FileDialgSellerSummary.Multiselect = false;
-                FileDialgSellerSummary.FileName = OrderMasterFilePath;
-                DialogResult dlgResult = FileDialgSellerSummary.ShowDialog();
+                ProductMaster ObjProductMaster = CommonFunctions.ObjProductMaster;
+                lblStatus.Text = "Loading Product Inventory file";
+                DataTable dtProductInventory = CommonFunctions.ReturnDataTableFromExcelWorksheet("Inventory", ProductInventoryFilePath, "*");
+                DataRow[] drProductsInventory = dtProductInventory.DefaultView.ToTable().Select("", "[StockName] asc");
+                ObjProductMaster.LoadProductInventoryFile(drProductsInventory);
 
-                if (dlgResult == System.Windows.Forms.DialogResult.OK)
+                lblStatus.Text = "Processing Product Inventory file";
+                for (int i = 0; i < drSellers.Length; i++)
                 {
-                    txtBoxSellerHistoryFile.Text = FileDialgSellerSummary.FileName;
+                    lblStatus.Text = "Updating Product Inventory file for Seller " + (i + 1) + " of " + drSellers.Length;
+                    String SheetName = drSellers[i]["Seller Name"].ToString().Replace(":", "").
+                                        Replace("\\", "").Replace("/", "").
+                                        Replace("?", "").Replace("*", "").
+                                        Replace("[", "").Replace("]", "");
+                    DataTable dtSellerInvoice = CommonFunctions.ReturnDataTableFromExcelWorksheet(SheetName, SellerSummaryFilePath, "*", "A6:F100000");
+                    dtSellerInvoice.DefaultView.RowFilter = "IsNull([Sl#No#], 0) > 0";
+                    DataRow[] drProducts = dtSellerInvoice.DefaultView.ToTable().Select("", "[Sl#No#] asc");
+
+                    ObjProductMaster.UpdateProductInventoryDataFromInvoice(drProducts);
                 }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.btnBrowsSellerHistory_Click()", ex);
-            }
-        }
+                ObjProductMaster.ComputeStockNetData("Sale");
 
-        private void chkBoxUpdSellerMaster_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!chkBoxUpdSellerHistory.Checked && !chkBoxUpdSellerMaster.Checked) chkBoxUpdSellerHistory.Checked = true;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.chkBoxUpdSellerMaster_CheckedChanged()", ex);
-            }
-        }
+                lblStatus.Text = "Updating Product Inventory file";
+                ObjProductMaster.UpdateProductInventoryFile(this, xlApp, SummaryCreationDate, ProductInventoryFilePath);
+                lblStatus.Text = "Completed updating Product Inventory file";
 
-        private void chkBoxUpdSellerHistory_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!chkBoxUpdSellerHistory.Checked && !chkBoxUpdSellerMaster.Checked) chkBoxUpdSellerMaster.Checked = true;
-                txtBoxSellerHistoryFile.Enabled = chkBoxUpdSellerHistory.Checked;
-                btnBrowsSellerHistory.Enabled = chkBoxUpdSellerHistory.Checked;
-                lblSellerHistoryFile.Enabled = chkBoxUpdSellerHistory.Checked;
+                lblStatus.Text = "Updating Product Stock History file";
+                ObjProductMaster.UpdateProductStockHistoryFile(this, xlApp, SummaryCreationDate, "Sale", ProductStockHistoryFilePath);
+                lblStatus.Text = "Completed updating Product Stock History file";
+
+                CommonFunctions.ObjProductMaster.ResetStockProducts();
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.chkBoxUpdSellerHistory_CheckedChanged()", ex);
+                CommonFunctions.ShowErrorDialog("UpdateOrderMasterForm.UpdateProductData()", ex);
+                throw;
             }
         }
     }

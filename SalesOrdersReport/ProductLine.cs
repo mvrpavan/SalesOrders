@@ -14,6 +14,7 @@ namespace SalesOrdersReport
         public XmlNode ProductLineNode;
         public ProductMaster ObjProductMaster;
         public SellerMaster ObjSellerMaster;
+        public VendorMaster ObjVendorMaster;
 
         public Boolean LoadDetailsFromNode(XmlNode ProductLineNode)
         {
@@ -34,6 +35,10 @@ namespace SalesOrdersReport
                 XmlNode QuotationNode;
                 XMLFileUtils.GetChildNode(ProductLineNode, "Quotation", out QuotationNode);
                 ObjSettings.LoadSettingsFromNode(QuotationNode);
+
+                XmlNode PurchaseOrderNode;
+                XMLFileUtils.GetChildNode(ProductLineNode, "PurchaseOrder", out PurchaseOrderNode);
+                ObjSettings.LoadSettingsFromNode(PurchaseOrderNode);
 
                 return true;
             }
@@ -74,6 +79,7 @@ namespace SalesOrdersReport
                     ObjProductDetails.ItemName = dtRow["ItemName"].ToString();
                     ObjProductDetails.StockName = dtRow["StockName"].ToString();
                     ObjProductDetails.VendorName = dtRow["VendorName"].ToString();
+                    ObjProductDetails.Units = Double.Parse(dtRow["Units"].ToString());
                     ObjProductDetails.PurchasePrice = Double.Parse(dtRow["PurchasePrice"].ToString());
                     ObjProductDetails.SellingPrice = Double.Parse(dtRow["SellingPrice"].ToString());
                     ObjProductDetails.ListPrices = new Double[ObjProductMaster.ListPriceGroups.Count];
@@ -167,6 +173,76 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("ProductLine.LoadSellerMaster()", ex);
+            }
+        }
+
+        public void LoadVendorMaster(DataTable dtVendorMaster, DataTable dtDiscountGroupMaster)
+        {
+            try
+            {
+                ObjVendorMaster = new VendorMaster();
+                ObjVendorMaster.Initialize();
+
+                #region Load Line from Seller Master
+                CommonFunctions.ListLines = new List<String>();
+                Boolean ContainsBlanks = false;
+                for (int i = 0; i < dtVendorMaster.Rows.Count; i++)
+                {
+                    DataRow dtRow = dtVendorMaster.Rows[i];
+                    String Line = dtRow["Line"].ToString().Replace("<", "").Replace(">", "").ToUpper();
+                    if (Line.Trim().Length == 0) ContainsBlanks = true;
+                    else if (!CommonFunctions.ListLines.Contains(Line)) CommonFunctions.ListLines.Add(Line);
+                }
+
+                CommonFunctions.ListLines.Sort();
+                CommonFunctions.ListLines.Insert(0, "<All>");
+                if (ContainsBlanks) CommonFunctions.ListLines.Add("<Blanks>");
+                #endregion
+
+                #region Load Discount Groups
+                for (int i = 0; i < dtDiscountGroupMaster.Rows.Count; i++)
+                {
+                    DataRow dtRow = dtDiscountGroupMaster.Rows[i];
+                    //DiscountGroup	Discount	DiscountType	Default	Description
+
+                    DiscountGroupDetails ObjDiscountGroupDetails = new DiscountGroupDetails();
+                    ObjDiscountGroupDetails.Name = dtRow["DiscountGroup"].ToString().Trim();
+                    ObjDiscountGroupDetails.Discount = Double.Parse(dtRow["Discount"].ToString().Trim());
+                    ObjDiscountGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(dtRow["DiscountType"].ToString().Trim());
+                    ObjDiscountGroupDetails.IsDefault = (Int32.Parse(dtRow["Default"].ToString().Trim()) == 1);
+                    ObjDiscountGroupDetails.Description = dtRow["Description"].ToString().Trim();
+
+                    ObjVendorMaster.AddDiscountGroupToCache(ObjDiscountGroupDetails);
+                }
+                #endregion
+
+                #region Load Vendor Details
+                for (int i = 0; i < dtVendorMaster.Rows.Count; i++)
+                {
+                    DataRow dtRow = dtVendorMaster.Rows[i];
+                    //SlNo	VendorName	Address	TINNumber	Phone	Line	OldBalance	PriceGroup	DiscountGroup
+
+                    VendorDetails ObjVendorDetails = new VendorDetails();
+                    ObjVendorDetails.VendorName = dtRow["VendorName"].ToString().Trim();
+                    ObjVendorDetails.Address = dtRow["Address"].ToString().Trim();
+                    ObjVendorDetails.TINNumber = dtRow["TINNumber"].ToString().Trim();
+                    ObjVendorDetails.Phone = dtRow["Phone"].ToString().Trim();
+                    ObjVendorDetails.Line = dtRow["Line"].ToString().Trim();
+                    ObjVendorDetails.PriceGroup = "";
+                    ObjVendorDetails.DiscountGroup = "";
+
+                    if (dtRow["PriceGroup"] != DBNull.Value && dtRow["PriceGroup"].ToString().Trim().Length > 0)
+                        ObjVendorDetails.PriceGroup = dtRow["PriceGroup"].ToString().Trim();
+                    if (dtRow["DiscountGroup"] != DBNull.Value && dtRow["DiscountGroup"].ToString().Trim().Length > 0)
+                        ObjVendorDetails.DiscountGroup = dtRow["DiscountGroup"].ToString().Trim();
+
+                    ObjVendorMaster.AddVendorToCache(ObjVendorDetails, ObjProductMaster.ListPriceGroups);
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductLine.LoadVendorMaster()", ex);
             }
         }
     }

@@ -16,7 +16,7 @@ namespace SalesOrdersReport
     {
         public static List<ProductLine> ListProductLines;
         public static Int32 SelectedProductLineIndex;
-        public static List<String> ListLines, ListSelectedSellers;
+        public static List<String> ListLines, ListSelectedSellers, ListSelectedVendors;
         public static String AppDataFolder;
         public static String MasterFilePath;
         public static ToolStripProgressBar ToolStripProgressBarMainForm;
@@ -36,6 +36,7 @@ namespace SalesOrdersReport
                 LoadSettingsFile();
 
                 ListSelectedSellers = new List<String>();
+                ListSelectedVendors = new List<String>();
             }
             catch (Exception ex)
             {
@@ -93,6 +94,7 @@ namespace SalesOrdersReport
                 OleDbDataAdapter dapAdapter = new OleDbDataAdapter(strCommandText, conOleDbCon);
                 DataTable dtbInput = new DataTable();
                 dapAdapter.Fill(dtbInput);
+                conOleDbCon.Close();
                 return dtbInput;
             }
             catch (Exception)
@@ -127,9 +129,10 @@ namespace SalesOrdersReport
         static XmlNode ProductLinesNode;
         public static ApplicationSettings ObjApplicationSettings;
         public static GeneralSettings ObjGeneralSettings;
-        public static ReportSettings ObjInvoiceSettings, ObjQuotationSettings;
+        public static ReportSettings ObjInvoiceSettings, ObjQuotationSettings, ObjPurchaseOrderSettings;
         public static ProductMaster ObjProductMaster;
         public static SellerMaster ObjSellerMaster;
+        public static VendorMaster ObjVendorMaster;
 
         public static void LoadSettingsFile()
         {
@@ -203,8 +206,10 @@ namespace SalesOrdersReport
                 ObjGeneralSettings = CurrProductLine.ObjSettings.GeneralSettings;
                 ObjInvoiceSettings = CurrProductLine.ObjSettings.InvoiceSettings;
                 ObjQuotationSettings = CurrProductLine.ObjSettings.QuotationSettings;
+                ObjPurchaseOrderSettings = CurrProductLine.ObjSettings.PurchaseOrderSettings;
                 ObjProductMaster = CurrProductLine.ObjProductMaster;
                 ObjSellerMaster = CurrProductLine.ObjSellerMaster;
+                ObjVendorMaster = CurrProductLine.ObjVendorMaster;
             }
             catch (Exception ex)
             {
@@ -262,6 +267,70 @@ namespace SalesOrdersReport
         public static string GetColorHexCode(Color color)
         {
             return ColorTranslator.ToHtml(color).Replace("#", "");
+        }
+
+        public static void ResetProgressBar(Int32 ProgressState = 0, Int32 Maximum = 100, Int32 Step = 1, String Status = "")
+        {
+            try
+            {
+                ToolStripProgressBarMainForm.Maximum = Maximum;
+                ToolStripProgressBarMainForm.Step = Step;
+                ToolStripProgressBarMainForm.Value = ProgressState;
+                ToolStripProgressBarMainFormStatus.Text = Status;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.ResetProgressBar()", ex);
+            }
+        }
+
+        public static void UpdateProgressBar(Int32 ProgressState)
+        {
+            try
+            {
+                if (ToolStripProgressBarMainForm == null || ToolStripProgressBarMainFormStatus == null) return;
+
+                ToolStripProgressBarMainForm.Value = Math.Min(ProgressState, 100);
+                ToolStripProgressBarMainFormStatus.Text = Math.Min(ProgressState, 100).ToString() + "%";
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.UpdateProgressBar()", ex);
+            }
+        }
+
+        public static Boolean ValidateFile_Overwrite_TakeBackup(Form ParentForm, String DirectoryPath, ref String FilePath, 
+                                                String ValidFileName, String FileDesc)
+        {
+            try
+            {
+                if (FilePath.Length == 0)
+                {
+                    FilePath = DirectoryPath + @"\" + ValidFileName;
+                    if (File.Exists(FilePath))
+                    {
+                        DialogResult result = MessageBox.Show(ParentForm, "\"" + FilePath + "\" already exist.\nDo you want to append " + FileDesc + " to this file?\nYes - Append to it\nNo - Backup it & Create new",
+                                                FileDesc, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                        switch (result)
+                        {
+                            case DialogResult.Cancel: return false;
+                            case DialogResult.No:
+                                String BackupFilePath = DirectoryPath + @"\" + ValidFileName + ".bkp";
+                                if (File.Exists(BackupFilePath)) File.Delete(BackupFilePath);
+                                File.Move(FilePath, BackupFilePath);
+                                break;
+                            case DialogResult.Yes:
+                            default: break;
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.ValidateFile_Overwrite_TakeBackup()", ex);
+                throw;
+            }
         }
     }
 }

@@ -82,6 +82,25 @@
       <DependentUpon>AddNewOrderSheetForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CommonFunctions.cs" />
+    <Compile Include="UpdateProductPurchasesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateProductPurchasesForm.Designer.cs">
+      <DependentUpon>UpdateProductPurchasesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VendorDetails.cs" />
+    <Compile Include="VendorListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VendorListForm.Designer.cs">
+      <DependentUpon>VendorListForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VendorOrderSheetForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VendorOrderSheetForm.Designer.cs">
+      <DependentUpon>VendorOrderSheetForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ItemMaster.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -91,11 +110,11 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CreateSellerInvoice.cs">
+    <Compile Include="SellerInvoiceForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CreateSellerInvoice.Designer.cs">
-      <DependentUpon>CreateSellerInvoice.cs</DependentUpon>
+    <Compile Include="SellerInvoiceForm.Designer.cs">
+      <DependentUpon>SellerInvoiceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ManageProductLineForm.cs">
       <SubType>Form</SubType>
@@ -120,11 +139,11 @@
     <Compile Include="SellerHistoryReportForm.Designer.cs">
       <DependentUpon>SellerHistoryReportForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SellerList.cs">
+    <Compile Include="SellerListForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SellerList.Designer.cs">
-      <DependentUpon>SellerList.cs</DependentUpon>
+    <Compile Include="SellerListForm.Designer.cs">
+      <DependentUpon>SellerListForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsForm.cs">
@@ -139,6 +158,12 @@
     <Compile Include="UpdateOrderMasterForm.Designer.cs">
       <DependentUpon>UpdateOrderMasterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="VendorPurchaseOrderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VendorPurchaseOrderForm.Designer.cs">
+      <DependentUpon>VendorPurchaseOrderForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="XMLFileUtils.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
@@ -146,11 +171,20 @@
     <EmbeddedResource Include="AddNewOrderSheetForm.resx">
       <DependentUpon>AddNewOrderSheetForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UpdateProductPurchasesForm.resx">
+      <DependentUpon>UpdateProductPurchasesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VendorListForm.resx">
+      <DependentUpon>VendorListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VendorOrderSheetForm.resx">
+      <DependentUpon>VendorOrderSheetForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CreateSellerInvoice.resx">
-      <DependentUpon>CreateSellerInvoice.cs</DependentUpon>
+    <EmbeddedResource Include="SellerInvoiceForm.resx">
+      <DependentUpon>SellerInvoiceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ManageProductLineForm.resx">
       <DependentUpon>ManageProductLineForm.cs</DependentUpon>
@@ -171,14 +205,17 @@
     <EmbeddedResource Include="SellerHistoryReportForm.resx">
       <DependentUpon>SellerHistoryReportForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SellerList.resx">
-      <DependentUpon>SellerList.cs</DependentUpon>
+    <EmbeddedResource Include="SellerListForm.resx">
+      <DependentUpon>SellerListForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateOrderMasterForm.resx">
       <DependentUpon>UpdateOrderMasterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VendorPurchaseOrderForm.resx">
+      <DependentUpon>VendorPurchaseOrderForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="App.config">
       <SubType>Designer</SubType>
@@ -223,7 +260,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\CerenLogo.png" />
     <None Include="Images\Settings.png" />
     <None Include="Images\Close_Black.png" />
     <None Include="Images\Close_Black_VerySmall.png" />

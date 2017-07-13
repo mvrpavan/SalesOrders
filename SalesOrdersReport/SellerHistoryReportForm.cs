@@ -15,8 +15,6 @@ namespace SalesOrdersReport
     {
         String SellerHistoryFilePath = "", SaveFolderPath = "";
         List<String> ListSellerNames = null;
-        ToolStripProgressBar ToolStripProgressBarMainForm;
-        ToolStripLabel ToolStripProgressBarStatus;
 
         public SellerHistoryReportForm()
         {
@@ -34,13 +32,7 @@ namespace SalesOrdersReport
             dateTimePickerEnd.Value = DateTime.Now.Date;
             dateTimePickerEnd.Enabled = false;
 
-            ToolStripProgressBarMainForm = CommonFunctions.ToolStripProgressBarMainForm;
-            ToolStripProgressBarStatus = CommonFunctions.ToolStripProgressBarMainFormStatus;
-
-            ToolStripProgressBarMainForm.Maximum = 100;
-            ToolStripProgressBarMainForm.Step = 1;
-            ToolStripProgressBarMainForm.Value = 0;
-            ToolStripProgressBarStatus.Text = "";
+            CommonFunctions.ResetProgressBar();
 
             lblStatus.Text = "";
             
@@ -258,7 +250,7 @@ namespace SalesOrdersReport
                     ReportProgressFunc(10 + ((i + 1) * 90/ProgressBarCount));
                 }
                 xlRange = xlSellerReportWorksheet.Range[xlSellerReportWorksheet.Cells[StartRow, StartCol], xlSellerReportWorksheet.Cells[StartRow + drSellerRecords.Length, LastCol]];
-                CreateSellerInvoice.SetAllBorders(xlRange);
+                SellerInvoiceForm.SetAllBorders(xlRange);
 
                 xlSellerReportWorksheet.UsedRange.Columns.AutoFit();
 
@@ -297,8 +289,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                ToolStripProgressBarMainForm.Value = Math.Min(e.ProgressPercentage, 100);
-                ToolStripProgressBarStatus.Text = Math.Min(e.ProgressPercentage, 100).ToString() + "%";
+                CommonFunctions.UpdateProgressBar(e.ProgressPercentage);
             }
             catch (Exception ex)
             {
@@ -310,8 +301,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                ToolStripProgressBarMainForm.Value = 0;
-                ToolStripProgressBarStatus.Text = "";
+                CommonFunctions.ResetProgressBar();
                 lblStatus.Text = "";
 
                 btnCreateReport.Enabled = true;

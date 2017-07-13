@@ -16,11 +16,13 @@ namespace SalesOrdersReport
         public MainForm()
         {
             CommonFunctions.Initialize();
+
+            InitializeComponent();
+
 #if RELEASE
             this.BackgroundImage = Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.ObjApplicationSettings.LogoFileName);
             this.BackgroundImageLayout = ImageLayout.Center;
-#endif  
-            InitializeComponent();
+#endif
             this.Text = CommonFunctions.ObjApplicationSettings.MainFormTitleText;
 
             toolStripOrderMasterPath.Text = "";
@@ -31,9 +33,27 @@ namespace SalesOrdersReport
 
             LoadProductLines();
 
-            productToolStripMenuItem.Visible = true;
-            vendorToolStripMenuItem.Visible = false;
-            //reportsToolStripMenuItem.Visible = false;
+            fileMenu.Visible = true;
+            sellerMenu.Visible = true;
+            vendorMenu.Visible = true;
+            productMenu.Visible = false;
+            reportsMenu.Visible = true;
+
+            addModifySellerToolStripMenuItem.Visible = false;
+            discountGroupToolStripMenuItem.Visible = false;
+
+            priceGroupsToolStripMenuItem.Visible = false;
+            addModifyItemToolStripMenuItem.Visible = false;
+
+            addModifyVendorToolStripMenuItem.Visible = false;
+
+            vendorHistoryToolStripMenuItem.Visible = false;
+            productStockToolStripMenuItem.Visible = false;
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CommonFunctions.WriteToSettingsFile();
         }
 
         void LoadProductLines()
@@ -56,11 +76,13 @@ namespace SalesOrdersReport
             }
         }
 
-        void SetChildFormProperties(Form ObjForm)
+        void ShowChildForm(Form ObjForm)
         {
             try
             {
                 if (MdiChildren.Length > 0) return;
+
+                CommonFunctions.ResetProgressBar();
 
                 ObjForm.MdiParent = this;
                 ObjForm.ShowIcon = false;
@@ -74,7 +96,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("MainForm.SetChildFormProperties()", ex);
+                CommonFunctions.ShowErrorDialog("MainForm.ShowChildForm()", ex);
             }
         }
 
@@ -105,7 +127,7 @@ namespace SalesOrdersReport
             EnableDisableAllMenuItems(true, true);
         }
 
-        Boolean IsValidToOpenForm()
+        Boolean IsValidToOpenChildForm()
         {
             try
             {
@@ -118,7 +140,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("MainForm.createInvoiceToolStripMenuItem_Click()", ex);
+                CommonFunctions.ShowErrorDialog("MainForm.IsValidToOpenChildForm()", ex);
                 return false;
             }
         }
@@ -130,7 +152,7 @@ namespace SalesOrdersReport
             {
                 OrderMasterForm ObjOrderMasterForm = new OrderMasterForm();
                 ObjOrderMasterForm.FormClosed += new FormClosedEventHandler(OrderMasterForm_FormClosed);
-                SetChildFormProperties(ObjOrderMasterForm);
+                ShowChildForm(ObjOrderMasterForm);
             }
             catch (Exception ex)
             {
@@ -159,7 +181,7 @@ namespace SalesOrdersReport
             try
             {
                 SettingsForm ObjSettingsForm = new SettingsForm();
-                SetChildFormProperties(ObjSettingsForm);
+                ShowChildForm(ObjSettingsForm);
             }
             catch (Exception ex)
             {
@@ -169,7 +191,7 @@ namespace SalesOrdersReport
 
         private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            this.Close();
         }
         #endregion
 
@@ -178,10 +200,10 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (!IsValidToOpenForm()) return;
+                if (!IsValidToOpenChildForm()) return;
 
                 AddNewOrderSheetForm ObjAddNewOrderSheetForm = new AddNewOrderSheetForm();
-                SetChildFormProperties(ObjAddNewOrderSheetForm);
+                ShowChildForm(ObjAddNewOrderSheetForm);
             }
             catch (Exception ex)
             {
@@ -193,10 +215,10 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (!IsValidToOpenForm()) return;
+                if (!IsValidToOpenChildForm()) return;
 
-                CreateSellerInvoice ObjInvoiceForm = new CreateSellerInvoice();
-                SetChildFormProperties(ObjInvoiceForm);
+                SellerInvoiceForm ObjInvoiceForm = new SellerInvoiceForm();
+                ShowChildForm(ObjInvoiceForm);
             }
             catch (Exception ex)
             {
@@ -208,7 +230,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (!IsValidToOpenForm()) return;
+                if (!IsValidToOpenChildForm()) return;
             }
             catch (Exception ex)
             {
@@ -220,7 +242,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (!IsValidToOpenForm()) return;
+                if (!IsValidToOpenChildForm()) return;
             }
             catch (Exception ex)
             {
@@ -232,10 +254,10 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (!IsValidToOpenForm()) return;
+                if (!IsValidToOpenChildForm()) return;
 
                 UpdateOrderMasterForm ObjUpdateOrderMasterForm = new UpdateOrderMasterForm();
-                SetChildFormProperties(ObjUpdateOrderMasterForm);
+                ShowChildForm(ObjUpdateOrderMasterForm);
             }
             catch (Exception ex)
             {
@@ -250,11 +272,6 @@ namespace SalesOrdersReport
 
         }
 
-        private void updateStockToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void addModifyItemToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -264,22 +281,49 @@ namespace SalesOrdersReport
         #region Vendor Menu Item
         private void createOrderSheetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+                VendorOrderSheetForm ObjVendorOrderSheetForm = new VendorOrderSheetForm();
+                ShowChildForm(ObjVendorOrderSheetForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.createOrderSheetToolStripMenuItem_Click()", ex);
+            }
         }
 
         private void createPurchaseOrderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+                VendorPurchaseOrderForm ObjVendorPurchaseOrderForm = new VendorPurchaseOrderForm();
+                ShowChildForm(ObjVendorPurchaseOrderForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.createPurchaseOrderToolStripMenuItem_Click()", ex);
+            }
         }
 
-        private void addModifyVendorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ManageVendorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void updateOrdersToolStripMenuItem_Click(object sender, EventArgs e)
+        private void updatePurchasesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+                UpdateProductPurchasesForm ObjUpdateProductPurchasesForm = new UpdateProductPurchasesForm();
+                ShowChildForm(ObjUpdateProductPurchasesForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.updatePurchasesToolStripMenuItem_Click()", ex);
+            }
         }
         #endregion
 
@@ -293,10 +337,10 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (!IsValidToOpenForm()) return;
+                if (!IsValidToOpenChildForm()) return;
 
                 SellerHistoryReportForm ObjSellerHistoryReportForm = new SellerHistoryReportForm();
-                SetChildFormProperties(ObjSellerHistoryReportForm);
+                ShowChildForm(ObjSellerHistoryReportForm);
             }
             catch (Exception ex)
             {
@@ -314,15 +358,11 @@ namespace SalesOrdersReport
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             About ObjAbout = new About();
-            SetChildFormProperties(ObjAbout);
+            ShowChildForm(ObjAbout);
         }
         #endregion
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            CommonFunctions.WriteToSettingsFile();
-        }
-
+        #region ProductLine Toolstrip
         private void toolStripComboBoxProductLine_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -335,12 +375,14 @@ namespace SalesOrdersReport
                 if (toolStripComboBoxProductLine.SelectedItem.ToString().Equals("<Create New>"))
                 {
                     ManageProductLineForm ObjManageProductLineForm = new ManageProductLineForm();
-                    SetChildFormProperties(ObjManageProductLineForm);
+                    ShowChildForm(ObjManageProductLineForm);
                     ObjManageProductLineForm.FormClosed += new FormClosedEventHandler(ObjManageProductLineForm_FormClosed);
                 }
                 else
                 {
                     CommonFunctions.SelectProductLine(Int32.Parse((toolStripComboBoxProductLine.SelectedIndex + 1).ToString()));
+                    MessageBox.Show(this, "Product Line changed to " + toolStripComboBoxProductLine.SelectedItem, "Product Line", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    statusStrip.Focus();
                 }
             }
             catch (Exception ex)
@@ -351,7 +393,30 @@ namespace SalesOrdersReport
 
         void ObjManageProductLineForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            LoadProductLines();
+            try
+            {
+                LoadProductLines();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.ObjManageProductLineForm_FormClosed()", ex);
+            }
         }
+        #endregion
+
+        #region Status Strip
+        private void statusStrip_SizeChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                this.BackgroundImage = Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.ObjApplicationSettings.LogoFileName);
+                this.BackgroundImageLayout = ImageLayout.Center;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.picBoxBackgroundLogo_SizeChanged()", ex);
+            }
+        }
+        #endregion
     }
 }

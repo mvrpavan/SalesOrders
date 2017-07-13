@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
+using Excel = Microsoft.Office.Interop.Excel;
+using System.IO;
+using System.Windows.Forms;
 
 namespace SalesOrdersReport
 {
@@ -63,7 +67,7 @@ namespace SalesOrdersReport
     class ProductDetails : IComparer<ProductDetails>
     {
         public String ItemName, StockName, VendorName;
-        public Double PurchasePrice, SellingPrice;
+        public Double PurchasePrice, SellingPrice, Units;
         public Int32 StockProductIndex;
         public Double[] ListPrices;
         Boolean[] ArrPriceFilledFlag;
@@ -100,6 +104,9 @@ namespace SalesOrdersReport
     {
         public String StockName;
         public List<Int32> ListProductIndexes;
+        public Double Units = 1.0, Inventory = 0, OrderQty = 0, RecvdQty = 0, NetQty = 0;
+        public Double TotalCost = 0, TotalDiscount = 0, TotalTax = 0, NetCost = 0;
+        public Boolean IsUpdated = false, IsStockOverride = false;
 
         public int Compare(StockProductDetails x, StockProductDetails y)
         {
@@ -110,7 +117,7 @@ namespace SalesOrdersReport
     class ProductMaster
     {
         List<ProductDetails> ListProducts;
-        List<StockProductDetails> ListStockProducts;
+        public List<StockProductDetails> ListStockProducts;
         public List<PriceGroupDetails> ListPriceGroups;
         Int32 DefaultPriceGroupIndex;
 
@@ -149,6 +156,11 @@ namespace SalesOrdersReport
         {
             try
             {
+                ObjProductDetails.ItemName = ObjProductDetails.ItemName.Trim();
+                if (String.IsNullOrEmpty(ObjProductDetails.StockName))
+                    ObjProductDetails.StockName = ObjProductDetails.ItemName;
+                ObjProductDetails.StockName = ObjProductDetails.StockName.Trim();
+
                 StockProductDetails ObjStockProductDetails = new StockProductDetails();
                 ObjStockProductDetails.StockName = ObjProductDetails.StockName;
                 AddStockProduct(ObjStockProductDetails);
@@ -227,6 +239,24 @@ namespace SalesOrdersReport
             return null;
         }
 
+        public StockProductDetails GetStockProductDetails(String StockName)
+        {
+            try
+            {
+                StockProductDetails ObjStockProduct = new StockProductDetails();
+                ObjStockProduct.StockName = StockName;
+                Int32 Index = ListStockProducts.BinarySearch(ObjStockProduct, ObjStockProduct);
+
+                if (Index < 0) return null;
+                return ListStockProducts[Index];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.GetStockProductDetails()", ex);
+            }
+            return null;
+        }
+
         public Double GetPriceForProduct(String ItemName, Int32 PriceGroupIndex)
         {
             try
@@ -243,6 +273,318 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("ProductMaster.GetPriceForProduct()", ex);
             }
             return -1;
+        }
+
+        public void ComputeStockNetData(String TransactionType)
+        {
+            try
+            {
+                for (int i = 0; i < ListStockProducts.Count; i++)
+                {
+                    StockProductDetails ObjStockProductDetails = ListStockProducts[i];
+                    if (ObjStockProductDetails.IsUpdated)
+                    {
+                        if (ObjStockProductDetails.IsStockOverride)
+                        {
+                            ObjStockProductDetails.NetQty = ObjStockProductDetails.RecvdQty;
+                            ObjStockProductDetails.RecvdQty -= ObjStockProductDetails.Inventory;
+                        }
+                        else
+                        {
+                            switch (TransactionType.Trim().ToUpper())
+                            {
+                                case "SALE": ObjStockProductDetails.RecvdQty = -1 * ObjStockProductDetails.RecvdQty; break;
+                                case "PURCHASE":
+                                default: break;
+                            }
+                            ObjStockProductDetails.NetQty = ObjStockProductDetails.Inventory + ObjStockProductDetails.RecvdQty;
+                        }
+                        ObjStockProductDetails.NetCost = Math.Round(ObjStockProductDetails.TotalCost - ObjStockProductDetails.TotalDiscount + ObjStockProductDetails.TotalTax, 0);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.ComputeStockNetData()", ex);
+            }
+        }
+
+        public void ResetStockProducts(Boolean Flag = false)
+        {
+            try
+            {
+                for (int i = 0; i < ListStockProducts.Count; i++)
+                {
+                    StockProductDetails ObjStockProductDetails = ListStockProducts[i];
+                    ObjStockProductDetails.IsUpdated = Flag;
+                    ObjStockProductDetails.IsStockOverride = false;
+                    ObjStockProductDetails.NetQty = 0;
+                    ObjStockProductDetails.OrderQty = 0;
+                    ObjStockProductDetails.RecvdQty = 0;
+                    ObjStockProductDetails.Inventory = 0;
+                    ObjStockProductDetails.NetCost = 0;
+                    ObjStockProductDetails.TotalCost = 0;
+                    ObjStockProductDetails.TotalDiscount = 0;
+                    ObjStockProductDetails.TotalTax = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.ResetStockProducts()", ex);
+            }
+        }
+
+        public void LoadProductInventoryFile(DataRow[] drProductInventory)
+        {
+            try
+            {
+                foreach (DataRow dr in drProductInventory)
+                {
+                    StockProductDetails ObjStockProductDetails = GetStockProductDetails(dr["StockName"].ToString().Trim());
+                    if (ObjStockProductDetails == null) continue;
+                    ObjStockProductDetails.Inventory = 0; ObjStockProductDetails.OrderQty = 0;
+                    ObjStockProductDetails.RecvdQty = 0; ObjStockProductDetails.NetQty = 0;
+                    ObjStockProductDetails.TotalCost = 0; ObjStockProductDetails.TotalDiscount = 0;
+                    ObjStockProductDetails.TotalTax = 0; ObjStockProductDetails.NetCost = 0;
+
+                    if (dr["Stock"] != DBNull.Value) ObjStockProductDetails.Inventory = Double.Parse(dr["Stock"].ToString());
+                    if (dr["Units"] != DBNull.Value) ObjStockProductDetails.Units = Double.Parse(dr["Units"].ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.LoadProductInventoryFile()", ex);
+                throw;
+            }
+        }
+
+        public void UpdateProductInventoryDataFromPO(DataRow[] drProducts, Boolean IsStockOverride)
+        {
+            try
+            {
+                foreach (DataRow dr in drProducts)
+                {
+                    StockProductDetails ObjStockProductDetails = GetStockProductDetails(dr["Item Name"].ToString().Trim());
+                    if (ObjStockProductDetails.IsStockOverride && IsStockOverride == false)
+                    {
+                        continue;
+                    }
+                    else if (IsStockOverride)
+                    {
+                        ObjStockProductDetails.OrderQty = Double.Parse(dr["Order Quantity"].ToString().Trim());
+                        if (dr["Received Quantity"] == DBNull.Value) continue;
+                        ObjStockProductDetails.RecvdQty = (Double.Parse(dr["Received Quantity"].ToString().Trim()) * ObjStockProductDetails.Units);
+                        if (dr["Total"] != DBNull.Value)
+                        {
+                            ObjStockProductDetails.TotalCost = Double.Parse(dr["Total"].ToString().Trim());
+                            ObjStockProductDetails.TotalTax = (Double.Parse(dr["Total"].ToString().Trim()) * Double.Parse(CommonFunctions.ObjPurchaseOrderSettings.VATPercent) / 100);
+                        }
+                    }
+                    else
+                    {
+                        ObjStockProductDetails.OrderQty += Double.Parse(dr["Order Quantity"].ToString().Trim());
+                        if (dr["Received Quantity"] == DBNull.Value) continue;
+                        ObjStockProductDetails.RecvdQty += (Double.Parse(dr["Received Quantity"].ToString().Trim()) * ObjStockProductDetails.Units);
+                        if (dr["Total"] != DBNull.Value)
+                        {
+                            ObjStockProductDetails.TotalCost += Double.Parse(dr["Total"].ToString().Trim());
+                            ObjStockProductDetails.TotalTax += (Double.Parse(dr["Total"].ToString().Trim()) * Double.Parse(CommonFunctions.ObjPurchaseOrderSettings.VATPercent) / 100);
+                        }
+                    }
+                    ObjStockProductDetails.IsUpdated = true;
+                    ObjStockProductDetails.IsStockOverride |= IsStockOverride;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.UpdateProductInventoryDataFromPO()", ex);
+                throw;
+            }
+        }
+
+        public void UpdateProductInventoryDataFromInvoice(DataRow[] drProducts)
+        {
+            try
+            {
+                foreach (DataRow dr in drProducts)
+                {
+                    ProductDetails ObjProductDetails = GetProductDetails(dr["Item Name"].ToString().Trim());
+                    if (ObjProductDetails == null) continue;
+                    StockProductDetails ObjStockProductDetails = ListStockProducts[ObjProductDetails.StockProductIndex];
+                    ObjStockProductDetails.OrderQty += Double.Parse(dr["Order Quantity"].ToString().Trim());
+                    if (dr["Sales Quantity"] == DBNull.Value) continue;
+                    ObjStockProductDetails.RecvdQty += (Double.Parse(dr["Sales Quantity"].ToString().Trim()) * ObjProductDetails.Units);
+                    if (dr["Total"] != DBNull.Value)
+                    {
+                        ObjStockProductDetails.TotalCost += Double.Parse(dr["Total"].ToString().Trim());
+                        //ObjStockProductDetails.TotalTax += (Double.Parse(dr["Total"].ToString().Trim()) * Double.Parse(CommonFunctions.ObjInvoiceSettings.VATPercent) / 100);
+                    }
+                    ObjStockProductDetails.IsUpdated = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.UpdateProductInventoryDataFromInvoice()", ex);
+                throw;
+            }
+        }
+
+        public void UpdateProductInventoryFile(Form ParentForm, Excel.Application xlApp, DateTime SummaryCreationDate, String ProductInventoryFile)
+        {
+            try
+            {
+                Excel.Workbook xlProductInventory = xlApp.Workbooks.Open(ProductInventoryFile);
+                Excel.Worksheet xlInventoryWorksheet = CommonFunctions.GetWorksheet(xlProductInventory, "Inventory");
+                ProductMaster ObjProductMaster = CommonFunctions.ObjProductMaster;
+
+                Int32 RowCount = xlInventoryWorksheet.UsedRange.Rows.Count, ColumnCount = xlInventoryWorksheet.UsedRange.Columns.Count;
+                Int32 StartRow = 1, StockNameColPos = 2, StockColPos = 4, LastPODateColPos = 5, LastUpdateDateColPos = 6;
+                for (int i = 0; i < ColumnCount; i++)
+                {
+                    String ColName = xlInventoryWorksheet.Cells[1, 1 + i].Value.ToString().Trim().ToUpper();
+                    switch (ColName)
+                    {
+                        case "STOCKNAME": StockNameColPos = i + 1; break;
+                        case "STOCK": StockColPos = i + 1; break;
+                        case "LASTUPDATEDATE": LastUpdateDateColPos = i + 1; break;
+                        case "LASTPODATE": LastPODateColPos = i + 1; break;
+                        default: break;
+                    }
+                }
+
+                for (int i = 1; i < RowCount; i++)
+                {
+                    String StockName = xlInventoryWorksheet.Cells[StartRow + i, StockNameColPos].Value.ToString().Trim();
+                    StockProductDetails ObjStockProductDetails = ObjProductMaster.GetStockProductDetails(StockName);
+                    if (ObjStockProductDetails == null || !ObjStockProductDetails.IsUpdated) continue;
+                    xlInventoryWorksheet.Cells[StartRow + i, StockColPos].Value = ObjStockProductDetails.NetQty;
+                    xlInventoryWorksheet.Cells[StartRow + i, LastPODateColPos].Value = SummaryCreationDate.ToString("dd-MMM-yyyy");
+                    xlInventoryWorksheet.Cells[StartRow + i, LastUpdateDateColPos].Value = DateTime.Now.Date.ToString("dd-MMM-yyyy");
+                }
+
+                xlProductInventory.Save();
+                xlProductInventory.Close();
+
+                MessageBox.Show(ParentForm, "Product Inventory file updated successfully", "Product Inventory", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.UpdateProductInventoryFile()", ex);
+                throw;
+            }
+        }
+
+        public void UpdateProductStockHistoryFile(Form ParentForm, Excel.Application xlApp, DateTime SummaryCreationDate, String TransactionType, String ProductStockHistoryFile)
+        {
+            try
+            {
+                Excel.Workbook xlProductStockHistory;
+                Excel.Worksheet xlStockHistoryWorksheet;
+
+                Boolean StockHistoryFileExists = true;
+                String[] Header = new String[] { "PO Date", "Update Date", "Type", "Stock Name", "Order Qty", "Receive Qty", "Net Qty", "Total Cost", "Total Discount", "Total Tax", "Net Cost" };
+                if (!File.Exists(ProductStockHistoryFile))
+                {
+                    StockHistoryFileExists = false;
+
+                    xlProductStockHistory = xlApp.Workbooks.Add();
+                    xlStockHistoryWorksheet = xlProductStockHistory.Worksheets.Add();
+                    xlStockHistoryWorksheet.Name = "Stock History";
+                    for (int i = 0; i < Header.Length; i++)
+                    {
+                        xlStockHistoryWorksheet.Cells[1, i + 1].Value = Header[i];
+                    }
+
+                    Excel.Range xlRange1 = xlStockHistoryWorksheet.Range[xlStockHistoryWorksheet.Cells[1, 1], xlStockHistoryWorksheet.Cells[1, Header.Length]];
+                    xlRange1.Font.Bold = true;
+                    SellerInvoiceForm.SetAllBorders(xlRange1);
+                    xlProductStockHistory.SaveAs(ProductStockHistoryFile);
+
+                    Excel.Worksheet xlSheet = CommonFunctions.GetWorksheet(xlProductStockHistory, "Sheet1");
+                    if (xlSheet != null) xlSheet.Delete();
+                    xlSheet = CommonFunctions.GetWorksheet(xlProductStockHistory, "Sheet2");
+                    if (xlSheet != null) xlSheet.Delete();
+                    xlSheet = CommonFunctions.GetWorksheet(xlProductStockHistory, "Sheet3");
+                    if (xlSheet != null) xlSheet.Delete();
+                }
+                else
+                {
+                    xlProductStockHistory = xlApp.Workbooks.Open(ProductStockHistoryFile);
+                    xlStockHistoryWorksheet = CommonFunctions.GetWorksheet(xlProductStockHistory, "Stock History");
+                }
+
+                ProductMaster ObjProductMaster = CommonFunctions.ObjProductMaster;
+
+                Int32 RowCount = xlStockHistoryWorksheet.UsedRange.Rows.Count, ColumnCount = xlStockHistoryWorksheet.UsedRange.Columns.Count;
+                Int32 StartRow = RowCount + 1, PODateColPos = 1, UpdateDateColPos = 2, TypeColPos = 3, StockNameColPos = 4,
+                    OrderQtyColPos = 5, ReceiveQtyColPos = 6, NetQtyColPos = 7, TotalCostColPos = 8, TotalDiscountColPos = 9,
+                    TotalTaxColPos = 10, NetCostColPos = 11;
+                //PO Date\tUpdate Date\tType\tStock Name\tOrder Qty\tReceive Qty\tNet Qty\tTotal Cost\tTotal Discount\tTotal Tax\tNet Cost
+
+                for (int i = 0; i < ColumnCount; i++)
+                {
+                    String ColName = xlStockHistoryWorksheet.Cells[1, 1 + i].Value.ToString().Trim().ToUpper();
+                    switch (ColName)
+                    {
+                        case "PO DATE": PODateColPos = i + 1; break;
+                        case "UPDATE DATE": UpdateDateColPos = i + 1; break;
+                        case "TYPE": TypeColPos = i + 1; break;
+                        case "STOCK NAME": StockNameColPos = i + 1; break;
+                        case "ORDER QTY": OrderQtyColPos = i + 1; break;
+                        case "RECEIVE QTY": ReceiveQtyColPos = i + 1; break;
+                        case "NET QTY": NetQtyColPos = i + 1; break;
+                        case "TOTAL COST": TotalCostColPos = i + 1; break;
+                        case "TOTAL DISCOUNT": TotalDiscountColPos = i + 1; break;
+                        case "TOTAL TAX": TotalTaxColPos = i + 1; break;
+                        case "NET COST": NetCostColPos = i + 1; break;
+                        default: break;
+                    }
+                }
+
+                Int32 StockCounter = 0;
+                for (int i = 0, j = 0; i < ObjProductMaster.ListStockProducts.Count; i++)
+                {
+                    StockProductDetails ObjStockProduct = ObjProductMaster.ListStockProducts[i];
+                    if (!ObjStockProduct.IsUpdated) continue;
+
+                    xlStockHistoryWorksheet.Cells[StartRow + j, PODateColPos].Value = SummaryCreationDate.ToString("dd-MMM-yyyy");
+                    xlStockHistoryWorksheet.Cells[StartRow + j, UpdateDateColPos].Value = DateTime.Now.Date.ToString("dd-MMM-yyyy");
+                    xlStockHistoryWorksheet.Cells[StartRow + j, TypeColPos].Value = TransactionType;
+                    xlStockHistoryWorksheet.Cells[StartRow + j, StockNameColPos].Value = ObjStockProduct.StockName;
+                    xlStockHistoryWorksheet.Cells[StartRow + j, OrderQtyColPos].Value = ObjStockProduct.OrderQty;
+                    xlStockHistoryWorksheet.Cells[StartRow + j, ReceiveQtyColPos].Value = ObjStockProduct.RecvdQty;
+                    xlStockHistoryWorksheet.Cells[StartRow + j, NetQtyColPos].Value = ObjStockProduct.NetQty;
+                    xlStockHistoryWorksheet.Cells[StartRow + j, TotalCostColPos].Value = ObjStockProduct.TotalCost;
+                    xlStockHistoryWorksheet.Cells[StartRow + j, TotalDiscountColPos].Value = ObjStockProduct.TotalDiscount;
+                    xlStockHistoryWorksheet.Cells[StartRow + j, TotalTaxColPos].Value = ObjStockProduct.TotalTax;
+                    xlStockHistoryWorksheet.Cells[StartRow + j, NetCostColPos].Value = ObjStockProduct.NetCost;
+                    StockCounter = j;
+                    j++;
+                }
+
+                Excel.Range xlRange = xlStockHistoryWorksheet.Range[xlStockHistoryWorksheet.Cells[StartRow, PODateColPos], xlStockHistoryWorksheet.Cells[StartRow + StockCounter, NetCostColPos]];
+                SellerInvoiceForm.SetAllBorders(xlRange);
+
+                xlProductStockHistory.Save();
+                xlProductStockHistory.Close();
+
+                String Message;
+                if (StockHistoryFileExists)
+                {
+                    Message = "Product Stock History file is updated with " + TransactionType + " details";
+                }
+                else
+                {
+                    Message = "Product Stock History file is updated with " + TransactionType + " details\n";
+                    Message += "Product Stock History file is created at " + ProductStockHistoryFile;
+                }
+                MessageBox.Show(ParentForm, Message, "Product Stock History", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.UpdateProductStockHistoryFile()", ex);
+                throw;
+            }
         }
     }
 }

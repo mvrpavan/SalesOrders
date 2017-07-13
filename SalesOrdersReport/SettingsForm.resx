@@ -118,6 +118,46 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnHeaderSubTitleColorPO.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAADZSURBVDhPlZHBCgFRFIbHylpSNpK9d2EjO09gZStPYOkheANPQTaykqSUvR3F943kxlzGV1/T
+        uc1/5p4zyZ+0cIcXnGMVc9NFg7dAm3ylgSuc4HtYPYtSwT2+h0IdJ0oJD5gVVL/exig99KUTZoXdSZRn
+        uI813GLYwJ1ECcNPbBLexMVmkhUWa8/diYv173zQwSvGwjZ3sf6dD+p4xlFavQjDXxniBgtp9WCAucJF
+        XOM4rR5NvInj/AzLFI/YRJt4E8dxJ7lYojewiU/HcSe5KeMCZ+g4f5Akd5e+UEq4dmvWAAAAAElFTkSu
+        QmCC
+</value>
+  </data>
+  <data name="btnHeaderTitleColorPO.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAADZSURBVDhPlZHBCgFRFIbHylpSNpK9d2EjO09gZStPYOkheANPQTaykqSUvR3F943kxlzGV1/T
+        uc1/5p4zyZ+0cIcXnGMVc9NFg7dAm3ylgSuc4HtYPYtSwT2+h0IdJ0oJD5gVVL/exig99KUTZoXdSZRn
+        uI813GLYwJ1ECcNPbBLexMVmkhUWa8/diYv173zQwSvGwjZ3sf6dD+p4xlFavQjDXxniBgtp9WCAucJF
+        XOM4rR5NvInj/AzLFI/YRJt4E8dxJ7lYojewiU/HcSe5KeMCZ+g4f5Akd5e+UEq4dmvWAAAAAElFTkSu
+        QmCC
+</value>
+  </data>
+  <data name="btnFooterTextColorPO.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAADZSURBVDhPlZHBCgFRFIbHylpSNpK9d2EjO09gZStPYOkheANPQTaykqSUvR3F943kxlzGV1/T
+        uc1/5p4zyZ+0cIcXnGMVc9NFg7dAm3ylgSuc4HtYPYtSwT2+h0IdJ0oJD5gVVL/exig99KUTZoXdSZRn
+        uI813GLYwJ1ECcNPbBLexMVmkhUWa8/diYv173zQwSvGwjZ3sf6dD+p4xlFavQjDXxniBgtp9WCAucJF
+        XOM4rR5NvInj/AzLFI/YRJt4E8dxJ7lYojewiU/HcSe5KeMCZ+g4f5Akd5e+UEq4dmvWAAAAAElFTkSu
+        QmCC
+</value>
+  </data>
+  <data name="btnFooterTitleColorPO.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAADZSURBVDhPlZHBCgFRFIbHylpSNpK9d2EjO09gZStPYOkheANPQTaykqSUvR3F943kxlzGV1/T
+        uc1/5p4zyZ+0cIcXnGMVc9NFg7dAm3ylgSuc4HtYPYtSwT2+h0IdJ0oJD5gVVL/exig99KUTZoXdSZRn
+        uI813GLYwJ1ECcNPbBLexMVmkhUWa8/diYv173zQwSvGwjZ3sf6dD+p4xlFavQjDXxniBgtp9WCAucJF
+        XOM4rR5NvInj/AzLFI/YRJt4E8dxJ7lYojewiU/HcSe5KeMCZ+g4f5Akd5e+UEq4dmvWAAAAAElFTkSu
+        QmCC
+</value>
+  </data>
   <data name="btnFooterTextColorInv.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8

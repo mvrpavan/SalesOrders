@@ -12,19 +12,17 @@ namespace SalesOrdersReport
 {
     enum ReportType
     {
-        INVOICE, QUOTATION
+        INVOICE, QUOTATION, PURCHASEORDER
     }
 
-    public partial class CreateSellerInvoice : Form
+    public partial class SellerInvoiceForm : Form
     {
         public String MasterFilePath;
         Excel.Application xlApp;
         Boolean SummaryPrinted = false;
         CheckState PrevAllLinesCheckState = CheckState.Indeterminate;
-        ToolStripProgressBar ToolStripProgressBarMainForm;
-        ToolStripLabel ToolStripProgressBarStatus;
 
-        public CreateSellerInvoice()
+        public SellerInvoiceForm()
         {
             try
             {
@@ -32,13 +30,7 @@ namespace SalesOrdersReport
                 MasterFilePath = CommonFunctions.MasterFilePath;
                 txtBoxOutputFolder.Text = System.IO.Path.GetDirectoryName(MasterFilePath);
 
-                ToolStripProgressBarMainForm = CommonFunctions.ToolStripProgressBarMainForm;
-                ToolStripProgressBarStatus = CommonFunctions.ToolStripProgressBarMainFormStatus;
-
-                ToolStripProgressBarMainForm.Maximum = 100;
-                ToolStripProgressBarMainForm.Step = 1;
-                ToolStripProgressBarMainForm.Value = 0;
-                ToolStripProgressBarStatus.Text = "";
+                CommonFunctions.ResetProgressBar();
 
                 lblStatus.Text = "";
                 CommonFunctions.ListSelectedSellers.Clear();
@@ -47,7 +39,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("CreateSellerInvoice.ctor", ex);
+                CommonFunctions.ShowErrorDialog("SellerInvoiceForm.ctor", ex);
             }
         }
 
@@ -78,21 +70,6 @@ namespace SalesOrdersReport
         {
             try
             {
-                /*CommonFunctions.ListLines = new List<String>();
-                DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", MasterFilePath, "*");
-                Boolean ContainsBlanks = false;
-                for (int i = 0; i < dtSellerMaster.Rows.Count; i++)
-                {
-                    DataRow dtRow = dtSellerMaster.Rows[i];
-                    String Line = dtRow["Line"].ToString().Replace("<", "").Replace(">", "").ToUpper();
-                    if (Line.Trim().Length == 0) ContainsBlanks = true;
-                    else if (!CommonFunctions.ListLines.Contains(Line)) CommonFunctions.ListLines.Add(Line);
-                }
-
-                CommonFunctions.ListLines.Sort();
-                CommonFunctions.ListLines.Insert(0, "<All>");
-                if (ContainsBlanks) CommonFunctions.ListLines.Add("<Blanks>");*/
-
                 chkListBoxLine.Items.Clear();
                 for (int i = 0; i < CommonFunctions.ListLines.Count; i++)
                 {
@@ -161,7 +138,6 @@ namespace SalesOrdersReport
             {
                 DataTable dtItemMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("ItemMaster", MasterFilePath, "*");
                 DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", MasterFilePath, "*");
-                List<String> ListVendors = dtItemMaster.AsEnumerable().Select(s => s.Field<String>("VendorName")).Distinct().ToList();
                 String[] SelectedLine = new String[chkListBoxLine.CheckedItems.Count];
                 chkListBoxLine.CheckedItems.CopyTo(SelectedLine, 0);
 
@@ -283,7 +259,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("CreateInvoice_Click", ex);
+                CommonFunctions.ShowErrorDialog("SellerInvoiceForm.backgroundWorker1_DoWork()", ex);
             }
             finally
             {
@@ -780,7 +756,7 @@ namespace SalesOrdersReport
             }
         }
 
-        private static void AddPageHeaderAndFooter(ref Excel.Worksheet xlWorksheet, String PageHeaderTitle, ReportSettings CurrReportSettings)
+        internal static void AddPageHeaderAndFooter(ref Excel.Worksheet xlWorksheet, String PageHeaderTitle, ReportSettings CurrReportSettings)
         {
             try
             {
@@ -892,17 +868,12 @@ namespace SalesOrdersReport
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            // Change the value of the ProgressBar to the BackgroundWorker progress.
-            ToolStripProgressBarMainForm.Value = Math.Min(e.ProgressPercentage, 100);
-
-            // Set the text.
-            ToolStripProgressBarStatus.Text = Math.Min(e.ProgressPercentage, 100).ToString() + "%";
+            CommonFunctions.UpdateProgressBar(e.ProgressPercentage);
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            ToolStripProgressBarMainForm.Value = 0;
-            ToolStripProgressBarStatus.Text = "";
+            CommonFunctions.ResetProgressBar();
             btnCancel.Focus();
         }
 
@@ -952,7 +923,7 @@ namespace SalesOrdersReport
 
         private void btnAddSeller_Click(object sender, EventArgs e)
         {
-            SellerList ObjSellersListForm = new SellerList(this);
+            SellerListForm ObjSellersListForm = new SellerListForm(this);
             ObjSellersListForm.ShowDialog(this);
         }
 

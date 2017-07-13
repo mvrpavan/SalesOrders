@@ -1,6 +1,6 @@
 ﻿namespace SalesOrdersReport
 {
-    partial class SellerList
+    partial class SellerListForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SellerList));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SellerListForm));
             this.label1 = new System.Windows.Forms.Label();
             this.cmbBoxLineFilter = new System.Windows.Forms.ComboBox();
             this.dtGridViewSellers = new System.Windows.Forms.DataGridView();

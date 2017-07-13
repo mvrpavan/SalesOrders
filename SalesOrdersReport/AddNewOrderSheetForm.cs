@@ -14,8 +14,6 @@ namespace SalesOrdersReport
     {
         String MasterFilePath;
         List<Color> ListColors;
-        ToolStripProgressBar ToolStripProgressBarMainForm;
-        ToolStripLabel ToolStripProgressBarStatus;
 
         public AddNewOrderSheetForm()
         {
@@ -37,13 +35,7 @@ namespace SalesOrdersReport
                 ListColors.Add(Color.FromArgb(255, 153, 153));
                 ListColors.Add(Color.FromArgb(51, 255, 153));
 
-                ToolStripProgressBarMainForm = CommonFunctions.ToolStripProgressBarMainForm;
-                ToolStripProgressBarStatus = CommonFunctions.ToolStripProgressBarMainFormStatus;
-
-                ToolStripProgressBarMainForm.Maximum = 100;
-                ToolStripProgressBarMainForm.Step = 1;
-                ToolStripProgressBarMainForm.Value = 0;
-                ToolStripProgressBarStatus.Text = "";
+                CommonFunctions.ResetProgressBar();
             }
             catch (Exception ex)
             {
@@ -189,7 +181,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("CreateOrderSheet_Click", ex);
+                CommonFunctions.ShowErrorDialog("AddNewOrderSheetForm.backgroundWorker1_DoWork()", ex);
             }
             finally
             {
@@ -200,17 +192,12 @@ namespace SalesOrdersReport
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            // Change the value of the ProgressBar to the BackgroundWorker progress.
-            ToolStripProgressBarMainForm.Value = e.ProgressPercentage;
-
-            // Set the text.
-            ToolStripProgressBarStatus.Text = e.ProgressPercentage.ToString() + "%";
+            CommonFunctions.UpdateProgressBar(e.ProgressPercentage);
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            ToolStripProgressBarMainForm.Value = 0;
-            ToolStripProgressBarStatus.Text = "";
+            CommonFunctions.ResetProgressBar();
             btnCancel.Focus();
         }
     }

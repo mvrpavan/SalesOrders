@@ -9,12 +9,12 @@ using System.Windows.Forms;
 
 namespace SalesOrdersReport
 {
-    public partial class SellerList : Form
+    public partial class SellerListForm : Form
     {
-        CreateSellerInvoice ObjCreateSellerInvoice;
+        SellerInvoiceForm ObjCreateSellerInvoice;
         DataTable dtSellerMaster;
 
-        public SellerList(CreateSellerInvoice ObjForm)
+        public SellerListForm(SellerInvoiceForm ObjForm)
         {
             InitializeComponent();
             ObjCreateSellerInvoice = ObjForm;
@@ -46,7 +46,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("SellerList.FillDataGridSellers", ex);
+                CommonFunctions.ShowErrorDialog("SellerListForm.FillDataGridSellers", ex);
             }
         }
 
@@ -63,7 +63,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("SellerList.FillListBoxLineFilter", ex);
+                CommonFunctions.ShowErrorDialog("SellerListForm.FillListBoxLineFilter", ex);
             }
         }
 
@@ -76,7 +76,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("SellerList.btnClose_Click", ex);
+                CommonFunctions.ShowErrorDialog("SellerListForm.btnClose_Click", ex);
             }
         }
 
@@ -88,7 +88,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("SellerList.cmbBoxLineFilter_SelectedIndexChanged", ex);
+                CommonFunctions.ShowErrorDialog("SellerListForm.cmbBoxLineFilter_SelectedIndexChanged", ex);
             }
         }
 
@@ -115,7 +115,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("SellerList.dtGridViewSellers_CellClick", ex);
+                CommonFunctions.ShowErrorDialog("SellerListForm.dtGridViewSellers_CellClick", ex);
             }
         }
     }

@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Sales Orders")]
-[assembly: AssemblyDescription("Sales Orders")]
+[assembly: AssemblyDescription("Easily manage your Invoices, Purchase Orders, Sellers, Vendors & Stock with Sales Orders Software")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Freelance Projects Inc.")]
-[assembly: AssemblyProduct("Report Generation Package")]
+[assembly: AssemblyProduct("Invoicing and Inventory Management Software Solution")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("5.0.0.0")]
-[assembly: AssemblyFileVersion("5.0.0.0")]
+[assembly: AssemblyVersion("6.0.0.0")]
+[assembly: AssemblyFileVersion("6.0.0.0")]

@@ -85,6 +85,33 @@
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
+            this.tabPagePurchaseOrder = new System.Windows.Forms.TabPage();
+            this.txtBoxVATPercentPO = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.txtBoxHeaderSubTitleColorPO = new System.Windows.Forms.TextBox();
+            this.txtBoxHeaderTitleColorPO = new System.Windows.Forms.TextBox();
+            this.btnHeaderSubTitleColorPO = new System.Windows.Forms.Button();
+            this.btnHeaderTitleColorPO = new System.Windows.Forms.Button();
+            this.txtBoxFooterTextColorPO = new System.Windows.Forms.TextBox();
+            this.txtBoxFooterTitleColorPO = new System.Windows.Forms.TextBox();
+            this.btnFooterTextColorPO = new System.Windows.Forms.Button();
+            this.btnFooterTitleColorPO = new System.Windows.Forms.Button();
+            this.txtBoxAddressPO = new System.Windows.Forms.TextBox();
+            this.txtBoxLastPONumber = new System.Windows.Forms.TextBox();
+            this.txtBoxTINNumberPO = new System.Windows.Forms.TextBox();
+            this.txtBoxEMailIDPO = new System.Windows.Forms.TextBox();
+            this.txtBoxPhoneNumberPO = new System.Windows.Forms.TextBox();
+            this.txtBoxFooterTitlePO = new System.Windows.Forms.TextBox();
+            this.txtBoxHeaderSubTitlePO = new System.Windows.Forms.TextBox();
+            this.txtBoxHeaderTitlePO = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
             this.btnApplySettings = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.colorDialogSettings = new System.Windows.Forms.ColorDialog();
@@ -94,6 +121,7 @@
             this.tabPageGeneral.SuspendLayout();
             this.tabPageInvoice.SuspendLayout();
             this.tabPageQuotation.SuspendLayout();
+            this.tabPagePurchaseOrder.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlSettings
@@ -101,6 +129,7 @@
             this.tabControlSettings.Controls.Add(this.tabPageGeneral);
             this.tabControlSettings.Controls.Add(this.tabPageInvoice);
             this.tabControlSettings.Controls.Add(this.tabPageQuotation);
+            this.tabControlSettings.Controls.Add(this.tabPagePurchaseOrder);
             this.tabControlSettings.Location = new System.Drawing.Point(12, 42);
             this.tabControlSettings.Name = "tabControlSettings";
             this.tabControlSettings.SelectedIndex = 0;
@@ -188,6 +217,7 @@
             this.txtBoxFooterTextColorInv.Name = "txtBoxFooterTextColorInv";
             this.txtBoxFooterTextColorInv.Size = new System.Drawing.Size(21, 13);
             this.txtBoxFooterTextColorInv.TabIndex = 26;
+            this.txtBoxFooterTextColorInv.TabStop = false;
             // 
             // txtBoxHeaderSubTitleColorInv
             // 
@@ -197,6 +227,7 @@
             this.txtBoxHeaderSubTitleColorInv.Name = "txtBoxHeaderSubTitleColorInv";
             this.txtBoxHeaderSubTitleColorInv.Size = new System.Drawing.Size(21, 13);
             this.txtBoxHeaderSubTitleColorInv.TabIndex = 26;
+            this.txtBoxHeaderSubTitleColorInv.TabStop = false;
             // 
             // txtBoxHeaderTitleColorInv
             // 
@@ -206,6 +237,7 @@
             this.txtBoxHeaderTitleColorInv.Name = "txtBoxHeaderTitleColorInv";
             this.txtBoxHeaderTitleColorInv.Size = new System.Drawing.Size(21, 13);
             this.txtBoxHeaderTitleColorInv.TabIndex = 26;
+            this.txtBoxHeaderTitleColorInv.TabStop = false;
             // 
             // txtBoxFooterTitleColorInv
             // 
@@ -215,6 +247,7 @@
             this.txtBoxFooterTitleColorInv.Name = "txtBoxFooterTitleColorInv";
             this.txtBoxFooterTitleColorInv.Size = new System.Drawing.Size(21, 13);
             this.txtBoxFooterTitleColorInv.TabIndex = 26;
+            this.txtBoxFooterTitleColorInv.TabStop = false;
             // 
             // btnFooterTextColorInv
             // 
@@ -446,6 +479,7 @@
             this.txtBoxHeaderSubTitleColorQuot.Name = "txtBoxHeaderSubTitleColorQuot";
             this.txtBoxHeaderSubTitleColorQuot.Size = new System.Drawing.Size(21, 13);
             this.txtBoxHeaderSubTitleColorQuot.TabIndex = 29;
+            this.txtBoxHeaderSubTitleColorQuot.TabStop = false;
             // 
             // txtBoxHeaderTitleColorQuot
             // 
@@ -455,6 +489,7 @@
             this.txtBoxHeaderTitleColorQuot.Name = "txtBoxHeaderTitleColorQuot";
             this.txtBoxHeaderTitleColorQuot.Size = new System.Drawing.Size(21, 13);
             this.txtBoxHeaderTitleColorQuot.TabIndex = 30;
+            this.txtBoxHeaderTitleColorQuot.TabStop = false;
             // 
             // btnHeaderSubTitleColorQuot
             // 
@@ -484,6 +519,7 @@
             this.txtBoxFooterTextColorQuot.Name = "txtBoxFooterTextColorQuot";
             this.txtBoxFooterTextColorQuot.Size = new System.Drawing.Size(21, 13);
             this.txtBoxFooterTextColorQuot.TabIndex = 25;
+            this.txtBoxFooterTextColorQuot.TabStop = false;
             // 
             // txtBoxFooterTitleColorQuot
             // 
@@ -493,6 +529,7 @@
             this.txtBoxFooterTitleColorQuot.Name = "txtBoxFooterTitleColorQuot";
             this.txtBoxFooterTitleColorQuot.Size = new System.Drawing.Size(21, 13);
             this.txtBoxFooterTitleColorQuot.TabIndex = 25;
+            this.txtBoxFooterTitleColorQuot.TabStop = false;
             // 
             // btnFooterTextColorQuot
             // 
@@ -643,12 +680,278 @@
             this.label20.TabIndex = 9;
             this.label20.Text = "Header Title";
             // 
+            // tabPagePurchaseOrder
+            // 
+            this.tabPagePurchaseOrder.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxVATPercentPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.label27);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxHeaderSubTitleColorPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxHeaderTitleColorPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.btnHeaderSubTitleColorPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.btnHeaderTitleColorPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxFooterTextColorPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxFooterTitleColorPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.btnFooterTextColorPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.btnFooterTitleColorPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxAddressPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxLastPONumber);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxTINNumberPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxEMailIDPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxPhoneNumberPO);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxFooterTitlePO);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxHeaderSubTitlePO);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxHeaderTitlePO);
+            this.tabPagePurchaseOrder.Controls.Add(this.label13);
+            this.tabPagePurchaseOrder.Controls.Add(this.label17);
+            this.tabPagePurchaseOrder.Controls.Add(this.label21);
+            this.tabPagePurchaseOrder.Controls.Add(this.label22);
+            this.tabPagePurchaseOrder.Controls.Add(this.label23);
+            this.tabPagePurchaseOrder.Controls.Add(this.label24);
+            this.tabPagePurchaseOrder.Controls.Add(this.label25);
+            this.tabPagePurchaseOrder.Controls.Add(this.label26);
+            this.tabPagePurchaseOrder.Location = new System.Drawing.Point(4, 22);
+            this.tabPagePurchaseOrder.Name = "tabPagePurchaseOrder";
+            this.tabPagePurchaseOrder.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPagePurchaseOrder.Size = new System.Drawing.Size(539, 305);
+            this.tabPagePurchaseOrder.TabIndex = 4;
+            this.tabPagePurchaseOrder.Text = "Purchase Order";
+            this.tabPagePurchaseOrder.UseVisualStyleBackColor = true;
+            // 
+            // txtBoxVATPercentPO
+            // 
+            this.txtBoxVATPercentPO.Location = new System.Drawing.Point(178, 217);
+            this.txtBoxVATPercentPO.Name = "txtBoxVATPercentPO";
+            this.txtBoxVATPercentPO.Size = new System.Drawing.Size(204, 20);
+            this.txtBoxVATPercentPO.TabIndex = 11;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(70, 220);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(68, 13);
+            this.label27.TabIndex = 55;
+            this.label27.Text = "VAT Percent";
+            // 
+            // txtBoxHeaderSubTitleColorPO
+            // 
+            this.txtBoxHeaderSubTitleColorPO.BackColor = System.Drawing.SystemColors.InfoText;
+            this.txtBoxHeaderSubTitleColorPO.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtBoxHeaderSubTitleColorPO.Enabled = false;
+            this.txtBoxHeaderSubTitleColorPO.Location = new System.Drawing.Point(422, 59);
+            this.txtBoxHeaderSubTitleColorPO.Name = "txtBoxHeaderSubTitleColorPO";
+            this.txtBoxHeaderSubTitleColorPO.Size = new System.Drawing.Size(21, 13);
+            this.txtBoxHeaderSubTitleColorPO.TabIndex = 53;
+            this.txtBoxHeaderSubTitleColorPO.TabStop = false;
+            // 
+            // txtBoxHeaderTitleColorPO
+            // 
+            this.txtBoxHeaderTitleColorPO.BackColor = System.Drawing.SystemColors.InfoText;
+            this.txtBoxHeaderTitleColorPO.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtBoxHeaderTitleColorPO.Enabled = false;
+            this.txtBoxHeaderTitleColorPO.Location = new System.Drawing.Point(422, 33);
+            this.txtBoxHeaderTitleColorPO.Name = "txtBoxHeaderTitleColorPO";
+            this.txtBoxHeaderTitleColorPO.Size = new System.Drawing.Size(21, 13);
+            this.txtBoxHeaderTitleColorPO.TabIndex = 54;
+            this.txtBoxHeaderTitleColorPO.TabStop = false;
+            // 
+            // btnHeaderSubTitleColorPO
+            // 
+            this.btnHeaderSubTitleColorPO.Image = ((System.Drawing.Image)(resources.GetObject("btnHeaderSubTitleColorPO.Image")));
+            this.btnHeaderSubTitleColorPO.Location = new System.Drawing.Point(388, 54);
+            this.btnHeaderSubTitleColorPO.Name = "btnHeaderSubTitleColorPO";
+            this.btnHeaderSubTitleColorPO.Size = new System.Drawing.Size(28, 23);
+            this.btnHeaderSubTitleColorPO.TabIndex = 4;
+            this.btnHeaderSubTitleColorPO.UseVisualStyleBackColor = true;
+            this.btnHeaderSubTitleColorPO.Click += new System.EventHandler(this.btnHeaderSubTitleColorPO_Click);
+            // 
+            // btnHeaderTitleColorPO
+            // 
+            this.btnHeaderTitleColorPO.Image = ((System.Drawing.Image)(resources.GetObject("btnHeaderTitleColorPO.Image")));
+            this.btnHeaderTitleColorPO.Location = new System.Drawing.Point(388, 28);
+            this.btnHeaderTitleColorPO.Name = "btnHeaderTitleColorPO";
+            this.btnHeaderTitleColorPO.Size = new System.Drawing.Size(28, 23);
+            this.btnHeaderTitleColorPO.TabIndex = 2;
+            this.btnHeaderTitleColorPO.UseVisualStyleBackColor = true;
+            this.btnHeaderTitleColorPO.Click += new System.EventHandler(this.btnHeaderTitleColorPO_Click);
+            // 
+            // txtBoxFooterTextColorPO
+            // 
+            this.txtBoxFooterTextColorPO.BackColor = System.Drawing.SystemColors.InfoText;
+            this.txtBoxFooterTextColorPO.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtBoxFooterTextColorPO.Enabled = false;
+            this.txtBoxFooterTextColorPO.Location = new System.Drawing.Point(422, 111);
+            this.txtBoxFooterTextColorPO.Name = "txtBoxFooterTextColorPO";
+            this.txtBoxFooterTextColorPO.Size = new System.Drawing.Size(21, 13);
+            this.txtBoxFooterTextColorPO.TabIndex = 51;
+            this.txtBoxFooterTextColorPO.TabStop = false;
+            // 
+            // txtBoxFooterTitleColorPO
+            // 
+            this.txtBoxFooterTitleColorPO.BackColor = System.Drawing.SystemColors.InfoText;
+            this.txtBoxFooterTitleColorPO.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtBoxFooterTitleColorPO.Enabled = false;
+            this.txtBoxFooterTitleColorPO.Location = new System.Drawing.Point(422, 85);
+            this.txtBoxFooterTitleColorPO.Name = "txtBoxFooterTitleColorPO";
+            this.txtBoxFooterTitleColorPO.Size = new System.Drawing.Size(21, 13);
+            this.txtBoxFooterTitleColorPO.TabIndex = 52;
+            this.txtBoxFooterTitleColorPO.TabStop = false;
+            // 
+            // btnFooterTextColorPO
+            // 
+            this.btnFooterTextColorPO.Image = ((System.Drawing.Image)(resources.GetObject("btnFooterTextColorPO.Image")));
+            this.btnFooterTextColorPO.Location = new System.Drawing.Point(388, 106);
+            this.btnFooterTextColorPO.Name = "btnFooterTextColorPO";
+            this.btnFooterTextColorPO.Size = new System.Drawing.Size(28, 23);
+            this.btnFooterTextColorPO.TabIndex = 8;
+            this.btnFooterTextColorPO.UseVisualStyleBackColor = true;
+            this.btnFooterTextColorPO.Click += new System.EventHandler(this.btnFooterTextColorPO_Click);
+            // 
+            // btnFooterTitleColorPO
+            // 
+            this.btnFooterTitleColorPO.Image = ((System.Drawing.Image)(resources.GetObject("btnFooterTitleColorPO.Image")));
+            this.btnFooterTitleColorPO.Location = new System.Drawing.Point(388, 80);
+            this.btnFooterTitleColorPO.Name = "btnFooterTitleColorPO";
+            this.btnFooterTitleColorPO.Size = new System.Drawing.Size(28, 23);
+            this.btnFooterTitleColorPO.TabIndex = 6;
+            this.btnFooterTitleColorPO.UseVisualStyleBackColor = true;
+            this.btnFooterTitleColorPO.Click += new System.EventHandler(this.btnFooterTitleColorPO_Click);
+            // 
+            // txtBoxAddressPO
+            // 
+            this.txtBoxAddressPO.Location = new System.Drawing.Point(178, 108);
+            this.txtBoxAddressPO.Multiline = true;
+            this.txtBoxAddressPO.Name = "txtBoxAddressPO";
+            this.txtBoxAddressPO.Size = new System.Drawing.Size(204, 51);
+            this.txtBoxAddressPO.TabIndex = 7;
+            // 
+            // txtBoxLastPONumber
+            // 
+            this.txtBoxLastPONumber.Location = new System.Drawing.Point(178, 269);
+            this.txtBoxLastPONumber.Name = "txtBoxLastPONumber";
+            this.txtBoxLastPONumber.Size = new System.Drawing.Size(204, 20);
+            this.txtBoxLastPONumber.TabIndex = 13;
+            // 
+            // txtBoxTINNumberPO
+            // 
+            this.txtBoxTINNumberPO.Location = new System.Drawing.Point(178, 243);
+            this.txtBoxTINNumberPO.Name = "txtBoxTINNumberPO";
+            this.txtBoxTINNumberPO.Size = new System.Drawing.Size(204, 20);
+            this.txtBoxTINNumberPO.TabIndex = 12;
+            // 
+            // txtBoxEMailIDPO
+            // 
+            this.txtBoxEMailIDPO.Location = new System.Drawing.Point(178, 191);
+            this.txtBoxEMailIDPO.Name = "txtBoxEMailIDPO";
+            this.txtBoxEMailIDPO.Size = new System.Drawing.Size(204, 20);
+            this.txtBoxEMailIDPO.TabIndex = 10;
+            // 
+            // txtBoxPhoneNumberPO
+            // 
+            this.txtBoxPhoneNumberPO.Location = new System.Drawing.Point(178, 165);
+            this.txtBoxPhoneNumberPO.Name = "txtBoxPhoneNumberPO";
+            this.txtBoxPhoneNumberPO.Size = new System.Drawing.Size(204, 20);
+            this.txtBoxPhoneNumberPO.TabIndex = 9;
+            // 
+            // txtBoxFooterTitlePO
+            // 
+            this.txtBoxFooterTitlePO.Location = new System.Drawing.Point(178, 82);
+            this.txtBoxFooterTitlePO.Name = "txtBoxFooterTitlePO";
+            this.txtBoxFooterTitlePO.Size = new System.Drawing.Size(204, 20);
+            this.txtBoxFooterTitlePO.TabIndex = 5;
+            // 
+            // txtBoxHeaderSubTitlePO
+            // 
+            this.txtBoxHeaderSubTitlePO.Location = new System.Drawing.Point(178, 56);
+            this.txtBoxHeaderSubTitlePO.Name = "txtBoxHeaderSubTitlePO";
+            this.txtBoxHeaderSubTitlePO.Size = new System.Drawing.Size(204, 20);
+            this.txtBoxHeaderSubTitlePO.TabIndex = 3;
+            // 
+            // txtBoxHeaderTitlePO
+            // 
+            this.txtBoxHeaderTitlePO.Location = new System.Drawing.Point(178, 30);
+            this.txtBoxHeaderTitlePO.Name = "txtBoxHeaderTitlePO";
+            this.txtBoxHeaderTitlePO.Size = new System.Drawing.Size(204, 20);
+            this.txtBoxHeaderTitlePO.TabIndex = 1;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(70, 272);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(111, 13);
+            this.label13.TabIndex = 38;
+            this.label13.Text = "Last Purchase Order#";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(70, 246);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(65, 13);
+            this.label17.TabIndex = 40;
+            this.label17.Text = "TIN Number";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(70, 194);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(73, 13);
+            this.label21.TabIndex = 34;
+            this.label21.Text = "Email Address";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(70, 168);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(78, 13);
+            this.label22.TabIndex = 35;
+            this.label22.Text = "Phone Number";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(70, 111);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(45, 13);
+            this.label23.TabIndex = 48;
+            this.label23.Text = "Address";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(70, 85);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(60, 13);
+            this.label24.TabIndex = 46;
+            this.label24.Text = "Footer Title";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(70, 59);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(84, 13);
+            this.label25.TabIndex = 42;
+            this.label25.Text = "Header SubTitle";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(70, 33);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(65, 13);
+            this.label26.TabIndex = 44;
+            this.label26.Text = "Header Title";
+            // 
             // btnApplySettings
             // 
             this.btnApplySettings.Location = new System.Drawing.Point(162, 394);
             this.btnApplySettings.Name = "btnApplySettings";
             this.btnApplySettings.Size = new System.Drawing.Size(97, 23);
-            this.btnApplySettings.TabIndex = 13;
+            this.btnApplySettings.TabIndex = 24;
             this.btnApplySettings.Text = "Apply Settings";
             this.btnApplySettings.UseVisualStyleBackColor = true;
             this.btnApplySettings.Click += new System.EventHandler(this.btnApplySettings_Click);
@@ -659,7 +962,7 @@
             this.btnClose.Location = new System.Drawing.Point(309, 394);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
-            this.btnClose.TabIndex = 14;
+            this.btnClose.TabIndex = 25;
             this.btnClose.Text = "Cancel";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnCancel_Click);
@@ -680,7 +983,7 @@
             this.cmbBoxProductLines.Location = new System.Drawing.Point(220, 13);
             this.cmbBoxProductLines.Name = "cmbBoxProductLines";
             this.cmbBoxProductLines.Size = new System.Drawing.Size(120, 21);
-            this.cmbBoxProductLines.TabIndex = 16;
+            this.cmbBoxProductLines.TabIndex = 0;
             this.cmbBoxProductLines.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProductLines_SelectedIndexChanged);
             // 
             // SettingsForm
@@ -709,6 +1012,8 @@
             this.tabPageInvoice.PerformLayout();
             this.tabPageQuotation.ResumeLayout(false);
             this.tabPageQuotation.PerformLayout();
+            this.tabPagePurchaseOrder.ResumeLayout(false);
+            this.tabPagePurchaseOrder.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -742,6 +1047,24 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtBoxLastInvoiceNumberInv;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox txtBoxFooterTextColorInv;
+        private System.Windows.Forms.TextBox txtBoxFooterTitleColorInv;
+        private System.Windows.Forms.TextBox txtBoxHeaderSubTitleColorInv;
+        private System.Windows.Forms.TextBox txtBoxHeaderTitleColorInv;
+        private System.Windows.Forms.Button btnHeaderSubTitleColorInv;
+        private System.Windows.Forms.Button btnHeaderTitleColorInv;
+        private System.Windows.Forms.TabPage tabPageGeneral;
+        private System.Windows.Forms.ComboBox ddlSummaryLocation;
+        private System.Windows.Forms.Label lblSummaryLocation;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox cmbBoxProductLines;
+        private System.Windows.Forms.TabPage tabPagePurchaseOrder;
+        private System.Windows.Forms.TextBox txtBoxHeaderSubTitleColorQuot;
+        private System.Windows.Forms.TextBox txtBoxHeaderTitleColorQuot;
+        private System.Windows.Forms.Button btnHeaderSubTitleColorQuot;
+        private System.Windows.Forms.Button btnHeaderTitleColorQuot;
+        private System.Windows.Forms.TextBox txtBoxFooterTextColorQuot;
+        private System.Windows.Forms.TextBox txtBoxFooterTitleColorQuot;
         private System.Windows.Forms.Button btnFooterTextColorQuot;
         private System.Windows.Forms.Button btnFooterTitleColorQuot;
         private System.Windows.Forms.TextBox txtBoxAddressQuot;
@@ -760,22 +1083,31 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.TextBox txtBoxFooterTextColorQuot;
-        private System.Windows.Forms.TextBox txtBoxFooterTitleColorQuot;
-        private System.Windows.Forms.TextBox txtBoxFooterTextColorInv;
-        private System.Windows.Forms.TextBox txtBoxFooterTitleColorInv;
-        private System.Windows.Forms.TextBox txtBoxHeaderSubTitleColorInv;
-        private System.Windows.Forms.TextBox txtBoxHeaderTitleColorInv;
-        private System.Windows.Forms.Button btnHeaderSubTitleColorInv;
-        private System.Windows.Forms.Button btnHeaderTitleColorInv;
-        private System.Windows.Forms.TextBox txtBoxHeaderSubTitleColorQuot;
-        private System.Windows.Forms.TextBox txtBoxHeaderTitleColorQuot;
-        private System.Windows.Forms.Button btnHeaderSubTitleColorQuot;
-        private System.Windows.Forms.Button btnHeaderTitleColorQuot;
-        private System.Windows.Forms.TabPage tabPageGeneral;
-        private System.Windows.Forms.ComboBox ddlSummaryLocation;
-        private System.Windows.Forms.Label lblSummaryLocation;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox cmbBoxProductLines;
+        private System.Windows.Forms.TextBox txtBoxHeaderSubTitleColorPO;
+        private System.Windows.Forms.TextBox txtBoxHeaderTitleColorPO;
+        private System.Windows.Forms.Button btnHeaderSubTitleColorPO;
+        private System.Windows.Forms.Button btnHeaderTitleColorPO;
+        private System.Windows.Forms.TextBox txtBoxFooterTextColorPO;
+        private System.Windows.Forms.TextBox txtBoxFooterTitleColorPO;
+        private System.Windows.Forms.Button btnFooterTextColorPO;
+        private System.Windows.Forms.Button btnFooterTitleColorPO;
+        private System.Windows.Forms.TextBox txtBoxAddressPO;
+        private System.Windows.Forms.TextBox txtBoxLastPONumber;
+        private System.Windows.Forms.TextBox txtBoxTINNumberPO;
+        private System.Windows.Forms.TextBox txtBoxEMailIDPO;
+        private System.Windows.Forms.TextBox txtBoxPhoneNumberPO;
+        private System.Windows.Forms.TextBox txtBoxFooterTitlePO;
+        private System.Windows.Forms.TextBox txtBoxHeaderSubTitlePO;
+        private System.Windows.Forms.TextBox txtBoxHeaderTitlePO;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.TextBox txtBoxVATPercentPO;
+        private System.Windows.Forms.Label label27;
     }
 }

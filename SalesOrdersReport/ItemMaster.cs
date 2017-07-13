@@ -12,7 +12,7 @@ namespace SalesOrdersReport
         public Double Price;
     }
 
-    class VendorDetails
+    class VendorDetails2
     {
         public String VendorName;
         public System.Drawing.Color Color;
@@ -21,7 +21,7 @@ namespace SalesOrdersReport
     class CItemMaster
     {
         List<ItemDetails> ListItems;
-        List<VendorDetails> ListVendors;
+        List<VendorDetails2> ListVendors;
         List<System.Drawing.Color> ListColors;
 
         public void Initialize()
@@ -29,7 +29,7 @@ namespace SalesOrdersReport
             try
             {
                 ListItems = new List<ItemDetails>();
-                ListVendors = new List<VendorDetails>();
+                ListVendors = new List<VendorDetails2>();
 
                 ListColors = new List<System.Drawing.Color>();
                 //ListColors.Add(System.Drawing.Color.FromArgb(242, 220, 219));
@@ -74,7 +74,7 @@ namespace SalesOrdersReport
                 Int32 VendorIndx = ListVendors.FindIndex(e => e.VendorName.Equals(VendorName, StringComparison.InvariantCultureIgnoreCase));
                 if (VendorIndx < 0)
                 {
-                    VendorDetails tmpVendor = new VendorDetails();
+                    VendorDetails2 tmpVendor = new VendorDetails2();
                     tmpVendor.VendorName = VendorName;
                     tmpVendor.Color = ListColors[ListColors .Count % ListVendors.Count];
                     ListVendors.Add(tmpVendor);

@@ -38,33 +38,51 @@ namespace SalesOrdersReport
                 ddlSummaryLocation.SelectedIndex = CommonFunctions.ObjGeneralSettings.SummaryLocation;
 
                 //Load Invoice Settings from CommonFunctions Module
-                txtBoxHeaderTitleInv.Text = CommonFunctions.ObjInvoiceSettings.HeaderTitle;
-                txtBoxHeaderSubTitleInv.Text = CommonFunctions.ObjInvoiceSettings.HeaderSubTitle;
-                txtBoxHeaderTitleColorInv.BackColor = CommonFunctions.ObjInvoiceSettings.HeaderTitleColor;
-                txtBoxHeaderSubTitleColorInv.BackColor = CommonFunctions.ObjInvoiceSettings.HeaderSubTitleColor;
-                txtBoxFooterTitleInv.Text = CommonFunctions.ObjInvoiceSettings.FooterTitle;
-                txtBoxFooterTitleColorInv.BackColor = CommonFunctions.ObjInvoiceSettings.FooterTitleColor;
-                txtBoxFooterTextColorInv.BackColor = CommonFunctions.ObjInvoiceSettings.FooterTextColor;
-                txtBoxAddressInv.Text = CommonFunctions.ObjInvoiceSettings.Address;
-                txtBoxPhoneNumberInv.Text = CommonFunctions.ObjInvoiceSettings.PhoneNumber;
-                txtBoxEMailIDInv.Text = CommonFunctions.ObjInvoiceSettings.EMailID;
-                txtBoxVATPercentInv.Text = CommonFunctions.ObjInvoiceSettings.VATPercent;
-                txtBoxTINNumberInv.Text = CommonFunctions.ObjInvoiceSettings.TINNumber;
-                txtBoxLastInvoiceNumberInv.Text = CommonFunctions.ObjInvoiceSettings.LastNumber.ToString();
+                ReportSettings CurrSettings = CommonFunctions.ObjInvoiceSettings;
+                txtBoxHeaderTitleInv.Text = CurrSettings.HeaderTitle;
+                txtBoxHeaderSubTitleInv.Text = CurrSettings.HeaderSubTitle;
+                txtBoxHeaderTitleColorInv.BackColor = CurrSettings.HeaderTitleColor;
+                txtBoxHeaderSubTitleColorInv.BackColor = CurrSettings.HeaderSubTitleColor;
+                txtBoxFooterTitleInv.Text = CurrSettings.FooterTitle;
+                txtBoxFooterTitleColorInv.BackColor = CurrSettings.FooterTitleColor;
+                txtBoxFooterTextColorInv.BackColor = CurrSettings.FooterTextColor;
+                txtBoxAddressInv.Text = CurrSettings.Address;
+                txtBoxPhoneNumberInv.Text = CurrSettings.PhoneNumber;
+                txtBoxEMailIDInv.Text = CurrSettings.EMailID;
+                txtBoxVATPercentInv.Text = CurrSettings.VATPercent;
+                txtBoxTINNumberInv.Text = CurrSettings.TINNumber;
+                txtBoxLastInvoiceNumberInv.Text = CurrSettings.LastNumber.ToString();
 
                 //Load Quotation Settings from CommonFunctions Module
-                txtBoxHeaderTitleQuot.Text = CommonFunctions.ObjQuotationSettings.HeaderTitle;
-                txtBoxHeaderSubTitleQuot.Text = CommonFunctions.ObjQuotationSettings.HeaderSubTitle;
-                txtBoxHeaderTitleColorQuot.BackColor = CommonFunctions.ObjQuotationSettings.HeaderTitleColor;
-                txtBoxHeaderSubTitleColorQuot.BackColor = CommonFunctions.ObjQuotationSettings.HeaderSubTitleColor;
-                txtBoxFooterTitleQuot.Text = CommonFunctions.ObjQuotationSettings.FooterTitle;
-                txtBoxFooterTitleColorQuot.BackColor = CommonFunctions.ObjQuotationSettings.FooterTitleColor;
-                txtBoxFooterTextColorQuot.BackColor = CommonFunctions.ObjQuotationSettings.FooterTextColor;
-                txtBoxAddressQuot.Text = CommonFunctions.ObjQuotationSettings.Address;
-                txtBoxPhoneNumberQuot.Text = CommonFunctions.ObjQuotationSettings.PhoneNumber;
-                txtBoxEMailIDQuot.Text = CommonFunctions.ObjQuotationSettings.EMailID;
-                txtBoxTINNumberQuot.Text = CommonFunctions.ObjQuotationSettings.TINNumber;
-                txtBoxLastQuotationNumberQuot.Text = CommonFunctions.ObjQuotationSettings.LastNumber.ToString();
+                CurrSettings = CommonFunctions.ObjQuotationSettings;
+                txtBoxHeaderTitleQuot.Text = CurrSettings.HeaderTitle;
+                txtBoxHeaderSubTitleQuot.Text = CurrSettings.HeaderSubTitle;
+                txtBoxHeaderTitleColorQuot.BackColor = CurrSettings.HeaderTitleColor;
+                txtBoxHeaderSubTitleColorQuot.BackColor = CurrSettings.HeaderSubTitleColor;
+                txtBoxFooterTitleQuot.Text = CurrSettings.FooterTitle;
+                txtBoxFooterTitleColorQuot.BackColor = CurrSettings.FooterTitleColor;
+                txtBoxFooterTextColorQuot.BackColor = CurrSettings.FooterTextColor;
+                txtBoxAddressQuot.Text = CurrSettings.Address;
+                txtBoxPhoneNumberQuot.Text = CurrSettings.PhoneNumber;
+                txtBoxEMailIDQuot.Text = CurrSettings.EMailID;
+                txtBoxTINNumberQuot.Text = CurrSettings.TINNumber;
+                txtBoxLastQuotationNumberQuot.Text = CurrSettings.LastNumber.ToString();
+
+                //Load Purchase Order Settings from CommonFunctions Module
+                CurrSettings = CommonFunctions.ObjPurchaseOrderSettings;
+                txtBoxHeaderTitlePO.Text = CurrSettings.HeaderTitle;
+                txtBoxHeaderSubTitlePO.Text = CurrSettings.HeaderSubTitle;
+                txtBoxHeaderTitleColorPO.BackColor = CurrSettings.HeaderTitleColor;
+                txtBoxHeaderSubTitleColorPO.BackColor = CurrSettings.HeaderSubTitleColor;
+                txtBoxFooterTitlePO.Text = CurrSettings.FooterTitle;
+                txtBoxFooterTitleColorPO.BackColor = CurrSettings.FooterTitleColor;
+                txtBoxFooterTextColorPO.BackColor = CurrSettings.FooterTextColor;
+                txtBoxAddressPO.Text = CurrSettings.Address;
+                txtBoxPhoneNumberPO.Text = CurrSettings.PhoneNumber;
+                txtBoxEMailIDPO.Text = CurrSettings.EMailID;
+                txtBoxVATPercentPO.Text = CurrSettings.VATPercent;
+                txtBoxTINNumberPO.Text = CurrSettings.TINNumber;
+                txtBoxLastPONumber.Text = CurrSettings.LastNumber.ToString();
             }
             catch (Exception ex)
             {
@@ -115,8 +133,25 @@ namespace SalesOrdersReport
                 CurrSettings.TINNumber = txtBoxTINNumberQuot.Text;
                 CurrSettings.LastNumber = Int32.Parse(txtBoxLastQuotationNumberQuot.Text);
 
+                //Apply Purchase Order Settings to CommonFunctions Module
+                CurrSettings = CommonFunctions.ObjPurchaseOrderSettings;
+                CurrSettings.HeaderTitle = txtBoxHeaderTitlePO.Text;
+                CurrSettings.HeaderSubTitle = txtBoxHeaderSubTitlePO.Text;
+                CurrSettings.HeaderTitleColor = txtBoxHeaderTitleColorPO.BackColor;
+                CurrSettings.HeaderSubTitleColor = txtBoxHeaderSubTitleColorPO.BackColor;
+                CurrSettings.FooterTitle = txtBoxFooterTitlePO.Text;
+                CurrSettings.FooterTitleColor = txtBoxFooterTitleColorPO.BackColor;
+                CurrSettings.FooterTextColor = txtBoxFooterTextColorPO.BackColor;
+                CurrSettings.Address = txtBoxAddressPO.Text;
+                CurrSettings.PhoneNumber = txtBoxPhoneNumberPO.Text;
+                CurrSettings.EMailID = txtBoxEMailIDPO.Text;
+                CurrSettings.VATPercent = txtBoxVATPercentPO.Text;
+                CurrSettings.TINNumber = txtBoxTINNumberPO.Text;
+                CurrSettings.LastNumber = Int32.Parse(txtBoxLastPONumber.Text);
+
                 CommonFunctions.WriteToSettingsFile();      //Save to Settings.xml file
-                //CommonFunctions.LoadSettingsFile();         //Reload from Settings.xml file
+
+                MessageBox.Show(this, "Settings Updated Successfully", "Settings", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();
             }
             catch (Exception ex)
@@ -182,13 +217,40 @@ namespace SalesOrdersReport
             if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
                 txtBoxHeaderSubTitleColorQuot.BackColor = colorDialogSettings.Color;
         }
-#endregion
+
+        private void btnHeaderTitleColorPO_Click(object sender, EventArgs e)
+        {
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                txtBoxHeaderTitleColorPO.BackColor = colorDialogSettings.Color;
+        }
+
+        private void btnHeaderSubTitleColorPO_Click(object sender, EventArgs e)
+        {
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                txtBoxHeaderSubTitleColorPO.BackColor = colorDialogSettings.Color;
+        }
+
+        private void btnFooterTitleColorPO_Click(object sender, EventArgs e)
+        {
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                btnFooterTitleColorPO.BackColor = colorDialogSettings.Color;
+        }
+
+        private void btnFooterTextColorPO_Click(object sender, EventArgs e)
+        {
+            DialogResult Result = colorDialogSettings.ShowDialog(this);
+            if (Result == System.Windows.Forms.DialogResult.OK || Result == System.Windows.Forms.DialogResult.Yes)
+                btnFooterTextColorPO.BackColor = colorDialogSettings.Color;
+        }
+        #endregion
 
         private void cmbBoxProductLines_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                if (cmbBoxProductLines.SelectedIndex + 1 == CommonFunctions.SelectedProductLineIndex) return;
                 CommonFunctions.SelectProductLine(Int32.Parse((cmbBoxProductLines.SelectedIndex + 1).ToString()), true);
                 LoadSettings();
             }

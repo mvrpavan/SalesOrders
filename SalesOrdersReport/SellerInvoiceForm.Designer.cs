@@ -1,6 +1,6 @@
 ﻿namespace SalesOrdersReport
 {
-    partial class CreateSellerInvoice
+    partial class SellerInvoiceForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreateSellerInvoice));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SellerInvoiceForm));
             this.label1 = new System.Windows.Forms.Label();
             this.dateTimeInvoice = new System.Windows.Forms.DateTimePicker();
             this.chkBoxCreateSummary = new System.Windows.Forms.CheckBox();
