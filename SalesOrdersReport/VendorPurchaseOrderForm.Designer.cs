@@ -48,13 +48,13 @@
             this.chkBoxCreateSummary = new System.Windows.Forms.CheckBox();
             this.dateTimePO = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.grpBoxVendorPODetails = new System.Windows.Forms.GroupBox();
+            this.grpBoxVendorFilter = new System.Windows.Forms.GroupBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.bgWorkerCreatePO = new System.ComponentModel.BackgroundWorker();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.grpBoxVendorPODetails.SuspendLayout();
+            this.grpBoxVendorFilter.SuspendLayout();
             this.SuspendLayout();
             // 
             // listBoxVendors
@@ -104,7 +104,7 @@
             this.chkBoxUseOrdQty.Name = "chkBoxUseOrdQty";
             this.chkBoxUseOrdQty.Size = new System.Drawing.Size(175, 17);
             this.chkBoxUseOrdQty.TabIndex = 24;
-            this.chkBoxUseOrdQty.Text = "&Use Order Qty as Recevied Qty";
+            this.chkBoxUseOrdQty.Text = "&Use Order Qty as Received Qty";
             this.chkBoxUseOrdQty.UseVisualStyleBackColor = true;
             // 
             // txtBoxVendorOrderSheet
@@ -131,7 +131,7 @@
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(124, 42);
             this.btnClose.TabIndex = 37;
-            this.btnClose.Text = "&Close";
+            this.btnClose.Text = "&Close Window";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -158,7 +158,7 @@
             this.btnCreatePurchaseOrder.Name = "btnCreatePurchaseOrder";
             this.btnCreatePurchaseOrder.Size = new System.Drawing.Size(124, 42);
             this.btnCreatePurchaseOrder.TabIndex = 36;
-            this.btnCreatePurchaseOrder.Text = "&Generate Purchase Order";
+            this.btnCreatePurchaseOrder.Text = "&Generate Purchase Orders";
             this.btnCreatePurchaseOrder.UseVisualStyleBackColor = true;
             this.btnCreatePurchaseOrder.Click += new System.EventHandler(this.btnCreatePurchaseOrder_Click);
             // 
@@ -243,32 +243,32 @@
             this.label1.TabIndex = 22;
             this.label1.Text = "Choose Date";
             // 
-            // groupBox1
+            // grpBoxVendorPODetails
             // 
-            this.groupBox1.Controls.Add(this.txtBoxVendorOrderSheet);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.txtBoxOutputFolder);
-            this.groupBox1.Controls.Add(this.btnSaveFolderBrowse);
-            this.groupBox1.Controls.Add(this.btnBrowseVendorOrderFile);
-            this.groupBox1.Location = new System.Drawing.Point(12, 197);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(465, 99);
-            this.groupBox1.TabIndex = 42;
-            this.groupBox1.TabStop = false;
+            this.grpBoxVendorPODetails.Controls.Add(this.txtBoxVendorOrderSheet);
+            this.grpBoxVendorPODetails.Controls.Add(this.label2);
+            this.grpBoxVendorPODetails.Controls.Add(this.label4);
+            this.grpBoxVendorPODetails.Controls.Add(this.txtBoxOutputFolder);
+            this.grpBoxVendorPODetails.Controls.Add(this.btnSaveFolderBrowse);
+            this.grpBoxVendorPODetails.Controls.Add(this.btnBrowseVendorOrderFile);
+            this.grpBoxVendorPODetails.Location = new System.Drawing.Point(12, 197);
+            this.grpBoxVendorPODetails.Name = "grpBoxVendorPODetails";
+            this.grpBoxVendorPODetails.Size = new System.Drawing.Size(465, 99);
+            this.grpBoxVendorPODetails.TabIndex = 42;
+            this.grpBoxVendorPODetails.TabStop = false;
             // 
-            // groupBox2
+            // grpBoxVendorFilter
             // 
-            this.groupBox2.Controls.Add(this.chkListBoxLine);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.listBoxVendors);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.btnAddVendor);
-            this.groupBox2.Location = new System.Drawing.Point(12, 82);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(465, 109);
-            this.groupBox2.TabIndex = 43;
-            this.groupBox2.TabStop = false;
+            this.grpBoxVendorFilter.Controls.Add(this.chkListBoxLine);
+            this.grpBoxVendorFilter.Controls.Add(this.label5);
+            this.grpBoxVendorFilter.Controls.Add(this.listBoxVendors);
+            this.grpBoxVendorFilter.Controls.Add(this.label6);
+            this.grpBoxVendorFilter.Controls.Add(this.btnAddVendor);
+            this.grpBoxVendorFilter.Location = new System.Drawing.Point(12, 82);
+            this.grpBoxVendorFilter.Name = "grpBoxVendorFilter";
+            this.grpBoxVendorFilter.Size = new System.Drawing.Size(465, 109);
+            this.grpBoxVendorFilter.TabIndex = 43;
+            this.grpBoxVendorFilter.TabStop = false;
             // 
             // openFileDialog1
             // 
@@ -287,8 +287,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(489, 407);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.grpBoxVendorFilter);
+            this.Controls.Add(this.grpBoxVendorPODetails);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.chkBoxUseOrdQty);
@@ -300,10 +300,10 @@
             this.Name = "VendorPurchaseOrderForm";
             this.Text = "Create Purchase Orders";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VendorPurchaseOrderForm_FormClosing);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.grpBoxVendorPODetails.ResumeLayout(false);
+            this.grpBoxVendorPODetails.PerformLayout();
+            this.grpBoxVendorFilter.ResumeLayout(false);
+            this.grpBoxVendorFilter.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -330,8 +330,8 @@
         private System.Windows.Forms.CheckBox chkBoxCreateSummary;
         private System.Windows.Forms.DateTimePicker dateTimePO;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox grpBoxVendorPODetails;
+        private System.Windows.Forms.GroupBox grpBoxVendorFilter;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.ComponentModel.BackgroundWorker bgWorkerCreatePO;

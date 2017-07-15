@@ -30,6 +30,8 @@ namespace SalesOrdersReport
             groupBoxHistoryUpdate.Enabled = false;
             btnUpdate.Enabled = false;
             FileDialgSellerSummary.Multiselect = false;
+
+            CommonFunctions.ObjProductMaster.ResetStockProducts();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -423,12 +425,12 @@ namespace SalesOrdersReport
                                             + "||" + dtRow["Seller Name"].ToString().Trim().ToUpper())) continue;
                     LastRow++;
 
-                    xlSellerHistoryWorksheet.Cells[StartRow + i, StartColumn].Value = SummaryCreationDate.ToString("dd-MMM-yyyy");
-                    xlSellerHistoryWorksheet.Cells[StartRow + i, StartColumn + 1].Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                    xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn].Value = SummaryCreationDate.ToString("dd-MMM-yyyy");
+                    xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn + 1].Value = DateTime.Now.ToString("dd-MMM-yyyy");
                     for (int j = 1; j < dtRow.ItemArray.Length; j++)
                     {
-                        xlSellerHistoryWorksheet.Cells[StartRow + i, StartColumn + 1 + j].Value = dtRow[j].ToString();
-                        if (j >= 3) xlSellerHistoryWorksheet.Cells[StartRow + i, StartColumn + 1 + j].NumberFormat = "#,##0.00";
+                        xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn + 1 + j].Value = dtRow[j].ToString();
+                        if (j >= 3) xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn + 1 + j].NumberFormat = "#,##0.00";
                     }
 
                     ReportProgressFunc((CurrSellerCount * 100) / ProgressBarCount);

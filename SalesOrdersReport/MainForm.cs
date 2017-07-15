@@ -84,6 +84,7 @@ namespace SalesOrdersReport
 
                 CommonFunctions.ResetProgressBar();
 
+                CommonFunctions.CurrentForm = ObjForm;
                 ObjForm.MdiParent = this;
                 ObjForm.ShowIcon = false;
                 ObjForm.ShowInTaskbar = false;
@@ -202,7 +203,7 @@ namespace SalesOrdersReport
             {
                 if (!IsValidToOpenChildForm()) return;
 
-                AddNewOrderSheetForm ObjAddNewOrderSheetForm = new AddNewOrderSheetForm();
+                SellerOrderSheetForm ObjAddNewOrderSheetForm = new SellerOrderSheetForm();
                 ShowChildForm(ObjAddNewOrderSheetForm);
             }
             catch (Exception ex)
@@ -368,6 +369,13 @@ namespace SalesOrdersReport
             try
             {
                 if (toolStripComboBoxProductLine.SelectedIndex + 1 == CommonFunctions.SelectedProductLineIndex) return;
+
+                if (MdiChildren.Length > 0)
+                {
+                    toolStripComboBoxProductLine.SelectedIndex = CommonFunctions.SelectedProductLineIndex - 1;
+                    MessageBox.Show(this, "Cannot change Product Line, while working in Current Product Line.\nClose other windows to select another Product Line.", "Product Line", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 MasterSheetSelected = false;
                 toolStripOrderMasterPath.Text = "";

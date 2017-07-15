@@ -172,13 +172,10 @@ namespace SalesOrdersReport
         {
             try
             {
-                btnCreatePurchaseOrder.Enabled = false;
-                btnClose.Enabled = false;
+                CommonFunctions.ToggleEnabledPropertyOfAllControls(this);
+                lblStatus.Enabled = true;
 
                 CreatePurchaseOrders();
-
-                btnCreatePurchaseOrder.Enabled = true;
-                btnClose.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -194,6 +191,9 @@ namespace SalesOrdersReport
         private void bgWorkerCreatePO_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             CommonFunctions.ResetProgressBar();
+
+            CommonFunctions.ToggleEnabledPropertyOfAllControls(this);
+            lblStatus.Enabled = true;
             btnClose.Focus();
         }
 
@@ -232,11 +232,11 @@ namespace SalesOrdersReport
 
                 String SelectedDateTimeString = dateTimePO.Value.ToString("dd-MM-yyyy");
 
-                String VendorPurchaseOrderFile = txtBoxVendorOrderSheet.Text;
+                String VendorOrderFile = txtBoxVendorOrderSheet.Text;
 
-                Excel.Workbook xlPOWorkbook = xlApp.Workbooks.Open(VendorPurchaseOrderFile);
+                Excel.Workbook xlPOWorkbook = xlApp.Workbooks.Open(VendorOrderFile);
                 Excel.Worksheet xlPOWorksheet = CommonFunctions.GetWorksheet(xlPOWorkbook, SelectedDateTimeString);
-                Int32 StartRow = 5, StartColumn = 1, DetailsCount = 5;
+                Int32 StartRow = 7, StartColumn = 1, DetailsCount = 5;
 
                 #region Identify StockItems in PurchaseOrderSheet
                 List<Int32> ListItemIndexes = new List<Int32>();
@@ -304,7 +304,7 @@ namespace SalesOrdersReport
 
                 CreateVendorPurchaseOrder(ReportType.PURCHASEORDER, drItems, drVendors, SelectedDateTimeString, 
                     StartRow, StartColumn, ListItemIndexes, ListVendorIndexes, xlWorkbook);
-                xlPOWorkbook.Close();
+                xlPOWorkbook.Close(false);
 
                 MessageBox.Show(this, "Purchase Order generated successfully", "Status", MessageBoxButtons.OK);
                 lblStatus.Text = "Click \"Close Window\" to close this window";
@@ -434,6 +434,7 @@ namespace SalesOrdersReport
                         Counter++;
                         ReportProgressFunc((Counter * 100) / ProgressBarCount);
                         if (xlPOWorksheet.Cells[StartRow + 1 + i, StartColumn + PODetailsCount + j].Value == null) continue;
+                        if (String.IsNullOrEmpty(xlPOWorksheet.Cells[StartRow + 1 + i, StartColumn + PODetailsCount + j].Value.ToString())) continue;
 
                         Quantity = Double.Parse(xlPOWorksheet.Cells[StartRow + 1 + i, StartColumn + PODetailsCount + j].Value.ToString());
                         drItems[ListItemIndexes[j]]["Quantity"] = Double.Parse(drItems[ListItemIndexes[j]]["Quantity"].ToString()) + Quantity;

@@ -104,7 +104,7 @@ namespace SalesOrdersReport
     {
         public String StockName;
         public List<Int32> ListProductIndexes;
-        public Double Units = 1.0, Inventory = 0, OrderQty = 0, RecvdQty = 0, NetQty = 0;
+        public Double Units = 1.0, Inventory = 0, OrderQty = 0, RecvdQty = 0, NetQty = 0, SaleQty = 0;
         public Double TotalCost = 0, TotalDiscount = 0, TotalTax = 0, NetCost = 0;
         public Boolean IsUpdated = false, IsStockOverride = false;
 
@@ -319,6 +319,7 @@ namespace SalesOrdersReport
                     ObjStockProductDetails.IsUpdated = Flag;
                     ObjStockProductDetails.IsStockOverride = false;
                     ObjStockProductDetails.NetQty = 0;
+                    ObjStockProductDetails.SaleQty = 0;
                     ObjStockProductDetails.OrderQty = 0;
                     ObjStockProductDetails.RecvdQty = 0;
                     ObjStockProductDetails.Inventory = 0;
@@ -334,6 +335,83 @@ namespace SalesOrdersReport
             }
         }
 
+        public void LoadProductPastSalesFromStockHistoryFile(DataTable dtSalePurchaseHistory, DateTime AsOnDate, Int32 PeriodValue, TimePeriodUnits PeriodUnits)
+        {
+            try
+            {
+                #region Compute Date Range
+                List<DateTime> ListPODates = dtSalePurchaseHistory.AsEnumerable().Select(s => s.Field<DateTime>("PO Date")).Distinct().ToList();
+                ListPODates.Sort();
+
+                DateTime FromDate = AsOnDate, ToDate = AsOnDate;
+                switch (PeriodUnits)
+                {
+                    case TimePeriodUnits.Days:
+                        Int32 ToDateIndex = -1;
+                        for (int i = ListPODates.Count - 1; i >= 0; i--)
+                        {
+                            if (ListPODates[i] <= AsOnDate)
+                            {
+                                ToDate = ListPODates[i];
+                                ToDateIndex = i;
+                                break;
+                            }
+                        }
+
+                        if (ToDateIndex < 0) return;
+                        FromDate = ListPODates[((ToDateIndex - PeriodValue) >= 0) ? (ToDateIndex - PeriodValue) : 0];
+                        break;
+                    case TimePeriodUnits.Weeks:
+                        ToDate = AsOnDate;
+                        FromDate = AsOnDate.AddDays(PeriodValue * -7);
+                        break;
+                    case TimePeriodUnits.Months:
+                        ToDate = AsOnDate;
+                        FromDate = AsOnDate.AddMonths(PeriodValue * -1);
+                        break;
+                    case TimePeriodUnits.Years:
+                        ToDate = AsOnDate;
+                        FromDate = AsOnDate.AddYears(PeriodValue * -1);
+                        break;
+                    case TimePeriodUnits.None:
+                    default: break;
+                }
+                #endregion
+
+                DataRow[] drSalesPurchaseHistory = dtSalePurchaseHistory.Select("", "[Stock Name] asc");
+
+                StockProductDetails ObjStockProductDetails = null;
+                String PreviousStockName = "";
+                for (int i = 0; i < drSalesPurchaseHistory.Length; i++)
+                {
+                    DataRow dr = drSalesPurchaseHistory[i];
+                    if (DateTime.Parse(dr["PO Date"].ToString()) < FromDate || DateTime.Parse(dr["PO Date"].ToString()) > ToDate) continue;
+
+                    if (!PreviousStockName.Trim().Equals(dr["Stock Name"].ToString().Trim(), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        ObjStockProductDetails = GetStockProductDetails(dr["Stock Name"].ToString().Trim());
+                        PreviousStockName = ObjStockProductDetails.StockName;
+                        if (ObjStockProductDetails == null) continue;
+                    }
+
+                    String TransactionType = dr["Type"].ToString().Trim().ToUpper();
+                    if (TransactionType.Equals("SALE"))
+                    {
+                        ObjStockProductDetails.SaleQty += (-1 * Int32.Parse(dr["Receive Qty"].ToString()));
+                    }
+                    else if (TransactionType.Equals("PURCHASE"))
+                    {
+                        ObjStockProductDetails.RecvdQty += Int32.Parse(dr["Receive Qty"].ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.LoadProductPastSalesFromStockHistoryFile()", ex);
+                throw;
+            }
+        }
+
         public void LoadProductInventoryFile(DataRow[] drProductInventory)
         {
             try
@@ -342,10 +420,6 @@ namespace SalesOrdersReport
                 {
                     StockProductDetails ObjStockProductDetails = GetStockProductDetails(dr["StockName"].ToString().Trim());
                     if (ObjStockProductDetails == null) continue;
-                    ObjStockProductDetails.Inventory = 0; ObjStockProductDetails.OrderQty = 0;
-                    ObjStockProductDetails.RecvdQty = 0; ObjStockProductDetails.NetQty = 0;
-                    ObjStockProductDetails.TotalCost = 0; ObjStockProductDetails.TotalDiscount = 0;
-                    ObjStockProductDetails.TotalTax = 0; ObjStockProductDetails.NetCost = 0;
 
                     if (dr["Stock"] != DBNull.Value) ObjStockProductDetails.Inventory = Double.Parse(dr["Stock"].ToString());
                     if (dr["Units"] != DBNull.Value) ObjStockProductDetails.Units = Double.Parse(dr["Units"].ToString());

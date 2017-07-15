@@ -10,12 +10,12 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace SalesOrdersReport
 {
-    public partial class AddNewOrderSheetForm : Form
+    public partial class SellerOrderSheetForm : Form
     {
         String MasterFilePath;
         List<Color> ListColors;
 
-        public AddNewOrderSheetForm()
+        public SellerOrderSheetForm()
         {
             try
             {
@@ -39,7 +39,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("AddNewOrderSheetForm", ex);
+                CommonFunctions.ShowErrorDialog("SellerOrderSheetForm.ctor()", ex);
             }
         }
 
@@ -57,7 +57,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("OutFolderBrowse_Click", ex);
+                CommonFunctions.ShowErrorDialog("SellerOrderSheetForm.OutFolderBrowse_Click()", ex);
             }
         }
 
@@ -181,7 +181,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("AddNewOrderSheetForm.backgroundWorker1_DoWork()", ex);
+                CommonFunctions.ShowErrorDialog("SellerOrderSheetForm.backgroundWorker1_DoWork()", ex);
             }
             finally
             {

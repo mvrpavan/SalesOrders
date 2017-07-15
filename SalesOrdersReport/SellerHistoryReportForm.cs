@@ -50,6 +50,8 @@ namespace SalesOrdersReport
                 btnCreateReport.Enabled = false;
                 btnClose.Enabled = false;
 
+                //CreateSellerReport();
+                ReportProgress = bgWorkerSellerHistory.ReportProgress;
                 bgWorkerSellerHistory.WorkerReportsProgress = true;
                 bgWorkerSellerHistory.RunWorkerAsync();
             }
@@ -121,7 +123,7 @@ namespace SalesOrdersReport
         #endregion
 
         delegate void ReportProgressDel(Int32 ProgressState);
-        ReportProgressDel ReportProgress;
+        ReportProgressDel ReportProgress = null;
 
         private void ReportProgressFunc(Int32 ProgressState)
         {
@@ -276,7 +278,6 @@ namespace SalesOrdersReport
         {
             try
             {
-                ReportProgress = bgWorkerSellerHistory.ReportProgress;
                 CreateSellerReport();
             }
             catch (Exception ex)

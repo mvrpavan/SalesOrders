@@ -50,12 +50,19 @@ namespace SalesOrdersReport
         }
     }
 
+    enum TimePeriodUnits
+    {
+        Days = 0, Weeks, Months, Years, None
+    }
+
     class ReportSettings
     {
         XmlNode SettingsNode;
         public String HeaderTitle, HeaderSubTitle, FooterTitle, Address, PhoneNumber, EMailID, VATPercent, TINNumber;
         public Int32 LastNumber;
         public Color HeaderTitleColor, HeaderSubTitleColor, FooterTitleColor, FooterTextColor;
+        public Int32 PastSalePeriodValue;
+        public TimePeriodUnits PastSalePeriodUnits;
 
         public void ReadSettingsFromNode(XmlNode Node)
         {
@@ -79,6 +86,15 @@ namespace SalesOrdersReport
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "HeaderSubTitleColor", out Value)) HeaderSubTitleColor = CommonFunctions.GetColor(Value);
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "FooterTitleColor", out Value)) FooterTitleColor = CommonFunctions.GetColor(Value);
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "FooterTextColor", out Value)) FooterTextColor = CommonFunctions.GetColor(Value);
+                XmlNode PastSalesPeriodNode;
+                if (XMLFileUtils.GetChildNode(SettingsNode, "PastSalesPeriod", out PastSalesPeriodNode))
+                {
+                    if (XMLFileUtils.GetChildNodeValue(PastSalesPeriodNode, "Value", out Value)) PastSalePeriodValue = Int32.Parse(Value);
+                    if (XMLFileUtils.GetChildNodeValue(PastSalesPeriodNode, "Units", out Value))
+                    {
+                        PastSalePeriodUnits = GetTimePeriodUnits(Value);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -107,11 +123,39 @@ namespace SalesOrdersReport
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "HeaderSubTitleColor", HeaderSubTitleColor.ToArgb().ToString());
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "FooterTitleColor", FooterTitleColor.ToArgb().ToString());
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "FooterTextColor", FooterTextColor.ToArgb().ToString());
+
+                XmlNode PastSalesPeriodNode;
+                if (XMLFileUtils.GetChildNode(SettingsNode, "PastSalesPeriod", out PastSalesPeriodNode))
+                {
+                    XMLFileUtils.SetChildNodeValue(PastSalesPeriodNode, "Value", PastSalePeriodValue.ToString());
+                    XMLFileUtils.SetChildNodeValue(PastSalesPeriodNode, "Units", PastSalePeriodUnits.ToString());
+                }
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("ReportSettings.UpdateSettingsToNode()", ex);
             }
+        }
+
+        public static TimePeriodUnits GetTimePeriodUnits(String Value)
+        {
+            try
+            {
+                switch (Value.Trim().ToUpper())
+                {
+                    case "DAYS": return TimePeriodUnits.Days;
+                    case "WEEKS": return TimePeriodUnits.Weeks;
+                    case "MONTHS": return TimePeriodUnits.Months;
+                    case "YEARS": return TimePeriodUnits.Years;
+                    default: break;
+                }
+                return TimePeriodUnits.None;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ReportSettings.GetTimePeriodUnits()", ex);
+            }
+            return TimePeriodUnits.None;
         }
     }
 

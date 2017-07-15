@@ -45,7 +45,8 @@ namespace SalesOrdersReport
 
                 btnOK.Enabled = false;
 
-                //LoadFromOrderMaster();
+                //LoadDetailsFromOrderMaster();
+                ReportProgress = bgWorkerOrderMaster.ReportProgress;
                 bgWorkerOrderMaster.RunWorkerAsync();
                 bgWorkerOrderMaster.WorkerReportsProgress = true;
             }
@@ -58,6 +59,15 @@ namespace SalesOrdersReport
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        delegate void ReportProgressDel(Int32 ProgressState);
+        ReportProgressDel ReportProgress = null;
+
+        private void ReportProgressFunc(Int32 ProgressState)
+        {
+            if (ReportProgress == null) return;
+            ReportProgress(ProgressState);
         }
 
         private void bgWorkerOrderMaster_DoWork(object sender, DoWorkEventArgs e)
@@ -105,21 +115,21 @@ namespace SalesOrdersReport
                 DataTable dtPriceGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("PriceGroupMaster", CommonFunctions.MasterFilePath, "*");
                 CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex].LoadProductMaster(dtProductMaster, dtPriceGroupMaster);
                 lblStatus.Text = "Completed loading Product details";
-                bgWorkerOrderMaster.ReportProgress(25);
+                ReportProgressFunc(25);
 
                 DataTable dtDiscountGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("DiscountGroupMaster", CommonFunctions.MasterFilePath, "*");
                 DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", CommonFunctions.MasterFilePath, "*");
                 CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex].LoadSellerMaster(dtSellerMaster, dtDiscountGroupMaster);
                 lblStatus.Text = "Completed loading Seller details";
-                bgWorkerOrderMaster.ReportProgress(50);
+                ReportProgressFunc(50);
 
                 DataTable dtVendorMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("VendorMaster", CommonFunctions.MasterFilePath, "*");
                 CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex].LoadVendorMaster(dtVendorMaster, dtDiscountGroupMaster);
                 lblStatus.Text = "Completed loading Vendor details";
-                bgWorkerOrderMaster.ReportProgress(75);
+                ReportProgressFunc(75);
 
                 CommonFunctions.SelectProductLine(CommonFunctions.SelectedProductLineIndex);
-                bgWorkerOrderMaster.ReportProgress(100);
+                ReportProgressFunc(100);
 
                 lblStatus.Text = "Completed loading details from OrderMaster file";
                 MessageBox.Show(this, "Completed loading details from OrderMaster file", "Order Master", MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -8,7 +8,7 @@
     <ReportAppendRowsAtBottom>7</ReportAppendRowsAtBottom>
   </Application>
   <ProductLines>
-    <ProductLine Name="Default">
+    <ProductLine Name="&lt;Default&gt;">
       <General>
         <SummaryLocation>0</SummaryLocation>
       </General>
@@ -38,16 +38,38 @@
         <Address>Bangalore-560032</Address>
         <PhoneNumber>1234567890</PhoneNumber>
         <EMailID>a@gmail.com</EMailID>
-        <TINNumber></TINNumber>
+        <TINNumber>
+        </TINNumber>
         <LastNumber>0</LastNumber>
       </Quotation>
+      <PurchaseOrder>
+        <HeaderTitle>Default Purchase Order</HeaderTitle>
+        <HeaderSubTitle>
+        </HeaderSubTitle>
+        <HeaderTitleColor>-6927541</HeaderTitleColor>
+        <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
+        <FooterTitle>Ceren Business Group</FooterTitle>
+        <FooterTitleColor>-6960825</FooterTitleColor>
+        <FooterTextColor>-6927541</FooterTextColor>
+        <Address>No.40, 5th Main, 6th Cross, Krishnappa Block, Ganganagar Extn., RT Nagar, Bangalore-560032</Address>
+        <PhoneNumber>+917022037919</PhoneNumber>
+        <EMailID>cerenbusinessgroup@gmail.com</EMailID>
+        <TINNumber>
+        </TINNumber>
+        <VATPercent>5.5</VATPercent>
+        <LastNumber>103</LastNumber>
+        <PastSalesPeriod>
+          <Value>10</Value>
+          <Units>Days</Units>
+        </PastSalesPeriod>
+      </PurchaseOrder>
     </ProductLine>
     <ProductLine Name="Vegetables">
       <General>
         <SummaryLocation>0</SummaryLocation>
       </General>
       <Invoice>
-        <HeaderTitle>Invoice</HeaderTitle>
+        <HeaderTitle>Veg Invoice12345678</HeaderTitle>
         <HeaderSubTitle>
         </HeaderSubTitle>
         <HeaderTitleColor>-6927541</HeaderTitleColor>
@@ -59,11 +81,11 @@
         <PhoneNumber>+917022037919</PhoneNumber>
         <EMailID>cerenbusinessgroup@gmail.com</EMailID>
         <TINNumber>29271403793</TINNumber>
-        <LastNumber>135</LastNumber>
+        <LastNumber>225</LastNumber>
         <VATPercent>5.5</VATPercent>
       </Invoice>
       <Quotation>
-        <HeaderTitle>Order Quotation</HeaderTitle>
+        <HeaderTitle>Veg Order Quotation</HeaderTitle>
         <HeaderSubTitle>
         </HeaderSubTitle>
         <HeaderTitleColor>-6927541</HeaderTitleColor>
@@ -76,15 +98,36 @@
         <EMailID>cerenbusinessgroup@gmail.com</EMailID>
         <TINNumber>
         </TINNumber>
-        <LastNumber>103</LastNumber>
+        <LastNumber>212</LastNumber>
       </Quotation>
+      <PurchaseOrder>
+        <HeaderTitle>Veg Purchase Order</HeaderTitle>
+        <HeaderSubTitle>
+        </HeaderSubTitle>
+        <HeaderTitleColor>-6927541</HeaderTitleColor>
+        <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
+        <FooterTitle>Ceren Business Group</FooterTitle>
+        <FooterTitleColor>-6960825</FooterTitleColor>
+        <FooterTextColor>-6927541</FooterTextColor>
+        <Address>No.40, 5th Main, 6th Cross, Krishnappa Block, Ganganagar Extn., RT Nagar, Bangalore-560032</Address>
+        <PhoneNumber>+917022037919</PhoneNumber>
+        <EMailID>cerenbusinessgroup@gmail.com</EMailID>
+        <TINNumber>
+        </TINNumber>
+        <VATPercent>5.5</VATPercent>
+        <LastNumber>121</LastNumber>
+        <PastSalesPeriod>
+          <Value>10</Value>
+          <Units>Days</Units>
+        </PastSalesPeriod>
+      </PurchaseOrder>
     </ProductLine>
     <ProductLine Name="Bakery">
       <General>
-        <SummaryLocation>0</SummaryLocation>
+        <SummaryLocation>1</SummaryLocation>
       </General>
       <Invoice>
-        <HeaderTitle>Invoice</HeaderTitle>
+        <HeaderTitle>Bakery Invoice</HeaderTitle>
         <HeaderSubTitle>
         </HeaderSubTitle>
         <HeaderTitleColor>-6927541</HeaderTitleColor>
@@ -95,12 +138,12 @@
         <Address>No.40, 5th Main, 6th Cross, Krishnappa Block, Ganganagar Extn., RT Nagar, Bangalore-560032</Address>
         <PhoneNumber>+917022037919</PhoneNumber>
         <EMailID>cerenbusinessgroup@gmail.com</EMailID>
-        <TINNumber>29271403793</TINNumber>
-        <LastNumber>135</LastNumber>
+        <TINNumber>29271403793123</TINNumber>
+        <LastNumber>13511</LastNumber>
         <VATPercent>5.5</VATPercent>
       </Invoice>
       <Quotation>
-        <HeaderTitle>Order Quotation</HeaderTitle>
+        <HeaderTitle>Bakery Order Quotation</HeaderTitle>
         <HeaderSubTitle>
         </HeaderSubTitle>
         <HeaderTitleColor>-6927541</HeaderTitleColor>
@@ -115,6 +158,28 @@
         </TINNumber>
         <LastNumber>103</LastNumber>
       </Quotation>
+      <PurchaseOrder>
+        <HeaderTitle>Bakery Purchase Order</HeaderTitle>
+        <HeaderSubTitle>
+        </HeaderSubTitle>
+        <HeaderTitleColor>-6927541</HeaderTitleColor>
+        <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
+        <FooterTitle>Ceren Business Group</FooterTitle>
+        <FooterTitleColor>-6960825</FooterTitleColor>
+        <FooterTextColor>-6927541</FooterTextColor>
+        <Address>
+        </Address>
+        <PhoneNumber>+917022037919</PhoneNumber>
+        <EMailID>cerenbusinessgroup@gmail.com</EMailID>
+        <TINNumber>
+        </TINNumber>
+        <VATPercent>5.5</VATPercent>
+        <LastNumber>103</LastNumber>
+        <PastSalesPeriod>
+          <Value>10</Value>
+          <Units>Days</Units>
+        </PastSalesPeriod>
+      </PurchaseOrder>
     </ProductLine>
   </ProductLines>
 </Settings>

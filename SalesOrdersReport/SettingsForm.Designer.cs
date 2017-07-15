@@ -117,11 +117,15 @@
             this.colorDialogSettings = new System.Windows.Forms.ColorDialog();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbBoxProductLines = new System.Windows.Forms.ComboBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.numUpDownPeriodValue = new System.Windows.Forms.NumericUpDown();
+            this.cmbBoxPeriodUnits = new System.Windows.Forms.ComboBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.tabPageInvoice.SuspendLayout();
             this.tabPageQuotation.SuspendLayout();
             this.tabPagePurchaseOrder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numUpDownPeriodValue)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControlSettings
@@ -683,6 +687,8 @@
             // tabPagePurchaseOrder
             // 
             this.tabPagePurchaseOrder.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabPagePurchaseOrder.Controls.Add(this.cmbBoxPeriodUnits);
+            this.tabPagePurchaseOrder.Controls.Add(this.numUpDownPeriodValue);
             this.tabPagePurchaseOrder.Controls.Add(this.txtBoxVATPercentPO);
             this.tabPagePurchaseOrder.Controls.Add(this.label27);
             this.tabPagePurchaseOrder.Controls.Add(this.txtBoxHeaderSubTitleColorPO);
@@ -701,6 +707,7 @@
             this.tabPagePurchaseOrder.Controls.Add(this.txtBoxFooterTitlePO);
             this.tabPagePurchaseOrder.Controls.Add(this.txtBoxHeaderSubTitlePO);
             this.tabPagePurchaseOrder.Controls.Add(this.txtBoxHeaderTitlePO);
+            this.tabPagePurchaseOrder.Controls.Add(this.label28);
             this.tabPagePurchaseOrder.Controls.Add(this.label13);
             this.tabPagePurchaseOrder.Controls.Add(this.label17);
             this.tabPagePurchaseOrder.Controls.Add(this.label21);
@@ -719,7 +726,7 @@
             // 
             // txtBoxVATPercentPO
             // 
-            this.txtBoxVATPercentPO.Location = new System.Drawing.Point(178, 217);
+            this.txtBoxVATPercentPO.Location = new System.Drawing.Point(178, 196);
             this.txtBoxVATPercentPO.Name = "txtBoxVATPercentPO";
             this.txtBoxVATPercentPO.Size = new System.Drawing.Size(204, 20);
             this.txtBoxVATPercentPO.TabIndex = 11;
@@ -727,7 +734,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(70, 220);
+            this.label27.Location = new System.Drawing.Point(70, 199);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(68, 13);
             this.label27.TabIndex = 55;
@@ -738,7 +745,7 @@
             this.txtBoxHeaderSubTitleColorPO.BackColor = System.Drawing.SystemColors.InfoText;
             this.txtBoxHeaderSubTitleColorPO.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtBoxHeaderSubTitleColorPO.Enabled = false;
-            this.txtBoxHeaderSubTitleColorPO.Location = new System.Drawing.Point(422, 59);
+            this.txtBoxHeaderSubTitleColorPO.Location = new System.Drawing.Point(422, 38);
             this.txtBoxHeaderSubTitleColorPO.Name = "txtBoxHeaderSubTitleColorPO";
             this.txtBoxHeaderSubTitleColorPO.Size = new System.Drawing.Size(21, 13);
             this.txtBoxHeaderSubTitleColorPO.TabIndex = 53;
@@ -749,7 +756,7 @@
             this.txtBoxHeaderTitleColorPO.BackColor = System.Drawing.SystemColors.InfoText;
             this.txtBoxHeaderTitleColorPO.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtBoxHeaderTitleColorPO.Enabled = false;
-            this.txtBoxHeaderTitleColorPO.Location = new System.Drawing.Point(422, 33);
+            this.txtBoxHeaderTitleColorPO.Location = new System.Drawing.Point(422, 12);
             this.txtBoxHeaderTitleColorPO.Name = "txtBoxHeaderTitleColorPO";
             this.txtBoxHeaderTitleColorPO.Size = new System.Drawing.Size(21, 13);
             this.txtBoxHeaderTitleColorPO.TabIndex = 54;
@@ -758,7 +765,7 @@
             // btnHeaderSubTitleColorPO
             // 
             this.btnHeaderSubTitleColorPO.Image = ((System.Drawing.Image)(resources.GetObject("btnHeaderSubTitleColorPO.Image")));
-            this.btnHeaderSubTitleColorPO.Location = new System.Drawing.Point(388, 54);
+            this.btnHeaderSubTitleColorPO.Location = new System.Drawing.Point(388, 33);
             this.btnHeaderSubTitleColorPO.Name = "btnHeaderSubTitleColorPO";
             this.btnHeaderSubTitleColorPO.Size = new System.Drawing.Size(28, 23);
             this.btnHeaderSubTitleColorPO.TabIndex = 4;
@@ -768,7 +775,7 @@
             // btnHeaderTitleColorPO
             // 
             this.btnHeaderTitleColorPO.Image = ((System.Drawing.Image)(resources.GetObject("btnHeaderTitleColorPO.Image")));
-            this.btnHeaderTitleColorPO.Location = new System.Drawing.Point(388, 28);
+            this.btnHeaderTitleColorPO.Location = new System.Drawing.Point(388, 7);
             this.btnHeaderTitleColorPO.Name = "btnHeaderTitleColorPO";
             this.btnHeaderTitleColorPO.Size = new System.Drawing.Size(28, 23);
             this.btnHeaderTitleColorPO.TabIndex = 2;
@@ -780,7 +787,7 @@
             this.txtBoxFooterTextColorPO.BackColor = System.Drawing.SystemColors.InfoText;
             this.txtBoxFooterTextColorPO.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtBoxFooterTextColorPO.Enabled = false;
-            this.txtBoxFooterTextColorPO.Location = new System.Drawing.Point(422, 111);
+            this.txtBoxFooterTextColorPO.Location = new System.Drawing.Point(422, 90);
             this.txtBoxFooterTextColorPO.Name = "txtBoxFooterTextColorPO";
             this.txtBoxFooterTextColorPO.Size = new System.Drawing.Size(21, 13);
             this.txtBoxFooterTextColorPO.TabIndex = 51;
@@ -791,7 +798,7 @@
             this.txtBoxFooterTitleColorPO.BackColor = System.Drawing.SystemColors.InfoText;
             this.txtBoxFooterTitleColorPO.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtBoxFooterTitleColorPO.Enabled = false;
-            this.txtBoxFooterTitleColorPO.Location = new System.Drawing.Point(422, 85);
+            this.txtBoxFooterTitleColorPO.Location = new System.Drawing.Point(422, 64);
             this.txtBoxFooterTitleColorPO.Name = "txtBoxFooterTitleColorPO";
             this.txtBoxFooterTitleColorPO.Size = new System.Drawing.Size(21, 13);
             this.txtBoxFooterTitleColorPO.TabIndex = 52;
@@ -800,7 +807,7 @@
             // btnFooterTextColorPO
             // 
             this.btnFooterTextColorPO.Image = ((System.Drawing.Image)(resources.GetObject("btnFooterTextColorPO.Image")));
-            this.btnFooterTextColorPO.Location = new System.Drawing.Point(388, 106);
+            this.btnFooterTextColorPO.Location = new System.Drawing.Point(388, 85);
             this.btnFooterTextColorPO.Name = "btnFooterTextColorPO";
             this.btnFooterTextColorPO.Size = new System.Drawing.Size(28, 23);
             this.btnFooterTextColorPO.TabIndex = 8;
@@ -810,7 +817,7 @@
             // btnFooterTitleColorPO
             // 
             this.btnFooterTitleColorPO.Image = ((System.Drawing.Image)(resources.GetObject("btnFooterTitleColorPO.Image")));
-            this.btnFooterTitleColorPO.Location = new System.Drawing.Point(388, 80);
+            this.btnFooterTitleColorPO.Location = new System.Drawing.Point(388, 59);
             this.btnFooterTitleColorPO.Name = "btnFooterTitleColorPO";
             this.btnFooterTitleColorPO.Size = new System.Drawing.Size(28, 23);
             this.btnFooterTitleColorPO.TabIndex = 6;
@@ -819,7 +826,7 @@
             // 
             // txtBoxAddressPO
             // 
-            this.txtBoxAddressPO.Location = new System.Drawing.Point(178, 108);
+            this.txtBoxAddressPO.Location = new System.Drawing.Point(178, 87);
             this.txtBoxAddressPO.Multiline = true;
             this.txtBoxAddressPO.Name = "txtBoxAddressPO";
             this.txtBoxAddressPO.Size = new System.Drawing.Size(204, 51);
@@ -827,49 +834,49 @@
             // 
             // txtBoxLastPONumber
             // 
-            this.txtBoxLastPONumber.Location = new System.Drawing.Point(178, 269);
+            this.txtBoxLastPONumber.Location = new System.Drawing.Point(178, 248);
             this.txtBoxLastPONumber.Name = "txtBoxLastPONumber";
             this.txtBoxLastPONumber.Size = new System.Drawing.Size(204, 20);
             this.txtBoxLastPONumber.TabIndex = 13;
             // 
             // txtBoxTINNumberPO
             // 
-            this.txtBoxTINNumberPO.Location = new System.Drawing.Point(178, 243);
+            this.txtBoxTINNumberPO.Location = new System.Drawing.Point(178, 222);
             this.txtBoxTINNumberPO.Name = "txtBoxTINNumberPO";
             this.txtBoxTINNumberPO.Size = new System.Drawing.Size(204, 20);
             this.txtBoxTINNumberPO.TabIndex = 12;
             // 
             // txtBoxEMailIDPO
             // 
-            this.txtBoxEMailIDPO.Location = new System.Drawing.Point(178, 191);
+            this.txtBoxEMailIDPO.Location = new System.Drawing.Point(178, 170);
             this.txtBoxEMailIDPO.Name = "txtBoxEMailIDPO";
             this.txtBoxEMailIDPO.Size = new System.Drawing.Size(204, 20);
             this.txtBoxEMailIDPO.TabIndex = 10;
             // 
             // txtBoxPhoneNumberPO
             // 
-            this.txtBoxPhoneNumberPO.Location = new System.Drawing.Point(178, 165);
+            this.txtBoxPhoneNumberPO.Location = new System.Drawing.Point(178, 144);
             this.txtBoxPhoneNumberPO.Name = "txtBoxPhoneNumberPO";
             this.txtBoxPhoneNumberPO.Size = new System.Drawing.Size(204, 20);
             this.txtBoxPhoneNumberPO.TabIndex = 9;
             // 
             // txtBoxFooterTitlePO
             // 
-            this.txtBoxFooterTitlePO.Location = new System.Drawing.Point(178, 82);
+            this.txtBoxFooterTitlePO.Location = new System.Drawing.Point(178, 61);
             this.txtBoxFooterTitlePO.Name = "txtBoxFooterTitlePO";
             this.txtBoxFooterTitlePO.Size = new System.Drawing.Size(204, 20);
             this.txtBoxFooterTitlePO.TabIndex = 5;
             // 
             // txtBoxHeaderSubTitlePO
             // 
-            this.txtBoxHeaderSubTitlePO.Location = new System.Drawing.Point(178, 56);
+            this.txtBoxHeaderSubTitlePO.Location = new System.Drawing.Point(178, 35);
             this.txtBoxHeaderSubTitlePO.Name = "txtBoxHeaderSubTitlePO";
             this.txtBoxHeaderSubTitlePO.Size = new System.Drawing.Size(204, 20);
             this.txtBoxHeaderSubTitlePO.TabIndex = 3;
             // 
             // txtBoxHeaderTitlePO
             // 
-            this.txtBoxHeaderTitlePO.Location = new System.Drawing.Point(178, 30);
+            this.txtBoxHeaderTitlePO.Location = new System.Drawing.Point(178, 9);
             this.txtBoxHeaderTitlePO.Name = "txtBoxHeaderTitlePO";
             this.txtBoxHeaderTitlePO.Size = new System.Drawing.Size(204, 20);
             this.txtBoxHeaderTitlePO.TabIndex = 1;
@@ -877,7 +884,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(70, 272);
+            this.label13.Location = new System.Drawing.Point(70, 251);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(111, 13);
             this.label13.TabIndex = 38;
@@ -886,7 +893,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(70, 246);
+            this.label17.Location = new System.Drawing.Point(70, 225);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(65, 13);
             this.label17.TabIndex = 40;
@@ -895,7 +902,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(70, 194);
+            this.label21.Location = new System.Drawing.Point(70, 173);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(73, 13);
             this.label21.TabIndex = 34;
@@ -904,7 +911,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(70, 168);
+            this.label22.Location = new System.Drawing.Point(70, 147);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(78, 13);
             this.label22.TabIndex = 35;
@@ -913,7 +920,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(70, 111);
+            this.label23.Location = new System.Drawing.Point(70, 90);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(45, 13);
             this.label23.TabIndex = 48;
@@ -922,7 +929,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(70, 85);
+            this.label24.Location = new System.Drawing.Point(70, 64);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(60, 13);
             this.label24.TabIndex = 46;
@@ -931,7 +938,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(70, 59);
+            this.label25.Location = new System.Drawing.Point(70, 38);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(84, 13);
             this.label25.TabIndex = 42;
@@ -940,7 +947,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(70, 33);
+            this.label26.Location = new System.Drawing.Point(70, 12);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(65, 13);
             this.label26.TabIndex = 44;
@@ -986,6 +993,31 @@
             this.cmbBoxProductLines.TabIndex = 0;
             this.cmbBoxProductLines.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProductLines_SelectedIndexChanged);
             // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(71, 279);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(113, 13);
+            this.label28.TabIndex = 38;
+            this.label28.Text = "Include Past Sales for ";
+            // 
+            // numUpDownPeriodValue
+            // 
+            this.numUpDownPeriodValue.Location = new System.Drawing.Point(190, 275);
+            this.numUpDownPeriodValue.Name = "numUpDownPeriodValue";
+            this.numUpDownPeriodValue.Size = new System.Drawing.Size(51, 20);
+            this.numUpDownPeriodValue.TabIndex = 14;
+            // 
+            // cmbBoxPeriodUnits
+            // 
+            this.cmbBoxPeriodUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxPeriodUnits.FormattingEnabled = true;
+            this.cmbBoxPeriodUnits.Location = new System.Drawing.Point(247, 274);
+            this.cmbBoxPeriodUnits.Name = "cmbBoxPeriodUnits";
+            this.cmbBoxPeriodUnits.Size = new System.Drawing.Size(67, 21);
+            this.cmbBoxPeriodUnits.TabIndex = 15;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1014,6 +1046,7 @@
             this.tabPageQuotation.PerformLayout();
             this.tabPagePurchaseOrder.ResumeLayout(false);
             this.tabPagePurchaseOrder.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numUpDownPeriodValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1109,5 +1142,8 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.TextBox txtBoxVATPercentPO;
         private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.ComboBox cmbBoxPeriodUnits;
+        private System.Windows.Forms.NumericUpDown numUpDownPeriodValue;
+        private System.Windows.Forms.Label label28;
     }
 }

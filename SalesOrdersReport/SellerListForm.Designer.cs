@@ -32,8 +32,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cmbBoxLineFilter = new System.Windows.Forms.ComboBox();
             this.dtGridViewSellers = new System.Windows.Forms.DataGridView();
-            this.btnClose = new System.Windows.Forms.Button();
             this.colSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.btnClose = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewSellers)).BeginInit();
             this.SuspendLayout();
             // 
@@ -73,6 +73,16 @@
             this.dtGridViewSellers.TabIndex = 2;
             this.dtGridViewSellers.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewSellers_CellClick);
             // 
+            // colSelect
+            // 
+            this.colSelect.FalseValue = "false";
+            this.colSelect.HeaderText = "";
+            this.colSelect.Name = "colSelect";
+            this.colSelect.ReadOnly = true;
+            this.colSelect.ToolTipText = "Check to Select Seller";
+            this.colSelect.TrueValue = "true";
+            this.colSelect.Width = 20;
+            // 
             // btnClose
             // 
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -84,17 +94,7 @@
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // colSelect
-            // 
-            this.colSelect.FalseValue = "false";
-            this.colSelect.HeaderText = "";
-            this.colSelect.Name = "colSelect";
-            this.colSelect.ReadOnly = true;
-            this.colSelect.ToolTipText = "Check to Select Seller";
-            this.colSelect.TrueValue = "true";
-            this.colSelect.Width = 20;
-            // 
-            // SellerList
+            // SellerListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -105,8 +105,9 @@
             this.Controls.Add(this.cmbBoxLineFilter);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "SellerList";
+            this.Name = "SellerListForm";
             this.Text = "Add Sellers to List";
+            this.Load += new System.EventHandler(this.SellerListForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewSellers)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

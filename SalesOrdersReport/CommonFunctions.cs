@@ -21,6 +21,7 @@ namespace SalesOrdersReport
         public static String MasterFilePath;
         public static ToolStripProgressBar ToolStripProgressBarMainForm;
         public static ToolStripLabel ToolStripProgressBarMainFormStatus;
+        public static Form CurrentForm = null;
 
         public static void Initialize()
         {
@@ -46,7 +47,10 @@ namespace SalesOrdersReport
 
         public static void ShowErrorDialog(String Method, Exception ex)
         {
-            MessageBox.Show("Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+            if (CurrentForm != null)
+                MessageBox.Show(CurrentForm, "Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+            else
+                MessageBox.Show("Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
         }
 
         public static void ReleaseCOMObject(object obj)
@@ -116,7 +120,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("CommonFunctions.GetWorksheet", ex);
+                ShowErrorDialog("CommonFunctions.GetWorksheet", ex);
             }
             return null;
         }
@@ -329,6 +333,22 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 ShowErrorDialog("CommonFunctions.ValidateFile_Overwrite_TakeBackup()", ex);
+                throw;
+            }
+        }
+
+        public static void ToggleEnabledPropertyOfAllControls(Form CurrentForm, Boolean Override = false, Boolean Enabled = false)
+        {
+            try
+            {
+                foreach (Control item in CurrentForm.Controls)
+                {
+                    item.Enabled = (Override ? Enabled : !item.Enabled);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.ToggleEnabledPropertyOfAllControls()", ex);
                 throw;
             }
         }

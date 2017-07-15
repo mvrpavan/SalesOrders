@@ -1,6 +1,6 @@
 ﻿namespace SalesOrdersReport
 {
-    partial class AddNewOrderSheetForm
+    partial class SellerOrderSheetForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddNewOrderSheetForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SellerOrderSheetForm));
             this.dateTimeOrderSheet = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.chkBoxMarkVendors = new System.Windows.Forms.CheckBox();

@@ -75,11 +75,11 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="AddNewOrderSheetForm.cs">
+    <Compile Include="SellerOrderSheetForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddNewOrderSheetForm.Designer.cs">
-      <DependentUpon>AddNewOrderSheetForm.cs</DependentUpon>
+    <Compile Include="SellerOrderSheetForm.Designer.cs">
+      <DependentUpon>SellerOrderSheetForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CommonFunctions.cs" />
     <Compile Include="UpdateProductPurchasesForm.cs">
@@ -168,8 +168,8 @@
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddNewOrderSheetForm.resx">
-      <DependentUpon>AddNewOrderSheetForm.cs</DependentUpon>
+    <EmbeddedResource Include="SellerOrderSheetForm.resx">
+      <DependentUpon>SellerOrderSheetForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateProductPurchasesForm.resx">
       <DependentUpon>UpdateProductPurchasesForm.cs</DependentUpon>

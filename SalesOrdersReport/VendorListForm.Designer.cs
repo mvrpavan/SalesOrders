@@ -70,7 +70,7 @@
             this.colSelect.HeaderText = "";
             this.colSelect.Name = "colSelect";
             this.colSelect.ReadOnly = true;
-            this.colSelect.ToolTipText = "Check to Select Seller";
+            this.colSelect.ToolTipText = "Check to Select Vendor";
             this.colSelect.TrueValue = "true";
             this.colSelect.Width = 20;
             // 
@@ -105,6 +105,7 @@
             this.Controls.Add(this.label1);
             this.Name = "VendorListForm";
             this.Text = "Vendor List";
+            this.Load += new System.EventHandler(this.VendorListForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewVendors)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -115,8 +116,8 @@
 
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.DataGridView dtGridViewVendors;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn colSelect;
         private System.Windows.Forms.ComboBox cmbBoxLineFilter;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colSelect;
     }
 }

@@ -34,6 +34,8 @@ namespace SalesOrdersReport
             chkBoxUpdProductInventory.Checked = true;
             chkBoxUpdStockHistory.Checked = true;
             chkBoxUpdVendorHistory.Checked = true;
+
+            CommonFunctions.ObjProductMaster.ResetStockProducts();
         }
 
         delegate void ReportProgressDel(Int32 ProgressState);

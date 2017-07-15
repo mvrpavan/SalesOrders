@@ -19,12 +19,30 @@ namespace SalesOrdersReport
             InitializeComponent();
             ObjVendorPurchaseOrderForm = ObjForm;
             dtVendorMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("VendorMaster", CommonFunctions.MasterFilePath, "VendorName,Line");
-            FillListBoxLineFilter();
+        }
+
+        private void VendorListForm_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                FillListBoxLineFilter();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("VendorListForm.VendorListForm_Load()", ex);
+            }
         }
 
         private void cmbBoxLineFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillDataGridVendors();
+            try
+            {
+                FillDataGridVendors();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("VendorListForm.cmbBoxLineFilter_SelectedIndexChanged()", ex);
+            }
         }
 
         private void btnClose_Click(object sender, EventArgs e)

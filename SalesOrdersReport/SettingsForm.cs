@@ -23,7 +23,15 @@ namespace SalesOrdersReport
                 cmbBoxProductLines.Items.Add(ObjProductLine.Name);
             }
             cmbBoxProductLines.SelectedIndex = CommonFunctions.SelectedProductLineIndex - 1;
-            
+
+            //Load cmbBoxPeriodUnits
+            cmbBoxPeriodUnits.Items.Clear();
+            cmbBoxPeriodUnits.Items.Add("Days");
+            cmbBoxPeriodUnits.Items.Add("Weeks");
+            cmbBoxPeriodUnits.Items.Add("Months");
+            cmbBoxPeriodUnits.Items.Add("Years");
+            cmbBoxPeriodUnits.SelectedIndex = 0;
+
             LoadSettings();
         }
 
@@ -83,6 +91,8 @@ namespace SalesOrdersReport
                 txtBoxVATPercentPO.Text = CurrSettings.VATPercent;
                 txtBoxTINNumberPO.Text = CurrSettings.TINNumber;
                 txtBoxLastPONumber.Text = CurrSettings.LastNumber.ToString();
+                numUpDownPeriodValue.Value = CurrSettings.PastSalePeriodValue;
+                cmbBoxPeriodUnits.SelectedIndex = (Int32)CurrSettings.PastSalePeriodUnits;
             }
             catch (Exception ex)
             {
@@ -148,6 +158,8 @@ namespace SalesOrdersReport
                 CurrSettings.VATPercent = txtBoxVATPercentPO.Text;
                 CurrSettings.TINNumber = txtBoxTINNumberPO.Text;
                 CurrSettings.LastNumber = Int32.Parse(txtBoxLastPONumber.Text);
+                CurrSettings.PastSalePeriodValue = (Int32)numUpDownPeriodValue.Value;
+                CurrSettings.PastSalePeriodUnits = ReportSettings.GetTimePeriodUnits(cmbBoxPeriodUnits.SelectedItem.ToString());
 
                 CommonFunctions.WriteToSettingsFile();      //Save to Settings.xml file
 
@@ -251,6 +263,8 @@ namespace SalesOrdersReport
         {
             try
             {
+                if (cmbBoxProductLines.SelectedIndex + 1 == CommonFunctions.SelectedProductLineIndex) return;
+
                 CommonFunctions.SelectProductLine(Int32.Parse((cmbBoxProductLines.SelectedIndex + 1).ToString()), true);
                 LoadSettings();
             }

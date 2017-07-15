@@ -19,7 +19,18 @@ namespace SalesOrdersReport
             InitializeComponent();
             ObjCreateSellerInvoice = ObjForm;
             dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", ObjCreateSellerInvoice.MasterFilePath, "SellerName,Line");
-            FillListBoxLineFilter();
+        }
+
+        private void SellerListForm_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                FillListBoxLineFilter();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("SellerListForm.SellerListForm_Load()", ex);
+            }
         }
 
         private void FillDataGridSellers()
@@ -46,7 +57,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("SellerListForm.FillDataGridSellers", ex);
+                CommonFunctions.ShowErrorDialog("SellerListForm.FillDataGridSellers()", ex);
             }
         }
 
@@ -63,7 +74,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("SellerListForm.FillListBoxLineFilter", ex);
+                CommonFunctions.ShowErrorDialog("SellerListForm.FillListBoxLineFilter()", ex);
             }
         }
 
@@ -76,7 +87,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("SellerListForm.btnClose_Click", ex);
+                CommonFunctions.ShowErrorDialog("SellerListForm.btnClose_Click()", ex);
             }
         }
 
@@ -88,7 +99,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("SellerListForm.cmbBoxLineFilter_SelectedIndexChanged", ex);
+                CommonFunctions.ShowErrorDialog("SellerListForm.cmbBoxLineFilter_SelectedIndexChanged()", ex);
             }
         }
 
@@ -115,7 +126,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("SellerListForm.dtGridViewSellers_CellClick", ex);
+                CommonFunctions.ShowErrorDialog("SellerListForm.dtGridViewSellers_CellClick()", ex);
             }
         }
     }
