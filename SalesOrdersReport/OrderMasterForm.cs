@@ -111,20 +111,23 @@ namespace SalesOrdersReport
         {
             try
             {
+                ProductLine CurrProductLine = CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex];
+
                 DataTable dtProductMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("ItemMaster", CommonFunctions.MasterFilePath, "*");
                 DataTable dtPriceGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("PriceGroupMaster", CommonFunctions.MasterFilePath, "*");
-                CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex].LoadProductMaster(dtProductMaster, dtPriceGroupMaster);
+                DataTable dtHSNMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("HSNMaster", CommonFunctions.MasterFilePath, "*");
+                CurrProductLine.LoadProductMaster(dtProductMaster, dtPriceGroupMaster, dtHSNMaster);
                 lblStatus.Text = "Completed loading Product details";
                 ReportProgressFunc(25);
 
                 DataTable dtDiscountGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("DiscountGroupMaster", CommonFunctions.MasterFilePath, "*");
                 DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", CommonFunctions.MasterFilePath, "*");
-                CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex].LoadSellerMaster(dtSellerMaster, dtDiscountGroupMaster);
+                CurrProductLine.LoadSellerMaster(dtSellerMaster, dtDiscountGroupMaster);
                 lblStatus.Text = "Completed loading Seller details";
                 ReportProgressFunc(50);
 
                 DataTable dtVendorMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("VendorMaster", CommonFunctions.MasterFilePath, "*");
-                CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex].LoadVendorMaster(dtVendorMaster, dtDiscountGroupMaster);
+                CurrProductLine.LoadVendorMaster(dtVendorMaster, dtDiscountGroupMaster);
                 lblStatus.Text = "Completed loading Vendor details";
                 ReportProgressFunc(75);
 

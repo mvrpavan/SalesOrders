@@ -24,9 +24,10 @@
         <PhoneNumber>1234567890</PhoneNumber>
         <EMailID>a@gmail.com</EMailID>
         <TINNumber>1234567890</TINNumber>
+        <GSTINumber>1234567890ABCD</GSTINumber>
         <LastNumber>0</LastNumber>
         <VATPercent>5.5</VATPercent>
-      </Invoice>
+    </Invoice>
       <Quotation>
         <HeaderTitle>Default Title</HeaderTitle>
         <HeaderSubTitle>Default SubTitle</HeaderSubTitle>
@@ -40,6 +41,7 @@
         <EMailID>a@gmail.com</EMailID>
         <TINNumber>
         </TINNumber>
+        <GSTINumber>1234567890ABCD</GSTINumber>
         <LastNumber>0</LastNumber>
       </Quotation>
       <PurchaseOrder>
@@ -56,6 +58,7 @@
         <EMailID>cerenbusinessgroup@gmail.com</EMailID>
         <TINNumber>
         </TINNumber>
+        <GSTINumber>1234567890ABCD</GSTINumber>
         <VATPercent>5.5</VATPercent>
         <LastNumber>103</LastNumber>
         <PastSalesPeriod>

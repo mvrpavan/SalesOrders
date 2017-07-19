@@ -268,7 +268,7 @@ namespace SalesOrdersReport
             }
         }
 
-        private void CreateSellerReport(ReportType EnumReportType, DataRow[] drItems, DataRow[] drSellers, String SelectedDateTimeString, Int32 StartRow, Int32 StartColumn, List<Int32> ListItemIndexes, List<Int32> ListSellerIndexes, Excel.Workbook xlWorkbook)
+        private void CreateSellerReportOld(ReportType EnumReportType, DataRow[] drItems, DataRow[] drSellers, String SelectedDateTimeString, Int32 StartRow, Int32 StartColumn, List<Int32> ListItemIndexes, List<Int32> ListSellerIndexes, Excel.Workbook xlWorkbook)
         {
             try
             {
@@ -451,7 +451,7 @@ namespace SalesOrdersReport
                     xlRange.Value = "Discount";
                     xlRange.Font.Bold = true;
 
-                    DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(ObjCurrentSeller.SellerName);
+                    DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(ObjCurrentSeller.Name);
 
                     xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + DiscountRowOffset, TotalColNum];
                     Excel.Range xlSalesTotal1 = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum];
@@ -576,6 +576,141 @@ namespace SalesOrdersReport
             }
         }
 
+        private void CreateSellerReport(ReportType EnumReportType, DataRow[] drItems, DataRow[] drSellers, String SelectedDateTimeString, Int32 StartRow, Int32 StartColumn, List<Int32> ListItemIndexes, List<Int32> ListSellerIndexes, Excel.Workbook xlWorkbook)
+        {
+            try
+            {
+                Boolean PrintOldBalance = false, CreateSummary = false;
+                ReportSettings CurrReportSettings = null;
+                String ReportTypeName = "", BillNumberText = "", SaveFileName = "";
+                switch (EnumReportType)
+                {
+                    case ReportType.INVOICE:
+                        CurrReportSettings = CommonFunctions.ObjInvoiceSettings;
+                        ReportTypeName = "Invoice";
+                        BillNumberText = "Invoice#";
+                        SaveFileName = txtBoxOutputFolder.Text + "\\Invoice_" + SelectedDateTimeString + ".xlsx";
+                        if (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0) CreateSummary = true;
+                        break;
+                    case ReportType.QUOTATION:
+                        CurrReportSettings = CommonFunctions.ObjQuotationSettings;
+                        ReportTypeName = "Quotation";
+                        PrintOldBalance = true;
+                        BillNumberText = "Quotation#";
+                        SaveFileName = txtBoxOutputFolder.Text + "\\Quotation_" + SelectedDateTimeString + ".xlsx";
+                        if (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1) CreateSummary = true;
+                        break;
+                    default:
+                        return;
+                }
+                Excel.Worksheet xlSalesOrderWorksheet = xlWorkbook.Sheets[1];
+
+                #region Print Invoice Sheet for each Seller
+
+                Int32 InvoiceNumber = CurrReportSettings.LastNumber;
+                Int32 ValidSellerCount = ListSellerIndexes.Where(s => (s >= 0)).ToList().Count;
+                Int32 ValidItemCount = ListItemIndexes.Where(s => (s >= 0)).ToList().Count;
+                Int32 ProgressBarCount = (ValidSellerCount * ValidItemCount);
+                Int32 Counter = 0, SLNo = 0;
+                Int32 SellerCount = 0, SalesOrderDetailsCount = 5;
+                Double Quantity;
+                for (int i = 0; i < ListSellerIndexes.Count; i++)
+                {
+                    if (ListSellerIndexes[i] < 0) continue;
+                    SellerCount++;
+                    lblStatus.Text = "Creating " + ReportTypeName + " for Seller " + SellerCount + " of " + ValidSellerCount;
+                    Excel.Worksheet xlWorkSheet = xlWorkbook.Worksheets.Add(Type.Missing, xlWorkbook.Sheets[xlWorkbook.Sheets.Count]);
+
+                    SLNo = 0;
+                    InvoiceNumber++;
+                    SellerDetails ObjCurrentSeller = CommonFunctions.ObjSellerMaster.GetSellerDetails(drSellers[ListSellerIndexes[i]]["SellerName"].ToString());
+                    DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(ObjCurrentSeller.Name);
+
+                    Invoice ObjInvoice = new InvoiceGST();
+                    ObjInvoice.SerialNumber = InvoiceNumber.ToString();
+                    ObjInvoice.InvoiceNumberText = BillNumberText;
+                    ObjInvoice.ObjSellerDetails = ObjCurrentSeller;
+                    ObjInvoice.CurrReportSettings = CurrReportSettings;
+                    ObjInvoice.DateOfInvoice = DateTime.Now;
+                    ObjInvoice.PrintOldBalance = PrintOldBalance;
+                    ObjInvoice.ListProducts = new List<ProductDetailsForInvoice>();
+
+                    #region Print Invoice Items
+                    for (int j = 0; j < ListItemIndexes.Count; j++)
+                    {
+                        if (ListItemIndexes[j] < 0) continue;
+                        Counter++;
+                        backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
+
+                        if (xlSalesOrderWorksheet.Cells[StartRow + 1 + i, StartColumn + SalesOrderDetailsCount + j].Value == null) continue;
+
+                        SLNo++;
+                        Quantity = Double.Parse(xlSalesOrderWorksheet.Cells[StartRow + 1 + i, StartColumn + SalesOrderDetailsCount + j].Value.ToString());
+                        drItems[ListItemIndexes[j]]["Quantity"] = Double.Parse(drItems[ListItemIndexes[j]]["Quantity"].ToString()) + Quantity;
+
+                        ProductDetailsForInvoice ObjProductDetailsForInvoice = new ProductDetailsForInvoice();
+                        ProductDetails ObjProductDetails = CommonFunctions.ObjProductMaster.GetProductDetails(drItems[ListItemIndexes[j]]["ItemName"].ToString());
+                        ObjProductDetailsForInvoice.SerialNumber = SLNo;
+                        ObjProductDetailsForInvoice.Description = ObjProductDetails.ItemName;
+                        ObjProductDetailsForInvoice.HSNCode = ObjProductDetails.HSNCode;
+                        ObjProductDetailsForInvoice.UnitsOfMeasurement = ObjProductDetails.UnitsOfMeasurement;
+                        ObjProductDetailsForInvoice.OrderQuantity = Quantity;
+                        ObjProductDetailsForInvoice.SaleQuantity = 0;
+                        if (chkBoxUseOrdQty.Checked == true) ObjProductDetailsForInvoice.SaleQuantity = Quantity;
+                        ObjProductDetailsForInvoice.Rate = CommonFunctions.ObjProductMaster.GetPriceForProduct(ObjProductDetails.ItemName, ObjCurrentSeller.PriceGroupIndex);
+
+                        Double[] TaxRates = CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(ObjProductDetails.ItemName);
+                        ObjProductDetailsForInvoice.CGSTDetails = new TaxDetails();
+                        ObjProductDetailsForInvoice.CGSTDetails.TaxRate = TaxRates[0] / 100;
+                        ObjProductDetailsForInvoice.SGSTDetails = new TaxDetails();
+                        ObjProductDetailsForInvoice.SGSTDetails.TaxRate = TaxRates[1] / 100;
+                        ObjProductDetailsForInvoice.IGSTDetails = new TaxDetails();
+                        ObjProductDetailsForInvoice.IGSTDetails.TaxRate = TaxRates[2] / 100;
+                        ObjProductDetailsForInvoice.DiscountGroup = ObjDiscountGroup;
+                        ObjInvoice.ListProducts.Add(ObjProductDetailsForInvoice);
+                    }
+                    #endregion
+                    ObjInvoice.CreateInvoice(xlWorkSheet);
+
+                    drSellers[ListSellerIndexes[i]]["InvoiceNumber"] = ObjInvoice.SerialNumber;
+                    drSellers[ListSellerIndexes[i]]["Total"] = ObjInvoice.TotalSalesValue;
+                    drSellers[ListSellerIndexes[i]]["TotalDiscount"] = ObjInvoice.TotalDiscount;
+                    drSellers[ListSellerIndexes[i]]["TotalTax"] = ObjInvoice.TotalTax;
+                }
+                #endregion
+
+                if (chkBoxCreateSummary.Checked && !SummaryPrinted && CreateSummary)
+                {
+                    CreateSellerSummarySheet(drSellers, xlWorkbook, CurrReportSettings);
+                    CreateItemSummarySheet(drItems, xlWorkbook, CurrReportSettings);
+                    SummaryPrinted = true;
+                }
+
+                xlApp.DisplayAlerts = false;
+                xlWorkbook.Sheets[SelectedDateTimeString].Delete();
+                xlApp.DisplayAlerts = true;
+                Excel.Worksheet FirstWorksheet = xlWorkbook.Sheets[1];
+                FirstWorksheet.Select();
+
+                #region Write InvoiceNumber to Settings File
+                CurrReportSettings.LastNumber = InvoiceNumber;
+                #endregion
+
+                backgroundWorker1.ReportProgress(100);
+                xlWorkbook.SaveAs(SaveFileName);
+                xlWorkbook.Close();
+                lblStatus.Text = "Completed creation of " + ReportTypeName + "s for all Sellers";
+
+                CommonFunctions.ReleaseCOMObject(xlWorkbook);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CreateSellerReport", ex);
+                xlApp.Quit();
+                CommonFunctions.ReleaseCOMObject(xlApp);
+            }
+        }
+
         public static void SetAllBorders(Excel.Range xlRange)
         {
             try
@@ -583,6 +718,23 @@ namespace SalesOrdersReport
                 xlRange.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic);
                 xlRange.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle = Excel.XlLineStyle.xlContinuous;
                 xlRange.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
+                xlRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
+                xlRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
+                xlRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
+                xlRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CreateSellerReport", ex);
+                throw ex;
+            }
+        }
+
+        public static void SetBorders(Excel.Range xlRange)
+        {
+            try
+            {
+                xlRange.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic);
                 xlRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
                 xlRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
                 xlRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
@@ -799,9 +951,9 @@ namespace SalesOrdersReport
                 {
                     xlWorksheet.PageSetup.CenterFooter += "\n&\"Arial,Italic\"&10&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.FooterTextColor) + CurrReportSettings.Address;
                 }
-                if (!String.IsNullOrEmpty(CurrReportSettings.TINNumber))
+                if (!String.IsNullOrEmpty(CurrReportSettings.GSTINumber))
                 {
-                    xlWorksheet.PageSetup.CenterFooter += "\nTIN#:" + CurrReportSettings.TINNumber;
+                    xlWorksheet.PageSetup.CenterFooter += "\nGSTIN:" + CurrReportSettings.GSTINumber;
                 }
                 if (!String.IsNullOrEmpty(CurrReportSettings.PhoneNumber))
                 {
@@ -823,6 +975,10 @@ namespace SalesOrdersReport
                 xlWorksheet.PageSetup.HeaderMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.25);
                 xlWorksheet.PageSetup.LeftMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.7);
                 xlWorksheet.PageSetup.RightMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.7);
+
+                xlWorksheet.PageSetup.Zoom = false;
+                xlWorksheet.PageSetup.FitToPagesTall = 1;
+                xlWorksheet.PageSetup.FitToPagesWide = 1;
 
                 /*xlWorksheet.PageSetup.PrintHeadings = false;
                 xlWorksheet.PageSetup.PrintGridlines = false;

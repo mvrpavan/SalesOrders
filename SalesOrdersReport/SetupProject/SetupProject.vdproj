@@ -224,7 +224,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sales Orders Invoice"
         "ProductCode" = "8:{EA41F8B0-A4F5-4D0C-BA0E-5749D0AB17DE}"
-        "PackageCode" = "8:{4DDF8E85-5C9D-4362-8359-146AC5628CA9}"
+        "PackageCode" = "8:{C4AED8FD-C456-4DA6-95B1-3F3229F62AA4}"
         "UpgradeCode" = "8:{0C621456-DA16-47E0-818B-DF056ACA9FE7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

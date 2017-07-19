@@ -75,6 +75,8 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="Invoice.cs" />
+    <Compile Include="InvoiceGST.cs" />
     <Compile Include="SellerOrderSheetForm.cs">
       <SubType>Form</SubType>
     </Compile>

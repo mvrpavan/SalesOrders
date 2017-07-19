@@ -64,11 +64,46 @@ namespace SalesOrdersReport
         }
     }
 
+    class TaxGroupDetails : IComparer<TaxGroupDetails>
+    {
+        public String Name, Description;
+        public Double TaxRate;
+
+        public int Compare(TaxGroupDetails x, TaxGroupDetails y)
+        {
+            return x.Name.ToUpper().CompareTo(y.Name.ToUpper());
+        }
+
+        public Double GetTaxAmount(Double SellingPrice)
+        {
+            try
+            {
+                return SellingPrice * TaxRate / 100;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("TaxGroupDetails.GetTaxAmount()", ex);
+            }
+            return -1;
+        }
+    }
+
+    class HSNCodeDetails : IComparer<HSNCodeDetails>
+    {
+        public String HSNCode;
+        public Double[] ListTaxRates;
+
+        public int Compare(HSNCodeDetails x, HSNCodeDetails y)
+        {
+            return x.HSNCode.ToUpper().CompareTo(y.HSNCode.ToUpper());
+        }
+    }
+
     class ProductDetails : IComparer<ProductDetails>
     {
-        public String ItemName, StockName, VendorName;
+        public String ItemName, StockName, VendorName, HSNCode, UnitsOfMeasurement;
         public Double PurchasePrice, SellingPrice, Units;
-        public Int32 StockProductIndex;
+        public Int32 StockProductIndex, HSNCodeIndex;
         public Double[] ListPrices;
         Boolean[] ArrPriceFilledFlag;
 
@@ -119,6 +154,8 @@ namespace SalesOrdersReport
         List<ProductDetails> ListProducts;
         public List<StockProductDetails> ListStockProducts;
         public List<PriceGroupDetails> ListPriceGroups;
+        public List<HSNCodeDetails> ListHSNCodeDetails;
+        public List<TaxGroupDetails> ListTaxGroupDetails;
         Int32 DefaultPriceGroupIndex;
 
         public void Initialize()
@@ -128,6 +165,8 @@ namespace SalesOrdersReport
                 ListProducts = new List<ProductDetails>();
                 ListStockProducts = new List<StockProductDetails>();
                 ListPriceGroups = new List<PriceGroupDetails>();
+                ListHSNCodeDetails = new List<HSNCodeDetails>();
+                ListTaxGroupDetails = new List<TaxGroupDetails>();
                 DefaultPriceGroupIndex = -1;
             }
             catch (Exception ex)
@@ -196,6 +235,58 @@ namespace SalesOrdersReport
             }
         }
 
+        public void AddHSNCode(HSNCodeDetails ObjHSNCodeDetails)
+        {
+            try
+            {
+                //Add HSNCode to ListHSNCodeDetails
+                Int32 HSNCodeIndex = ListHSNCodeDetails.BinarySearch(ObjHSNCodeDetails, ObjHSNCodeDetails);
+                if (HSNCodeIndex < 0)
+                {
+                    ListHSNCodeDetails.Insert(~HSNCodeIndex, ObjHSNCodeDetails);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.AddHSNCode()", ex);
+            }
+        }
+
+        HSNCodeDetails GetHSNCodeDetails(String HSNCode)
+        {
+            try
+            {
+                HSNCodeDetails ObjHSNCodeDetails = new HSNCodeDetails();
+                ObjHSNCodeDetails.HSNCode = HSNCode;
+                Int32 HSNCodeIndex = ListHSNCodeDetails.BinarySearch(ObjHSNCodeDetails, ObjHSNCodeDetails);
+
+                if (HSNCodeIndex < 0) return null;
+
+                return ListHSNCodeDetails[HSNCodeIndex];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.GetHSNCodeDetails()", ex);
+            }
+            return null;
+        }
+
+        public Double[] GetTaxRatesForProduct(String ItemName)
+        {
+            try
+            {
+                ProductDetails ObjProductDetails = GetProductDetails(ItemName);
+                if (ObjProductDetails == null) return null;
+
+                return ListHSNCodeDetails[ObjProductDetails.HSNCodeIndex].ListTaxRates;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.GetTaxRatesForProduct()", ex);
+            }
+            return null;
+        }
+
         public void UpdateStockProductIndexes()
         {
             try
@@ -218,6 +309,28 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("ProductMaster.UpdateStockProductIndexes()", ex);
+            }
+        }
+
+        public void UpdateHSNProductIndexes()
+        {
+            try
+            {
+                for (int i = 0; i < ListProducts.Count; i++)
+                {
+                    HSNCodeDetails ObjHSNCodeDetails = new HSNCodeDetails();
+                    ObjHSNCodeDetails.HSNCode = ListProducts[i].HSNCode;
+
+                    Int32 HSNCodeIndex = ListHSNCodeDetails.BinarySearch(ObjHSNCodeDetails, ObjHSNCodeDetails);
+                    if (HSNCodeIndex >= 0)
+                    {
+                        ListProducts[i].HSNCodeIndex = HSNCodeIndex;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.UpdateHSNProductIndexes()", ex);
             }
         }
 
@@ -491,7 +604,7 @@ namespace SalesOrdersReport
                     if (dr["Total"] != DBNull.Value)
                     {
                         ObjStockProductDetails.TotalCost += Double.Parse(dr["Total"].ToString().Trim());
-                        //ObjStockProductDetails.TotalTax += (Double.Parse(dr["Total"].ToString().Trim()) * Double.Parse(CommonFunctions.ObjInvoiceSettings.VATPercent) / 100);
+                        ObjStockProductDetails.TotalTax += Double.Parse(dr["TotalTax"].ToString().Trim());
                     }
                     ObjStockProductDetails.IsUpdated = true;
                 }

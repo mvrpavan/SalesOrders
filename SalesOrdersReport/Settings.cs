@@ -58,7 +58,7 @@ namespace SalesOrdersReport
     class ReportSettings
     {
         XmlNode SettingsNode;
-        public String HeaderTitle, HeaderSubTitle, FooterTitle, Address, PhoneNumber, EMailID, VATPercent, TINNumber;
+        public String HeaderTitle, HeaderSubTitle, FooterTitle, Address, PhoneNumber, EMailID, VATPercent, TINNumber, GSTINumber;
         public Int32 LastNumber;
         public Color HeaderTitleColor, HeaderSubTitleColor, FooterTitleColor, FooterTextColor;
         public Int32 PastSalePeriodValue;
@@ -79,6 +79,7 @@ namespace SalesOrdersReport
                 XMLFileUtils.GetChildNodeValue(SettingsNode, "EMailID", out EMailID);
                 XMLFileUtils.GetChildNodeValue(SettingsNode, "VATPercent", out VATPercent);
                 XMLFileUtils.GetChildNodeValue(SettingsNode, "TINNumber", out TINNumber);
+                XMLFileUtils.GetChildNodeValue(SettingsNode, "GSTINumber", out GSTINumber);
 
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "LastNumber", out Value)) LastNumber = Int32.Parse(Value);
 
@@ -116,6 +117,7 @@ namespace SalesOrdersReport
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "EMailID", EMailID);
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "VATPercent", VATPercent);
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "TINNumber", TINNumber);
+                XMLFileUtils.SetChildNodeValue(SettingsNode, "GSTINumber", GSTINumber);
 
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "LastNumber", LastNumber.ToString());
 

@@ -49,7 +49,7 @@ namespace SalesOrdersReport
             }
         }
 
-        public void LoadProductMaster(DataTable dtProductMaster, DataTable dtPriceGroupMaster)
+        public void LoadProductMaster(DataTable dtProductMaster, DataTable dtPriceGroupMaster, DataTable dtHSNMaster)
         {
             try
             {
@@ -71,10 +71,12 @@ namespace SalesOrdersReport
                     ObjProductMaster.AddPriceGroupToCache(ObjPriceGroupDetails);
                 }
 
+                LoadHSNMasterData(dtHSNMaster);
+
                 for (int i = 0; i < dtProductMaster.Rows.Count; i++)
                 {
                     DataRow dtRow = dtProductMaster.Rows[i];
-                    //SlNo	ItemName	VendorName	PurchasePrice	SellingPrice	Wholesale	Retail  StockName
+                    //SlNo	ItemName	VendorName	PurchasePrice	SellingPrice	Wholesale	Retail  StockName   HSNCode UnitsOfMeasurement
                     ProductDetails ObjProductDetails = new ProductDetails();
                     ObjProductDetails.ItemName = dtRow["ItemName"].ToString();
                     ObjProductDetails.StockName = dtRow["StockName"].ToString();
@@ -82,6 +84,8 @@ namespace SalesOrdersReport
                     ObjProductDetails.Units = Double.Parse(dtRow["Units"].ToString());
                     ObjProductDetails.PurchasePrice = Double.Parse(dtRow["PurchasePrice"].ToString());
                     ObjProductDetails.SellingPrice = Double.Parse(dtRow["SellingPrice"].ToString());
+                    ObjProductDetails.HSNCode = dtRow["HSNCode"].ToString();
+                    ObjProductDetails.UnitsOfMeasurement = dtRow["UnitOfMeasurement"].ToString();
                     ObjProductDetails.ListPrices = new Double[ObjProductMaster.ListPriceGroups.Count];
                     for (int j = 0; j < ObjProductDetails.ListPrices.Length; j++)
                     {
@@ -150,7 +154,7 @@ namespace SalesOrdersReport
                     //SlNo	SellerName	Address	TINNumber	Phone	Line	OldBalance	PriceGroup	DiscountGroup
 
                     SellerDetails ObjSellerDetails = new SellerDetails();
-                    ObjSellerDetails.SellerName = dtRow["SellerName"].ToString().Trim();
+                    ObjSellerDetails.Name = dtRow["SellerName"].ToString().Trim();
                     ObjSellerDetails.Address = dtRow["Address"].ToString().Trim();
                     ObjSellerDetails.TINNumber = dtRow["TINNumber"].ToString().Trim();
                     ObjSellerDetails.Phone = dtRow["Phone"].ToString().Trim();
@@ -158,6 +162,9 @@ namespace SalesOrdersReport
                     ObjSellerDetails.OldBalance = 0;
                     ObjSellerDetails.PriceGroup = "";
                     ObjSellerDetails.DiscountGroup = "";
+                    ObjSellerDetails.State = "";
+                    ObjSellerDetails.StateCode = "";
+                    ObjSellerDetails.GSTIN = "";
 
                     if (dtRow["OldBalance"] != DBNull.Value && dtRow["OldBalance"].ToString().Trim().Length > 0)
                         ObjSellerDetails.OldBalance = Double.Parse(dtRow["OldBalance"].ToString().ToString());
@@ -165,6 +172,12 @@ namespace SalesOrdersReport
                         ObjSellerDetails.PriceGroup = dtRow["PriceGroup"].ToString().Trim();
                     if (dtRow["DiscountGroup"] != DBNull.Value && dtRow["DiscountGroup"].ToString().Trim().Length > 0)
                         ObjSellerDetails.DiscountGroup = dtRow["DiscountGroup"].ToString().Trim();
+                    if (dtRow["State"] != DBNull.Value && dtRow["State"].ToString().Trim().Length > 0)
+                        ObjSellerDetails.State = dtRow["State"].ToString().Trim();
+                    if (dtRow["StateCode"] != DBNull.Value && dtRow["StateCode"].ToString().Trim().Length > 0)
+                        ObjSellerDetails.StateCode = dtRow["StateCode"].ToString().Trim();
+                    if (dtRow["GSTIN"] != DBNull.Value && dtRow["GSTIN"].ToString().Trim().Length > 0)
+                        ObjSellerDetails.GSTIN = dtRow["GSTIN"].ToString().Trim();
 
                     ObjSellerMaster.AddSellerToCache(ObjSellerDetails, ObjProductMaster.ListPriceGroups);
                 }
@@ -243,6 +256,59 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("ProductLine.LoadVendorMaster()", ex);
+            }
+        }
+
+        void LoadHSNMasterData(DataTable dtHSNMaster)
+        {
+            try
+            {
+                List<TaxGroupDetails> ListTaxGroupDetails = ObjProductMaster.ListTaxGroupDetails;
+                ListTaxGroupDetails.Clear();
+
+                String[] ArrTaxName = new String[] { "CGST", "SGST", "IGST" };
+                String[] ArrTaxDesc = new String[] { "Central Goods and Service Tax", "State Goods and Service Tax", "Inter Goods and Service Tax" };
+                for (int i = 0; i < ArrTaxName.Length; i++)
+                {
+                    TaxGroupDetails ObjTaxGroupDetails = new TaxGroupDetails();
+                    ObjTaxGroupDetails.Name = ArrTaxName[i]; ObjTaxGroupDetails.Description = ArrTaxDesc[i];
+                    ObjTaxGroupDetails.TaxRate = 0;
+                    ListTaxGroupDetails.Add(ObjTaxGroupDetails);
+                }
+
+                Int32[] TaxColIndexes = new Int32[ListTaxGroupDetails.Count];
+                for (int i = 0; i < TaxColIndexes.Length; i++)
+                {
+                    for (int j = 0; j < dtHSNMaster.Columns.Count; j++)
+                    {
+                        if (dtHSNMaster.Columns[j].ColumnName.Equals(ListTaxGroupDetails[i].Name, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            TaxColIndexes[i] = j;
+                            break;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < dtHSNMaster.Rows.Count; i++)
+                {
+                    DataRow dr = dtHSNMaster.Rows[i];
+
+                    if (dr["HSNCode"] == DBNull.Value || String.IsNullOrEmpty(dr["HSNCode"].ToString())) continue;
+
+                    HSNCodeDetails ObjHSNCodeDetails = new HSNCodeDetails();
+                    ObjHSNCodeDetails.HSNCode = dr["HSNCode"].ToString();
+                    ObjHSNCodeDetails.ListTaxRates = new Double[TaxColIndexes.Length];
+                    for (int j = 0; j < TaxColIndexes.Length; j++)
+                    {
+                        ObjHSNCodeDetails.ListTaxRates[j] = Double.Parse(dr[ListTaxGroupDetails[j].Name].ToString());
+                    }
+
+                    ObjProductMaster.AddHSNCode(ObjHSNCodeDetails);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductLine.LoadHSNMasterData()", ex);
             }
         }
     }

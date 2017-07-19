@@ -59,6 +59,7 @@ namespace SalesOrdersReport
                 txtBoxEMailIDInv.Text = CurrSettings.EMailID;
                 txtBoxVATPercentInv.Text = CurrSettings.VATPercent;
                 txtBoxTINNumberInv.Text = CurrSettings.TINNumber;
+                txtBoxGSTINumberInv.Text = CurrSettings.GSTINumber;
                 txtBoxLastInvoiceNumberInv.Text = CurrSettings.LastNumber.ToString();
 
                 //Load Quotation Settings from CommonFunctions Module
@@ -74,6 +75,7 @@ namespace SalesOrdersReport
                 txtBoxPhoneNumberQuot.Text = CurrSettings.PhoneNumber;
                 txtBoxEMailIDQuot.Text = CurrSettings.EMailID;
                 txtBoxTINNumberQuot.Text = CurrSettings.TINNumber;
+                txtBoxGSTINumberQuot.Text = CurrSettings.GSTINumber;
                 txtBoxLastQuotationNumberQuot.Text = CurrSettings.LastNumber.ToString();
 
                 //Load Purchase Order Settings from CommonFunctions Module
@@ -90,6 +92,7 @@ namespace SalesOrdersReport
                 txtBoxEMailIDPO.Text = CurrSettings.EMailID;
                 txtBoxVATPercentPO.Text = CurrSettings.VATPercent;
                 txtBoxTINNumberPO.Text = CurrSettings.TINNumber;
+                txtBoxGSTINumberPO.Text = CurrSettings.GSTINumber;
                 txtBoxLastPONumber.Text = CurrSettings.LastNumber.ToString();
                 numUpDownPeriodValue.Value = CurrSettings.PastSalePeriodValue;
                 cmbBoxPeriodUnits.SelectedIndex = (Int32)CurrSettings.PastSalePeriodUnits;
@@ -126,6 +129,7 @@ namespace SalesOrdersReport
                 CurrSettings.EMailID = txtBoxEMailIDInv.Text;
                 CurrSettings.VATPercent = txtBoxVATPercentInv.Text;
                 CurrSettings.TINNumber = txtBoxTINNumberInv.Text;
+                CurrSettings.GSTINumber = txtBoxGSTINumberInv.Text;
                 CurrSettings.LastNumber = Int32.Parse(txtBoxLastInvoiceNumberInv.Text);
 
                 //Apply Quotation Settings to CommonFunctions Module
@@ -141,6 +145,7 @@ namespace SalesOrdersReport
                 CurrSettings.PhoneNumber = txtBoxPhoneNumberQuot.Text;
                 CurrSettings.EMailID = txtBoxEMailIDQuot.Text;
                 CurrSettings.TINNumber = txtBoxTINNumberQuot.Text;
+                CurrSettings.GSTINumber = txtBoxGSTINumberQuot.Text;
                 CurrSettings.LastNumber = Int32.Parse(txtBoxLastQuotationNumberQuot.Text);
 
                 //Apply Purchase Order Settings to CommonFunctions Module
@@ -157,6 +162,7 @@ namespace SalesOrdersReport
                 CurrSettings.EMailID = txtBoxEMailIDPO.Text;
                 CurrSettings.VATPercent = txtBoxVATPercentPO.Text;
                 CurrSettings.TINNumber = txtBoxTINNumberPO.Text;
+                CurrSettings.GSTINumber = txtBoxGSTINumberPO.Text;
                 CurrSettings.LastNumber = Int32.Parse(txtBoxLastPONumber.Text);
                 CurrSettings.PastSalePeriodValue = (Int32)numUpDownPeriodValue.Value;
                 CurrSettings.PastSalePeriodUnits = ReportSettings.GetTimePeriodUnits(cmbBoxPeriodUnits.SelectedItem.ToString());

@@ -37,6 +37,14 @@ namespace SalesOrdersReport
             lblStatus.Text = "";
             
             FillSellerList();
+
+            txtBoxSellerHistoryFilePath.Text = Path.GetDirectoryName(CommonFunctions.MasterFilePath) + @"\SellerHistory.xlsx";
+            SellerHistoryFilePath = txtBoxSellerHistoryFilePath.Text;
+
+            txtBoxSaveFolderPath.Text = Path.GetDirectoryName(CommonFunctions.MasterFilePath);
+            SaveFolderPath = txtBoxSaveFolderPath.Text;
+
+            btnCreateReport.Focus();
         }
 
         #region Events

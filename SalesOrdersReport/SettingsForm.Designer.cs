@@ -86,6 +86,8 @@
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.tabPagePurchaseOrder = new System.Windows.Forms.TabPage();
+            this.cmbBoxPeriodUnits = new System.Windows.Forms.ComboBox();
+            this.numUpDownPeriodValue = new System.Windows.Forms.NumericUpDown();
             this.txtBoxVATPercentPO = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
             this.txtBoxHeaderSubTitleColorPO = new System.Windows.Forms.TextBox();
@@ -104,6 +106,7 @@
             this.txtBoxFooterTitlePO = new System.Windows.Forms.TextBox();
             this.txtBoxHeaderSubTitlePO = new System.Windows.Forms.TextBox();
             this.txtBoxHeaderTitlePO = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
@@ -117,9 +120,12 @@
             this.colorDialogSettings = new System.Windows.Forms.ColorDialog();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbBoxProductLines = new System.Windows.Forms.ComboBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.numUpDownPeriodValue = new System.Windows.Forms.NumericUpDown();
-            this.cmbBoxPeriodUnits = new System.Windows.Forms.ComboBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.txtBoxGSTINumberInv = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.txtBoxGSTINumberQuot = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.txtBoxGSTINumberPO = new System.Windows.Forms.TextBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.tabPageInvoice.SuspendLayout();
@@ -187,6 +193,7 @@
             this.tabPageInvoice.Controls.Add(this.btnFooterTitleColorInv);
             this.tabPageInvoice.Controls.Add(this.txtBoxAddressInv);
             this.tabPageInvoice.Controls.Add(this.txtBoxLastInvoiceNumberInv);
+            this.tabPageInvoice.Controls.Add(this.txtBoxGSTINumberInv);
             this.tabPageInvoice.Controls.Add(this.txtBoxTINNumberInv);
             this.tabPageInvoice.Controls.Add(this.txtBoxVATPercentInv);
             this.tabPageInvoice.Controls.Add(this.txtBoxEMailIDInv);
@@ -195,6 +202,7 @@
             this.tabPageInvoice.Controls.Add(this.txtBoxHeaderSubTitleInv);
             this.tabPageInvoice.Controls.Add(this.txtBoxHeaderTitleInv);
             this.tabPageInvoice.Controls.Add(this.label10);
+            this.tabPageInvoice.Controls.Add(this.label29);
             this.tabPageInvoice.Controls.Add(this.label9);
             this.tabPageInvoice.Controls.Add(this.label8);
             this.tabPageInvoice.Controls.Add(this.label7);
@@ -306,13 +314,13 @@
             this.txtBoxLastInvoiceNumberInv.Location = new System.Drawing.Point(178, 269);
             this.txtBoxLastInvoiceNumberInv.Name = "txtBoxLastInvoiceNumberInv";
             this.txtBoxLastInvoiceNumberInv.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxLastInvoiceNumberInv.TabIndex = 13;
+            this.txtBoxLastInvoiceNumberInv.TabIndex = 14;
             // 
             // txtBoxTINNumberInv
             // 
             this.txtBoxTINNumberInv.Location = new System.Drawing.Point(178, 243);
             this.txtBoxTINNumberInv.Name = "txtBoxTINNumberInv";
-            this.txtBoxTINNumberInv.Size = new System.Drawing.Size(204, 20);
+            this.txtBoxTINNumberInv.Size = new System.Drawing.Size(73, 20);
             this.txtBoxTINNumberInv.TabIndex = 12;
             // 
             // txtBoxVATPercentInv
@@ -451,6 +459,7 @@
             this.tabPageQuotation.Controls.Add(this.btnFooterTitleColorQuot);
             this.tabPageQuotation.Controls.Add(this.txtBoxAddressQuot);
             this.tabPageQuotation.Controls.Add(this.txtBoxLastQuotationNumberQuot);
+            this.tabPageQuotation.Controls.Add(this.txtBoxGSTINumberQuot);
             this.tabPageQuotation.Controls.Add(this.txtBoxTINNumberQuot);
             this.tabPageQuotation.Controls.Add(this.txtBoxEMailIDQuot);
             this.tabPageQuotation.Controls.Add(this.txtBoxPhoneNumberQuot);
@@ -458,6 +467,7 @@
             this.tabPageQuotation.Controls.Add(this.txtBoxHeaderSubTitleQuot);
             this.tabPageQuotation.Controls.Add(this.txtBoxHeaderTitleQuot);
             this.tabPageQuotation.Controls.Add(this.label11);
+            this.tabPageQuotation.Controls.Add(this.label30);
             this.tabPageQuotation.Controls.Add(this.label12);
             this.tabPageQuotation.Controls.Add(this.label14);
             this.tabPageQuotation.Controls.Add(this.label15);
@@ -568,13 +578,13 @@
             this.txtBoxLastQuotationNumberQuot.Location = new System.Drawing.Point(178, 243);
             this.txtBoxLastQuotationNumberQuot.Name = "txtBoxLastQuotationNumberQuot";
             this.txtBoxLastQuotationNumberQuot.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxLastQuotationNumberQuot.TabIndex = 12;
+            this.txtBoxLastQuotationNumberQuot.TabIndex = 13;
             // 
             // txtBoxTINNumberQuot
             // 
             this.txtBoxTINNumberQuot.Location = new System.Drawing.Point(178, 217);
             this.txtBoxTINNumberQuot.Name = "txtBoxTINNumberQuot";
-            this.txtBoxTINNumberQuot.Size = new System.Drawing.Size(204, 20);
+            this.txtBoxTINNumberQuot.Size = new System.Drawing.Size(73, 20);
             this.txtBoxTINNumberQuot.TabIndex = 11;
             // 
             // txtBoxEMailIDQuot
@@ -701,6 +711,7 @@
             this.tabPagePurchaseOrder.Controls.Add(this.btnFooterTitleColorPO);
             this.tabPagePurchaseOrder.Controls.Add(this.txtBoxAddressPO);
             this.tabPagePurchaseOrder.Controls.Add(this.txtBoxLastPONumber);
+            this.tabPagePurchaseOrder.Controls.Add(this.txtBoxGSTINumberPO);
             this.tabPagePurchaseOrder.Controls.Add(this.txtBoxTINNumberPO);
             this.tabPagePurchaseOrder.Controls.Add(this.txtBoxEMailIDPO);
             this.tabPagePurchaseOrder.Controls.Add(this.txtBoxPhoneNumberPO);
@@ -709,6 +720,7 @@
             this.tabPagePurchaseOrder.Controls.Add(this.txtBoxHeaderTitlePO);
             this.tabPagePurchaseOrder.Controls.Add(this.label28);
             this.tabPagePurchaseOrder.Controls.Add(this.label13);
+            this.tabPagePurchaseOrder.Controls.Add(this.label31);
             this.tabPagePurchaseOrder.Controls.Add(this.label17);
             this.tabPagePurchaseOrder.Controls.Add(this.label21);
             this.tabPagePurchaseOrder.Controls.Add(this.label22);
@@ -723,6 +735,22 @@
             this.tabPagePurchaseOrder.TabIndex = 4;
             this.tabPagePurchaseOrder.Text = "Purchase Order";
             this.tabPagePurchaseOrder.UseVisualStyleBackColor = true;
+            // 
+            // cmbBoxPeriodUnits
+            // 
+            this.cmbBoxPeriodUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxPeriodUnits.FormattingEnabled = true;
+            this.cmbBoxPeriodUnits.Location = new System.Drawing.Point(247, 274);
+            this.cmbBoxPeriodUnits.Name = "cmbBoxPeriodUnits";
+            this.cmbBoxPeriodUnits.Size = new System.Drawing.Size(67, 21);
+            this.cmbBoxPeriodUnits.TabIndex = 16;
+            // 
+            // numUpDownPeriodValue
+            // 
+            this.numUpDownPeriodValue.Location = new System.Drawing.Point(190, 275);
+            this.numUpDownPeriodValue.Name = "numUpDownPeriodValue";
+            this.numUpDownPeriodValue.Size = new System.Drawing.Size(51, 20);
+            this.numUpDownPeriodValue.TabIndex = 15;
             // 
             // txtBoxVATPercentPO
             // 
@@ -837,13 +865,13 @@
             this.txtBoxLastPONumber.Location = new System.Drawing.Point(178, 248);
             this.txtBoxLastPONumber.Name = "txtBoxLastPONumber";
             this.txtBoxLastPONumber.Size = new System.Drawing.Size(204, 20);
-            this.txtBoxLastPONumber.TabIndex = 13;
+            this.txtBoxLastPONumber.TabIndex = 14;
             // 
             // txtBoxTINNumberPO
             // 
             this.txtBoxTINNumberPO.Location = new System.Drawing.Point(178, 222);
             this.txtBoxTINNumberPO.Name = "txtBoxTINNumberPO";
-            this.txtBoxTINNumberPO.Size = new System.Drawing.Size(204, 20);
+            this.txtBoxTINNumberPO.Size = new System.Drawing.Size(73, 20);
             this.txtBoxTINNumberPO.TabIndex = 12;
             // 
             // txtBoxEMailIDPO
@@ -880,6 +908,15 @@
             this.txtBoxHeaderTitlePO.Name = "txtBoxHeaderTitlePO";
             this.txtBoxHeaderTitlePO.Size = new System.Drawing.Size(204, 20);
             this.txtBoxHeaderTitlePO.TabIndex = 1;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(71, 279);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(113, 13);
+            this.label28.TabIndex = 38;
+            this.label28.Text = "Include Past Sales for ";
             // 
             // label13
             // 
@@ -993,30 +1030,53 @@
             this.cmbBoxProductLines.TabIndex = 0;
             this.cmbBoxProductLines.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProductLines_SelectedIndexChanged);
             // 
-            // label28
+            // label29
             // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(71, 279);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(113, 13);
-            this.label28.TabIndex = 38;
-            this.label28.Text = "Include Past Sales for ";
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(257, 246);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(43, 13);
+            this.label29.TabIndex = 0;
+            this.label29.Text = "GST IN";
             // 
-            // numUpDownPeriodValue
+            // txtBoxGSTINumberInv
             // 
-            this.numUpDownPeriodValue.Location = new System.Drawing.Point(190, 275);
-            this.numUpDownPeriodValue.Name = "numUpDownPeriodValue";
-            this.numUpDownPeriodValue.Size = new System.Drawing.Size(51, 20);
-            this.numUpDownPeriodValue.TabIndex = 14;
+            this.txtBoxGSTINumberInv.Location = new System.Drawing.Point(306, 243);
+            this.txtBoxGSTINumberInv.Name = "txtBoxGSTINumberInv";
+            this.txtBoxGSTINumberInv.Size = new System.Drawing.Size(76, 20);
+            this.txtBoxGSTINumberInv.TabIndex = 13;
             // 
-            // cmbBoxPeriodUnits
+            // label30
             // 
-            this.cmbBoxPeriodUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBoxPeriodUnits.FormattingEnabled = true;
-            this.cmbBoxPeriodUnits.Location = new System.Drawing.Point(247, 274);
-            this.cmbBoxPeriodUnits.Name = "cmbBoxPeriodUnits";
-            this.cmbBoxPeriodUnits.Size = new System.Drawing.Size(67, 21);
-            this.cmbBoxPeriodUnits.TabIndex = 15;
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(257, 220);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(43, 13);
+            this.label30.TabIndex = 7;
+            this.label30.Text = "GST IN";
+            // 
+            // txtBoxGSTINumberQuot
+            // 
+            this.txtBoxGSTINumberQuot.Location = new System.Drawing.Point(306, 217);
+            this.txtBoxGSTINumberQuot.Name = "txtBoxGSTINumberQuot";
+            this.txtBoxGSTINumberQuot.Size = new System.Drawing.Size(76, 20);
+            this.txtBoxGSTINumberQuot.TabIndex = 12;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(257, 225);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(43, 13);
+            this.label31.TabIndex = 40;
+            this.label31.Text = "GST IN";
+            // 
+            // txtBoxGSTINumberPO
+            // 
+            this.txtBoxGSTINumberPO.Location = new System.Drawing.Point(306, 222);
+            this.txtBoxGSTINumberPO.Name = "txtBoxGSTINumberPO";
+            this.txtBoxGSTINumberPO.Size = new System.Drawing.Size(76, 20);
+            this.txtBoxGSTINumberPO.TabIndex = 13;
             // 
             // SettingsForm
             // 
@@ -1145,5 +1205,11 @@
         private System.Windows.Forms.ComboBox cmbBoxPeriodUnits;
         private System.Windows.Forms.NumericUpDown numUpDownPeriodValue;
         private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox txtBoxGSTINumberInv;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.TextBox txtBoxGSTINumberQuot;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox txtBoxGSTINumberPO;
+        private System.Windows.Forms.Label label31;
     }
 }

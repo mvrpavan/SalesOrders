@@ -262,7 +262,7 @@ namespace SalesOrdersReport
                 Excel.Workbook xlSellerSummaryWorkbook = xlApp.Workbooks.Open(SellerSummaryFilePath);
                 Excel.Worksheet xlSellerSummaryWorksheet = CommonFunctions.GetWorksheet(xlSellerSummaryWorkbook, "Seller Summary");
                 DateTime SummaryCreationDate = DateTime.Parse(xlSellerSummaryWorksheet.Cells[1, 2].Value.ToString());
-                xlSellerSummaryWorkbook.Close();
+                xlSellerSummaryWorkbook.Close(false);
 
                 if (chkBoxUpdSellerMaster.Checked)
                 {
@@ -410,9 +410,9 @@ namespace SalesOrdersReport
                     xlSellerHistoryWorksheet = CommonFunctions.GetWorksheet(xlSellerHistoryWorkbook, "Seller History");
                 }
 
-                Int32 RowCount = xlSellerHistoryWorksheet.UsedRange.Rows.Count + 1;
+                Int32 RowCount = xlSellerHistoryWorksheet.UsedRange.Rows.Count;
                 Int32 ColumnCount = xlSellerHistoryWorksheet.UsedRange.Columns.Count;
-                Int32 StartRow = RowCount, StartColumn = 1, LastRow = 0;
+                Int32 StartRow = RowCount + 1, StartColumn = 1, LastRow = 0;
 
                 for (int i = 0; i < drSellers.Length; i++)
                 {
@@ -423,7 +423,6 @@ namespace SalesOrdersReport
                     if (ListSellerKeys.Contains(SummaryCreationDate.ToString("dd-MMM-yyyy")
                                             + "||" + dtRow["Bill#"].ToString().Trim().ToUpper()
                                             + "||" + dtRow["Seller Name"].ToString().Trim().ToUpper())) continue;
-                    LastRow++;
 
                     xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn].Value = SummaryCreationDate.ToString("dd-MMM-yyyy");
                     xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn + 1].Value = DateTime.Now.ToString("dd-MMM-yyyy");
@@ -435,10 +434,11 @@ namespace SalesOrdersReport
 
                     ReportProgressFunc((CurrSellerCount * 100) / ProgressBarCount);
                     lblStatus.Text = "Updated " + CurrSellerCount + " of " + ProgressBarCount + " Sellers data in Seller History";
+                    LastRow++;
                 }
                 ReportProgressFunc(100);
 
-                Excel.Range xlRange = xlSellerHistoryWorksheet.Range[xlSellerHistoryWorksheet.Cells[StartRow - 1, StartColumn], xlSellerHistoryWorksheet.Cells[StartRow + LastRow - 1, StartColumn + Header.Length - 1]];
+                Excel.Range xlRange = xlSellerHistoryWorksheet.Range[xlSellerHistoryWorksheet.Cells[StartRow, StartColumn], xlSellerHistoryWorksheet.Cells[StartRow + LastRow - 1, StartColumn + Header.Length - 1]];
                 SellerInvoiceForm.SetAllBorders(xlRange);
 
                 xlSellerHistoryWorkbook.Save();
@@ -481,9 +481,11 @@ namespace SalesOrdersReport
                                         Replace("\\", "").Replace("/", "").
                                         Replace("?", "").Replace("*", "").
                                         Replace("[", "").Replace("]", "");
-                    DataTable dtSellerInvoice = CommonFunctions.ReturnDataTableFromExcelWorksheet(SheetName, SellerSummaryFilePath, "*", "A6:F100000");
-                    dtSellerInvoice.DefaultView.RowFilter = "IsNull([Sl#No#], 0) > 0";
-                    DataRow[] drProducts = dtSellerInvoice.DefaultView.ToTable().Select("", "[Sl#No#] asc");
+                    //DataTable dtSellerInvoice = CommonFunctions.ReturnDataTableFromExcelWorksheet(SheetName, SellerSummaryFilePath, "*", "A6:F100000");
+                    Invoice ObjInvoice = new InvoiceGST();
+                    DataTable dtSellerInvoice = ObjInvoice.LoadInvoice(SheetName, SellerSummaryFilePath);
+                    dtSellerInvoice.DefaultView.RowFilter = "IsNull([Sl No], 0) > 0";
+                    DataRow[] drProducts = dtSellerInvoice.DefaultView.ToTable().Select("", "[Sl No] asc");
 
                     ObjProductMaster.UpdateProductInventoryDataFromInvoice(drProducts);
                 }

@@ -39,13 +39,13 @@ namespace SalesOrdersReport
 
     class SellerDetails : IComparer<SellerDetails>
     {
-        public String SellerName, Address, TINNumber, Phone, Line, PriceGroup, DiscountGroup;
+        public String Name, Address, TINNumber, Phone, Line, PriceGroup, DiscountGroup, State, StateCode, GSTIN;
         public Int32 LineIndex, PriceGroupIndex, DiscountGroupIndex;
         public Double OldBalance;
 
         public int Compare(SellerDetails x, SellerDetails y)
         {
-            return x.SellerName.ToUpper().CompareTo(y.SellerName.ToUpper());
+            return x.Name.ToUpper().CompareTo(y.Name.ToUpper());
         }
     }
 
@@ -111,7 +111,7 @@ namespace SalesOrdersReport
             try
             {
                 SellerDetails ObjSellerDetails = new SellerDetails();
-                ObjSellerDetails.SellerName = SellerName;
+                ObjSellerDetails.Name = SellerName;
 
                 Int32 Index = ListSellerDetails.BinarySearch(ObjSellerDetails, ObjSellerDetails);
                 if (Index < 0) return null;
@@ -162,7 +162,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                return ListSellerDetails.Select(e => e.SellerName).ToList();
+                return ListSellerDetails.Select(e => e.Name).ToList();
             }
             catch (Exception ex)
             {

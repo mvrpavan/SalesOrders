@@ -444,7 +444,7 @@ namespace SalesOrdersReport
                         xlWorkSheet.Cells[SlNo + POStartRow + 1, ItemNameColNum].Value = drItems[ListItemIndexes[j]]["StockName"].ToString();
                         xlWorkSheet.Cells[SlNo + POStartRow + 1, OrdQtyColNum].Value = Quantity;
                         if (chkBoxUseOrdQty.Checked == true) xlWorkSheet.Cells[SlNo + POStartRow + 1, RecdQtyColNum].Value = Quantity;
-                        xlWorkSheet.Cells[SlNo + POStartRow + 1, PriceColNum].Value = CommonFunctions.ObjProductMaster.GetPriceForProduct(drItems[ListItemIndexes[j]]["StockName"].ToString(), ObjCurrentVendor.PriceGroupIndex);
+                        xlWorkSheet.Cells[SlNo + POStartRow + 1, PriceColNum].Value = CommonFunctions.ObjProductMaster.GetPriceForProduct(drItems[ListItemIndexes[j]]["ItemName"].ToString(), ObjCurrentVendor.PriceGroupIndex);
                         xlWorkSheet.Cells[SlNo + POStartRow + 1, PriceColNum].NumberFormat = "#,##0.00";
                         Excel.Range xlRangeSaleQty = xlWorkSheet.Cells[SlNo + POStartRow + 1, RecdQtyColNum];
                         Excel.Range xlRangePrice = xlWorkSheet.Cells[SlNo + POStartRow + 1, PriceColNum];
