@@ -5,7 +5,6 @@ using System.Text;
 using System.Data;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
-using System.Windows.Forms;
 
 namespace SalesOrdersReport
 {
@@ -616,7 +615,7 @@ namespace SalesOrdersReport
             }
         }
 
-        public void UpdateProductInventoryFile(Form ParentForm, Excel.Application xlApp, DateTime SummaryCreationDate, String ProductInventoryFile)
+        public void UpdateProductInventoryFile(Excel.Application xlApp, DateTime SummaryCreationDate, String ProductInventoryFile)
         {
             try
             {
@@ -651,8 +650,6 @@ namespace SalesOrdersReport
 
                 xlProductInventory.Save();
                 xlProductInventory.Close();
-
-                MessageBox.Show(ParentForm, "Product Inventory file updated successfully", "Product Inventory", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -661,19 +658,16 @@ namespace SalesOrdersReport
             }
         }
 
-        public void UpdateProductStockHistoryFile(Form ParentForm, Excel.Application xlApp, DateTime SummaryCreationDate, String TransactionType, String ProductStockHistoryFile)
+        public void UpdateProductStockHistoryFile(Excel.Application xlApp, DateTime SummaryCreationDate, String TransactionType, String ProductStockHistoryFile)
         {
             try
             {
                 Excel.Workbook xlProductStockHistory;
                 Excel.Worksheet xlStockHistoryWorksheet;
 
-                Boolean StockHistoryFileExists = true;
                 String[] Header = new String[] { "PO Date", "Update Date", "Type", "Stock Name", "Order Qty", "Receive Qty", "Net Qty", "Total Cost", "Total Discount", "Total Tax", "Net Cost" };
                 if (!File.Exists(ProductStockHistoryFile))
                 {
-                    StockHistoryFileExists = false;
-
                     xlProductStockHistory = xlApp.Workbooks.Add();
                     xlStockHistoryWorksheet = xlProductStockHistory.Worksheets.Add();
                     xlStockHistoryWorksheet.Name = "Stock History";
@@ -754,18 +748,6 @@ namespace SalesOrdersReport
 
                 xlProductStockHistory.Save();
                 xlProductStockHistory.Close();
-
-                String Message;
-                if (StockHistoryFileExists)
-                {
-                    Message = "Product Stock History file is updated with " + TransactionType + " details";
-                }
-                else
-                {
-                    Message = "Product Stock History file is updated with " + TransactionType + " details\n";
-                    Message += "Product Stock History file is created at " + ProductStockHistoryFile;
-                }
-                MessageBox.Show(ParentForm, Message, "Product Stock History", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

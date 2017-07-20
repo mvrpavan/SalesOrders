@@ -214,16 +214,20 @@ namespace SalesOrdersReport
                     String Line = drSellers[SellerIndex]["Line"].ToString().Replace("<", "").Replace(">", "").ToUpper();
                     if (Line.Trim().Length == 0) Line = "<Blanks>";
 
-                    if (!SelectedLine.Contains(Line) && !CommonFunctions.ListSelectedSellers.Contains(SellerName))
-                    {
-                        ListSellerIndexes.Add(-1);
-                        continue;
-                    }
+                    //if (!SelectedLine.Contains(Line) && !CommonFunctions.ListSelectedSellers.Contains(SellerName))
+                    //{
+                    //    ListSellerIndexes.Add(-1);
+                    //    continue;
+                    //}
 
                     Excel.Range CountCell = xlSalesOrderWorksheet.Cells[i, StartColumn + 1];
                     Double CountItems = Double.Parse(CountCell.Value.ToString());
                     if (CountItems <= 1E-6)
                     {
+                        if (SelectedLine.Contains(Line) || CommonFunctions.ListSelectedSellers.Contains(SellerName))
+                        {
+                            drSellers[SellerIndex]["InvoiceNumber"] = Int32.MinValue;
+                        }
                         ListSellerIndexes.Add(-1);
                         continue;
                     }
@@ -838,37 +842,42 @@ namespace SalesOrdersReport
                 xlRange1.Font.Bold = true;
 
                 Int32 SellersCount = 0;
+                Boolean IsSellerOnlyInSummary = false;
                 for (int i = 0; i < drSellers.Length; i++)
                 {
                     if (String.IsNullOrEmpty(drSellers[i]["InvoiceNumber"].ToString().Trim())) continue;
+                    if (Int32.Parse(drSellers[i]["InvoiceNumber"].ToString()) == Int32.MinValue) IsSellerOnlyInSummary = true;
                     SellersCount++;
 
                     CurrRow = SellersCount + SummaryStartRow + 1;
                     CurrCol = 0;
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = SellersCount;
-                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = drSellers[i]["InvoiceNumber"].ToString();
+                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = (IsSellerOnlyInSummary ? "-1" : drSellers[i]["InvoiceNumber"].ToString());
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = drSellers[i]["SellerName"].ToString();
                     CurrCol++; Excel.Range xlRangeSale = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    xlRangeSale.Formula = drSellers[i]["Total"].ToString();
-                    xlRangeSale.NumberFormat = "#,##0.00";
                     CurrCol++; Excel.Range xlRangeCancel = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     CurrCol++; Excel.Range xlRangeReturn = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     CurrCol++; Excel.Range xlRangeDiscount = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     CurrCol++; Excel.Range xlRangeTotalTax = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     CurrCol++; Excel.Range xlRangeNetSale = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    xlRangeDiscount.Formula = drSellers[i]["TotalDiscount"].ToString();
-                    if (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0) xlRangeTotalTax.Formula = drSellers[i]["TotalTax"].ToString();
+                    CurrCol++; Excel.Range xlRangeOldBalance = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
+                    CurrCol++; Excel.Range xlRangeCash = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
+                    if (!IsSellerOnlyInSummary)
+                    {
+                        xlRangeSale.Formula = drSellers[i]["Total"].ToString();
+                        xlRangeDiscount.Formula = drSellers[i]["TotalDiscount"].ToString();
+                        if (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0) xlRangeTotalTax.Formula = drSellers[i]["TotalTax"].ToString();
+                    }
                     xlRangeNetSale.Formula = "=Round(" + xlRangeSale.Address[false, false]
-                                                + "-" + xlRangeCancel.Address[false, false] 
-                                                + "-" + xlRangeReturn.Address[false, false] 
+                                                + "-" + xlRangeCancel.Address[false, false]
+                                                + "-" + xlRangeReturn.Address[false, false]
                                                 + "-" + xlRangeDiscount.Address[false, false]
                                                 + "+" + xlRangeTotalTax.Address[false, false] + ", 0)";
-                    xlRangeNetSale.NumberFormat = "#,##0.00";
-                    CurrCol++; Excel.Range xlRangeOldBalance = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     xlRangeOldBalance.Value = drSellers[i]["OldBalance"].ToString();
-                    xlRangeOldBalance.NumberFormat = "#,##0.00";
-                    CurrCol++; Excel.Range xlRangeCash = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    xlRangeCash.NumberFormat = "#,##0.00";
+                    xlRangeSale.NumberFormat = "#,##0.00"; xlRangeCancel.NumberFormat = "#,##0.00";
+                    xlRangeReturn.NumberFormat = "#,##0.00"; xlRangeDiscount.NumberFormat = "#,##0.00";
+                    xlRangeTotalTax.NumberFormat = "#,##0.00"; xlRangeNetSale.NumberFormat = "#,##0.00";
+                    xlRangeOldBalance.NumberFormat = "#,##0.00"; xlRangeCash.NumberFormat = "#,##0.00";
                 }
                 CurrRow = SellersCount + SummaryStartRow + 2;
                 Excel.Range xlRange = xlSellerSummaryWorkSheet.Cells[CurrRow, 3];
@@ -975,10 +984,6 @@ namespace SalesOrdersReport
                 xlWorksheet.PageSetup.HeaderMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.25);
                 xlWorksheet.PageSetup.LeftMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.7);
                 xlWorksheet.PageSetup.RightMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.7);
-
-                xlWorksheet.PageSetup.Zoom = false;
-                xlWorksheet.PageSetup.FitToPagesTall = 1;
-                xlWorksheet.PageSetup.FitToPagesWide = 1;
 
                 /*xlWorksheet.PageSetup.PrintHeadings = false;
                 xlWorksheet.PageSetup.PrintGridlines = false;

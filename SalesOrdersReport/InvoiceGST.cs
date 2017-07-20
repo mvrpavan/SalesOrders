@@ -351,6 +351,10 @@ namespace SalesOrdersReport
                 #endregion
 
                 SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorkSheet, CurrReportSettings.HeaderSubTitle, CurrReportSettings);
+
+                xlWorkSheet.PageSetup.Zoom = false;
+                xlWorkSheet.PageSetup.FitToPagesTall = 1;
+                xlWorkSheet.PageSetup.FitToPagesWide = 1;
             }
             catch (Exception ex)
             {
@@ -364,6 +368,7 @@ namespace SalesOrdersReport
             try
             {
                 DataTable dtSellerInvoice = CommonFunctions.ReturnDataTableFromExcelWorksheet(SheetName, ExcelWorkbookPath, "*", "A8:P100000");
+                if (dtSellerInvoice == null) return null;
                 dtSellerInvoice.Rows.RemoveAt(0);
                 dtSellerInvoice.Columns["Description of Goods"].ColumnName = "Item Name";
                 dtSellerInvoice.Columns["Ord Qty"].ColumnName = "Order Quantity";

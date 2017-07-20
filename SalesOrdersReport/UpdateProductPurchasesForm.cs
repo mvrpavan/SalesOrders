@@ -297,11 +297,13 @@ namespace SalesOrdersReport
                 DateTime SummaryCreationDate = DateTime.Parse(xlVendorSummaryWorksheet.Cells[1, 2].Value.ToString());
                 xlVendorSummaryWorkbook.Close(false);
 
+                String Message = "";
                 if (chkBoxUpdVendorHistory.Checked)
                 {
                     lblStatus.Text = "Updating Vendor History file";
                     UpdateVendorHistoryFile(xlApp, drVendors, SummaryCreationDate);
                     lblStatus.Text = "Completed updating Vendor History file";
+                    Message += "\nVendor History";
                 }
 
                 if (chkBoxUpdStockHistory.Checked || chkBoxUpdProductInventory.Checked)
@@ -334,18 +336,22 @@ namespace SalesOrdersReport
                     if (chkBoxUpdProductInventory.Checked)
                     {
                         lblStatus.Text = "Updating Product Inventory file";
-                        ObjProductMaster.UpdateProductInventoryFile(this, xlApp, SummaryCreationDate, ProductInventoryFile);
+                        ObjProductMaster.UpdateProductInventoryFile(xlApp, SummaryCreationDate, ProductInventoryFile);
                         lblStatus.Text = "Completed updating Product Inventory file";
+                        Message += "\nProduct Inventory";
                     }
 
                     if (chkBoxUpdStockHistory.Checked)
                     {
                         lblStatus.Text = "Updating Product Stock History file";
-                        ObjProductMaster.UpdateProductStockHistoryFile(this, xlApp, SummaryCreationDate, "Purchase", ProductStockHistoryFile);
+                        ObjProductMaster.UpdateProductStockHistoryFile(xlApp, SummaryCreationDate, "Purchase", ProductStockHistoryFile);
                         lblStatus.Text = "Completed updating Product Stock History file";
+                        Message += "\nProduct Stock History";
                     }
 
                     CommonFunctions.ObjProductMaster.ResetStockProducts();
+                    
+                    MessageBox.Show(this, "Updated following details successfully:" + Message, "Update Purchases", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -369,13 +375,10 @@ namespace SalesOrdersReport
                 Excel.Worksheet xlVendorHistoryWorksheet;
 
                 Int32 ProgressBarCount = drVendors.Length, CurrVendorCount = 0;
-                Boolean VendorHistoryFileExists = true;
                 List<String> ListVendorKeys;
                 String[] Header = new String[] { "Create Date", "Update Date", "Bill#", "Vendor Name", "Sale", "Cancel", "Return", "Discount", "Total Tax", "Net Sale", "Cash"};
                 if (!File.Exists(VendorHistoryFile))
                 {
-                    VendorHistoryFileExists = false;
-
                     xlVendorHistoryWorkbook = xlApp.Workbooks.Add();
                     xlVendorHistoryWorksheet = xlVendorHistoryWorkbook.Worksheets.Add();
                     xlVendorHistoryWorksheet.Name = "Vendor History";
@@ -442,18 +445,6 @@ namespace SalesOrdersReport
 
                 xlVendorHistoryWorkbook.Save();
                 xlVendorHistoryWorkbook.Close();
-
-                String Message;
-                if (VendorHistoryFileExists)
-                {
-                    Message = "Vendor History file is updated with Vendor Summary details";
-                }
-                else
-                {
-                    Message = "Vendor History file is updated with Vendor Summary details\n";
-                    Message += "Vendor History files is created at " + VendorHistoryFile;
-                }
-                MessageBox.Show(this, Message, "Vendor History", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
