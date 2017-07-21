@@ -19,7 +19,6 @@ namespace SalesOrdersReport
             InitializeComponent();
             ObjCreateSellerInvoice = ObjForm;
             dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", ObjCreateSellerInvoice.MasterFilePath, "SellerName,Line");
-            FillListBoxLineFilter();
         }
 
         private void FillDataGridSellers()
@@ -116,6 +115,18 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("SellerList.dtGridViewSellers_CellClick", ex);
+            }
+        }
+
+        private void SellerList_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                FillListBoxLineFilter();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("SellerList.SellerList_Load()", ex);
             }
         }
     }

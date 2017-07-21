@@ -40,6 +40,8 @@ namespace SalesOrdersReport
                 prgrssBarProcess.Maximum = 100;
                 prgrssBarProcess.Step = 1;
                 prgrssBarProcess.Value = 0;
+
+                chkBoxMarkVendors.Checked = false;
             }
             catch (Exception ex)
             {
@@ -107,7 +109,10 @@ namespace SalesOrdersReport
                     if (!(HeaderItems[i].Equals("Name") || HeaderItems[i].Equals("Contact Details")))
                         xlRange.Orientation = 90;
                     xlRange.Font.Bold = true;
-                    xlRange.Interior.Color = Color.FromArgb(242, 220, 219);
+                    xlRange.WrapText = true;
+                    xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignBottom;
+                    xlRange.Interior.Color = Color.FromArgb(180, 180, 180);
                     Counter++;
                     backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
                 }
@@ -121,7 +126,7 @@ namespace SalesOrdersReport
                     if (chkBoxMarkVendors.Checked)
                         xlRange.Interior.Color = ListColors[ListVendors.IndexOf(drItems[i]["VendorName"].ToString()) % ListColors.Count];
                     else
-                        xlRange.Interior.Color = Color.FromArgb(242, 220, 219);
+                        xlRange.Interior.Color = Color.FromArgb(180, 180, 180);
                     Counter++;
                     backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
                 }
@@ -168,6 +173,9 @@ namespace SalesOrdersReport
                 #endregion
 
                 xlWorkSheet.UsedRange.Columns.AutoFit();
+
+                Excel.Range xlRangeBorders = xlWorkSheet.Range[xlWorkSheet.Cells[StartRow, StartCol], xlWorkSheet.Cells[StartRow + drSellers.Length, StartCol + HeaderItems.Count + drItems.Length - 1]];
+                CreateSellerInvoice.SetAllBorders(xlRangeBorders);
 
                 backgroundWorker1.ReportProgress(((ProgressBarCount - 1) * 100) / ProgressBarCount);
                 xlWorkbook.SaveAs(txtBoxOutputFolder.Text + "\\SalesOrder_" + xlWorkSheet.Name + ".xlsx");

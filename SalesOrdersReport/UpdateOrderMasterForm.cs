@@ -107,16 +107,16 @@ namespace SalesOrdersReport
                 ReportProgressFunc(0);
 
                 lblStatus.Text = "Reading SellerSummary File...";
-                DataTable dtSellerSummary = CommonFunctions.ReturnDataTableFromExcelWorksheet("Seller Summary", SellerSummaryFilePath, "*", "A2:K100000");
+                DataTable dtSellerSummary = CommonFunctions.ReturnDataTableFromExcelWorksheet("Seller Summary", SellerSummaryFilePath, "*", "A2:L100000");
                 if (dtSellerSummary == null)
                 {
                     MessageBox.Show(this, "Provided Seller Summary file doesn't contain \"Seller Summary\" Sheet.\nPlease provide correct file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     lblStatus.Text = "Please provide file with \"Seller Summary\" sheet";
                     return;
                 }
-                DataColumn NewOldBalanceColumn = new DataColumn("NewOldBalance", Type.GetType("System.Double"), "IsNull([Net Sale], 0) + IsNull([OB], 0) - IsNull([Cash], 0)");
-                NewOldBalanceColumn.DefaultValue = 0;
-                dtSellerSummary.Columns.Add(NewOldBalanceColumn);
+                //DataColumn NewOldBalanceColumn = new DataColumn("NewOldBalance", Type.GetType("System.Double"), "IsNull([Net Sale], 0) + IsNull([OB], 0) - IsNull([Cash], 0)");
+                //NewOldBalanceColumn.DefaultValue = 0;
+                //dtSellerSummary.Columns.Add(NewOldBalanceColumn);
                 dtSellerSummary.DefaultView.RowFilter = "IsNull([Sl#], 0) > 0";
                 DataRow[] drSellers = dtSellerSummary.DefaultView.ToTable().Select("", "[Sl#] asc");
 
@@ -162,7 +162,7 @@ namespace SalesOrdersReport
                     if (SellerIndex < 0) continue;
                     CurrSellerCount++;
 
-                    xlSellerMasterWorksheet.Cells[i, OldBalanceColIndex].Value = drSellers[SellerIndex]["NewOldBalance"];
+                    xlSellerMasterWorksheet.Cells[i, OldBalanceColIndex].Value = drSellers[SellerIndex]["Balance"];
 
                     ReportProgressFunc((CurrSellerCount * 100) / ProgressBarCount);
                     lblStatus.Text = "Updated " + CurrSellerCount + " of " + ProgressBarCount + " Sellers data in OrderMaster";
