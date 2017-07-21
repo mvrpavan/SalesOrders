@@ -233,6 +233,7 @@
             this.dateTimePO.Name = "dateTimePO";
             this.dateTimePO.Size = new System.Drawing.Size(257, 20);
             this.dateTimePO.TabIndex = 21;
+            this.dateTimePO.ValueChanged += new System.EventHandler(this.dateTimePO_ValueChanged);
             // 
             // label1
             // 

@@ -28,6 +28,9 @@ namespace SalesOrdersReport
             lblStatus.Text = "";
             CommonFunctions.ListSelectedVendors.Clear();
 
+            dateTimePO.Value = DateTime.Now;
+            txtBoxVendorOrderSheet.Text = txtBoxOutputFolder.Text + @"\VendorOrder_" + dateTimePO.Value.ToString("dd-MM-yyyy") + ".xlsx";
+
             FillLineFromOrderMaster();
         }
 
@@ -76,7 +79,7 @@ namespace SalesOrdersReport
             try
             {
                 openFileDialog1.Multiselect = false;
-                openFileDialog1.FileName = MasterFilePath;
+                openFileDialog1.FileName = "";
                 DialogResult dlgResult = openFileDialog1.ShowDialog();
 
                 if (dlgResult == System.Windows.Forms.DialogResult.OK)
@@ -211,7 +214,7 @@ namespace SalesOrdersReport
                 {
                     btnClose.Enabled = true;
                     btnCreatePurchaseOrder.Enabled = true;
-                    MessageBox.Show(this, "No Line/Vendor are selected\nUnable to create Purchase Orders", "Status", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(this, "No Line/Vendors are selected\nUnable to create Purchase Orders", "Status", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     lblStatus.Text = "Select any Line/Vendor";
                     return;
                 }
@@ -236,6 +239,13 @@ namespace SalesOrdersReport
 
                 Excel.Workbook xlPOWorkbook = xlApp.Workbooks.Open(VendorOrderFile);
                 Excel.Worksheet xlPOWorksheet = CommonFunctions.GetWorksheet(xlPOWorkbook, SelectedDateTimeString);
+                if (xlPOWorksheet == null)
+                {
+                    MessageBox.Show(this, "Please provide Correct Vendor Order file with given Date sheet!!!", "Vendor Purchase Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    lblStatus.Text = "Provide Correct Vendor Order file";
+                    xlPOWorkbook.Close(false);
+                    return;
+                }
                 Int32 StartRow = 7, StartColumn = 1, DetailsCount = 5;
 
                 #region Identify StockItems in PurchaseOrderSheet
@@ -767,6 +777,18 @@ namespace SalesOrdersReport
         private void VendorPurchaseOrderForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             CommonFunctions.WriteToSettingsFile();
+        }
+
+        private void dateTimePO_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                txtBoxVendorOrderSheet.Text = txtBoxOutputFolder.Text + @"\VendorOrder_" + dateTimePO.Value.ToString("dd-MM-yyyy") + ".xlsx";
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("VendorPurchaseOrderForm.dateTimePO_ValueChanged()", ex);
+            }
         }
     }
 }

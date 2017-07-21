@@ -16,23 +16,23 @@ namespace SalesOrdersReport
             InitializeComponent();
 
             //Load ProductLines from CommonFunctions Module
-            cmbBoxProductLines.Items.Clear();
-            for (int i = 1; i < CommonFunctions.ListProductLines.Count; i++)
-            {
-                ProductLine ObjProductLine = CommonFunctions.ListProductLines[i];
-                cmbBoxProductLines.Items.Add(ObjProductLine.Name);
-            }
-            cmbBoxProductLines.SelectedIndex = CommonFunctions.SelectedProductLineIndex - 1;
+            //cmbBoxProductLines.Items.Clear();
+            //for (int i = 1; i < CommonFunctions.ListProductLines.Count; i++)
+            //{
+            //    ProductLine ObjProductLine = CommonFunctions.ListProductLines[i];
+            //    cmbBoxProductLines.Items.Add(ObjProductLine.Name);
+            //}
+            //cmbBoxProductLines.SelectedIndex = CommonFunctions.SelectedProductLineIndex - 1;
 
-            //Load cmbBoxPeriodUnits
-            cmbBoxPeriodUnits.Items.Clear();
-            cmbBoxPeriodUnits.Items.Add("Days");
-            cmbBoxPeriodUnits.Items.Add("Weeks");
-            cmbBoxPeriodUnits.Items.Add("Months");
-            cmbBoxPeriodUnits.Items.Add("Years");
-            cmbBoxPeriodUnits.SelectedIndex = 0;
+            ////Load cmbBoxPeriodUnits
+            //cmbBoxPeriodUnits.Items.Clear();
+            //cmbBoxPeriodUnits.Items.Add("Days");
+            //cmbBoxPeriodUnits.Items.Add("Weeks");
+            //cmbBoxPeriodUnits.Items.Add("Months");
+            //cmbBoxPeriodUnits.Items.Add("Years");
+            //cmbBoxPeriodUnits.SelectedIndex = 0;
 
-            LoadSettings();
+            //LoadSettings();
         }
 
         void LoadSettings()
@@ -269,7 +269,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (cmbBoxProductLines.SelectedIndex + 1 == CommonFunctions.SelectedProductLineIndex) return;
+                //if (cmbBoxProductLines.SelectedIndex + 1 == CommonFunctions.SelectedProductLineIndex) return;
 
                 CommonFunctions.SelectProductLine(Int32.Parse((cmbBoxProductLines.SelectedIndex + 1).ToString()), true);
                 LoadSettings();
@@ -290,6 +290,26 @@ namespace SalesOrdersReport
             {
                 CommonFunctions.ShowErrorDialog("SettingsForm.SettingsForm_FormClosed()", ex);
             }
+        }
+
+        private void SettingsForm_Load(object sender, EventArgs e)
+        {
+            //Load cmbBoxPeriodUnits
+            cmbBoxPeriodUnits.Items.Clear();
+            cmbBoxPeriodUnits.Items.Add("Days");
+            cmbBoxPeriodUnits.Items.Add("Weeks");
+            cmbBoxPeriodUnits.Items.Add("Months");
+            cmbBoxPeriodUnits.Items.Add("Years");
+            cmbBoxPeriodUnits.SelectedIndex = 0;
+
+            //Load ProductLines from CommonFunctions Module
+            cmbBoxProductLines.Items.Clear();
+            for (int i = 1; i < CommonFunctions.ListProductLines.Count; i++)
+            {
+                ProductLine ObjProductLine = CommonFunctions.ListProductLines[i];
+                cmbBoxProductLines.Items.Add(ObjProductLine.Name);
+            }
+            cmbBoxProductLines.SelectedIndex = CommonFunctions.SelectedProductLineIndex - 1;
         }
     }
 }

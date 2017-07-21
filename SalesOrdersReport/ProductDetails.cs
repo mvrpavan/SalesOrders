@@ -471,7 +471,7 @@ namespace SalesOrdersReport
                         }
 
                         if (ToDateIndex < 0) return;
-                        FromDate = ListPODates[((ToDateIndex - PeriodValue) >= 0) ? (ToDateIndex - PeriodValue) : 0];
+                        FromDate = ListPODates[((ToDateIndex - PeriodValue + 1) >= 0) ? (ToDateIndex - PeriodValue + 1) : 0];
                         break;
                     case TimePeriodUnits.Weeks:
                         ToDate = AsOnDate;
@@ -597,13 +597,14 @@ namespace SalesOrdersReport
                     ProductDetails ObjProductDetails = GetProductDetails(dr["Item Name"].ToString().Trim());
                     if (ObjProductDetails == null) continue;
                     StockProductDetails ObjStockProductDetails = ListStockProducts[ObjProductDetails.StockProductIndex];
-                    ObjStockProductDetails.OrderQty += Double.Parse(dr["Order Quantity"].ToString().Trim());
+                    ObjStockProductDetails.OrderQty += (Double.Parse(dr["Order Quantity"].ToString().Trim()) * ObjProductDetails.Units);
                     if (dr["Sales Quantity"] == DBNull.Value) continue;
                     ObjStockProductDetails.RecvdQty += (Double.Parse(dr["Sales Quantity"].ToString().Trim()) * ObjProductDetails.Units);
                     if (dr["Total"] != DBNull.Value)
                     {
                         ObjStockProductDetails.TotalCost += Double.Parse(dr["Total"].ToString().Trim());
                         ObjStockProductDetails.TotalTax += Double.Parse(dr["TotalTax"].ToString().Trim());
+                        ObjStockProductDetails.TotalDiscount += Double.Parse(dr["Discount"].ToString().Trim());
                     }
                     ObjStockProductDetails.IsUpdated = true;
                 }

@@ -20,14 +20,18 @@ namespace SalesOrdersReport
             InitializeComponent();
 
 #if RELEASE
-            this.BackgroundImage = Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.ObjApplicationSettings.LogoFileName);
-            this.BackgroundImageLayout = ImageLayout.Center;
+            if (!String.IsNullOrEmpty(CommonFunctions.ObjApplicationSettings.LogoFileName.Trim()))
+            {
+                this.BackgroundImage = Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.ObjApplicationSettings.LogoFileName);
+                this.BackgroundImageLayout = ImageLayout.Center;
+            }
 #endif
             this.Text = CommonFunctions.ObjApplicationSettings.MainFormTitleText;
 
             toolStripOrderMasterPath.Text = "";
             CommonFunctions.ToolStripProgressBarMainForm = this.toolStripProgressBar;
             CommonFunctions.ToolStripProgressBarMainFormStatus = this.toolStripProgress;
+            this.toolStripProgress.Text = "";
 
             MasterSheetSelected = false;
 
@@ -132,6 +136,8 @@ namespace SalesOrdersReport
         {
             try
             {
+                if (MdiChildren.Length > 0) return false;
+
                 if (!MasterSheetSelected)
                 {
                     MessageBox.Show(this, "Please Select Order Master File using \"File->Choose Master File\" before choosing this menu item", "Error!!!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -417,8 +423,13 @@ namespace SalesOrdersReport
         {
             try
             {
-                this.BackgroundImage = Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.ObjApplicationSettings.LogoFileName);
-                this.BackgroundImageLayout = ImageLayout.Center;
+#if RELEASE
+                if (!String.IsNullOrEmpty(CommonFunctions.ObjApplicationSettings.LogoFileName.Trim()))
+                {
+                    this.BackgroundImage = Image.FromFile(AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.ObjApplicationSettings.LogoFileName);
+                    this.BackgroundImageLayout = ImageLayout.Center;
+                }
+#endif
             }
             catch (Exception ex)
             {

@@ -373,8 +373,6 @@ namespace SalesOrdersReport
                 dtSellerInvoice.Columns["Description of Goods"].ColumnName = "Item Name";
                 dtSellerInvoice.Columns["Ord Qty"].ColumnName = "Order Quantity";
                 dtSellerInvoice.Columns["Sale Qty"].ColumnName = "Sales Quantity";
-                dtSellerInvoice.Columns["Total"].ColumnName = "Total Sale";
-                dtSellerInvoice.Columns["Taxable value"].ColumnName = "Total";
                 dtSellerInvoice.Columns.Add("TotalTax", Type.GetType("System.Double"), "Convert([F12], 'System.Double') + Convert([F14], 'System.Double') + Convert([F16], 'System.Double')");
                 dtSellerInvoice.DefaultView.RowFilter = "IsNull([Sl No], 0) > 0";
 

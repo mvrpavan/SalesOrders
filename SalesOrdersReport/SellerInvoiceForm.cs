@@ -35,6 +35,9 @@ namespace SalesOrdersReport
                 lblStatus.Text = "";
                 CommonFunctions.ListSelectedSellers.Clear();
 
+                dateTimeInvoice.Value = DateTime.Now;
+                txtBoxOtherFile.Text = txtBoxOutputFolder.Text + @"\SalesOrder_" + dateTimeInvoice.Value.ToString("dd-MM-yyyy") + ".xlsx";
+
                 FillLineFromOrderMaster();
             }
             catch (Exception ex)
@@ -114,7 +117,7 @@ namespace SalesOrdersReport
             try
             {
                 openFileDialog1.Multiselect = false;
-                openFileDialog1.FileName = MasterFilePath;
+                openFileDialog1.FileName = "";
                 DialogResult dlgResult = openFileDialog1.ShowDialog();
 
                 if (dlgResult == System.Windows.Forms.DialogResult.OK)
@@ -843,9 +846,25 @@ namespace SalesOrdersReport
 
                 Int32 SellersCount = 0;
                 Boolean IsSellerOnlyInSummary = false;
+                List<DataRow> tmpdrSellers = new List<DataRow>();
                 for (int i = 0; i < drSellers.Length; i++)
                 {
                     if (String.IsNullOrEmpty(drSellers[i]["InvoiceNumber"].ToString().Trim())) continue;
+                    if (Int32.Parse(drSellers[i]["InvoiceNumber"].ToString()) == Int32.MinValue) continue;
+                    tmpdrSellers.Add(drSellers[i]);
+                }
+                for (int i = 0; i < drSellers.Length; i++)
+                {
+                    if (String.IsNullOrEmpty(drSellers[i]["InvoiceNumber"].ToString().Trim())) continue;
+                    if (Int32.Parse(drSellers[i]["InvoiceNumber"].ToString()) == Int32.MinValue)
+                        tmpdrSellers.Add(drSellers[i]);
+                }
+                drSellers = tmpdrSellers.ToArray();
+
+                for (int i = 0; i < drSellers.Length; i++)
+                {
+                    if (String.IsNullOrEmpty(drSellers[i]["InvoiceNumber"].ToString().Trim())) continue;
+                    IsSellerOnlyInSummary = false;
                     if (Int32.Parse(drSellers[i]["InvoiceNumber"].ToString()) == Int32.MinValue) IsSellerOnlyInSummary = true;
                     SellersCount++;
 
@@ -1099,6 +1118,18 @@ namespace SalesOrdersReport
         private void CreateSellerInvoice_FormClosing(object sender, FormClosingEventArgs e)
         {
             CommonFunctions.WriteToSettingsFile();
+        }
+
+        private void dateTimeInvoice_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                txtBoxOtherFile.Text = txtBoxOutputFolder.Text + @"\SalesOrder_" + dateTimeInvoice.Value.ToString("dd-MM-yyyy") + ".xlsx";
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("SellerInvoiceForm.dateTimeInvoice_ValueChanged()", ex);
+            }
         }
     }
 }

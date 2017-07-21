@@ -18,33 +18,40 @@ namespace SalesOrdersReport
 
         public SellerHistoryReportForm()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            chkBoxDateFilter.Checked = false;
+                chkBoxDateFilter.Checked = false;
 
-            dateTimePickerStart.Format = DateTimePickerFormat.Custom;
-            dateTimePickerStart.CustomFormat = "dd-MMM-yyyy";
-            dateTimePickerStart.Value = DateTime.Now.Date;
-            dateTimePickerStart.Enabled = false;
+                dateTimePickerStart.Format = DateTimePickerFormat.Custom;
+                dateTimePickerStart.CustomFormat = "dd-MMM-yyyy";
+                dateTimePickerStart.Value = DateTime.Now.Date;
+                dateTimePickerStart.Enabled = false;
 
-            dateTimePickerEnd.Format = DateTimePickerFormat.Custom;
-            dateTimePickerEnd.CustomFormat = "dd-MMM-yyyy";
-            dateTimePickerEnd.Value = DateTime.Now.Date;
-            dateTimePickerEnd.Enabled = false;
+                dateTimePickerEnd.Format = DateTimePickerFormat.Custom;
+                dateTimePickerEnd.CustomFormat = "dd-MMM-yyyy";
+                dateTimePickerEnd.Value = DateTime.Now.Date;
+                dateTimePickerEnd.Enabled = false;
 
-            CommonFunctions.ResetProgressBar();
+                CommonFunctions.ResetProgressBar();
 
-            lblStatus.Text = "";
-            
-            FillSellerList();
+                lblStatus.Text = "";
 
-            txtBoxSellerHistoryFilePath.Text = Path.GetDirectoryName(CommonFunctions.MasterFilePath) + @"\SellerHistory.xlsx";
-            SellerHistoryFilePath = txtBoxSellerHistoryFilePath.Text;
+                FillSellerList();
 
-            txtBoxSaveFolderPath.Text = Path.GetDirectoryName(CommonFunctions.MasterFilePath);
-            SaveFolderPath = txtBoxSaveFolderPath.Text;
+                txtBoxSellerHistoryFilePath.Text = Path.GetDirectoryName(CommonFunctions.MasterFilePath) + @"\SellerHistory.xlsx";
+                SellerHistoryFilePath = txtBoxSellerHistoryFilePath.Text;
 
-            btnCreateReport.Focus();
+                txtBoxSaveFolderPath.Text = Path.GetDirectoryName(CommonFunctions.MasterFilePath);
+                SaveFolderPath = txtBoxSaveFolderPath.Text;
+
+                btnCreateReport.Focus();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("SellerHistoryReportForm.ctor()", ex);
+            }
         }
 
         #region Events
@@ -165,25 +172,29 @@ namespace SalesOrdersReport
                 if (String.IsNullOrEmpty(SellerHistoryFilePath))
                 {
                     MessageBox.Show(this, "Please select Seller History file!!!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    lblStatus.Text = "Please select Seller History file";
                     return;
                 }
 
                 if (String.IsNullOrEmpty(SaveFolderPath))
                 {
                     MessageBox.Show(this, "Please select Save Folder path!!!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    lblStatus.Text = "Please select Save folder";
+                    return;
+                }
+
+                if (cmbBoxSellerList.SelectedItem == null || String.IsNullOrEmpty(cmbBoxSellerList.SelectedItem.ToString()))
+                {
+                    MessageBox.Show(this, "Please select valid Seller name from list!!!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    lblStatus.Text = "Please select valid Seller";
                     return;
                 }
 
                 String SelectedSellerName = cmbBoxSellerList.SelectedItem.ToString().Trim();
-                if (String.IsNullOrEmpty(SelectedSellerName))
-                {
-                    MessageBox.Show(this, "Please select valid Seller name from list!!!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
                 if (ListSellerNames.FindIndex(e => e.Trim().Equals(SelectedSellerName, StringComparison.InvariantCultureIgnoreCase)) < 0)
                 {
                     MessageBox.Show(this, "Unable to find the Seller!!!\nPlease select valid Seller name from list.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    lblStatus.Text = "Please select valid Seller name from list";
                     return;
                 }
 
@@ -209,7 +220,8 @@ namespace SalesOrdersReport
                 DataRow[] drSellerRecords = dtSellerSummary.DefaultView.ToTable().Select("", "[Create Date] asc, [Bill#] asc");
                 if (drSellerRecords == null || drSellerRecords.Length == 0)
                 {
-                    MessageBox.Show(this, "No data for the given filters found in Seller History.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(this, "No data found for the given filters in Seller History.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    lblStatus.Text = "No data found";
                     return;
                 }
                 //Create Date	Update Date	Bill#	Seller Name	Sale	Cancel	Return	Discount	Total Tax	Net Sale	OB	Cash	Balance
@@ -311,7 +323,6 @@ namespace SalesOrdersReport
             try
             {
                 CommonFunctions.ResetProgressBar();
-                lblStatus.Text = "";
 
                 btnCreateReport.Enabled = true;
                 btnClose.Enabled = true;

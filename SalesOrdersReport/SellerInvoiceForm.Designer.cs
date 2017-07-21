@@ -70,6 +70,7 @@
             this.dateTimeInvoice.Name = "dateTimeInvoice";
             this.dateTimeInvoice.Size = new System.Drawing.Size(257, 20);
             this.dateTimeInvoice.TabIndex = 0;
+            this.dateTimeInvoice.ValueChanged += new System.EventHandler(this.dateTimeInvoice_ValueChanged);
             // 
             // chkBoxCreateSummary
             // 
@@ -277,7 +278,7 @@
             this.label6.TabIndex = 7;
             this.label6.Text = "Seller list";
             // 
-            // CreateSellerInvoice
+            // SellerInvoiceForm
             // 
             this.AcceptButton = this.btnCreateInvoice;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -308,7 +309,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "CreateSellerInvoice";
+            this.Name = "SellerInvoiceForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create Seller Invoice";

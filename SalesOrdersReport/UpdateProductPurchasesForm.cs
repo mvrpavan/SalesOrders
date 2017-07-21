@@ -350,9 +350,8 @@ namespace SalesOrdersReport
                     }
 
                     CommonFunctions.ObjProductMaster.ResetStockProducts();
-                    
-                    MessageBox.Show(this, "Updated following details successfully:" + Message, "Update Purchases", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+                MessageBox.Show(this, "Updated following details successfully:" + Message, "Update Purchases", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

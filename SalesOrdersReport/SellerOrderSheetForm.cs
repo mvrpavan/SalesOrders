@@ -68,8 +68,18 @@ namespace SalesOrdersReport
 
         private void btnCreateOrderSheet_Click(object sender, EventArgs e)
         {
-            backgroundWorker1.RunWorkerAsync();
-            backgroundWorker1.WorkerReportsProgress = true;
+            try
+            {
+                btnCreateOrderSheet.Enabled = false;
+                btnCancel.Enabled = false;
+
+                backgroundWorker1.RunWorkerAsync();
+                backgroundWorker1.WorkerReportsProgress = true;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("SellerOrderSheetForm.btnCreateOrderSheet_Click()", ex);
+            }
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -177,7 +187,7 @@ namespace SalesOrdersReport
 
                 CommonFunctions.ReleaseCOMObject(xlWorkbook);
                 backgroundWorker1.ReportProgress(100);
-                MessageBox.Show(this, "Created Sales Order Sheet Successfully", "Status", MessageBoxButtons.OK);
+                MessageBox.Show(this, "Created Sales Order Sheet Successfully", "Sales Order Sheet", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -197,8 +207,19 @@ namespace SalesOrdersReport
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            CommonFunctions.ResetProgressBar();
-            btnCancel.Focus();
+            try
+            {
+                CommonFunctions.ResetProgressBar();
+
+                btnCreateOrderSheet.Enabled = true;
+                btnCancel.Enabled = true;
+
+                btnCancel.Focus();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("SellerOrderSheetForm.backgroundWorker1_RunWorkerCompleted()", ex);
+            }
         }
     }
 }

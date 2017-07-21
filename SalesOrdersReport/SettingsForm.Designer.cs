@@ -44,6 +44,7 @@
             this.btnFooterTitleColorInv = new System.Windows.Forms.Button();
             this.txtBoxAddressInv = new System.Windows.Forms.TextBox();
             this.txtBoxLastInvoiceNumberInv = new System.Windows.Forms.TextBox();
+            this.txtBoxGSTINumberInv = new System.Windows.Forms.TextBox();
             this.txtBoxTINNumberInv = new System.Windows.Forms.TextBox();
             this.txtBoxVATPercentInv = new System.Windows.Forms.TextBox();
             this.txtBoxEMailIDInv = new System.Windows.Forms.TextBox();
@@ -52,6 +53,7 @@
             this.txtBoxHeaderSubTitleInv = new System.Windows.Forms.TextBox();
             this.txtBoxHeaderTitleInv = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -71,6 +73,7 @@
             this.btnFooterTitleColorQuot = new System.Windows.Forms.Button();
             this.txtBoxAddressQuot = new System.Windows.Forms.TextBox();
             this.txtBoxLastQuotationNumberQuot = new System.Windows.Forms.TextBox();
+            this.txtBoxGSTINumberQuot = new System.Windows.Forms.TextBox();
             this.txtBoxTINNumberQuot = new System.Windows.Forms.TextBox();
             this.txtBoxEMailIDQuot = new System.Windows.Forms.TextBox();
             this.txtBoxPhoneNumberQuot = new System.Windows.Forms.TextBox();
@@ -78,6 +81,7 @@
             this.txtBoxHeaderSubTitleQuot = new System.Windows.Forms.TextBox();
             this.txtBoxHeaderTitleQuot = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
@@ -100,6 +104,7 @@
             this.btnFooterTitleColorPO = new System.Windows.Forms.Button();
             this.txtBoxAddressPO = new System.Windows.Forms.TextBox();
             this.txtBoxLastPONumber = new System.Windows.Forms.TextBox();
+            this.txtBoxGSTINumberPO = new System.Windows.Forms.TextBox();
             this.txtBoxTINNumberPO = new System.Windows.Forms.TextBox();
             this.txtBoxEMailIDPO = new System.Windows.Forms.TextBox();
             this.txtBoxPhoneNumberPO = new System.Windows.Forms.TextBox();
@@ -108,6 +113,7 @@
             this.txtBoxHeaderTitlePO = new System.Windows.Forms.TextBox();
             this.label28 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
@@ -120,12 +126,6 @@
             this.colorDialogSettings = new System.Windows.Forms.ColorDialog();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbBoxProductLines = new System.Windows.Forms.ComboBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.txtBoxGSTINumberInv = new System.Windows.Forms.TextBox();
-            this.label30 = new System.Windows.Forms.Label();
-            this.txtBoxGSTINumberQuot = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.txtBoxGSTINumberPO = new System.Windows.Forms.TextBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.tabPageInvoice.SuspendLayout();
@@ -316,6 +316,13 @@
             this.txtBoxLastInvoiceNumberInv.Size = new System.Drawing.Size(204, 20);
             this.txtBoxLastInvoiceNumberInv.TabIndex = 14;
             // 
+            // txtBoxGSTINumberInv
+            // 
+            this.txtBoxGSTINumberInv.Location = new System.Drawing.Point(306, 243);
+            this.txtBoxGSTINumberInv.Name = "txtBoxGSTINumberInv";
+            this.txtBoxGSTINumberInv.Size = new System.Drawing.Size(76, 20);
+            this.txtBoxGSTINumberInv.TabIndex = 13;
+            // 
             // txtBoxTINNumberInv
             // 
             this.txtBoxTINNumberInv.Location = new System.Drawing.Point(178, 243);
@@ -373,6 +380,15 @@
             this.label10.Size = new System.Drawing.Size(75, 13);
             this.label10.TabIndex = 0;
             this.label10.Text = "Last Invoice #";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(257, 246);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(43, 13);
+            this.label29.TabIndex = 0;
+            this.label29.Text = "GST IN";
             // 
             // label9
             // 
@@ -580,6 +596,13 @@
             this.txtBoxLastQuotationNumberQuot.Size = new System.Drawing.Size(204, 20);
             this.txtBoxLastQuotationNumberQuot.TabIndex = 13;
             // 
+            // txtBoxGSTINumberQuot
+            // 
+            this.txtBoxGSTINumberQuot.Location = new System.Drawing.Point(306, 217);
+            this.txtBoxGSTINumberQuot.Name = "txtBoxGSTINumberQuot";
+            this.txtBoxGSTINumberQuot.Size = new System.Drawing.Size(76, 20);
+            this.txtBoxGSTINumberQuot.TabIndex = 12;
+            // 
             // txtBoxTINNumberQuot
             // 
             this.txtBoxTINNumberQuot.Location = new System.Drawing.Point(178, 217);
@@ -630,6 +653,15 @@
             this.label11.Size = new System.Drawing.Size(86, 13);
             this.label11.TabIndex = 6;
             this.label11.Text = "Last Quotation #";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(257, 220);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(43, 13);
+            this.label30.TabIndex = 7;
+            this.label30.Text = "GST IN";
             // 
             // label12
             // 
@@ -867,6 +899,13 @@
             this.txtBoxLastPONumber.Size = new System.Drawing.Size(204, 20);
             this.txtBoxLastPONumber.TabIndex = 14;
             // 
+            // txtBoxGSTINumberPO
+            // 
+            this.txtBoxGSTINumberPO.Location = new System.Drawing.Point(306, 222);
+            this.txtBoxGSTINumberPO.Name = "txtBoxGSTINumberPO";
+            this.txtBoxGSTINumberPO.Size = new System.Drawing.Size(76, 20);
+            this.txtBoxGSTINumberPO.TabIndex = 13;
+            // 
             // txtBoxTINNumberPO
             // 
             this.txtBoxTINNumberPO.Location = new System.Drawing.Point(178, 222);
@@ -926,6 +965,15 @@
             this.label13.Size = new System.Drawing.Size(111, 13);
             this.label13.TabIndex = 38;
             this.label13.Text = "Last Purchase Order#";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(257, 225);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(43, 13);
+            this.label31.TabIndex = 40;
+            this.label31.Text = "GST IN";
             // 
             // label17
             // 
@@ -1030,54 +1078,6 @@
             this.cmbBoxProductLines.TabIndex = 0;
             this.cmbBoxProductLines.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProductLines_SelectedIndexChanged);
             // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(257, 246);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(43, 13);
-            this.label29.TabIndex = 0;
-            this.label29.Text = "GST IN";
-            // 
-            // txtBoxGSTINumberInv
-            // 
-            this.txtBoxGSTINumberInv.Location = new System.Drawing.Point(306, 243);
-            this.txtBoxGSTINumberInv.Name = "txtBoxGSTINumberInv";
-            this.txtBoxGSTINumberInv.Size = new System.Drawing.Size(76, 20);
-            this.txtBoxGSTINumberInv.TabIndex = 13;
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(257, 220);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(43, 13);
-            this.label30.TabIndex = 7;
-            this.label30.Text = "GST IN";
-            // 
-            // txtBoxGSTINumberQuot
-            // 
-            this.txtBoxGSTINumberQuot.Location = new System.Drawing.Point(306, 217);
-            this.txtBoxGSTINumberQuot.Name = "txtBoxGSTINumberQuot";
-            this.txtBoxGSTINumberQuot.Size = new System.Drawing.Size(76, 20);
-            this.txtBoxGSTINumberQuot.TabIndex = 12;
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(257, 225);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(43, 13);
-            this.label31.TabIndex = 40;
-            this.label31.Text = "GST IN";
-            // 
-            // txtBoxGSTINumberPO
-            // 
-            this.txtBoxGSTINumberPO.Location = new System.Drawing.Point(306, 222);
-            this.txtBoxGSTINumberPO.Name = "txtBoxGSTINumberPO";
-            this.txtBoxGSTINumberPO.Size = new System.Drawing.Size(76, 20);
-            this.txtBoxGSTINumberPO.TabIndex = 13;
-            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1097,6 +1097,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SettingsForm_FormClosed);
+            this.Load += new System.EventHandler(this.SettingsForm_Load);
             this.tabControlSettings.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.tabPageGeneral.PerformLayout();

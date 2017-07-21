@@ -26,7 +26,8 @@ namespace SalesOrdersReport
 
             chkBoxUpdSellerMaster.Checked = true;
             chkBoxUpdSellerHistory.Checked = true;
-            chkBoxUpdProductSales.Checked = true;
+            chkBoxUpdProductSales.Checked = false;
+            chkBoxUpdProductSales_CheckedChanged(null, null);
             groupBoxHistoryUpdate.Enabled = false;
             btnUpdate.Enabled = false;
             FileDialgSellerSummary.Multiselect = false;
@@ -461,8 +462,11 @@ namespace SalesOrdersReport
                 }
                 ReportProgressFunc(100);
 
-                Excel.Range xlRange = xlSellerHistoryWorksheet.Range[xlSellerHistoryWorksheet.Cells[StartRow, StartColumn], xlSellerHistoryWorksheet.Cells[StartRow + LastRow - 1, StartColumn + Header.Length - 1]];
-                SellerInvoiceForm.SetAllBorders(xlRange);
+                if (LastRow > 0)
+                {
+                    Excel.Range xlRange = xlSellerHistoryWorksheet.Range[xlSellerHistoryWorksheet.Cells[StartRow, StartColumn], xlSellerHistoryWorksheet.Cells[StartRow + LastRow - 1, StartColumn + Header.Length - 1]];
+                    SellerInvoiceForm.SetAllBorders(xlRange);
+                }
 
                 xlSellerHistoryWorkbook.Save();
                 xlSellerHistoryWorkbook.Close();
