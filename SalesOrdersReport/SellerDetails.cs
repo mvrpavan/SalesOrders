@@ -95,7 +95,7 @@ namespace SalesOrdersReport
                 {
                     ListSellerDetails.Insert(~SellerIndex, ObjSellerDetails);
 
-                    ObjSellerDetails.LineIndex = CommonFunctions.ListLines.FindIndex(e => e.Equals(ObjSellerDetails.Line, StringComparison.InvariantCultureIgnoreCase));
+                    ObjSellerDetails.LineIndex = CommonFunctions.ListSellerLines.FindIndex(e => e.Equals(ObjSellerDetails.Line, StringComparison.InvariantCultureIgnoreCase));
                     ObjSellerDetails.PriceGroupIndex = ListPriceGroups.FindIndex(e => e.Name.Equals(ObjSellerDetails.PriceGroup, StringComparison.InvariantCultureIgnoreCase));
                     ObjSellerDetails.DiscountGroupIndex = ListDiscountGroups.FindIndex(e => e.Name.Equals(ObjSellerDetails.DiscountGroup, StringComparison.InvariantCultureIgnoreCase));
                 }

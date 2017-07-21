@@ -74,9 +74,9 @@ namespace SalesOrdersReport
             try
             {
                 chkListBoxLine.Items.Clear();
-                for (int i = 0; i < CommonFunctions.ListLines.Count; i++)
+                for (int i = 0; i < CommonFunctions.ListSellerLines.Count; i++)
                 {
-                    chkListBoxLine.Items.Add(CommonFunctions.ListLines[i], true);
+                    chkListBoxLine.Items.Add(CommonFunctions.ListSellerLines[i], true);
                 }
 
                 PrevAllLinesCheckState = CheckState.Checked;
@@ -653,10 +653,19 @@ namespace SalesOrdersReport
 
                         SLNo++;
                         Quantity = Double.Parse(xlSalesOrderWorksheet.Cells[StartRow + 1 + i, StartColumn + SalesOrderDetailsCount + j].Value.ToString());
-                        drItems[ListItemIndexes[j]]["Quantity"] = Double.Parse(drItems[ListItemIndexes[j]]["Quantity"].ToString()) + Quantity;
+                        if (CreateSummary) drItems[ListItemIndexes[j]]["Quantity"] = Double.Parse(drItems[ListItemIndexes[j]]["Quantity"].ToString()) + Quantity;
 
                         ProductDetailsForInvoice ObjProductDetailsForInvoice = new ProductDetailsForInvoice();
                         ProductDetails ObjProductDetails = CommonFunctions.ObjProductMaster.GetProductDetails(drItems[ListItemIndexes[j]]["ItemName"].ToString());
+                        if (ObjProductDetails == null)
+                        {
+                            xlWorkbook.Close();
+
+                            CommonFunctions.ReleaseCOMObject(xlWorkbook);
+                            MessageBox.Show(this, "Unable to find Item \"" + drItems[ListItemIndexes[j]]["ItemName"].ToString() + "\" in ItemMaster", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            lblStatus.Text = "Unable to find Item \"" + drItems[ListItemIndexes[j]]["ItemName"].ToString() + "\" in ItemMaster";
+                            return;
+                        }
                         ObjProductDetailsForInvoice.SerialNumber = SLNo;
                         ObjProductDetailsForInvoice.Description = ObjProductDetails.ItemName;
                         ObjProductDetailsForInvoice.HSNCode = ObjProductDetails.HSNCode;
@@ -679,10 +688,13 @@ namespace SalesOrdersReport
                     #endregion
                     ObjInvoice.CreateInvoice(xlWorkSheet);
 
-                    drSellers[ListSellerIndexes[i]]["InvoiceNumber"] = ObjInvoice.SerialNumber;
-                    drSellers[ListSellerIndexes[i]]["Total"] = ObjInvoice.TotalSalesValue;
-                    drSellers[ListSellerIndexes[i]]["TotalDiscount"] = ObjInvoice.TotalDiscount;
-                    drSellers[ListSellerIndexes[i]]["TotalTax"] = ObjInvoice.TotalTax;
+                    if (CreateSummary)
+                    {
+                        drSellers[ListSellerIndexes[i]]["InvoiceNumber"] = ObjInvoice.SerialNumber;
+                        drSellers[ListSellerIndexes[i]]["Total"] = ObjInvoice.TotalSalesValue;
+                        drSellers[ListSellerIndexes[i]]["TotalDiscount"] = ObjInvoice.TotalDiscount;
+                        drSellers[ListSellerIndexes[i]]["TotalTax"] = ObjInvoice.TotalTax;
+                    }
                 }
                 #endregion
 
@@ -885,7 +897,7 @@ namespace SalesOrdersReport
                     {
                         xlRangeSale.Formula = drSellers[i]["Total"].ToString();
                         xlRangeDiscount.Formula = drSellers[i]["TotalDiscount"].ToString();
-                        if (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0) xlRangeTotalTax.Formula = drSellers[i]["TotalTax"].ToString();
+                        xlRangeTotalTax.Formula = drSellers[i]["TotalTax"].ToString();
                     }
                     xlRangeNetSale.Formula = "=Round(" + xlRangeSale.Address[false, false]
                                                 + "-" + xlRangeCancel.Address[false, false]

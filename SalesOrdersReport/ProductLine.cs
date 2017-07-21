@@ -115,19 +115,19 @@ namespace SalesOrdersReport
                 ObjSellerMaster.Initialize();
 
                 #region Load Line from Seller Master
-                CommonFunctions.ListLines = new List<String>();
+                CommonFunctions.ListSellerLines = new List<String>();
                 Boolean ContainsBlanks = false;
                 for (int i = 0; i < dtSellerMaster.Rows.Count; i++)
                 {
                     DataRow dtRow = dtSellerMaster.Rows[i];
                     String Line = dtRow["Line"].ToString().Replace("<", "").Replace(">", "").ToUpper();
                     if (Line.Trim().Length == 0) ContainsBlanks = true;
-                    else if (!CommonFunctions.ListLines.Contains(Line)) CommonFunctions.ListLines.Add(Line);
+                    else if (!CommonFunctions.ListSellerLines.Contains(Line)) CommonFunctions.ListSellerLines.Add(Line);
                 }
 
-                CommonFunctions.ListLines.Sort();
-                CommonFunctions.ListLines.Insert(0, "<All>");
-                if (ContainsBlanks) CommonFunctions.ListLines.Add("<Blanks>");
+                CommonFunctions.ListSellerLines.Sort();
+                CommonFunctions.ListSellerLines.Insert(0, "<All>");
+                if (ContainsBlanks) CommonFunctions.ListSellerLines.Add("<Blanks>");
                 #endregion
 
                 #region Load Discount Groups
@@ -196,20 +196,20 @@ namespace SalesOrdersReport
                 ObjVendorMaster = new VendorMaster();
                 ObjVendorMaster.Initialize();
 
-                #region Load Line from Seller Master
-                CommonFunctions.ListLines = new List<String>();
+                #region Load Line from Vendor Master
+                CommonFunctions.ListVendorLines = new List<String>();
                 Boolean ContainsBlanks = false;
                 for (int i = 0; i < dtVendorMaster.Rows.Count; i++)
                 {
                     DataRow dtRow = dtVendorMaster.Rows[i];
                     String Line = dtRow["Line"].ToString().Replace("<", "").Replace(">", "").ToUpper();
                     if (Line.Trim().Length == 0) ContainsBlanks = true;
-                    else if (!CommonFunctions.ListLines.Contains(Line)) CommonFunctions.ListLines.Add(Line);
+                    else if (!CommonFunctions.ListVendorLines.Contains(Line)) CommonFunctions.ListVendorLines.Add(Line);
                 }
 
-                CommonFunctions.ListLines.Sort();
-                CommonFunctions.ListLines.Insert(0, "<All>");
-                if (ContainsBlanks) CommonFunctions.ListLines.Add("<Blanks>");
+                CommonFunctions.ListVendorLines.Sort();
+                CommonFunctions.ListVendorLines.Insert(0, "<All>");
+                if (ContainsBlanks) CommonFunctions.ListVendorLines.Add("<Blanks>");
                 #endregion
 
                 #region Load Discount Groups

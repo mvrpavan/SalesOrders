@@ -39,9 +39,9 @@ namespace SalesOrdersReport
             try
             {
                 chkListBoxLine.Items.Clear();
-                for (int i = 0; i < CommonFunctions.ListLines.Count; i++)
+                for (int i = 0; i < CommonFunctions.ListVendorLines.Count; i++)
                 {
-                    chkListBoxLine.Items.Add(CommonFunctions.ListLines[i], true);
+                    chkListBoxLine.Items.Add(CommonFunctions.ListVendorLines[i], true);
                 }
 
                 PrevAllLinesCheckState = CheckState.Checked;

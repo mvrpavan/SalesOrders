@@ -16,7 +16,7 @@ namespace SalesOrdersReport
     {
         public static List<ProductLine> ListProductLines;
         public static Int32 SelectedProductLineIndex;
-        public static List<String> ListLines, ListSelectedSellers, ListSelectedVendors;
+        public static List<String> ListSellerLines, ListVendorLines, ListSelectedSellers, ListSelectedVendors;
         public static String AppDataFolder;
         public static String MasterFilePath;
         public static ToolStripProgressBar ToolStripProgressBarMainForm;

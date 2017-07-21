@@ -66,9 +66,9 @@ namespace SalesOrdersReport
             try
             {
                 cmbBoxLineFilter.Items.Clear();
-                for (int i = 0; i < CommonFunctions.ListLines.Count; i++)
+                for (int i = 0; i < CommonFunctions.ListSellerLines.Count; i++)
                 {
-                    cmbBoxLineFilter.Items.Add(CommonFunctions.ListLines[i]);
+                    cmbBoxLineFilter.Items.Add(CommonFunctions.ListSellerLines[i]);
                 }
                 cmbBoxLineFilter.SelectedIndex = 0;
             }

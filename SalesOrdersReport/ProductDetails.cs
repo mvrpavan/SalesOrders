@@ -338,7 +338,7 @@ namespace SalesOrdersReport
             try
             {
                 ProductDetails ObjProduct = new ProductDetails();
-                ObjProduct.ItemName = ItemName;
+                ObjProduct.ItemName = ItemName.Trim();
                 Int32 Index = ListProducts.BinarySearch(ObjProduct, ObjProduct);
 
                 if (Index < 0) return null;
