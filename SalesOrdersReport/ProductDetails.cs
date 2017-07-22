@@ -356,7 +356,7 @@ namespace SalesOrdersReport
             try
             {
                 StockProductDetails ObjStockProduct = new StockProductDetails();
-                ObjStockProduct.StockName = StockName;
+                ObjStockProduct.StockName = StockName.Trim();
                 Int32 Index = ListStockProducts.BinarySearch(ObjStockProduct, ObjStockProduct);
 
                 if (Index < 0) return null;

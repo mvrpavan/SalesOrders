@@ -339,7 +339,7 @@ namespace SalesOrdersReport
                     Int32 SellerIndex = -1;
                     for (int j = 0; j < drSellers.Length; j++)
                     {
-                        if (drSellers[j]["Seller Name"].ToString().Equals(SellerName, StringComparison.InvariantCultureIgnoreCase))
+                        if (drSellers[j]["Seller Name"].ToString().Trim().Equals(SellerName.Trim(), StringComparison.InvariantCultureIgnoreCase))
                         {
                             SellerIndex = j;
                             break;
@@ -492,7 +492,7 @@ namespace SalesOrdersReport
                 for (int i = 0; i < drSellers.Length; i++)
                 {
                     lblStatus.Text = "Updating Product Inventory file for Seller " + (i + 1) + " of " + drSellers.Length;
-                    String SheetName = drSellers[i]["Seller Name"].ToString().Replace(":", "").
+                    String SheetName = drSellers[i]["Seller Name"].ToString().Trim().Replace(":", "").
                                         Replace("\\", "").Replace("/", "").
                                         Replace("?", "").Replace("*", "").
                                         Replace("[", "").Replace("]", "");

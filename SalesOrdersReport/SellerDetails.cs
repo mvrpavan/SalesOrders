@@ -111,7 +111,7 @@ namespace SalesOrdersReport
             try
             {
                 SellerDetails ObjSellerDetails = new SellerDetails();
-                ObjSellerDetails.Name = SellerName;
+                ObjSellerDetails.Name = SellerName.Trim();
 
                 Int32 Index = ListSellerDetails.BinarySearch(ObjSellerDetails, ObjSellerDetails);
                 if (Index < 0) return null;

@@ -184,7 +184,7 @@ namespace SalesOrdersReport
                     Int32 ItemIndex = -1;
                     for (int j = 0; j < drItems.Length; j++)
                     {
-                        if (drItems[j]["ItemName"].ToString().Equals(ItemName, StringComparison.InvariantCultureIgnoreCase))
+                        if (drItems[j]["ItemName"].ToString().Trim().Equals(ItemName.Trim(), StringComparison.InvariantCultureIgnoreCase))
                         {
                             ItemIndex = j;
                             break;
@@ -205,7 +205,7 @@ namespace SalesOrdersReport
                     Int32 SellerIndex = -1;
                     for (int j = 0; j < drSellers.Length; j++)
                     {
-                        if (drSellers[j]["SellerName"].ToString().Equals(SellerName, StringComparison.InvariantCultureIgnoreCase))
+                        if (drSellers[j]["SellerName"].ToString().Trim().Equals(SellerName.Trim(), StringComparison.InvariantCultureIgnoreCase))
                         {
                             SellerIndex = j;
                             break;
