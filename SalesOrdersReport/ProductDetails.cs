@@ -509,11 +509,11 @@ namespace SalesOrdersReport
                     String TransactionType = dr["Type"].ToString().Trim().ToUpper();
                     if (TransactionType.Equals("SALE"))
                     {
-                        ObjStockProductDetails.SaleQty += (-1 * Int32.Parse(dr["Receive Qty"].ToString()));
+                        ObjStockProductDetails.SaleQty += (-1 * Double.Parse(dr["Receive Qty"].ToString()));
                     }
                     else if (TransactionType.Equals("PURCHASE"))
                     {
-                        ObjStockProductDetails.RecvdQty += Int32.Parse(dr["Receive Qty"].ToString());
+                        ObjStockProductDetails.RecvdQty += Double.Parse(dr["Receive Qty"].ToString());
                     }
                 }
             }
