@@ -180,10 +180,11 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\CerenLogo.png" />
     <Content Include="Settings.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>

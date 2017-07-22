@@ -599,7 +599,7 @@ namespace SalesOrdersReport
                     Excel.Range xlRangeTotalFrom = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum];
                     Excel.Range xlRangeTotalTo = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + OldBalanceRowOffset, TotalColNum];
                     Excel.Range xlRangeDiscount = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + DiscountRowOffset, TotalColNum];
-                    xlRange.Formula = "=Sum(" + xlRangeTotalFrom.Address[false, false] + ":" + xlRangeTotalTo.Address[false, false] + ") + " + xlRangeDiscount.Address[false, false];
+                    xlRange.Formula = "=Sum(" + xlRangeTotalFrom.Address[false, false] + ":" + xlRangeTotalTo.Address[false, false] + ") - " + xlRangeDiscount.Address[false, false];
                     xlRange.Font.Bold = true;
                     xlRange.NumberFormat = "#,##0.00";
 
