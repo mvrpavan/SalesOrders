@@ -129,7 +129,6 @@ namespace SalesOrdersReport
         #region "Settings file related methods"
         static XmlDocument SettingXmlDoc;
         static String SettingsFilePath;
-        //static Boolean SettingsFileEntryModified = false;
         static XmlNode ProductLinesNode;
         public static ApplicationSettings ObjApplicationSettings;
         public static GeneralSettings ObjGeneralSettings;
@@ -137,6 +136,7 @@ namespace SalesOrdersReport
         public static ProductMaster ObjProductMaster;
         public static SellerMaster ObjSellerMaster;
         public static VendorMaster ObjVendorMaster;
+        static Boolean SettingsFileUpdated = false;
 
         public static void LoadSettingsFile()
         {
@@ -184,7 +184,15 @@ namespace SalesOrdersReport
         {
             try
             {
+                if (SettingsFileUpdated) return;
+                if (e.OldValue == null && e.NewValue == null) return;
+                if ((e.OldValue != null && e.NewValue == null) || (e.OldValue == null && e.NewValue != null))
+                {
+                    SettingsFileUpdated = true;
+                    return;
+                }
                 if (e.OldValue.Equals(e.NewValue)) return;
+                SettingsFileUpdated = true;
             }
             catch (Exception ex)
             {
@@ -259,7 +267,8 @@ namespace SalesOrdersReport
                     ListProductLines[i].ObjSettings.UpdateSettingsToNode();
                 }
 
-                SettingXmlDoc.Save(SettingsFilePath);
+                if (SettingsFileUpdated) SettingXmlDoc.Save(SettingsFilePath);
+                SettingsFileUpdated = false;
             }
             catch (Exception ex)
             {

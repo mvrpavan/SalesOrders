@@ -87,7 +87,7 @@ namespace SalesOrdersReport
                 {
                     if (Element.Name.Equals(ChildNodeName, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (String.IsNullOrEmpty(Element.InnerText)) return false;
+                        //if (String.IsNullOrEmpty(Element.InnerText)) return false;
                         Element.InnerText = Value;
                         return true;
                     }
