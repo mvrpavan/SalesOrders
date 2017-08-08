@@ -98,6 +98,7 @@ namespace SalesOrdersReport
                 OleDbDataAdapter dapAdapter = new OleDbDataAdapter(strCommandText, conOleDbCon);
                 DataTable dtbInput = new DataTable();
                 dapAdapter.Fill(dtbInput);
+                conOleDbCon.Close();
                 return dtbInput;
             }
             catch (Exception)
