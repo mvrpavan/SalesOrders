@@ -633,7 +633,7 @@ namespace SalesOrdersReport
                     SellerDetails ObjCurrentSeller = CommonFunctions.ObjSellerMaster.GetSellerDetails(drSellers[ListSellerIndexes[i]]["SellerName"].ToString());
                     DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(ObjCurrentSeller.Name);
 
-                    Invoice ObjInvoice = new InvoiceGST();
+                    Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
                     ObjInvoice.SerialNumber = InvoiceNumber.ToString();
                     ObjInvoice.InvoiceNumberText = BillNumberText;
                     ObjInvoice.ObjSellerDetails = ObjCurrentSeller;

@@ -79,16 +79,16 @@ namespace SalesOrdersReport
                     xlRange.Font.Size = 10;
                     xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
                     xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
-                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow + i, CustDetailsStartCol + 9], xlWorkSheet.Cells[CustDetailsStartRow + i, CustDetailsStartCol + 15]];
+                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow + i, CustDetailsStartCol + 9], xlWorkSheet.Cells[CustDetailsStartRow + i, CustDetailsStartCol + 13]];
                     xlRange.Merge();
                     xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
                     xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
                 }
 
-                xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow + 2, CustDetailsStartCol + 7], xlWorkSheet.Cells[CustDetailsStartRow + 5, CustDetailsStartCol + 15]];
+                xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow + 2, CustDetailsStartCol + 7], xlWorkSheet.Cells[CustDetailsStartRow + 5, CustDetailsStartCol + 13]];
                 xlRange.Merge();
 
-                xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow + 6, CustDetailsStartCol], xlWorkSheet.Cells[CustDetailsStartRow + 6, CustDetailsStartCol + 15]];
+                xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow + 6, CustDetailsStartCol], xlWorkSheet.Cells[CustDetailsStartRow + 6, CustDetailsStartCol + 13]];
                 xlRange.Merge();
                 #endregion
                 #endregion
@@ -106,7 +106,7 @@ namespace SalesOrdersReport
                     DictColNumbers.Add(ArrHeader[i], InvoiceStartCol + i);
                 }
 
-                String[] ArrTaxesHeader = new String[] { "CGSTRate", "CGSTAmount", "SGSTRate", "SGSTAmount", "IGSTRate", "IGSTAmount" };
+                String[] ArrTaxesHeader = new String[] { "CGSTRate", "CGSTAmount", "SGSTRate", "SGSTAmount"/*, "IGSTRate", "IGSTAmount"*/ };
                 for (int i = 0; i < ArrTaxesHeader.Length; i++)
                 {
                     DictColNumbers.Add(ArrTaxesHeader[i], InvoiceStartCol + ArrHeader.Length + i);
@@ -241,11 +241,12 @@ namespace SalesOrdersReport
                 #endregion
 
                 #region Total Invoice Value
-                Int32 TotalInvoiceValueRow = TotalRowNum + 1, TotalInvoiceValueCol = DictColNumbers[ArrTaxesHeader[0]], LastInvoiceCol = DictColNumbers[ArrTaxesHeader[ArrTaxesHeader.Length - 1]];
+                Int32 TotalInvoiceValueRow = TotalRowNum + 1, TotalInvoiceValueCol = DictColNumbers[ItemDiscCol], LastInvoiceCol = DictColNumbers[ArrTaxesHeader[ArrTaxesHeader.Length - 1]];
+                Int32 TotalInvoiceTextCol = DictColNumbers[ItemTotalCol];
 
                 xlRange = xlWorkSheet.Cells[TotalInvoiceValueRow, DictColNumbers[SlNoCol]];
                 xlRange.Value = "Total Invoice Value(in figures)";
-                xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[TotalInvoiceValueRow, DictColNumbers[SlNoCol]], xlWorkSheet.Cells[TotalInvoiceValueRow, DictColNumbers[ItemTaxableValueCol]]];
+                xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[TotalInvoiceValueRow, DictColNumbers[SlNoCol]], xlWorkSheet.Cells[TotalInvoiceValueRow, TotalInvoiceTextCol]];
                 xlRange.Merge();
                 xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
                 xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
@@ -262,7 +263,7 @@ namespace SalesOrdersReport
 
                 xlRange = xlWorkSheet.Cells[TotalInvoiceValueRow + 1, DictColNumbers[SlNoCol]];
                 xlRange.Value = "Total Invoice Value(in words)";
-                xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[TotalInvoiceValueRow + 1, DictColNumbers[SlNoCol]], xlWorkSheet.Cells[TotalInvoiceValueRow + 1, DictColNumbers[ItemTaxableValueCol]]];
+                xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[TotalInvoiceValueRow + 1, DictColNumbers[SlNoCol]], xlWorkSheet.Cells[TotalInvoiceValueRow + 1, TotalInvoiceTextCol]];
                 xlRange.Merge();
                 xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
                 xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
@@ -281,7 +282,7 @@ namespace SalesOrdersReport
                 {
                     xlRange = xlWorkSheet.Cells[TotalInvoiceValueRow + 2, DictColNumbers[SlNoCol]];
                     xlRange.Value = "Old Balance";
-                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[TotalInvoiceValueRow + 2, DictColNumbers[SlNoCol]], xlWorkSheet.Cells[TotalInvoiceValueRow + 2, DictColNumbers[ItemTaxableValueCol]]];
+                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[TotalInvoiceValueRow + 2, DictColNumbers[SlNoCol]], xlWorkSheet.Cells[TotalInvoiceValueRow + 2, TotalInvoiceTextCol]];
                     xlRange.Merge();
                     xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
                     xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
@@ -294,7 +295,7 @@ namespace SalesOrdersReport
 
                     xlRange = xlWorkSheet.Cells[TotalInvoiceValueRow + 3, DictColNumbers[SlNoCol]];
                     xlRange.Value = "Net Total";
-                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[TotalInvoiceValueRow + 3, DictColNumbers[SlNoCol]], xlWorkSheet.Cells[TotalInvoiceValueRow + 3, DictColNumbers[ItemTaxableValueCol]]];
+                    xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[TotalInvoiceValueRow + 3, DictColNumbers[SlNoCol]], xlWorkSheet.Cells[TotalInvoiceValueRow + 3, TotalInvoiceTextCol]];
                     xlRange.Merge();
                     xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
                     xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
@@ -315,7 +316,7 @@ namespace SalesOrdersReport
 
                 xlRange = xlWorkSheet.Cells[LastInvoiceRowNum, DictColNumbers[SlNoCol]];
                 xlRange.Value = "Amount of Tax Subject to Reverse Charges";
-                xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[LastInvoiceRowNum, DictColNumbers[SlNoCol]], xlWorkSheet.Cells[LastInvoiceRowNum, DictColNumbers[ItemTaxableValueCol]]];
+                xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[LastInvoiceRowNum, DictColNumbers[SlNoCol]], xlWorkSheet.Cells[LastInvoiceRowNum, TotalInvoiceTextCol]];
                 xlRange.Merge();
                 xlRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
                 xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
@@ -337,7 +338,7 @@ namespace SalesOrdersReport
                 SellerInvoiceForm.SetAllBorders(xlRange);
 
                 #region Set Column Width & Row Height
-                Double[] ArrColumnWidths = new Double[] { 3.14, 13.86, 6.29, 3.57, 3.57, 6.57, 5.71, 8.14, 8.14, 8.14, 4.86, 7.14, 4.86, 7.14, 4.86, 7.14 };
+                Double[] ArrColumnWidths = new Double[] { 3.14, 13.86, 6.29, 3.57, 3.57, 6.57, 5.71, 8.14, 8.14, 8.14, 4.86, 7.14, 4.86, 7.14/*, 4.86, 7.14*/ };
                 for (int i = 0; i < ArrColumnWidths.Length; i++)
                 {
                     xlRange = xlWorkSheet.Columns[Char.ConvertFromUtf32(65 + i)];
@@ -353,7 +354,7 @@ namespace SalesOrdersReport
                 SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorkSheet, CurrReportSettings.HeaderSubTitle, CurrReportSettings);
 
                 xlWorkSheet.PageSetup.Zoom = false;
-                xlWorkSheet.PageSetup.FitToPagesTall = 1;
+                xlWorkSheet.PageSetup.FitToPagesTall = false;
                 xlWorkSheet.PageSetup.FitToPagesWide = 1;
             }
             catch (Exception ex)
@@ -373,7 +374,7 @@ namespace SalesOrdersReport
                 dtSellerInvoice.Columns["Description of Goods"].ColumnName = "Item Name";
                 dtSellerInvoice.Columns["Ord Qty"].ColumnName = "Order Quantity";
                 dtSellerInvoice.Columns["Sale Qty"].ColumnName = "Sales Quantity";
-                dtSellerInvoice.Columns.Add("TotalTax", Type.GetType("System.Double"), "Convert([F12], 'System.Double') + Convert([F14], 'System.Double') + Convert([F16], 'System.Double')");
+                dtSellerInvoice.Columns.Add("TotalTax", Type.GetType("System.Double"), "Convert([F12], 'System.Double') + Convert([F14], 'System.Double')");
                 dtSellerInvoice.DefaultView.RowFilter = "IsNull([Sl No], 0) > 0";
 
                 return dtSellerInvoice;

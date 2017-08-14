@@ -497,7 +497,8 @@ namespace SalesOrdersReport
                                         Replace("?", "").Replace("*", "").
                                         Replace("[", "").Replace("]", "");
                     //DataTable dtSellerInvoice = CommonFunctions.ReturnDataTableFromExcelWorksheet(SheetName, SellerSummaryFilePath, "*", "A6:F100000");
-                    Invoice ObjInvoice = new InvoiceGST();
+                    ReportType EnumReportType = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0 ? ReportType.INVOICE : ReportType.QUOTATION);
+                    Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
                     DataTable dtSellerInvoice = ObjInvoice.LoadInvoice(SheetName, SellerSummaryFilePath);
                     if (dtSellerInvoice == null) continue;
                     dtSellerInvoice.DefaultView.RowFilter = "IsNull([Sl No], 0) > 0";

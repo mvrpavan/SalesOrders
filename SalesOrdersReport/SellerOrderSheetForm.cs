@@ -173,7 +173,9 @@ namespace SalesOrdersReport
                     xlRange.Font.Bold = true;
                     xlRange.Interior.Color = Color.FromArgb(141, 180, 226);
 
-                    xlWorkSheet.Cells[StartRow - 3, StartCol + HeaderItems.Count + i].Value = drItems[i]["SellingPrice"].ToString();
+                    xlRange = xlWorkSheet.Cells[StartRow - 3, StartCol + HeaderItems.Count + i];
+                    xlRange.Value = drItems[i]["SellingPrice"].ToString();
+                    xlRange.NumberFormat = "#,##0.00";
                     Counter++;
                     backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
                 }

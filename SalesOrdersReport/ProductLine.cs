@@ -100,6 +100,7 @@ namespace SalesOrdersReport
                 }
 
                 ObjProductMaster.UpdateStockProductIndexes();
+                ObjProductMaster.UpdateHSNProductIndexes();
             }
             catch (Exception ex)
             {

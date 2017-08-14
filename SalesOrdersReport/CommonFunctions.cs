@@ -443,5 +443,23 @@ namespace SalesOrdersReport
                 throw;
             }
         }
+
+        public static Invoice GetInvoiceTemplate(ReportType EnumReportType)
+        {
+            try
+            {
+                if (EnumReportType == ReportType.INVOICE)
+                    return new InvoiceGST();
+                else if (EnumReportType == ReportType.QUOTATION)
+                    return new InvoiceVAT();
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.GetInvoiceTemplate()", ex);
+                throw;
+            }
+        }
     }
 }

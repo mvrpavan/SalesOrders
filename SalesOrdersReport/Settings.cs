@@ -63,12 +63,14 @@ namespace SalesOrdersReport
         public Color HeaderTitleColor, HeaderSubTitleColor, FooterTitleColor, FooterTextColor;
         public Int32 PastSalePeriodValue;
         public TimePeriodUnits PastSalePeriodUnits;
+        public ReportType Type;
 
-        public void ReadSettingsFromNode(XmlNode Node)
+        public void ReadSettingsFromNode(XmlNode Node, ReportType Type)
         {
             try
             {
                 SettingsNode = Node;
+                this.Type = Type;
 
                 String Value;
                 XMLFileUtils.GetChildNodeValue(SettingsNode, "HeaderTitle", out HeaderTitle);
@@ -216,13 +218,13 @@ namespace SalesOrdersReport
                         GeneralSettings.ReadSettingsFromNode(Node);
                         break;
                     case "INVOICE":
-                        InvoiceSettings.ReadSettingsFromNode(Node);
+                        InvoiceSettings.ReadSettingsFromNode(Node, ReportType.INVOICE);
                         break;
                     case "QUOTATION":
-                        QuotationSettings.ReadSettingsFromNode(Node);
+                        QuotationSettings.ReadSettingsFromNode(Node, ReportType.QUOTATION);
                         break;
                     case "PURCHASEORDER":
-                        PurchaseOrderSettings.ReadSettingsFromNode(Node);
+                        PurchaseOrderSettings.ReadSettingsFromNode(Node, ReportType.PURCHASEORDER);
                         break;
                     default: break;
                 }
