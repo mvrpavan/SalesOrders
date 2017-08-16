@@ -57,11 +57,14 @@ namespace SalesOrdersReport
                 ProductInventoryFilePath = txtBoxProductInventoryFile.Text.Trim();
                 ProductStockHistoryFilePath = txtBoxProductStockHistoryFile.Text.Trim();
 
-                //UpdateSellerMaster();
+#if DEBUG
+                UpdateSellerMaster();
+#else
                 // Start the BackgroundWorker.
                 ReportProgress = backgroundWorker1.ReportProgress;
                 backgroundWorker1.RunWorkerAsync();
                 backgroundWorker1.WorkerReportsProgress = true;
+#endif
             }
             catch (Exception ex)
             {

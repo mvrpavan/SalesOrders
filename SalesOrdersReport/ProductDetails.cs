@@ -628,6 +628,7 @@ namespace SalesOrdersReport
                 Int32 StartRow = 1, StockNameColPos = 2, StockColPos = 4, LastPODateColPos = 5, LastUpdateDateColPos = 6;
                 for (int i = 0; i < ColumnCount; i++)
                 {
+                    if (xlInventoryWorksheet.Cells[1, 1 + i].Value == null) break;
                     String ColName = xlInventoryWorksheet.Cells[1, 1 + i].Value.ToString().Trim().ToUpper();
                     switch (ColName)
                     {
@@ -705,6 +706,7 @@ namespace SalesOrdersReport
 
                 for (int i = 0; i < ColumnCount; i++)
                 {
+                    if (xlStockHistoryWorksheet.Cells[1, 1 + i].Value == null) break;
                     String ColName = xlStockHistoryWorksheet.Cells[1, 1 + i].Value.ToString().Trim().ToUpper();
                     switch (ColName)
                     {

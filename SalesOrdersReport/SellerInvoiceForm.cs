@@ -105,11 +105,23 @@ namespace SalesOrdersReport
 
         private void btnCreateInvoice_Click(object sender, EventArgs e)
         {
-            //backgroundWorker1_DoWork(null, null);
-            //return;
+#if DEBUG
+            backgroundWorker1_DoWork(null, null);
+#else
             // Start the BackgroundWorker.
+            ReportProgress = backgroundWorker1.ReportProgress;
             backgroundWorker1.RunWorkerAsync();
             backgroundWorker1.WorkerReportsProgress = true;
+#endif
+        }
+
+        delegate void ReportProgressDel(Int32 ProgressState);
+        ReportProgressDel ReportProgress = null;
+
+        private void ReportProgressFunc(Int32 ProgressState)
+        {
+            if (ReportProgress == null) return;
+            ReportProgress(ProgressState);
         }
 
         private void btnBrowseOtherFile_Click(object sender, EventArgs e)
@@ -404,7 +416,7 @@ namespace SalesOrdersReport
                     {
                         if (ListItemIndexes[j] < 0) continue;
                         Counter++;
-                        backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
+                        ReportProgressFunc((Counter * 100) / ProgressBarCount);
                         if (xlSalesOrderWorksheet.Cells[StartRow + 1 + i, StartColumn + SalesOrderDetailsCount + j].Value == null) continue;
 
                         Quantity = Double.Parse(xlSalesOrderWorksheet.Cells[StartRow + 1 + i, StartColumn + SalesOrderDetailsCount + j].Value.ToString());
@@ -568,7 +580,7 @@ namespace SalesOrdersReport
                 CurrReportSettings.LastNumber = InvoiceNumber;
                 #endregion
 
-                backgroundWorker1.ReportProgress(100);
+                ReportProgressFunc(100);
                 xlWorkbook.SaveAs(SaveFileName);
                 xlWorkbook.Close();
                 lblStatus.Text = "Completed creation of " + ReportTypeName + "s for all Sellers";
@@ -647,7 +659,7 @@ namespace SalesOrdersReport
                     {
                         if (ListItemIndexes[j] < 0) continue;
                         Counter++;
-                        backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
+                        ReportProgressFunc((Counter * 100) / ProgressBarCount);
 
                         if (xlSalesOrderWorksheet.Cells[StartRow + 1 + i, StartColumn + SalesOrderDetailsCount + j].Value == null) continue;
 
@@ -715,7 +727,7 @@ namespace SalesOrdersReport
                 CurrReportSettings.LastNumber = InvoiceNumber;
                 #endregion
 
-                backgroundWorker1.ReportProgress(100);
+                ReportProgressFunc(100);
                 xlWorkbook.SaveAs(SaveFileName);
                 xlWorkbook.Close();
                 lblStatus.Text = "Completed creation of " + ReportTypeName + "s for all Sellers";

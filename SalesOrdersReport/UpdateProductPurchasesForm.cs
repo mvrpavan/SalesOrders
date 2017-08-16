@@ -168,10 +168,13 @@ namespace SalesOrdersReport
                 ProductInventoryFile = txtBoxProductInventoryFile.Text.Trim();
                 ProductStockHistoryFile = txtBoxProductStockHistoryFile.Text.Trim();
 
-                //UpdateDetailsFromVendorPOFile();
+#if DEBUG
+                UpdateDetailsFromVendorPOFile();
+#else
                 ReportProgress = bgWorkerUpdPurchasesForm.ReportProgress;
                 bgWorkerUpdPurchasesForm.WorkerReportsProgress = true;
                 bgWorkerUpdPurchasesForm.RunWorkerAsync();
+#endif
             }
             catch (Exception ex)
             {

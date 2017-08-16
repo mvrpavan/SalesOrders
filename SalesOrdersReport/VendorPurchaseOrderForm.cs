@@ -115,10 +115,13 @@ namespace SalesOrdersReport
         {
             try
             {
-                //CreatePurchaseOrders();
+#if DEBUG
+                CreatePurchaseOrders();
+#else
                 ReportProgress = bgWorkerCreatePO.ReportProgress;
                 bgWorkerCreatePO.WorkerReportsProgress = true;
                 bgWorkerCreatePO.RunWorkerAsync();
+#endif
             }
             catch (Exception ex)
             {

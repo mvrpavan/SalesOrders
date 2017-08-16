@@ -65,10 +65,13 @@ namespace SalesOrdersReport
                 btnCreateReport.Enabled = false;
                 btnClose.Enabled = false;
 
-                //CreateSellerReport();
+#if DEBUG
+                CreateSellerReport();
+#else
                 ReportProgress = bgWorkerSellerHistory.ReportProgress;
                 bgWorkerSellerHistory.WorkerReportsProgress = true;
                 bgWorkerSellerHistory.RunWorkerAsync();
+#endif
             }
             catch (Exception ex)
             {

@@ -46,11 +46,13 @@ namespace SalesOrdersReport
                 CommonFunctions.ResetProgressBar();
 
                 btnOK.Enabled = false;
-
-                //LoadDetailsFromOrderMaster();
+#if DEBUG
+                LoadDetailsFromOrderMaster();
+#else
                 ReportProgress = bgWorkerOrderMaster.ReportProgress;
                 bgWorkerOrderMaster.RunWorkerAsync();
                 bgWorkerOrderMaster.WorkerReportsProgress = true;
+#endif
             }
             catch (Exception ex)
             {

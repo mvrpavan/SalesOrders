@@ -459,15 +459,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sales Orders Invoice"
-        "ProductCode" = "8:{45071272-7ADD-4439-B0CC-2073736CA350}"
-        "PackageCode" = "8:{78DB0E6E-E8F1-4BED-AC91-B7B40406E545}"
+        "ProductCode" = "8:{6E7D22BA-AFAA-418E-BDD1-1445806C6E3E}"
+        "PackageCode" = "8:{92B12FDE-3846-4D28-B0DE-4403CE6396E0}"
         "UpgradeCode" = "8:{0C621456-DA16-47E0-818B-DF056ACA9FE7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:6.2.00"
+        "ProductVersion" = "8:6.2.01"
         "Manufacturer" = "8:Freelance Projects Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1037,7 +1037,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B44D9FBD296F48C38BDA77E518B27B77"
             {
-            "SourcePath" = "8:..\\obj\\x86\\Release\\SalesOrdersReport.exe"
+            "SourcePath" = "8:..\\obj\\x86\\Debug\\SalesOrdersReport.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F80B6BE5128A4CA9884787E001FEE4B6"

@@ -131,10 +131,13 @@ namespace SalesOrdersReport
                     return;
                 }
 
-                //CreateVendorOrderSheet();
+#if DEBUG
+                CreateVendorOrderSheet();
+#else
                 ReportProgress = bgWorkerCreateVendorOrder.ReportProgress;
                 bgWorkerCreateVendorOrder.RunWorkerAsync();
                 bgWorkerCreateVendorOrder.WorkerReportsProgress = true;
+#endif
             }
             catch (Exception ex)
             {

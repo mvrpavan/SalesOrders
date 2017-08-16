@@ -73,13 +73,27 @@ namespace SalesOrdersReport
                 btnCreateOrderSheet.Enabled = false;
                 btnCancel.Enabled = false;
 
+#if DEBUG
+                backgroundWorker1_DoWork(null, null);
+#else
+                ReportProgress = backgroundWorker1.ReportProgress;
                 backgroundWorker1.RunWorkerAsync();
                 backgroundWorker1.WorkerReportsProgress = true;
+#endif
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("SellerOrderSheetForm.btnCreateOrderSheet_Click()", ex);
             }
+        }
+
+        delegate void ReportProgressDel(Int32 ProgressState);
+        ReportProgressDel ReportProgress = null;
+
+        private void ReportProgressFunc(Int32 ProgressState)
+        {
+            if (ReportProgress == null) return;
+            ReportProgress(ProgressState);
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -116,7 +130,7 @@ namespace SalesOrdersReport
                     xlRange.Font.Bold = true;
                     xlRange.Interior.Color = Color.FromArgb(242, 220, 219);
                     Counter++;
-                    backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
+                    ReportProgressFunc((Counter * 100) / ProgressBarCount);
                 }
 
                 for (int i = 0; i < drItems.Length; i++)
@@ -130,7 +144,7 @@ namespace SalesOrdersReport
                     else
                         xlRange.Interior.Color = Color.FromArgb(242, 220, 219);
                     Counter++;
-                    backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
+                    ReportProgressFunc((Counter * 100) / ProgressBarCount);
                 }
                 #endregion
 
@@ -147,7 +161,7 @@ namespace SalesOrdersReport
                     xlWorkSheet.Cells[StartRow + i + 1, StartCol + 3].Value = drSellers[i]["Line"].ToString();
                     xlWorkSheet.Cells[StartRow + i + 1, StartCol + 4].Value = ((drSellers[i]["Phone"] == DBNull.Value) ? "" : drSellers[i]["Phone"].ToString());
                     Counter++;
-                    backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
+                    ReportProgressFunc((Counter * 100) / ProgressBarCount);
                 }
                 #endregion
 
@@ -177,18 +191,18 @@ namespace SalesOrdersReport
                     xlRange.Value = drItems[i]["SellingPrice"].ToString();
                     xlRange.NumberFormat = "#,##0.00";
                     Counter++;
-                    backgroundWorker1.ReportProgress((Counter * 100) / ProgressBarCount);
+                    ReportProgressFunc((Counter * 100) / ProgressBarCount);
                 }
                 #endregion
 
                 xlWorkSheet.UsedRange.Columns.AutoFit();
 
-                backgroundWorker1.ReportProgress(((ProgressBarCount - 1) * 100) / ProgressBarCount);
+                ReportProgressFunc(((ProgressBarCount - 1) * 100) / ProgressBarCount);
                 xlWorkbook.SaveAs(txtBoxOutputFolder.Text + "\\SalesOrder_" + xlWorkSheet.Name + ".xlsx");
                 xlWorkbook.Close();
 
                 CommonFunctions.ReleaseCOMObject(xlWorkbook);
-                backgroundWorker1.ReportProgress(100);
+                ReportProgressFunc(100);
                 MessageBox.Show(this, "Created Sales Order Sheet Successfully", "Sales Order Sheet", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
