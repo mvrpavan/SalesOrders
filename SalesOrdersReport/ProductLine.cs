@@ -79,6 +79,7 @@ namespace SalesOrdersReport
                     //SlNo	ItemName	VendorName	PurchasePrice	SellingPrice	Wholesale	Retail  StockName   HSNCode UnitsOfMeasurement
                     ProductDetails ObjProductDetails = new ProductDetails();
                     ObjProductDetails.ItemName = dtRow["ItemName"].ToString();
+                    ObjProductDetails.CategoryName = dtRow["Category"].ToString();
                     ObjProductDetails.StockName = dtRow["StockName"].ToString();
                     ObjProductDetails.VendorName = dtRow["VendorName"].ToString();
                     ObjProductDetails.Units = Double.Parse(dtRow["Units"].ToString());

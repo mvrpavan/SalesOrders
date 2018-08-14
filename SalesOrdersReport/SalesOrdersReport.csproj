@@ -75,6 +75,18 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomerInvoiceSellerOrderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomerInvoiceSellerOrderForm.Designer.cs">
+      <DependentUpon>CustomerInvoiceSellerOrderForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DiscountForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DiscountForm.Designer.cs">
+      <DependentUpon>DiscountForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Invoice.cs" />
     <Compile Include="InvoiceGST.cs" />
     <Compile Include="InvoiceVAT.cs" />
@@ -170,6 +182,12 @@
     <Compile Include="XMLFileUtils.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomerInvoiceSellerOrderForm.resx">
+      <DependentUpon>CustomerInvoiceSellerOrderForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DiscountForm.resx">
+      <DependentUpon>DiscountForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SellerOrderSheetForm.resx">
       <DependentUpon>SellerOrderSheetForm.cs</DependentUpon>
@@ -267,6 +285,18 @@
     <None Include="Images\Close_Black.png" />
     <None Include="Images\Close_Black_VerySmall.png" />
     <None Include="Resources\database-5-16.ico" />
+    <None Include="Resources\edit.png" />
+    <None Include="Resources\remove.png" />
+    <None Include="Resources\x-button.png" />
+    <None Include="Resources\plus.png" />
+    <None Include="Resources\negative.png" />
+    <None Include="Resources\add.png" />
+    <None Include="Resources\edit_.png" />
+    <None Include="Resources\discount.png" />
+    <None Include="Resources\list.png" />
+    <None Include="Resources\list %281%29.png" />
+    <None Include="Resources\list %282%29.png" />
+    <None Include="Resources\open-archive.png" />
     <Content Include="Settings.xml">
       <SubType>Designer</SubType>
     </Content>

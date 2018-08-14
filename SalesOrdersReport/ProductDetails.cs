@@ -100,7 +100,7 @@ namespace SalesOrdersReport
 
     class ProductDetails : IComparer<ProductDetails>
     {
-        public String ItemName, StockName, VendorName, HSNCode, UnitsOfMeasurement;
+        public String ItemName, StockName, VendorName, HSNCode, UnitsOfMeasurement, CategoryName;
         public Double PurchasePrice, SellingPrice, Units;
         public Int32 StockProductIndex, HSNCodeIndex;
         public Double[] ListPrices;
@@ -331,6 +331,41 @@ namespace SalesOrdersReport
             {
                 CommonFunctions.ShowErrorDialog("ProductMaster.UpdateHSNProductIndexes()", ex);
             }
+        }
+
+        public List<String> GetProductCategoryList()
+        {
+            try
+            {
+                List<String> ListCategories = new List<String>();
+                ListCategories.AddRange(ListProducts.Select(e => e.CategoryName).Distinct());
+                return ListCategories;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.GetProductCategoryList()", ex);
+            }
+            return null;
+        }
+
+        public List<ProductDetails> GetProductListForCategory(String CategoryName)
+        {
+            try
+            {
+                List<ProductDetails> ListProductsForCategory = new List<ProductDetails>();
+                if (CategoryName.Equals("<ALL>", StringComparison.InvariantCultureIgnoreCase))
+                    ListProductsForCategory.AddRange(ListProducts);
+                else
+                    ListProductsForCategory.AddRange(ListProducts.Where(e => e.CategoryName.Equals(CategoryName, StringComparison.InvariantCultureIgnoreCase)));
+
+                ListProductsForCategory = ListProductsForCategory.OrderBy(e => e.ItemName).ToList();
+                return ListProductsForCategory;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMaster.GetProductListForCategory()", ex);
+            }
+            return null;
         }
 
         public ProductDetails GetProductDetails(String ItemName)

@@ -218,7 +218,7 @@ namespace SalesOrdersReport
             }
         }
 
-        private void createInvoiceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void createInvoiceFromSalesOrderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
@@ -229,7 +229,37 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
+                CommonFunctions.ShowErrorDialog("MainForm.createInvoiceFromSalesOrderToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void createInvoiceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+
+                CustomerInvoiceSellerOrderForm ObjCustomerInvoiceForm = new CustomerInvoiceSellerOrderForm(false, true);
+                ShowChildForm(ObjCustomerInvoiceForm);
+            }
+            catch (Exception ex)
+            {
                 CommonFunctions.ShowErrorDialog("MainForm.createInvoiceToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void createSellerOrderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+
+                CustomerInvoiceSellerOrderForm ObjCustomerInvoiceForm = new CustomerInvoiceSellerOrderForm(true, false);
+                ShowChildForm(ObjCustomerInvoiceForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.createSellerOrderToolStripMenuItem_Click()", ex);
             }
         }
 

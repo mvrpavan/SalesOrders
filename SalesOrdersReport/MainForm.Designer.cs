@@ -37,6 +37,8 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sellerMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.createOrderSheetToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.createInvoiceFromSalesOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createSellerOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createInvoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addModifySellerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.discountGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -130,6 +132,8 @@
             // 
             this.sellerMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createOrderSheetToolStripMenuItem1,
+            this.createInvoiceFromSalesOrderToolStripMenuItem,
+            this.createSellerOrderToolStripMenuItem,
             this.createInvoiceToolStripMenuItem,
             this.addModifySellerToolStripMenuItem,
             this.discountGroupToolStripMenuItem,
@@ -145,11 +149,25 @@
             this.createOrderSheetToolStripMenuItem1.Text = "Create Sales &Order Sheet";
             this.createOrderSheetToolStripMenuItem1.Click += new System.EventHandler(this.createSalesOrderSheetToolStripMenuItem_Click);
             // 
+            // createInvoiceFromSalesOrderToolStripMenuItem
+            // 
+            this.createInvoiceFromSalesOrderToolStripMenuItem.Name = "createInvoiceFromSalesOrderToolStripMenuItem";
+            this.createInvoiceFromSalesOrderToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.createInvoiceFromSalesOrderToolStripMenuItem.Text = "Create Seller &Invoices";
+            this.createInvoiceFromSalesOrderToolStripMenuItem.Click += new System.EventHandler(this.createInvoiceFromSalesOrderToolStripMenuItem_Click);
+            // 
+            // createSellerOrderToolStripMenuItem
+            // 
+            this.createSellerOrderToolStripMenuItem.Name = "createSellerOrderToolStripMenuItem";
+            this.createSellerOrderToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.createSellerOrderToolStripMenuItem.Text = "Create &Seller Order";
+            this.createSellerOrderToolStripMenuItem.Click += new System.EventHandler(this.createSellerOrderToolStripMenuItem_Click);
+            // 
             // createInvoiceToolStripMenuItem
             // 
             this.createInvoiceToolStripMenuItem.Name = "createInvoiceToolStripMenuItem";
             this.createInvoiceToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
-            this.createInvoiceToolStripMenuItem.Text = "Create Seller &Invoices";
+            this.createInvoiceToolStripMenuItem.Text = "Create Customer I&nvoice";
             this.createInvoiceToolStripMenuItem.Click += new System.EventHandler(this.createInvoiceToolStripMenuItem_Click);
             // 
             // addModifySellerToolStripMenuItem
@@ -295,7 +313,7 @@
             // toolStripTextBox1
             // 
             this.toolStripTextBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripTextBox1.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.toolStripTextBox1.BackColor = System.Drawing.SystemColors.Menu;
             this.toolStripTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.toolStripTextBox1.Margin = new System.Windows.Forms.Padding(1, 2, 10, 0);
             this.toolStripTextBox1.MaxLength = 20;
@@ -394,6 +412,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Main Form";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
@@ -444,6 +463,8 @@
         private System.Windows.Forms.ToolStripMenuItem updatePurchasesToolStripMenuItem;
         private System.Windows.Forms.PictureBox picBoxBackgroundLogo;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ToolStripMenuItem createInvoiceFromSalesOrderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createSellerOrderToolStripMenuItem;
     }
 }
 
