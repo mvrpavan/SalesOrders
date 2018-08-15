@@ -35,6 +35,19 @@ namespace SalesOrdersReport
             }
             return 0;
         }
+
+        public DiscountGroupDetails Clone()
+        {
+            try
+            {
+                return (DiscountGroupDetails)this.MemberwiseClone();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("DiscountGroupDetails.Clone()", ex);
+            }
+            return null;
+        }
     }
 
     class SellerDetails : IComparer<SellerDetails>

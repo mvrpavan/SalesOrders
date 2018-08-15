@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomerInvoiceSellerOrderForm));
             this.lblSelectName = new System.Windows.Forms.Label();
             this.cmbBoxSellerCustomer = new System.Windows.Forms.ComboBox();
             this.dtGridViewProdListForSelection = new System.Windows.Forms.DataGridView();
@@ -88,7 +87,6 @@
             this.opnFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.panelOrderControls = new System.Windows.Forms.Panel();
             this.btnBrowseSalesOrderFile = new System.Windows.Forms.Button();
-            this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProdListForSelection)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvOrdProdList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -267,9 +265,9 @@
             this.btnCnclInvOrd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCnclInvOrd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCnclInvOrd.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnCnclInvOrd.Location = new System.Drawing.Point(674, 234);
+            this.btnCnclInvOrd.Location = new System.Drawing.Point(642, 234);
             this.btnCnclInvOrd.Name = "btnCnclInvOrd";
-            this.btnCnclInvOrd.Size = new System.Drawing.Size(91, 38);
+            this.btnCnclInvOrd.Size = new System.Drawing.Size(123, 38);
             this.btnCnclInvOrd.TabIndex = 3;
             this.btnCnclInvOrd.Text = "Void Order";
             this.btnCnclInvOrd.UseVisualStyleBackColor = false;
@@ -659,7 +657,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.ForeColor = System.Drawing.Color.DimGray;
+            this.label9.ForeColor = System.Drawing.Color.DarkOrange;
             this.label9.Location = new System.Drawing.Point(3, 8);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(145, 18);
@@ -674,7 +672,7 @@
             this.btnDiscount.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.btnDiscount.Location = new System.Drawing.Point(528, 234);
             this.btnDiscount.Name = "btnDiscount";
-            this.btnDiscount.Size = new System.Drawing.Size(74, 38);
+            this.btnDiscount.Size = new System.Drawing.Size(118, 38);
             this.btnDiscount.TabIndex = 3;
             this.btnDiscount.Text = "Discount";
             this.btnDiscount.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
@@ -688,14 +686,15 @@
             this.btnHoldOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHoldOrder.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHoldOrder.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnHoldOrder.Location = new System.Drawing.Point(608, 234);
+            this.btnHoldOrder.Location = new System.Drawing.Point(642, 234);
             this.btnHoldOrder.Name = "btnHoldOrder";
-            this.btnHoldOrder.Size = new System.Drawing.Size(60, 38);
+            this.btnHoldOrder.Size = new System.Drawing.Size(10, 38);
             this.btnHoldOrder.TabIndex = 3;
             this.btnHoldOrder.Text = "Hold";
             this.btnHoldOrder.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
             this.btnHoldOrder.UseCompatibleTextRendering = true;
             this.btnHoldOrder.UseVisualStyleBackColor = false;
+            this.btnHoldOrder.Visible = false;
             this.btnHoldOrder.Click += new System.EventHandler(this.btnHoldOrder_Click);
             // 
             // txtSalesOrderFilePath
@@ -745,16 +744,6 @@
             this.btnBrowseSalesOrderFile.TabIndex = 10;
             this.btnBrowseSalesOrderFile.UseVisualStyleBackColor = true;
             this.btnBrowseSalesOrderFile.Click += new System.EventHandler(this.btnSalesOrderFilePath_Click);
-            // 
-            // printPreviewDialog1
-            // 
-            this.printPreviewDialog1.AutoScrollMargin = new System.Drawing.Size(0, 0);
-            this.printPreviewDialog1.AutoScrollMinSize = new System.Drawing.Size(0, 0);
-            this.printPreviewDialog1.ClientSize = new System.Drawing.Size(400, 300);
-            this.printPreviewDialog1.Enabled = true;
-            this.printPreviewDialog1.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialog1.Icon")));
-            this.printPreviewDialog1.Name = "printPreviewDialog1";
-            this.printPreviewDialog1.Visible = false;
             // 
             // CustomerInvoiceSellerOrderForm
             // 
@@ -856,6 +845,5 @@
         private System.Windows.Forms.Label lblInvOrdFile;
         private System.Windows.Forms.OpenFileDialog opnFileDialog;
         private System.Windows.Forms.Panel panelOrderControls;
-        private System.Windows.Forms.PrintPreviewDialog printPreviewDialog1;
     }
 }

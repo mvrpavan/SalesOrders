@@ -502,12 +502,18 @@ namespace SalesOrdersReport
                     //DataTable dtSellerInvoice = CommonFunctions.ReturnDataTableFromExcelWorksheet(SheetName, SellerSummaryFilePath, "*", "A6:F100000");
                     ReportType EnumReportType = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0 ? ReportType.INVOICE : ReportType.QUOTATION);
                     Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
-                    DataTable dtSellerInvoice = ObjInvoice.LoadInvoice(SheetName, SellerSummaryFilePath);
-                    if (dtSellerInvoice == null) continue;
-                    dtSellerInvoice.DefaultView.RowFilter = "IsNull([Sl No], 0) > 0";
-                    DataRow[] drProducts = dtSellerInvoice.DefaultView.ToTable().Select("", "[Sl No] asc");
+                    DataTable dtSellerInvoice = null;
+                    Int32 Count = 0;
+                    while (true)
+                    {
+                        dtSellerInvoice = ObjInvoice.LoadInvoice(SheetName + ((Count > 0) ? "" : " " + Count), SellerSummaryFilePath);
+                        if (dtSellerInvoice == null) break;
+                        dtSellerInvoice.DefaultView.RowFilter = "IsNull([Sl No], 0) > 0";
+                        DataRow[] drProducts = dtSellerInvoice.DefaultView.ToTable().Select("", "[Sl No] asc");
 
-                    ObjProductMaster.UpdateProductInventoryDataFromInvoice(drProducts);
+                        ObjProductMaster.UpdateProductInventoryDataFromInvoice(drProducts);
+                        Count++;
+                    }
                 }
                 ObjProductMaster.ComputeStockNetData("Sale");
 
