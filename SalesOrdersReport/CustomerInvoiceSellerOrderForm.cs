@@ -18,6 +18,20 @@ namespace SalesOrdersReport
         List<ProductDetails> ListAllProducts, ListProducts;
         List<String> ListSellerNames;
         SellerOrderDetails CurrSellerOrderDetails;
+        Dictionary<String, Int32> DictItemToColIndexes, DictSellerToRowIndexes;
+        List<SellerOrderDetails> ListSellerOrderDetails;
+        Double SubTotal = 0, Quantity = 0, Discount = 0, TaxAmount = 0, GrandTotal = 0;
+        Int32 NumItems = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4;
+        Int32 PaddingSpace = 6;
+        Char PaddingChar = ' ', CurrencyChar = '\u20B9';
+        Int32 BackgroundTask = -1;
+        Excel.Application xlApp;
+        List<Int32> ListSelectedRowIndexesToAdd = new List<Int32>();
+        Dictionary<String, DataGridViewRow> DictItemsSelected = new Dictionary<String, DataGridViewRow>();
+        Boolean ValueChanged = false;
+        Double DiscountPerc = 0, DiscountValue = 0;
+        List<Int32> ListSelectedRowIndexesToRemove = new List<Int32>();
+        Int32 cmbBoxSellerCustomerIndex = -1;
 
         public CustomerInvoiceSellerOrderForm(Boolean IsSellerOrder, Boolean IsCustomerInvoice)
         {
@@ -33,6 +47,8 @@ namespace SalesOrdersReport
                     SelectName = "Select Seller";
                     OrderInvoice = "Order";
                     txtBoxInvOrdNumber.Enabled = false;
+                    btnCreateInvOrd.Text = "Create/Update " + OrderInvoice;
+                    lblInvOrdFile.Text = "Sales Order File";
                 }
                 else if (IsCustomerInvoice)
                 {
@@ -40,6 +56,8 @@ namespace SalesOrdersReport
                     SelectName = "Select Customer";
                     OrderInvoice = "Invoice";
                     txtBoxInvOrdNumber.Enabled = true;
+                    btnCreateInvOrd.Text = "Create " + OrderInvoice;
+                    lblInvOrdFile.Text = "Sales Invoice File";
                 }
 
                 this.IsSellerOrder = IsSellerOrder;
@@ -48,7 +66,6 @@ namespace SalesOrdersReport
                 lblInvoiceNumber.Text = OrderInvoice + "#";
                 lblInvoiceDate.Text = OrderInvoice + " Date";
                 lblSelectName.Text = SelectName;
-                btnCreateInvOrd.Text = "Create/Update " + OrderInvoice;
                 btnCnclInvOrd.Text = "Cancel/Void " + OrderInvoice;
             }
             catch (Exception ex)
@@ -69,6 +86,7 @@ namespace SalesOrdersReport
                 cmbBoxSellerCustomer.DataSource = ListSellerNames;
                 cmbBoxSellerCustomer.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 cmbBoxSellerCustomer.AutoCompleteSource = AutoCompleteSource.ListItems;
+                cmbBoxSellerCustomer.SelectedIndex = -1;
 
                 //Populate cmbBoxProdCat with Item Categories and cmbBoxProduct with Items
                 List<String> ListItemCategories = new List<String>();
@@ -87,16 +105,12 @@ namespace SalesOrdersReport
                 cmbBoxProduct.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 cmbBoxProduct.AutoCompleteSource = AutoCompleteSource.ListItems;
                 cmbBoxProduct.SelectedIndex = -1;
-                
-                splitContainer1.Enabled = true;
 
-#if DEBUG
-                //backgroundWorker1_DoWork(null, null);
-#else
-                ReportProgress = backgroundWorker1.ReportProgress;
-                backgroundWorker1.RunWorkerAsync();
-                backgroundWorker1.WorkerReportsProgress = true;
-#endif
+                Int32 InvoiceNumber = CommonFunctions.ObjInvoiceSettings.LastNumber;
+                InvoiceNumber++;
+                txtBoxInvOrdNumber.Text = InvoiceNumber.ToString();
+
+                splitContainer1.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -113,7 +127,6 @@ namespace SalesOrdersReport
             ReportProgress(ProgressState);
         }
 
-        Int32 BackgroundTask = -1;
         private void btnCreateInvOrd_Click(object sender, EventArgs e)
         {
             try
@@ -126,20 +139,72 @@ namespace SalesOrdersReport
                     DialogResult diagResult = MessageBox.Show(this, "Confirm to Create/Update Seller Order", "Create Seller Order", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                     if (diagResult == DialogResult.No) return;
 
+                    for (int i = 0; i < CurrSellerOrderDetails.ListItemQuantity.Count; i++)
+                    {
+                        CurrSellerOrderDetails.ListItemQuantity[i] = 0;
+                    }
+
                     foreach (DataGridViewRow item in dtGridViewInvOrdProdList.Rows)
                     {
                         String ItemName = item.Cells[ItemColIndex].Value.ToString();
                         CurrSellerOrderDetails.ListItemQuantity[DictItemToColIndexes[ItemName.ToUpper()]] = Double.Parse(item.Cells[QtyColIndex].Value.ToString());
                     }
+                    CurrSellerOrderDetails.OrderItemCount = CurrSellerOrderDetails.ListItemQuantity.Count(s => s > 0);
 
-                    BackgroundTask = 2;
+                    BackgroundTask = 3;
+                    if (CurrSellerOrderDetails.ListItemQuantity.Zip(CurrSellerOrderDetails.ListItemOrigQuantity, (x, y) => Math.Abs(x - y)).Sum() > 0)
+                    {
+#if DEBUG
+                        backgroundWorker1_DoWork(null, null);
+                        backgroundWorker1_RunWorkerCompleted(null, null);
+#else
+                        ReportProgress = backgroundWorker1.ReportProgress;
+                        backgroundWorker1.RunWorkerAsync();
+                        backgroundWorker1.WorkerReportsProgress = true;
+#endif
+                    }
+                    else
+                    {
+                        backgroundWorker1_RunWorkerCompleted(null, null);
+                    }
+                }
+
+                if (IsCustomerInvoice)
+                {
+                    //Create Invoice sheet for this Customer order
+                    if (dtGridViewInvOrdProdList.Rows.Count == 0)
+                    {
+                        MessageBox.Show(this, "There are no Items in the Invoice.\nPlease add atleast one Item to the Invoice.", "Create Sales Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+
+                    Boolean IsValid = false;
+                    for (int i = 0; i < dtGridViewInvOrdProdList.Rows.Count; i++)
+                    {
+                        if (Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[QtyColIndex].Value.ToString()) > 0)
+                        {
+                            IsValid = true;
+                            break;
+                        }
+                    }
+
+                    if (!IsValid)
+                    {
+                        MessageBox.Show(this, "There are no Items with Quantity more than 0.\nPlease add atleast one Item with valid Quantity.", "Create Sales Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+
+                    DialogResult diagResult = MessageBox.Show(this, "Confirm to Create Customer Invoice", "Create Sales Invoice", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    if (diagResult == DialogResult.No) return;
+
+                    BackgroundTask = 3;
 #if DEBUG
                     backgroundWorker1_DoWork(null, null);
                     backgroundWorker1_RunWorkerCompleted(null, null);
 #else
-                ReportProgress = backgroundWorker1.ReportProgress;
-                backgroundWorker1.RunWorkerAsync(2);
-                backgroundWorker1.WorkerReportsProgress = true;
+                    ReportProgress = backgroundWorker1.ReportProgress;
+                    backgroundWorker1.RunWorkerAsync();
+                    backgroundWorker1.WorkerReportsProgress = true;
 #endif
                 }
             }
@@ -153,6 +218,8 @@ namespace SalesOrdersReport
         {
             try
             {
+                if (CurrSellerOrderDetails == null) return;
+
                 Excel.Workbook xlSalesOrderWorkbook = xlApp.Workbooks.Open(txtSalesOrderFilePath.Text);
                 Excel.Worksheet xlSalesOrderWorksheet = CommonFunctions.GetWorksheet(xlSalesOrderWorkbook, dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy"));
                 Int32 SellerRow = CurrSellerOrderDetails.SellerRowIndex, StartColumn = 1, DetailsCount = 5;
@@ -160,28 +227,67 @@ namespace SalesOrdersReport
                 Int32 ColumnCount = DetailsCount + CurrSellerOrderDetails.ListItemQuantity.Count;
                 for (int i = StartColumn + DetailsCount; i <= ColumnCount; i++)
                 {
-                    if (CurrSellerOrderDetails.ListItemQuantity[i - (StartColumn + DetailsCount)] > 0)
-                        xlSalesOrderWorksheet.Cells[SellerRow, i].Value = CurrSellerOrderDetails.ListItemQuantity[i - (StartColumn + DetailsCount)];
-                    else
+                    Int32 ItemIndex = i - (StartColumn + DetailsCount);
+                    if (CurrSellerOrderDetails.ListItemQuantity[ItemIndex] != CurrSellerOrderDetails.ListItemOrigQuantity[ItemIndex])
                     {
-                        String Value = xlSalesOrderWorksheet.Cells[SellerRow, i].Value.ToString();
-                        if (!String.IsNullOrEmpty(Value)) xlSalesOrderWorksheet.Cells[SellerRow, i].Value = 0;
+                        if (CurrSellerOrderDetails.ListItemQuantity[ItemIndex] > 0)
+                            xlSalesOrderWorksheet.Cells[SellerRow, i].Value = CurrSellerOrderDetails.ListItemQuantity[ItemIndex];
+                        else
+                            xlSalesOrderWorksheet.Cells[SellerRow, i].Value = "";
                     }
                 }
 
-                xlSalesOrderWorkbook.Close();
+                xlSalesOrderWorkbook.Close(SaveChanges: true);
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.UpdateSalesOrderSheetForCurrSeller()", ex);
             }
-            finally
+        }
+
+        void LoadSalesOrderForCurrSeller()
+        {
+            try
             {
-                if (xlApp != null)
+                if (CurrSellerOrderDetails == null) return;
+
+                Excel.Workbook xlSalesOrderWorkbook = xlApp.Workbooks.Open(txtSalesOrderFilePath.Text);
+                Excel.Worksheet xlSalesOrderWorksheet = CommonFunctions.GetWorksheet(xlSalesOrderWorkbook, dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy"));
+                Int32 SellerRow = CurrSellerOrderDetails.SellerRowIndex, StartColumn = 1, DetailsCount = 5;
+
+                CurrSellerOrderDetails.ListItemQuantity = new List<Double>();
+                Int32 ColumnCount = DetailsCount + DictItemToColIndexes.Count;
+
+                for (int i = StartColumn + DetailsCount; i <= ColumnCount; i++)
                 {
-                    xlApp.Quit();
-                    CommonFunctions.ReleaseCOMObject(xlApp);
+                    String Value = null;
+                    if (xlSalesOrderWorksheet.Cells[SellerRow, i].Value != null)
+                        Value = xlSalesOrderWorksheet.Cells[SellerRow, i].Value.ToString();
+
+                    if (String.IsNullOrEmpty(Value))
+                    {
+                        CurrSellerOrderDetails.ListItemQuantity.Add(0);
+                    }
+                    else
+                    {
+                        Double result;
+                        if (Double.TryParse(Value, out result))
+                            CurrSellerOrderDetails.ListItemQuantity.Add(result);
+                        else
+                        {
+                            KeyValuePair<String, Int32> item = DictItemToColIndexes.ElementAt(i - (StartColumn + DetailsCount));
+                            MessageBox.Show(this, "Invalid Quantity in Sales Order sheet\nSeller:" + CurrSellerOrderDetails.SellerName + ", Item:" + item.Key + ", Quantity:" + Value + "\nIgnoring quantity for this item",
+                                            "Quantity Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            CurrSellerOrderDetails.ListItemQuantity.Add(0);
+                        }
+                    }
                 }
+                CurrSellerOrderDetails.ListItemOrigQuantity = CurrSellerOrderDetails.ListItemQuantity.ToList();
+                xlSalesOrderWorkbook.Close();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.LoadSalesOrderForCurrSeller()", ex);
             }
         }
 
@@ -191,7 +297,7 @@ namespace SalesOrdersReport
             {
                 cmbBoxProdCat.SelectedIndex = -1;
                 cmbBoxProduct.SelectedIndex = -1;
-                cmbBoxSellerCustomer.SelectedIndex = -1;
+                //cmbBoxSellerCustomer.SelectedIndex = -1;
                 dtGridViewInvOrdProdList.Rows.Clear();
                 dtGridViewProdListForSelection.Rows.Clear();
                 ListSelectedRowIndexesToAdd.Clear();
@@ -213,14 +319,32 @@ namespace SalesOrdersReport
             {
                 if (dtGridViewInvOrdProdList.Rows.Count == 0 && dtGridViewProdListForSelection.Rows.Count == 0) return;
 
-                if (dtGridViewInvOrdProdList.Rows.Count > 0)
-                {
-                    DialogResult diagResult = MessageBox.Show(this, "Are you sure to cancel the order?\n(This will remove all items from the order and makes it void)", "Void Order", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-                    if (diagResult == DialogResult.No) return;
-                    dtGridViewProdListForSelection.Rows.Clear();
-                }
+                DialogResult diagResult = MessageBox.Show(this, "Are you sure to cancel the order?\n(This will remove all items from the order and makes it void)", "Void Order", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                if (diagResult == DialogResult.No) return;
 
-                ResetControls();
+                dtGridViewProdListForSelection.Rows.Clear();
+                for (int i = 0; i < CurrSellerOrderDetails.ListItemQuantity.Count; i++)
+                {
+                    CurrSellerOrderDetails.ListItemQuantity[i] = 0;
+                }
+                CurrSellerOrderDetails.OrderItemCount = 0;
+
+                BackgroundTask = 3;
+                if (CurrSellerOrderDetails.ListItemOrigQuantity.Sum() > 0)
+                {
+#if DEBUG
+                    backgroundWorker1_DoWork(null, null);
+                    backgroundWorker1_RunWorkerCompleted(null, null);
+#else
+                    ReportProgress = backgroundWorker1.ReportProgress;
+                    backgroundWorker1.RunWorkerAsync();
+                    backgroundWorker1.WorkerReportsProgress = true;
+#endif
+                }
+                else
+                {
+                    backgroundWorker1_RunWorkerCompleted(null, null);
+                }
             }
             catch (Exception ex)
             {
@@ -246,7 +370,6 @@ namespace SalesOrdersReport
             }
         }
 
-        Excel.Application xlApp;
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             xlApp = new Excel.Application();
@@ -254,13 +377,19 @@ namespace SalesOrdersReport
             {
                 switch (BackgroundTask)
                 {
-                    case 1:
-                        LoadSalesOrderSheet();
-                        MessageBox.Show(this, "Completed loading of Sales Order data", "Sales Order", MessageBoxButtons.OK);
+                    case 1:     //Load Sales Order Sheet
+                        if (IsSellerOrder) LoadSalesOrderSheet();
+                        if (IsCustomerInvoice) LoadSalesInvoiceSheet();
                         break;
-                    case 2:
-                        UpdateSalesOrderSheetForCurrSeller();
-                        MessageBox.Show(this, "Update Sales Order", "Sales Order", MessageBoxButtons.OK);
+                    case 2:     //Load Seller Order details
+                        LoadSalesOrderForCurrSeller();
+                        break;
+                    case 3:     //Update Seller Order details
+                        if (IsSellerOrder) UpdateSalesOrderSheetForCurrSeller();
+                        if (IsCustomerInvoice) CreateSalesInvoiceForCurrOrder();
+                        break;
+                    case 4:     //Create default Sales Invoice file
+                        CreateDefaultSalesInvoiceSheet();
                         break;
                     default:
                         break;
@@ -291,15 +420,64 @@ namespace SalesOrdersReport
 
                 switch (BackgroundTask)
                 {
-                    case 1:
-                        panelOrderControls.Enabled = true;
-                        cmbBoxProdCat.Enabled = true;
-                        cmbBoxProduct.Enabled = true;
-                        dtTmPckrInvOrdDate.Enabled = false;
-                        txtSalesOrderFilePath.Enabled = false;
+                    case 1:     //Load all Sellers
+                        EnableItemsPanel(true);
+                        if (IsSellerOrder)
+                            MessageBox.Show(this, "Completed loading of Sales Order data", "Sales Order", MessageBoxButtons.OK);
+                        if (IsCustomerInvoice)
+                            MessageBox.Show(this, "Completed loading of Sales Invoice data", "Sales Invoice", MessageBoxButtons.OK);
                         break;
-                    case 2:
+                    case 2:     //Load Seller Order for Current Seller
+                        if (CurrSellerOrderDetails.OrderItemCount == 0)
+                        {
+                            CurrSellerOrderDetails.ListItemQuantity = new List<Double>();
+                            CurrSellerOrderDetails.ListItemOrigQuantity = new List<Double>();
+                            for (int i = 0; i < DictItemToColIndexes.Count; i++)
+                            {
+                                CurrSellerOrderDetails.ListItemQuantity.Add(0);
+                                CurrSellerOrderDetails.ListItemOrigQuantity.Add(0);
+                            }
+                        }
+                        else
+                        {
+                            foreach (ProductDetails item in ListAllProducts)
+                            {
+                                if (!DictItemToColIndexes.ContainsKey(item.ItemName.ToUpper())) continue;
+                                Double Qty = CurrSellerOrderDetails.ListItemQuantity[DictItemToColIndexes[item.ItemName.ToUpper()]];
+                                if (Qty <= 0) continue;
+
+                                Object[] row = new Object[5];
+                                row[0] = item.CategoryName; row[ItemColIndex] = item.ItemName;
+                                row[PriceColIndex] = item.SellingPrice.ToString("F");
+                                row[QtyColIndex] = Qty; row[SelectColIndex] = false;
+
+                                Int32 Index = dtGridViewInvOrdProdList.Rows.Add(row);
+                                DictItemsSelected.Add(item.ItemName, dtGridViewInvOrdProdList.Rows[Index]);
+                            }
+                        }
+
+                        UpdateSummaryDetails();
+                        EnableItemsPanel(true);
+                        MessageBox.Show(this, "Loaded Sales Order data for selected Seller", "Sales Order", MessageBoxButtons.OK);
+                        break;
+                    case 3:     //Update Seller Order for Current Seller
+                        cmbBoxSellerCustomer.SelectedIndex = -1;
                         ResetControls();
+                        if (IsSellerOrder)
+                        {
+                            EnableItemsPanel(false);
+                            MessageBox.Show(this, "Update Sales Order", "Sales Order", MessageBoxButtons.OK);
+                        }
+
+                        if (IsCustomerInvoice)
+                        {
+                            EnableItemsPanel(true);
+                            MessageBox.Show(this, "Created Customer Invoice successfully", "Sales Invoice", MessageBoxButtons.OK);
+                        }
+                        break;
+                    case 4:     //Create default Sales Invoice file
+                        EnableItemsPanel(true);
+                        MessageBox.Show(this, "Created default Sales Invoice file", "Sales Invoice", MessageBoxButtons.OK);
                         break;
                     default:
                         break;
@@ -363,7 +541,6 @@ namespace SalesOrdersReport
             }
         }
 
-        List<Int32> ListSelectedRowIndexesToAdd = new List<Int32>();
         private void dtGridViewProdListForSelection_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -387,7 +564,6 @@ namespace SalesOrdersReport
             }
         }
 
-        Dictionary<String, DataGridViewRow> DictItemsSelected = new Dictionary<String, DataGridViewRow>();
         private void btnAddItem_Click(object sender, EventArgs e)
         {
             try
@@ -440,7 +616,6 @@ namespace SalesOrdersReport
             }
         }
 
-        List<Int32> ListSelectedRowIndexesToRemove = new List<Int32>();
         private void btnRemItem_Click(object sender, EventArgs e)
         {
             try
@@ -513,10 +688,6 @@ namespace SalesOrdersReport
             }
         }
 
-        Double SubTotal = 0, Quantity = 0, Discount = 0, TaxAmount = 0, GrandTotal = 0;
-        Int32 NumItems = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4;
-        Int32 PaddingSpace = 6;
-        Char PaddingChar = ' ', CurrencyChar = '\u20B9';
         private void UpdateSummaryDetails()
         {
             try
@@ -546,14 +717,17 @@ namespace SalesOrdersReport
             }
         }
 
-        Int32 cmbBoxSellerCustomerIndex = -1;
         private void cmbBoxSellerCustomer_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                if (cmbBoxSellerCustomer.SelectedIndex < 0) return;
-
-                UpdateCustomerDetails();
+                if (cmbBoxSellerCustomer.SelectedIndex < 0)
+                {
+                    cmbBoxSellerCustomerIndex = -1;
+                    CurrSellerOrderDetails = null;
+                    lblCustomerDetails.Text = "";
+                    return;
+                }
 
                 if (IsSellerOrder)
                 {
@@ -567,6 +741,8 @@ namespace SalesOrdersReport
                     Boolean WarnUser = false;
                     if (CurrSellerOrderDetails != null)
                     {
+                        if (cmbBoxSellerCustomer.SelectedIndex == cmbBoxSellerCustomerIndex) return;
+
                         if (dtGridViewInvOrdProdList.Rows.Count != CurrSellerOrderDetails.ListItemQuantity.Count(s => s > 0))
                         {
                             WarnUser = true;
@@ -597,6 +773,8 @@ namespace SalesOrdersReport
                         }
                     }
                     cmbBoxSellerCustomerIndex = cmbBoxSellerCustomer.SelectedIndex;
+                    CurrSellerOrderDetails = null;
+                    ResetControls();
 
                     //Load Selected Seller Order Details
                     String SellerName = cmbBoxSellerCustomer.SelectedValue.ToString().Trim();
@@ -606,8 +784,6 @@ namespace SalesOrdersReport
                         return;
                     }
 
-                    dtGridViewInvOrdProdList.Rows.Clear();
-                    DictItemsSelected.Clear();
                     Int32 SellerIndex = ListSellerOrderDetails.FindIndex(s => s.SellerName.Equals(SellerName, StringComparison.InvariantCultureIgnoreCase));
                     if (SellerIndex < 0)
                     {
@@ -615,23 +791,26 @@ namespace SalesOrdersReport
                         return;
                     }
 
+                    UpdateCustomerDetails();
                     CurrSellerOrderDetails = ListSellerOrderDetails[SellerIndex];
-                    foreach (ProductDetails item in ListAllProducts)
+                    CurrSellerOrderDetails.ListItemQuantity = null;
+                    CurrSellerOrderDetails.ListItemOrigQuantity = null;
+                    BackgroundTask = 2;
+                    if (CurrSellerOrderDetails.OrderItemCount > 0)
                     {
-                        if (!DictItemToColIndexes.ContainsKey(item.ItemName.ToUpper())) continue;
-                        Double Qty = CurrSellerOrderDetails.ListItemQuantity[DictItemToColIndexes[item.ItemName.ToUpper()]];
-                        if (Qty <= 0) continue;
-
-                        Object[] row = new Object[5];
-                        row[0] = item.CategoryName; row[ItemColIndex] = item.ItemName;
-                        row[PriceColIndex] = item.SellingPrice;
-                        row[QtyColIndex] = Qty; row[SelectColIndex] = false;
-
-                        Int32 Index = dtGridViewInvOrdProdList.Rows.Add(row);
-                        DictItemsSelected.Add(item.ItemName, dtGridViewInvOrdProdList.Rows[Index]);
+#if DEBUG
+                        backgroundWorker1_DoWork(null, null);
+                        backgroundWorker1_RunWorkerCompleted(null, null);
+#else
+                        ReportProgress = backgroundWorker1.ReportProgress;
+                        backgroundWorker1.RunWorkerAsync();
+                        backgroundWorker1.WorkerReportsProgress = true;
+#endif
                     }
-
-                    UpdateSummaryDetails();
+                    else
+                    {
+                        backgroundWorker1_RunWorkerCompleted(null, null);
+                    }
                 }
             }
             catch (Exception ex)
@@ -652,7 +831,6 @@ namespace SalesOrdersReport
             }
         }
 
-        Double DiscountPerc = 0, DiscountValue = 0;
         private void btnDiscount_Click(object sender, EventArgs e)
         {
             try
@@ -761,21 +939,21 @@ namespace SalesOrdersReport
                 this.MaximizeBox = true;
                 this.WindowState = FormWindowState.Maximized;
                 this.StartPosition = FormStartPosition.CenterScreen;
-                String FileName = "SalesOrder_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
-                txtSalesOrderFilePath.Text = Path.GetDirectoryName(MasterFilePath) + @"\" + FileName;
+                if (IsSellerOrder)
+                {
+                    String FileName = "SalesOrder_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
+                    txtSalesOrderFilePath.Text = Path.GetDirectoryName(MasterFilePath) + @"\" + FileName;
+                }
+                
+                if (IsCustomerInvoice)
+                {
+                    String FileName = "Invoice_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
+                    txtSalesOrderFilePath.Text = Path.GetDirectoryName(MasterFilePath) + @"\" + FileName;
+                }
                 UpdateSummaryDetails();
 
-                panelOrderControls.Enabled = false;
-                cmbBoxProdCat.Enabled = false;
-                cmbBoxProduct.Enabled = false;
-                if (!File.Exists(txtSalesOrderFilePath.Text))
-                {
-                    return;
-                }
-
-                panelOrderControls.Enabled = true;
-                cmbBoxProdCat.Enabled = true;
-                cmbBoxProduct.Enabled = true;
+                EnableItemsPanel(false);
+                if (File.Exists(txtSalesOrderFilePath.Text)) EnableItemsPanel(true);
             }
             catch (Exception ex)
             {
@@ -783,7 +961,20 @@ namespace SalesOrdersReport
             }
         }
 
-        Boolean ValueChanged = false;
+        void EnableItemsPanel(Boolean enable)
+        {
+            try
+            {
+                panelOrderControls.Enabled = enable;
+                cmbBoxProdCat.Enabled = enable;
+                cmbBoxProduct.Enabled = enable;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.EnableItemsPanel()", ex);
+            }
+        }
+
         private void dtGridViewProdListForSelection_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -834,6 +1025,24 @@ namespace SalesOrdersReport
                 DialogResult result = opnFileDialog.ShowDialog(this);
                 if (result == System.Windows.Forms.DialogResult.Cancel) return;
                 txtSalesOrderFilePath.Text = opnFileDialog.FileName;
+
+                if (!File.Exists(txtSalesOrderFilePath.Text))
+                {
+                    String FileName = Path.GetFileName(txtSalesOrderFilePath.Text);
+                    MessageBox.Show(this, "Sales Order file (" + FileName + ") does not exist."
+                                        + "\nPlease create Sales Order File for this Date, before creating any Orders.",
+                                        "Sales Order File", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+                BackgroundTask = 1;
+#if DEBUG
+                backgroundWorker1_DoWork(null, null);
+                backgroundWorker1_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorker1.ReportProgress;
+                backgroundWorker1.RunWorkerAsync();
+                backgroundWorker1.WorkerReportsProgress = true;
+#endif
             }
             catch (Exception ex)
             {
@@ -841,40 +1050,80 @@ namespace SalesOrdersReport
             }
         }
 
+        List<String> ListCustomerInvoiceSheetNames = new List<String>();
         private void dtTmPckrInvOrdDate_ValueChanged(object sender, EventArgs e)
         {
             try
             {
-                String FileName = "SalesOrder_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
-                txtSalesOrderFilePath.Text = Path.GetDirectoryName(MasterFilePath) + @"\" + FileName;
+                EnableItemsPanel(false);
 
-                panelOrderControls.Enabled = false;
-                cmbBoxProdCat.Enabled = false;
-                cmbBoxProduct.Enabled = false;
-
-                if (!File.Exists(txtSalesOrderFilePath.Text))
+                if (IsSellerOrder)
                 {
-                    MessageBox.Show(this, "Sales Order file (" + FileName + ") does not exist."
-                                        + "\nPlease create Sales Order File for this Date, before creating any Orders.",
-                                        "Sales Order File", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return;
+                    String FileName = "SalesOrder_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
+                    txtSalesOrderFilePath.Text = Path.GetDirectoryName(MasterFilePath) + @"\" + FileName;
+
+                    if (!File.Exists(txtSalesOrderFilePath.Text))
+                    {
+                        MessageBox.Show(this, "Sales Order file (" + FileName + ") does not exist."
+                                            + "\nPlease create Sales Order File for this Date, before creating any Orders.",
+                                            "Sales Order File", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+
+                    BackgroundTask = 1;
+#if DEBUG
+                    backgroundWorker1_DoWork(null, null);
+                    backgroundWorker1_RunWorkerCompleted(null, null);
+#else
+                    ReportProgress = backgroundWorker1.ReportProgress;
+                    backgroundWorker1.RunWorkerAsync();
+                    backgroundWorker1.WorkerReportsProgress = true;
+#endif
                 }
 
-                //panelOrderControls.Enabled = true;
-                //cmbBoxProdCat.Enabled = true;
-                //cmbBoxProduct.Enabled = true;
-                //dtTmPckrInvOrdDate.Enabled = false;
-                //txtSalesOrderFilePath.Enabled = false;
+                if (IsCustomerInvoice)
+                {
+                    String FileName = "Invoice_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
+                    txtSalesOrderFilePath.Text = Path.GetDirectoryName(MasterFilePath) + @"\" + FileName;
 
-                BackgroundTask = 1;
+                    List<String> ListCustomerInvoiceSheetNames = new List<String>();
+                    if (!File.Exists(txtSalesOrderFilePath.Text))
+                    {
+                        DialogResult result = MessageBox.Show(this, "Sales Invoice file (" + FileName + ") does not exist."
+                                            + "\nDo you want to create default Sales Invoice File for this Date?",
+                                            "Sales Invoice File", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                        if (result == DialogResult.No)
+                        {
+                            MessageBox.Show(this, "Please select a date with Sales Invoice file, before you create Customer Invoices.",
+                                                "Sales Invoice File", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                            return;
+                        }
+
+                        //Create an Invoice File with default ItemSummary and Seller Summary
+                        BackgroundTask = 4;
 #if DEBUG
-                backgroundWorker1_DoWork(null, null);
-                backgroundWorker1_RunWorkerCompleted(null, null);
+                        backgroundWorker1_DoWork(null, null);
+                        backgroundWorker1_RunWorkerCompleted(null, null);
 #else
-                ReportProgress = backgroundWorker1.ReportProgress;
-                backgroundWorker1.RunWorkerAsync(1);
-                backgroundWorker1.WorkerReportsProgress = true;
+                        ReportProgress = backgroundWorker1.ReportProgress;
+                        backgroundWorker1.RunWorkerAsync();
+                        backgroundWorker1.WorkerReportsProgress = true;
 #endif
+                    }
+                    else
+                    {
+                        //Get all Sheet Names other than ItemSummary and SellerSummary
+                        BackgroundTask = 1;
+#if DEBUG
+                        backgroundWorker1_DoWork(null, null);
+                        backgroundWorker1_RunWorkerCompleted(null, null);
+#else
+                        ReportProgress = backgroundWorker1.ReportProgress;
+                        backgroundWorker1.RunWorkerAsync();
+                        backgroundWorker1.WorkerReportsProgress = true;
+#endif
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -882,34 +1131,10 @@ namespace SalesOrdersReport
             }
         }
 
-        Dictionary<String, Int32> DictItemToColIndexes, DictSellerToRowIndexes;
-        List<SellerOrderDetails> ListSellerOrderDetails;
         private void LoadSalesOrderSheet()
         {
             try
             {
-                /*Int32 Count = ListProducts.Count + 5;
-                String Column = "";
-                if (Count / 26 >= 26)
-                {
-                    Column = ((Char)('A' + ((Count / (26 * 26)) - 1))).ToString();
-                    Column += ((Char)('A' + ((Count / 26) - 1))).ToString();
-                    Column += ((Char)('A' + ((Count % 26) - 1))).ToString();
-                }
-                else if (Count >= 26)
-                {
-                    Column = ((Char)('A' + ((Count / 26) - 1))).ToString();
-                    Column += ((Char)('A' + ((Count % 26) - 1))).ToString();
-                }
-                else
-                {
-                    Column = ('A' + ((Count % 26) - 1)).ToString();
-                }
-
-                DataTable dtSalesOrder = CommonFunctions.ReturnDataTableFromExcelWorksheet(dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy"), txtSalesOrderFilePath.Text, "*", "A5:" + Column + "10000");
-
-                return dtSalesOrder;*/
-
                 Excel.Workbook xlSalesOrderWorkbook = xlApp.Workbooks.Open(txtSalesOrderFilePath.Text);
                 Excel.Worksheet xlSalesOrderWorksheet = CommonFunctions.GetWorksheet(xlSalesOrderWorkbook, dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy"));
                 Int32 StartRow = 5, StartColumn = 1, DetailsCount = 5;
@@ -951,51 +1176,11 @@ namespace SalesOrdersReport
                     DictSellerToRowIndexes.Add(ListSellerNames[SellerIndex].ToUpper(), i);
                     SellerOrderDetails tmpSellerOrderDetails = new SellerOrderDetails();
                     tmpSellerOrderDetails.SellerName = ListSellerNames[SellerIndex];
-                    tmpSellerOrderDetails.ListItemQuantity = new List<Double>();
                     tmpSellerOrderDetails.SellerRowIndex = i;
                     tmpSellerOrderDetails.IsDirty = false;
-                    Int32 index = 0;
-                    Boolean NoOrder = false;
                     if (xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value != null)
-                        NoOrder = (Double.Parse(xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value.ToString()) <= 0);
-                    else NoOrder = true;
-
-                    foreach (KeyValuePair<String, Int32> item in DictItemToColIndexes)
-                    {
-                        if (item.Value < 0 || NoOrder)
-                        {
-                            tmpSellerOrderDetails.ListItemQuantity.Add(0);
-                        }
-                        else
-                        {
-                            if (xlSalesOrderWorksheet.Cells[i, StartColumn + DetailsCount + index].Value == null)
-                            {
-                                tmpSellerOrderDetails.ListItemQuantity.Add(0);
-                            }
-                            else
-                            {
-                                String Qty = xlSalesOrderWorksheet.Cells[i, StartColumn + DetailsCount + index].Value.ToString().Trim();
-                                if (!String.IsNullOrEmpty(Qty))
-                                {
-                                    Qty = Qty.Trim();
-                                    Double result;
-                                    if (Double.TryParse(Qty, out result))
-                                        tmpSellerOrderDetails.ListItemQuantity.Add(result);
-                                    else
-                                    {
-                                        MessageBox.Show(this, "Invalid Quantity in Sales Order sheet\nSeller:" + SellerName + ", Item:" + item.Key + ", Quantity:" + Qty + "\nIgnoring quantity for this item",
-                                                        "Quantity Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                        tmpSellerOrderDetails.ListItemQuantity.Add(0);
-                                    }
-                                }
-                                else
-                                {
-                                    tmpSellerOrderDetails.ListItemQuantity.Add(0);
-                                }
-                            }
-                        }
-                        index++;
-                    }
+                        tmpSellerOrderDetails.OrderItemCount = Int32.Parse(xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value.ToString());
+                    else tmpSellerOrderDetails.OrderItemCount = 0;
 
                     ListSellerOrderDetails.Add(tmpSellerOrderDetails);
                 }
@@ -1009,15 +1194,295 @@ namespace SalesOrdersReport
             }
         }
 
-        private void btnUpdateSalesOrder_Click(object sender, EventArgs e)
+        void LoadSalesInvoiceSheet()
         {
             try
             {
+                Excel.Workbook ObjWorkbook = xlApp.Workbooks.Open(txtSalesOrderFilePath.Text);
+                for (int i = 1; i <= ObjWorkbook.Sheets.Count; i++)
+                {
+                    String SheetName = ObjWorkbook.Worksheets[i].Name;
+                    if (SheetName.Equals("Item Summary", StringComparison.InvariantCultureIgnoreCase)
+                        || SheetName.Equals("Seller Summary", StringComparison.InvariantCultureIgnoreCase))
+                        continue;
+                    ListCustomerInvoiceSheetNames.Add(SheetName);
+                }
 
+                ObjWorkbook.Close(SaveChanges: false);
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.btnUpdateSalesOrder_Click()", ex);
+                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.LoadSalesInvoiceSheet()", ex);
+            }
+        }
+
+        void CreateDefaultSalesInvoiceSheet()
+        {
+            try
+            {
+                Excel.Workbook xlWorkbook = xlApp.Workbooks.Add();
+
+                #region Print Seller Summary Sheet
+                Int32 SummaryStartRow = 0, CurrRow = 0, CurrCol = 0;
+                Excel.Worksheet xlSellerSummaryWorkSheet = xlWorkbook.Worksheets.Add(xlWorkbook.Sheets[1]);
+                xlSellerSummaryWorkSheet.Name = "Seller Summary";
+
+                SummaryStartRow++;
+                Excel.Range xlRange1 = xlSellerSummaryWorkSheet.Cells[SummaryStartRow, 1];
+                xlRange1.Value = "Date";
+                xlRange1.Font.Bold = true;
+                xlRange1 = xlSellerSummaryWorkSheet.Cells[SummaryStartRow, 2];
+                xlRange1.Value = dtTmPckrInvOrdDate.Value.ToString("dd-MMM-yyyy");
+                xlRange1 = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[SummaryStartRow, 2], xlSellerSummaryWorkSheet.Cells[SummaryStartRow, 3]];
+                xlRange1.Merge();
+                xlRange1.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+
+                CurrRow = SummaryStartRow + 1;
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Sl#";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Bill#";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Seller Name";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Sale";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Cancel";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Return";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Discount";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Total Tax";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Net Sale";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "OB";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Cash";
+                Int32 LastCol = CurrCol;
+                xlRange1 = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[CurrRow, 1], xlSellerSummaryWorkSheet.Cells[CurrRow, LastCol]];
+                xlRange1.Font.Bold = true;
+                #endregion
+
+                #region Print Item Summary Sheet
+                SummaryStartRow = 0;
+                Double Total = 0;
+                Excel.Worksheet xlSummaryWorkSheet = xlWorkbook.Worksheets.Add(xlWorkbook.Sheets[1]);
+                xlSummaryWorkSheet.Name = "Item Summary";
+                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 1].Value = "Sl.No.";
+                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 2].Value = "Item Name";
+                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 3].Value = "Vendor Name";
+                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 4].Value = "Quantity";
+                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 5].Value = "Price";
+                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 6].Value = "Total";
+                xlRange1 = xlSummaryWorkSheet.Range[xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 1], xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 6]];
+                xlRange1.Font.Bold = true;
+
+                for (int i = 0; i < ListAllProducts.Count; i++)
+                {
+                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 1].Value = (i + 1).ToString();
+                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 2].Value = ListAllProducts[i].ItemName;
+                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 3].Value = ListAllProducts[i].VendorName;
+                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 4].Value = "0";
+                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].Value = ListAllProducts[i].PurchasePrice;
+                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].NumberFormat = "#,##0.00";
+                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].Value = "0";
+                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].NumberFormat = "#,##0.00";
+                    Total += Double.Parse(xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].Value.ToString());
+                }
+
+                Excel.Range tmpxlRange = xlSummaryWorkSheet.Cells[ListAllProducts.Count + SummaryStartRow + 2, 5];
+                tmpxlRange.Value = "Total";
+                tmpxlRange.Font.Bold = true;
+
+                tmpxlRange = xlSummaryWorkSheet.Cells[ListAllProducts.Count + SummaryStartRow + 2, 6];
+                tmpxlRange.Value = Total;
+                tmpxlRange.Font.Bold = true;
+                tmpxlRange.NumberFormat = "#,##0.00";
+                xlSummaryWorkSheet.UsedRange.Columns.AutoFit();
+                xlApp.DisplayAlerts = false;
+                xlApp.DisplayAlerts = true;
+                #endregion
+
+                if (xlWorkbook.Sheets["Sheet1"] != null) xlWorkbook.Sheets["Sheet1"].Delete();
+                if (xlWorkbook.Sheets["Sheet2"] != null) xlWorkbook.Sheets["Sheet2"].Delete();
+                if (xlWorkbook.Sheets["Sheet3"] != null) xlWorkbook.Sheets["Sheet3"].Delete();
+
+                xlWorkbook.Close(SaveChanges: true, Filename: txtSalesOrderFilePath.Text);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.CreateDefaultSalesInvoiceSheet()", ex);
+            }
+        }
+
+        void CreateSalesInvoiceForCurrOrder()
+        {
+            try
+            {
+                ReportType EnumReportType = ReportType.INVOICE;
+                Boolean PrintOldBalance = false;
+                ReportSettings CurrReportSettings = null;
+                String BillNumberText = "", SaveFileName = "";
+                String OutputFolder = Path.GetDirectoryName(txtSalesOrderFilePath.Text);
+                String SelectedDateTimeString = dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy");
+                switch (EnumReportType)
+                {
+                    case ReportType.INVOICE:
+                        CurrReportSettings = CommonFunctions.ObjInvoiceSettings;
+                        BillNumberText = "Invoice#";
+                        SaveFileName = OutputFolder + "\\Invoice_" + SelectedDateTimeString + ".xlsx";
+                        break;
+                    case ReportType.QUOTATION:
+                        CurrReportSettings = CommonFunctions.ObjQuotationSettings;
+                        PrintOldBalance = true;
+                        BillNumberText = "Quotation#";
+                        SaveFileName = OutputFolder + "\\Quotation_" + SelectedDateTimeString + ".xlsx";
+                        break;
+                    default:
+                        return;
+                }
+                Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(SaveFileName);
+                Excel.Worksheet xlWorkSheet = xlWorkbook.Worksheets.Add(Type.Missing, xlWorkbook.Sheets[xlWorkbook.Sheets.Count]);
+
+                Int32 InvoiceNumber = CurrReportSettings.LastNumber;
+                Int32 ValidItemCount = dtGridViewInvOrdProdList.Rows.Count;
+                Int32 ProgressBarCount = ValidItemCount;
+                Int32 Counter = 0, SLNo = 0;
+                Double Quantity;
+
+                SLNo = 0;
+                InvoiceNumber++;
+                SellerDetails ObjCurrentSeller = CommonFunctions.ObjSellerMaster.GetSellerDetails(cmbBoxSellerCustomer.SelectedValue.ToString());
+                DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(ObjCurrentSeller.Name);
+
+                Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
+                ObjInvoice.SerialNumber = InvoiceNumber.ToString();
+                ObjInvoice.InvoiceNumberText = BillNumberText;
+                ObjInvoice.ObjSellerDetails = ObjCurrentSeller;
+                ObjInvoice.CurrReportSettings = CurrReportSettings;
+                ObjInvoice.DateOfInvoice = DateTime.Now;
+                ObjInvoice.PrintOldBalance = PrintOldBalance;
+                ObjInvoice.UseNumberToWordsFormula = false;
+                ObjInvoice.ListProducts = new List<ProductDetailsForInvoice>();
+
+                #region Change SheetName
+                String SheetName = ObjCurrentSeller.Name.Replace(":", "").Replace("\\", "").Replace("/", "").
+                        Replace("?", "").Replace("*", "").Replace("[", "").Replace("]", "");
+                SheetName = ((SheetName.Length > 30) ? SheetName.Substring(0, 30) : SheetName);
+                Int32 SheetSuffix = 0;
+                Boolean ContainsCustomerSheet = false;
+                if (ListCustomerInvoiceSheetNames.Count > 0)
+                {
+                    for (int i = 0; i < ListCustomerInvoiceSheetNames.Count; i++)
+                    {
+                        if (ListCustomerInvoiceSheetNames[i].Contains(SheetName))
+                        {
+                            String NumberStr = ListCustomerInvoiceSheetNames[i].Replace(SheetName, "").Trim();
+                            Int32 Number;
+                            if (Int32.TryParse(NumberStr, out Number))
+                            {
+                                SheetSuffix = Math.Max(Number, SheetSuffix);
+                            }
+                            ContainsCustomerSheet = true;
+                        }
+                    }
+
+                    if (ContainsCustomerSheet || SheetSuffix > 0)
+                    {
+                        SheetSuffix++;
+                        SheetName += " " + SheetSuffix;
+                    }
+                }
+                ObjInvoice.SheetName = SheetName;
+                ListCustomerInvoiceSheetNames.Add(SheetName);
+                #endregion
+
+                #region Print Invoice Items
+                String ItemName;
+                for (int i = 0; i < dtGridViewInvOrdProdList.Rows.Count; i++)
+                {
+                    Counter++;
+                    ReportProgressFunc((Counter * 100) / ProgressBarCount);
+
+                    Quantity = Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[QtyColIndex].Value.ToString());
+                    ItemName = dtGridViewInvOrdProdList.Rows[i].Cells[ItemColIndex].Value.ToString();
+                    if (Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[QtyColIndex].Value.ToString()) == 0) continue;
+
+                    SLNo++;
+                    ProductDetailsForInvoice ObjProductDetailsForInvoice = new ProductDetailsForInvoice();
+                    ProductDetails ObjProductDetails = CommonFunctions.ObjProductMaster.GetProductDetails(ItemName);
+                    if (ObjProductDetails == null)
+                    {
+                        xlWorkbook.Close();
+                        CommonFunctions.ReleaseCOMObject(xlWorkbook);
+                        MessageBox.Show(this, "Unable to find Item \"" + ItemName + "\" in ItemMaster", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    ObjProductDetailsForInvoice.SerialNumber = SLNo;
+                    ObjProductDetailsForInvoice.Description = ObjProductDetails.ItemName;
+                    ObjProductDetailsForInvoice.HSNCode = ObjProductDetails.HSNCode;
+                    ObjProductDetailsForInvoice.UnitsOfMeasurement = ObjProductDetails.UnitsOfMeasurement;
+                    ObjProductDetailsForInvoice.OrderQuantity = Quantity;
+                    ObjProductDetailsForInvoice.SaleQuantity = Quantity;
+                    ObjProductDetailsForInvoice.Rate = CommonFunctions.ObjProductMaster.GetPriceForProduct(ObjProductDetails.ItemName, ObjCurrentSeller.PriceGroupIndex);
+
+                    Double[] TaxRates = CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(ObjProductDetails.ItemName);
+                    ObjProductDetailsForInvoice.CGSTDetails = new TaxDetails();
+                    ObjProductDetailsForInvoice.CGSTDetails.TaxRate = TaxRates[0] / 100;
+                    ObjProductDetailsForInvoice.SGSTDetails = new TaxDetails();
+                    ObjProductDetailsForInvoice.SGSTDetails.TaxRate = TaxRates[1] / 100;
+                    ObjProductDetailsForInvoice.IGSTDetails = new TaxDetails();
+                    ObjProductDetailsForInvoice.IGSTDetails.TaxRate = TaxRates[2] / 100;
+                    ObjProductDetailsForInvoice.DiscountGroup = ObjDiscountGroup;
+                    ObjInvoice.ListProducts.Add(ObjProductDetailsForInvoice);
+                }
+                #endregion
+                ObjInvoice.CreateInvoice(xlWorkSheet);
+
+                #region Update Seller Summary sheet with this Invoice data
+                Excel.Worksheet xlSellerSummaryWorkSheet = CommonFunctions.GetWorksheet(xlWorkbook, "Seller Summary");
+                Int32 SummaryStartRow = 2;
+                Int32 CurrRow = ListCustomerInvoiceSheetNames.Count + SummaryStartRow;
+                Int32 CurrCol = 0;
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ListCustomerInvoiceSheetNames.Count;
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = InvoiceNumber;
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ObjCurrentSeller.Name;
+                CurrCol++; Excel.Range xlRangeSale = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
+                CurrCol++; Excel.Range xlRangeCancel = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
+                CurrCol++; Excel.Range xlRangeReturn = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
+                CurrCol++; Excel.Range xlRangeDiscount = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
+                CurrCol++; Excel.Range xlRangeTotalTax = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
+                CurrCol++; Excel.Range xlRangeNetSale = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
+                CurrCol++; Excel.Range xlRangeOldBalance = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
+                CurrCol++; Excel.Range xlRangeCash = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
+                xlRangeSale.Formula = ObjInvoice.TotalSalesValue;
+                xlRangeDiscount.Formula = ObjInvoice.TotalDiscount;
+                xlRangeTotalTax.Formula = ObjInvoice.TotalTax;
+                xlRangeNetSale.Formula = "=Round(" + xlRangeSale.Address[false, false]
+                                            + "-" + xlRangeCancel.Address[false, false]
+                                            + "-" + xlRangeReturn.Address[false, false]
+                                            + "-" + xlRangeDiscount.Address[false, false]
+                                            + "+" + xlRangeTotalTax.Address[false, false] + ", 0)";
+                xlRangeOldBalance.Value = ObjCurrentSeller.OldBalance;
+                xlRangeSale.NumberFormat = "#,##0.00"; xlRangeCancel.NumberFormat = "#,##0.00";
+                xlRangeReturn.NumberFormat = "#,##0.00"; xlRangeDiscount.NumberFormat = "#,##0.00";
+                xlRangeTotalTax.NumberFormat = "#,##0.00"; xlRangeNetSale.NumberFormat = "#,##0.00";
+                xlRangeOldBalance.NumberFormat = "#,##0.00"; xlRangeCash.NumberFormat = "#,##0.00";
+                #endregion
+
+                xlApp.DisplayAlerts = true;
+                Excel.Worksheet FirstWorksheet = xlWorkbook.Sheets[1];
+                FirstWorksheet.Select();
+
+                #region Print Invoice
+                DialogResult result = MessageBox.Show(this, "Would you like to print the Invoice?", "Sales Invoice", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2);
+                if (result == System.Windows.Forms.DialogResult.Yes)
+                {
+                    xlWorkSheet.PrintOutEx();
+                }
+                #endregion
+
+                #region Write InvoiceNumber to Settings File
+                CurrReportSettings.LastNumber = InvoiceNumber;
+                #endregion
+
+                xlWorkbook.Close(SaveChanges: true);
+                CommonFunctions.ReleaseCOMObject(xlWorkbook);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.CreateSalesInvoiceForCurrOrder()", ex);
             }
         }
     }
@@ -1025,8 +1490,8 @@ namespace SalesOrdersReport
     class SellerOrderDetails
     {
         public String SellerName;
-        public List<Double> ListItemQuantity;
-        public Int32 SellerRowIndex;
+        public List<Double> ListItemQuantity, ListItemOrigQuantity;
+        public Int32 SellerRowIndex = -1, OrderItemCount = 0;
         public Boolean IsDirty = false;
     }
 }

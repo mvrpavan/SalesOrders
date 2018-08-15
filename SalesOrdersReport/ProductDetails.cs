@@ -339,6 +339,7 @@ namespace SalesOrdersReport
             {
                 List<String> ListCategories = new List<String>();
                 ListCategories.AddRange(ListProducts.Select(e => e.CategoryName).Distinct());
+                ListCategories.Sort();
                 return ListCategories;
             }
             catch (Exception ex)

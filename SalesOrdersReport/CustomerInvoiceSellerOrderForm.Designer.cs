@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomerInvoiceSellerOrderForm));
             this.lblSelectName = new System.Windows.Forms.Label();
             this.cmbBoxSellerCustomer = new System.Windows.Forms.ComboBox();
             this.dtGridViewProdListForSelection = new System.Windows.Forms.DataGridView();
@@ -83,11 +84,11 @@
             this.btnHoldOrder = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.txtSalesOrderFilePath = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
+            this.lblInvOrdFile = new System.Windows.Forms.Label();
             this.opnFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.panelOrderControls = new System.Windows.Forms.Panel();
             this.btnBrowseSalesOrderFile = new System.Windows.Forms.Button();
-            this.btnUpdateSalesOrder = new System.Windows.Forms.Button();
+            this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProdListForSelection)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvOrdProdList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -315,6 +316,7 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dtGridViewInvOrdProdList.DefaultCellStyle = dataGridViewCellStyle2;
             this.dtGridViewInvOrdProdList.Location = new System.Drawing.Point(3, 3);
+            this.dtGridViewInvOrdProdList.MultiSelect = false;
             this.dtGridViewInvOrdProdList.Name = "dtGridViewInvOrdProdList";
             this.dtGridViewInvOrdProdList.RowTemplate.Height = 30;
             this.dtGridViewInvOrdProdList.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -696,10 +698,6 @@
             this.btnHoldOrder.UseVisualStyleBackColor = false;
             this.btnHoldOrder.Click += new System.EventHandler(this.btnHoldOrder_Click);
             // 
-            // toolTip1
-            // 
-            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            // 
             // txtSalesOrderFilePath
             // 
             this.txtSalesOrderFilePath.Location = new System.Drawing.Point(151, 43);
@@ -707,14 +705,14 @@
             this.txtSalesOrderFilePath.Size = new System.Drawing.Size(214, 20);
             this.txtSalesOrderFilePath.TabIndex = 11;
             // 
-            // label10
+            // lblInvOrdFile
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(30, 47);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(81, 13);
-            this.label10.TabIndex = 0;
-            this.label10.Text = "Sales Order File";
+            this.lblInvOrdFile.AutoSize = true;
+            this.lblInvOrdFile.Location = new System.Drawing.Point(30, 47);
+            this.lblInvOrdFile.Name = "lblInvOrdFile";
+            this.lblInvOrdFile.Size = new System.Drawing.Size(81, 13);
+            this.lblInvOrdFile.TabIndex = 0;
+            this.lblInvOrdFile.Text = "Sales Order File";
             // 
             // opnFileDialog
             // 
@@ -748,18 +746,15 @@
             this.btnBrowseSalesOrderFile.UseVisualStyleBackColor = true;
             this.btnBrowseSalesOrderFile.Click += new System.EventHandler(this.btnSalesOrderFilePath_Click);
             // 
-            // btnUpdateSalesOrder
+            // printPreviewDialog1
             // 
-            this.btnUpdateSalesOrder.BackColor = System.Drawing.Color.MediumSeaGreen;
-            this.btnUpdateSalesOrder.FlatAppearance.BorderSize = 0;
-            this.btnUpdateSalesOrder.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnUpdateSalesOrder.Location = new System.Drawing.Point(704, 17);
-            this.btnUpdateSalesOrder.Name = "btnUpdateSalesOrder";
-            this.btnUpdateSalesOrder.Size = new System.Drawing.Size(139, 73);
-            this.btnUpdateSalesOrder.TabIndex = 13;
-            this.btnUpdateSalesOrder.Text = "Update Sales Order";
-            this.btnUpdateSalesOrder.UseVisualStyleBackColor = false;
-            this.btnUpdateSalesOrder.Click += new System.EventHandler(this.btnUpdateSalesOrder_Click);
+            this.printPreviewDialog1.AutoScrollMargin = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.AutoScrollMinSize = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.ClientSize = new System.Drawing.Size(400, 300);
+            this.printPreviewDialog1.Enabled = true;
+            this.printPreviewDialog1.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialog1.Icon")));
+            this.printPreviewDialog1.Name = "printPreviewDialog1";
+            this.printPreviewDialog1.Visible = false;
             // 
             // CustomerInvoiceSellerOrderForm
             // 
@@ -767,7 +762,6 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(855, 570);
-            this.Controls.Add(this.btnUpdateSalesOrder);
             this.Controls.Add(this.txtSalesOrderFilePath);
             this.Controls.Add(this.btnBrowseSalesOrderFile);
             this.Controls.Add(this.label2);
@@ -778,7 +772,7 @@
             this.Controls.Add(this.cmbBoxProdCat);
             this.Controls.Add(this.lblInvoiceNumber);
             this.Controls.Add(this.cmbBoxProduct);
-            this.Controls.Add(this.label10);
+            this.Controls.Add(this.lblInvOrdFile);
             this.Controls.Add(this.lblInvoiceDate);
             this.Controls.Add(this.lblSelectName);
             this.Controls.Add(this.panelOrderControls);
@@ -859,9 +853,9 @@
         private System.Windows.Forms.Button btnSelectAllToRemove;
         private System.Windows.Forms.Button btnBrowseSalesOrderFile;
         private System.Windows.Forms.TextBox txtSalesOrderFilePath;
-        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label lblInvOrdFile;
         private System.Windows.Forms.OpenFileDialog opnFileDialog;
         private System.Windows.Forms.Panel panelOrderControls;
-        private System.Windows.Forms.Button btnUpdateSalesOrder;
+        private System.Windows.Forms.PrintPreviewDialog printPreviewDialog1;
     }
 }

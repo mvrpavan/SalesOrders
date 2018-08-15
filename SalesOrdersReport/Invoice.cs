@@ -33,6 +33,8 @@ namespace SalesOrdersReport
         public String[] ArrTotalTaxes;
         public ReportSettings CurrReportSettings;
         public Boolean PrintOldBalance;
+        public String SheetName;
+        public Boolean UseNumberToWordsFormula = true;
 
         public abstract void CreateInvoice(Excel.Worksheet OutputWorksheet);
 

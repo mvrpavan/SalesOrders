@@ -13,8 +13,12 @@ namespace SalesOrdersReport
         {
             try
             {
-                String SheetName = ObjSellerDetails.Name.Replace(":", "").Replace("\\", "").Replace("/", "").
-                                        Replace("?", "").Replace("*", "").Replace("[", "").Replace("]", "");
+                String SheetName = this.SheetName;
+                if (String.IsNullOrEmpty(SheetName))
+                {
+                    SheetName = ObjSellerDetails.Name.Replace(":", "").Replace("\\", "").Replace("/", "").
+                                            Replace("?", "").Replace("*", "").Replace("[", "").Replace("]", "");
+                }
                 xlWorkSheet.Name = ((SheetName.Length > 30) ? SheetName.Substring(0, 30) : SheetName);
 
                 Int32 InvoiceHeaderStartRow = 0, InvoiceStartCol = 1;
@@ -269,7 +273,10 @@ namespace SalesOrdersReport
                 xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
 
                 xlRange = xlWorkSheet.Cells[TotalInvoiceValueRow + 1, TotalInvoiceValueCol];
-                xlRange.Formula = "=NumberToWords(" + xlWorkSheet.Cells[TotalInvoiceValueRow, TotalInvoiceValueCol].Address[false, false] + ") & \" only\"";
+                if (UseNumberToWordsFormula)
+                    xlRange.Formula = "=NumberToWords(" + xlWorkSheet.Cells[TotalInvoiceValueRow, TotalInvoiceValueCol].Address[false, false] + ") & \" only\"";
+                else
+                    xlRange.Value = CommonFunctions.NumberToWords(xlWorkSheet.Cells[TotalInvoiceValueRow, TotalInvoiceValueCol].Value.ToString()) + " only";
                 xlRange.WrapText = true;
                 xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[TotalInvoiceValueRow + 1, TotalInvoiceValueCol], xlWorkSheet.Cells[TotalInvoiceValueRow + 1, LastInvoiceCol]];
                 xlRange.Merge();

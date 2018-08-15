@@ -277,6 +277,37 @@ namespace SalesOrdersReport
         }
         #endregion
 
+        public static String GetExcelColumnNameForColumnNumber(Int32 ColumnNumber)
+        {
+            try
+            {
+                Int32 Count = ColumnNumber;
+                String Column = "";
+                if (Count / 26 >= 26)
+                {
+                    Column = ((Char)('A' + ((Count / (26 * 26)) - 1))).ToString();
+                    Column += ((Char)('A' + ((Count / 26) - 1))).ToString();
+                    Column += ((Char)('A' + ((Count % 26) - 1))).ToString();
+                }
+                else if (Count >= 26)
+                {
+                    Column = ((Char)('A' + ((Count / 26) - 1))).ToString();
+                    Column += ((Char)('A' + ((Count % 26) - 1))).ToString();
+                }
+                else
+                {
+                    Column = ('A' + ((Count % 26) - 1)).ToString();
+                }
+
+                return Column;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.GetExcelColumnNameForColumnNumber()", ex);
+            }
+            return "";
+        }
+
         public static string GetColorHexCode(Color color)
         {
             return ColorTranslator.ToHtml(color).Replace("#", "");
