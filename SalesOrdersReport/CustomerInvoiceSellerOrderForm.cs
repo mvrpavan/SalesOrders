@@ -35,6 +35,7 @@ namespace SalesOrdersReport
         List<Int32> ListSelectedRowIndexesToRemove = new List<Int32>();
         Int32 cmbBoxSellerCustomerIndex = -1;
         Boolean LoadCompleted = false;
+        Boolean IsSalesInvoiceFileValid = false;
 
         public CustomerInvoiceSellerOrderForm(Boolean IsSellerOrder, Boolean IsCustomerInvoice)
         {
@@ -52,6 +53,7 @@ namespace SalesOrdersReport
                     txtBoxInvOrdNumber.Enabled = false;
                     btnCreateInvOrd.Text = "Create/Update " + OrderInvoice;
                     lblInvOrdFile.Text = "Sales Order File";
+                    btnDiscount.Enabled = false;
                 }
                 else if (IsCustomerInvoice)
                 {
@@ -62,6 +64,7 @@ namespace SalesOrdersReport
                     txtBoxInvOrdNumber.ReadOnly = true;
                     btnCreateInvOrd.Text = "Create " + OrderInvoice;
                     lblInvOrdFile.Text = "Sales Invoice File";
+                    btnDiscount.Enabled = true;
                 }
 
                 this.IsSellerOrder = IsSellerOrder;
@@ -109,12 +112,7 @@ namespace SalesOrdersReport
                 cmbBoxProduct.AutoCompleteSource = AutoCompleteSource.ListItems;
                 cmbBoxProduct.SelectedIndex = -1;
 
-                //if (IsCustomerInvoice)
-                //{
-                //    Int32 InvoiceNumber = CommonFunctions.ObjInvoiceSettings.LastNumber;
-                //    InvoiceNumber++;
-                //    txtBoxInvOrdNumber.Text = InvoiceNumber.ToString();
-                //}
+                lblStatus.Text = "Please choose " + OrderInvoice + " date";
             }
             catch (Exception ex)
             {
@@ -155,6 +153,7 @@ namespace SalesOrdersReport
                     }
                     CurrSellerOrderDetails.OrderItemCount = CurrSellerOrderDetails.ListItemQuantity.Count(s => s > 0);
 
+                    lblStatus.Text = "Creating/Updating Seller order in Sales order file. Please wait...";
                     BackgroundTask = 3;
                     if (CurrSellerOrderDetails.ListItemQuantity.Zip(CurrSellerOrderDetails.ListItemOrigQuantity, (x, y) => Math.Abs(x - y)).Sum() > 0)
                     {
@@ -201,6 +200,7 @@ namespace SalesOrdersReport
                     DialogResult diagResult = MessageBox.Show(this, "Confirm to Create Customer Invoice", "Create Sales Invoice", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                     if (diagResult == DialogResult.No) return;
 
+                    lblStatus.Text = "Creating Customer invoice in Sales invoice file. Please wait...";
                     BackgroundTask = 3;
 #if DEBUG
                     backgroundWorker1_DoWork(null, null);
@@ -332,6 +332,7 @@ namespace SalesOrdersReport
                 }
                 CurrSellerOrderDetails.OrderItemCount = 0;
 
+                lblStatus.Text = "Cancelling Seller order in Sales order file. Please wait...";
                 BackgroundTask = 3;
                 if (CurrSellerOrderDetails.ListItemOrigQuantity.Sum() > 0)
                 {
@@ -403,7 +404,7 @@ namespace SalesOrdersReport
                     default:
                         break;
                 }
-
+                ReportProgressFunc(100);
             }
             catch (Exception ex)
             {
@@ -425,8 +426,6 @@ namespace SalesOrdersReport
         {
             try
             {
-                CommonFunctions.ResetProgressBar();
-
                 switch (BackgroundTask)
                 {
                     case 1:     //Load all Sellers
@@ -436,6 +435,7 @@ namespace SalesOrdersReport
                             dtTmPckrInvOrdDate.Enabled = false;
                             btnBrowseSalesOrderFile.Enabled = false;
                             MessageBox.Show(this, "Completed loading of Sales Order data", "Sales Order", MessageBoxButtons.OK);
+                            lblStatus.Text = "Choose a Seller to create/update Sales Order";
                         }
 
                         if (IsCustomerInvoice)
@@ -445,9 +445,13 @@ namespace SalesOrdersReport
                                 dtTmPckrInvOrdDate.Enabled = false;
                                 btnBrowseSalesOrderFile.Enabled = false;
                                 MessageBox.Show(this, "Completed loading of Sales Invoice data", "Sales Invoice", MessageBoxButtons.OK);
+                                lblStatus.Text = "Choose a Customer to create Sales Invocie";
                             }
                             else
+                            {
                                 EnableItemsPanel(false);
+                                lblStatus.Text = "Please choose a valid Sales Invoice file";
+                            }
                         }
                         break;
                     case 2:     //Load Seller Order for Current Seller
@@ -479,6 +483,7 @@ namespace SalesOrdersReport
                                 DictItemsSelected.Add(item.ItemName, dtGridViewInvOrdProdList.Rows[Index]);
                             }
                         }
+                        lblStatus.Text = "Choose Items to add to Seller Sales order";
 
                         UpdateSummaryDetails();
                         EnableItemsPanel(true);
@@ -492,12 +497,14 @@ namespace SalesOrdersReport
                             EnableItemsPanel(false);
                             cmbBoxSellerCustomer.Enabled = true;
                             MessageBox.Show(this, "Created/Updated Sales Order successfully", "Sales Order", MessageBoxButtons.OK);
+                            lblStatus.Text = "Choose a Seller to create/update Sales Order";
                         }
 
                         if (IsCustomerInvoice)
                         {
                             EnableItemsPanel(true);
                             MessageBox.Show(this, "Created Customer Invoice successfully", "Sales Invoice", MessageBoxButtons.OK);
+                            lblStatus.Text = "Choose a Customer to create Sales Invoice";
                         }
                         break;
                     case 4:     //Create default Sales Invoice file
@@ -505,10 +512,12 @@ namespace SalesOrdersReport
                         dtTmPckrInvOrdDate.Enabled = false;
                         btnBrowseSalesOrderFile.Enabled = false;
                         MessageBox.Show(this, "Created default Sales Invoice file successfully", "Sales Invoice", MessageBoxButtons.OK);
+                        lblStatus.Text = "Choose a Customer to create Sales Invoice";
                         break;
                     default:
                         break;
                 }
+                CommonFunctions.ResetProgressBar();
                 BackgroundTask = -1;
             }
             catch (Exception ex)
@@ -832,6 +841,8 @@ namespace SalesOrdersReport
                         DiscountValue = CurrSellerDiscountGroup.Discount;
                     CurrSellerOrderDetails.ListItemQuantity = null;
                     CurrSellerOrderDetails.ListItemOrigQuantity = null;
+
+                    lblStatus.Text = "Loading Seller order data from Sales order file. Please wait...";
                     BackgroundTask = 2;
                     if (CurrSellerOrderDetails.OrderItemCount > 0)
                     {
@@ -1113,6 +1124,8 @@ namespace SalesOrdersReport
                     }
                     return;
                 }
+
+                lblStatus.Text = "Loading data from Sales " + OrderInvoice + " file. Please wait...";
                 BackgroundTask = 1;
 #if DEBUG
                 backgroundWorker1_DoWork(null, null);
@@ -1149,6 +1162,7 @@ namespace SalesOrdersReport
                         return;
                     }
 
+                    lblStatus.Text = "Loading data from Sales Order file, please wait.....";
                     BackgroundTask = 1;
 #if DEBUG
                     backgroundWorker1_DoWork(null, null);
@@ -1179,6 +1193,7 @@ namespace SalesOrdersReport
                         }
 
                         //Create an Invoice File with default ItemSummary and Seller Summary
+                        lblStatus.Text = "Creating default Sales Invoice file, please wait.....";
                         BackgroundTask = 4;
 #if DEBUG
                         backgroundWorker1_DoWork(null, null);
@@ -1192,6 +1207,7 @@ namespace SalesOrdersReport
                     else
                     {
                         //Get all Sheet Names other than ItemSummary and SellerSummary
+                        lblStatus.Text = "Loading data from Sales Invoice file, please wait.....";
                         BackgroundTask = 1;
 #if DEBUG
                         backgroundWorker1_DoWork(null, null);
@@ -1221,6 +1237,8 @@ namespace SalesOrdersReport
                 #region Identify Items in SalesOrderSheet
                 DictItemToColIndexes = new Dictionary<String, Int32>();
                 Int32 ColumnCount = xlSalesOrderWorksheet.UsedRange.Columns.Count;
+                Int32 RowCount = xlSalesOrderWorksheet.UsedRange.Rows.Count + 1;
+                Int32 ProgressBarCount = ((ColumnCount - (StartColumn + DetailsCount)) + (RowCount - (StartRow + 1)));
                 for (int i = StartColumn + DetailsCount; i <= ColumnCount; i++)
                 {
                     String ItemName = xlSalesOrderWorksheet.Cells[StartRow, i].Value;
@@ -1232,13 +1250,13 @@ namespace SalesOrdersReport
                         MessageBox.Show(this, "Item:" + ItemName + " not found in ItemMaster, Skipping this Item", "Item error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else DictItemToColIndexes.Add(ListAllProducts[ItemIndex].ItemName.ToUpper(), i - (StartColumn + DetailsCount));
+                    ReportProgressFunc((i - (StartColumn + DetailsCount)) * 100 / ProgressBarCount);
                 }
                 #endregion
 
                 #region Identify Sellers in SalesOrderSheet
                 ListSellerOrderDetails = new List<SellerOrderDetails>();
                 DictSellerToRowIndexes = new Dictionary<String, Int32>();
-                Int32 RowCount = xlSalesOrderWorksheet.UsedRange.Rows.Count + 1;
                 for (int i = StartRow + 1; i <= RowCount; i++)
                 {
                     if (xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value == null) continue;
@@ -1246,6 +1264,7 @@ namespace SalesOrdersReport
                     String SellerName = xlSalesOrderWorksheet.Cells[i, StartColumn + 2].Value;
                     SellerName = SellerName.Trim();
                     Int32 SellerIndex = ListSellerNames.FindIndex(e => e.Equals(SellerName, StringComparison.InvariantCultureIgnoreCase));
+                    ReportProgressFunc((i - (StartColumn + 1) + (ColumnCount - (StartColumn + DetailsCount))) * 100 / ProgressBarCount);
                     if (SellerIndex < 0)
                     {
                         MessageBox.Show(this, "Seller:" + SellerName + " not found in SellerMaster, Skipping this seller", "Seller error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1272,7 +1291,6 @@ namespace SalesOrdersReport
             }
         }
 
-        Boolean IsSalesInvoiceFileValid = false;
         void LoadSalesInvoiceSheet()
         {
             try
@@ -1280,6 +1298,7 @@ namespace SalesOrdersReport
                 Excel.Workbook ObjWorkbook = xlApp.Workbooks.Open(txtSalesOrderFilePath.Text);
                 Int32 Count = 0;
                 ListCustomerInvoiceSheetNames.Clear();
+                Int32 ProgressbarCount = ObjWorkbook.Sheets.Count;
                 for (int i = 1; i <= ObjWorkbook.Sheets.Count; i++)
                 {
                     String SheetName = ObjWorkbook.Worksheets[i].Name;
@@ -1290,6 +1309,7 @@ namespace SalesOrdersReport
                         continue;
                     }
                     ListCustomerInvoiceSheetNames.Add(SheetName);
+                    ReportProgressFunc(i * 100 / ProgressbarCount);
                 }
 
                 ObjWorkbook.Close(SaveChanges: false);
@@ -1314,6 +1334,7 @@ namespace SalesOrdersReport
         {
             try
             {
+                ReportProgressFunc(0);
                 Excel.Workbook xlWorkbook = xlApp.Workbooks.Add();
 
                 #region Print Seller Summary Sheet
@@ -1346,6 +1367,7 @@ namespace SalesOrdersReport
                 Int32 LastCol = CurrCol;
                 xlRange1 = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[CurrRow, 1], xlSellerSummaryWorkSheet.Cells[CurrRow, LastCol]];
                 xlRange1.Font.Bold = true;
+                ReportProgressFunc(50);
                 #endregion
 
                 #region Print Item Summary Sheet
@@ -1373,6 +1395,7 @@ namespace SalesOrdersReport
                     xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].Value = "0";
                     xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].NumberFormat = "#,##0.00";
                     Total += Double.Parse(xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].Value.ToString());
+                    ReportProgressFunc(50 + (i * 50 / ListAllProducts.Count));
                 }
 
                 Excel.Range tmpxlRange = xlSummaryWorkSheet.Cells[ListAllProducts.Count + SummaryStartRow + 2, 5];
