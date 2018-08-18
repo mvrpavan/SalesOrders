@@ -171,6 +171,23 @@ namespace SalesOrdersReport
             return null;
         }
 
+        public void SetSellerDiscount(String SellerName, DiscountGroupDetails DiscountGroup)
+        {
+            try
+            {
+                SellerDetails ObjSellerDetails = GetSellerDetails(SellerName);
+                if (ObjSellerDetails == null) return;
+                Int32 DiscountGroupIndex = ObjSellerDetails.DiscountGroupIndex;
+                if (DiscountGroupIndex < 0) DiscountGroupIndex = DefaultDiscountGroupIndex;
+
+                ListDiscountGroups[DiscountGroupIndex] = DiscountGroup;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("SellerMaster.SetSellerDiscount()", ex);
+            }
+        }
+
         public List<String> GetSellerList()
         {
             try

@@ -83,12 +83,17 @@
             this.btnHoldOrder = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btnBrowseSalesOrderFile = new System.Windows.Forms.Button();
+            this.btnCancelChanges = new System.Windows.Forms.Button();
             this.txtSalesOrderFilePath = new System.Windows.Forms.TextBox();
             this.lblInvOrdFile = new System.Windows.Forms.Label();
             this.opnFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.panelOrderControls = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
+            this.txtBoxSalesQuotFilePath = new System.Windows.Forms.TextBox();
+            this.lblQuotFile = new System.Windows.Forms.Label();
+            this.picBoxLoading = new System.Windows.Forms.PictureBox();
+            this.btnBrowseSalesQuotFile = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProdListForSelection)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvOrdProdList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -98,16 +103,17 @@
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panelOrderControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picBoxLoading)).BeginInit();
             this.SuspendLayout();
             // 
             // lblSelectName
             // 
-            this.lblSelectName.AutoSize = true;
             this.lblSelectName.Location = new System.Drawing.Point(30, 72);
             this.lblSelectName.Name = "lblSelectName";
             this.lblSelectName.Size = new System.Drawing.Size(115, 13);
             this.lblSelectName.TabIndex = 0;
             this.lblSelectName.Text = "Select Seller/Customer";
+            this.lblSelectName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cmbBoxSellerCustomer
             // 
@@ -193,17 +199,17 @@
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(351, 99);
+            this.label2.Location = new System.Drawing.Point(438, 99);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(60, 13);
             this.label2.TabIndex = 0;
             this.label2.Text = "Select Item";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cmbBoxProduct
             // 
             this.cmbBoxProduct.FormattingEnabled = true;
-            this.cmbBoxProduct.Location = new System.Drawing.Point(413, 96);
+            this.cmbBoxProduct.Location = new System.Drawing.Point(504, 96);
             this.cmbBoxProduct.Name = "cmbBoxProduct";
             this.cmbBoxProduct.Size = new System.Drawing.Size(253, 21);
             this.cmbBoxProduct.TabIndex = 3;
@@ -214,18 +220,18 @@
             this.cmbBoxProdCat.FormattingEnabled = true;
             this.cmbBoxProdCat.Location = new System.Drawing.Point(151, 96);
             this.cmbBoxProdCat.Name = "cmbBoxProdCat";
-            this.cmbBoxProdCat.Size = new System.Drawing.Size(173, 21);
+            this.cmbBoxProdCat.Size = new System.Drawing.Size(212, 21);
             this.cmbBoxProdCat.TabIndex = 2;
             this.cmbBoxProdCat.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProdCat_SelectedIndexChanged);
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(30, 99);
+            this.label3.Location = new System.Drawing.Point(63, 99);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(82, 13);
             this.label3.TabIndex = 0;
             this.label3.Text = "Select Category";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // dtTmPckrInvOrdDate
             // 
@@ -237,12 +243,12 @@
             // 
             // lblInvoiceDate
             // 
-            this.lblInvoiceDate.AutoSize = true;
-            this.lblInvoiceDate.Location = new System.Drawing.Point(30, 20);
+            this.lblInvoiceDate.Location = new System.Drawing.Point(77, 20);
             this.lblInvoiceDate.Name = "lblInvoiceDate";
             this.lblInvoiceDate.Size = new System.Drawing.Size(68, 13);
             this.lblInvoiceDate.TabIndex = 0;
             this.lblInvoiceDate.Text = "Invoice Date";
+            this.lblInvoiceDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblInvoiceNumber
             // 
@@ -262,18 +268,18 @@
             // 
             // btnCnclInvOrd
             // 
-            this.btnCnclInvOrd.BackColor = System.Drawing.Color.IndianRed;
+            this.btnCnclInvOrd.BackColor = System.Drawing.Color.Tomato;
             this.btnCnclInvOrd.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCnclInvOrd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCnclInvOrd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCnclInvOrd.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnCnclInvOrd.Location = new System.Drawing.Point(642, 234);
+            this.btnCnclInvOrd.Location = new System.Drawing.Point(612, 234);
             this.btnCnclInvOrd.Name = "btnCnclInvOrd";
-            this.btnCnclInvOrd.Size = new System.Drawing.Size(123, 38);
+            this.btnCnclInvOrd.Size = new System.Drawing.Size(65, 38);
             this.btnCnclInvOrd.TabIndex = 2;
             this.btnCnclInvOrd.Text = "Void Order";
             this.btnCnclInvOrd.UseVisualStyleBackColor = false;
-            this.btnCnclInvOrd.Click += new System.EventHandler(this.btnCnclInvOrd_Click);
+            this.btnCnclInvOrd.Click += new System.EventHandler(this.btnVoidInvOrd_Click);
             // 
             // btnCreateInvOrd
             // 
@@ -674,7 +680,7 @@
             this.btnDiscount.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.btnDiscount.Location = new System.Drawing.Point(528, 234);
             this.btnDiscount.Name = "btnDiscount";
-            this.btnDiscount.Size = new System.Drawing.Size(108, 38);
+            this.btnDiscount.Size = new System.Drawing.Size(78, 38);
             this.btnDiscount.TabIndex = 1;
             this.btnDiscount.Text = "Discount";
             this.btnDiscount.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
@@ -689,7 +695,7 @@
             this.btnHoldOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHoldOrder.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHoldOrder.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnHoldOrder.Location = new System.Drawing.Point(698, 34);
+            this.btnHoldOrder.Location = new System.Drawing.Point(762, 79);
             this.btnHoldOrder.Name = "btnHoldOrder";
             this.btnHoldOrder.Size = new System.Drawing.Size(81, 38);
             this.btnHoldOrder.TabIndex = 3;
@@ -713,6 +719,22 @@
             this.btnBrowseSalesOrderFile.UseVisualStyleBackColor = true;
             this.btnBrowseSalesOrderFile.Click += new System.EventHandler(this.btnSalesOrderFilePath_Click);
             // 
+            // btnCancelChanges
+            // 
+            this.btnCancelChanges.BackColor = System.Drawing.Color.DarkOrange;
+            this.btnCancelChanges.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancelChanges.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancelChanges.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancelChanges.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnCancelChanges.Location = new System.Drawing.Point(683, 234);
+            this.btnCancelChanges.Name = "btnCancelChanges";
+            this.btnCancelChanges.Size = new System.Drawing.Size(82, 38);
+            this.btnCancelChanges.TabIndex = 2;
+            this.btnCancelChanges.Text = "Cancel";
+            this.toolTip1.SetToolTip(this.btnCancelChanges, "Cancel Changes");
+            this.btnCancelChanges.UseVisualStyleBackColor = false;
+            this.btnCancelChanges.Click += new System.EventHandler(this.btnCancelChanges_Click);
+            // 
             // txtSalesOrderFilePath
             // 
             this.txtSalesOrderFilePath.Location = new System.Drawing.Point(151, 43);
@@ -722,12 +744,12 @@
             // 
             // lblInvOrdFile
             // 
-            this.lblInvOrdFile.AutoSize = true;
-            this.lblInvOrdFile.Location = new System.Drawing.Point(30, 47);
+            this.lblInvOrdFile.Location = new System.Drawing.Point(64, 47);
             this.lblInvOrdFile.Name = "lblInvOrdFile";
             this.lblInvOrdFile.Size = new System.Drawing.Size(81, 13);
             this.lblInvOrdFile.TabIndex = 0;
             this.lblInvOrdFile.Text = "Sales Order File";
+            this.lblInvOrdFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // opnFileDialog
             // 
@@ -740,6 +762,7 @@
             this.panelOrderControls.Controls.Add(this.panel2);
             this.panelOrderControls.Controls.Add(this.btnDiscount);
             this.panelOrderControls.Controls.Add(this.panel1);
+            this.panelOrderControls.Controls.Add(this.btnCancelChanges);
             this.panelOrderControls.Controls.Add(this.btnCnclInvOrd);
             this.panelOrderControls.Controls.Add(this.btnClose);
             this.panelOrderControls.Enabled = false;
@@ -752,7 +775,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(12, 576);
+            this.label10.Location = new System.Drawing.Point(9, 576);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(55, 16);
             this.label10.TabIndex = 13;
@@ -762,11 +785,48 @@
             // 
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatus.Location = new System.Drawing.Point(73, 576);
+            this.lblStatus.Location = new System.Drawing.Point(70, 576);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(51, 16);
             this.lblStatus.TabIndex = 13;
             this.lblStatus.Text = "Status";
+            // 
+            // txtBoxSalesQuotFilePath
+            // 
+            this.txtBoxSalesQuotFilePath.Location = new System.Drawing.Point(504, 43);
+            this.txtBoxSalesQuotFilePath.Name = "txtBoxSalesQuotFilePath";
+            this.txtBoxSalesQuotFilePath.Size = new System.Drawing.Size(214, 20);
+            this.txtBoxSalesQuotFilePath.TabIndex = 11;
+            // 
+            // lblQuotFile
+            // 
+            this.lblQuotFile.Location = new System.Drawing.Point(426, 47);
+            this.lblQuotFile.Name = "lblQuotFile";
+            this.lblQuotFile.Size = new System.Drawing.Size(72, 13);
+            this.lblQuotFile.TabIndex = 0;
+            this.lblQuotFile.Text = "Quotation File";
+            this.lblQuotFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // picBoxLoading
+            // 
+            this.picBoxLoading.Image = global::SalesOrdersReport.Properties.Resources.loading_small;
+            this.picBoxLoading.Location = new System.Drawing.Point(824, 570);
+            this.picBoxLoading.Name = "picBoxLoading";
+            this.picBoxLoading.Size = new System.Drawing.Size(24, 24);
+            this.picBoxLoading.TabIndex = 14;
+            this.picBoxLoading.TabStop = false;
+            // 
+            // btnBrowseSalesQuotFile
+            // 
+            this.btnBrowseSalesQuotFile.FlatAppearance.BorderSize = 0;
+            this.btnBrowseSalesQuotFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBrowseSalesQuotFile.Image = global::SalesOrdersReport.Properties.Resources.open_archive;
+            this.btnBrowseSalesQuotFile.Location = new System.Drawing.Point(724, 39);
+            this.btnBrowseSalesQuotFile.Name = "btnBrowseSalesQuotFile";
+            this.btnBrowseSalesQuotFile.Size = new System.Drawing.Size(30, 27);
+            this.btnBrowseSalesQuotFile.TabIndex = 10;
+            this.btnBrowseSalesQuotFile.UseVisualStyleBackColor = true;
+            this.btnBrowseSalesQuotFile.Click += new System.EventHandler(this.btnSalesOrderFilePath_Click);
             // 
             // CustomerInvoiceSellerOrderForm
             // 
@@ -774,9 +834,12 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(855, 601);
+            this.Controls.Add(this.picBoxLoading);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.label10);
+            this.Controls.Add(this.txtBoxSalesQuotFilePath);
             this.Controls.Add(this.txtSalesOrderFilePath);
+            this.Controls.Add(this.btnBrowseSalesQuotFile);
             this.Controls.Add(this.btnBrowseSalesOrderFile);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnHoldOrder);
@@ -787,6 +850,7 @@
             this.Controls.Add(this.cmbBoxProdCat);
             this.Controls.Add(this.lblInvoiceNumber);
             this.Controls.Add(this.cmbBoxProduct);
+            this.Controls.Add(this.lblQuotFile);
             this.Controls.Add(this.lblInvOrdFile);
             this.Controls.Add(this.lblInvoiceDate);
             this.Controls.Add(this.lblSelectName);
@@ -808,6 +872,7 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panelOrderControls.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picBoxLoading)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -873,5 +938,10 @@
         private System.Windows.Forms.Panel panelOrderControls;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label lblStatus;
+        private System.Windows.Forms.TextBox txtBoxSalesQuotFilePath;
+        private System.Windows.Forms.Label lblQuotFile;
+        private System.Windows.Forms.Button btnBrowseSalesQuotFile;
+        private System.Windows.Forms.PictureBox picBoxLoading;
+        private System.Windows.Forms.Button btnCancelChanges;
     }
 }

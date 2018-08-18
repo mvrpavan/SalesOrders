@@ -13,10 +13,14 @@ namespace SalesOrdersReport
         {
             try
             {
-                String SheetName = ObjSellerDetails.Name.Replace(":", "").
+                String SheetName = this.SheetName;
+                if (String.IsNullOrEmpty(SheetName))
+                {
+                    SheetName = ObjSellerDetails.Name.Replace(":", "").
                                         Replace("\\", "").Replace("/", "").
                                         Replace("?", "").Replace("*", "").
                                         Replace("[", "").Replace("]", "");
+                }
                 xlWorkSheet.Name = ((SheetName.Length > 30) ? SheetName.Substring(0, 30) : SheetName);
 
                 Int32 InvoiceHeaderStartRow = 0;

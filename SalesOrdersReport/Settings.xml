@@ -11,6 +11,10 @@
     <ProductLine Name="&lt;Default&gt;">
       <General>
         <SummaryLocation>0</SummaryLocation>
+        <CustomerBillGenFormatInvoice>True</CustomerBillGenFormatInvoice>
+        <CustomerBillGenFormatQuotation>True</CustomerBillGenFormatQuotation>
+        <CustomerBillPrintFormatInvoice>False</CustomerBillPrintFormatInvoice>
+        <CustomerBillPrintFormatQuotation>True</CustomerBillPrintFormatQuotation>
       </General>
       <Invoice>
         <HeaderTitle>Default Title</HeaderTitle>
@@ -70,6 +74,10 @@
     <ProductLine Name="Vegetables">
       <General>
         <SummaryLocation>0</SummaryLocation>
+        <CustomerBillGenFormatInvoice>True</CustomerBillGenFormatInvoice>
+        <CustomerBillGenFormatQuotation>True</CustomerBillGenFormatQuotation>
+        <CustomerBillPrintFormatInvoice>False</CustomerBillPrintFormatInvoice>
+        <CustomerBillPrintFormatQuotation>True</CustomerBillPrintFormatQuotation>
       </General>
       <Invoice>
         <HeaderTitle>Veg Invoice12345678</HeaderTitle>
@@ -128,6 +136,10 @@
     <ProductLine Name="Bakery">
       <General>
         <SummaryLocation>1</SummaryLocation>
+        <CustomerBillGenFormatInvoice>True</CustomerBillGenFormatInvoice>
+        <CustomerBillGenFormatQuotation>True</CustomerBillGenFormatQuotation>
+        <CustomerBillPrintFormatInvoice>False</CustomerBillPrintFormatInvoice>
+        <CustomerBillPrintFormatQuotation>True</CustomerBillPrintFormatQuotation>
       </General>
       <Invoice>
         <HeaderTitle>Bakery Invoice</HeaderTitle>

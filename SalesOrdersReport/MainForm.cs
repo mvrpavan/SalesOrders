@@ -463,7 +463,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("MainForm.picBoxBackgroundLogo_SizeChanged()", ex);
+                CommonFunctions.ShowErrorDialog("MainForm.statusStrip_SizeChanged()", ex);
             }
         }
         #endregion

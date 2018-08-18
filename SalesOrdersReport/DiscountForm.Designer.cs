@@ -91,6 +91,11 @@
             // numUpDownDiscValue
             // 
             this.numUpDownDiscValue.Location = new System.Drawing.Point(163, 43);
+            this.numUpDownDiscValue.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
             this.numUpDownDiscValue.Name = "numUpDownDiscValue";
             this.numUpDownDiscValue.Size = new System.Drawing.Size(72, 20);
             this.numUpDownDiscValue.TabIndex = 5;

@@ -167,6 +167,8 @@ namespace SalesOrdersReport
     {
         XmlNode SettingsNode;
         public Int32 SummaryLocation = 0;
+        public Boolean IsCustomerBillGenFormatInvoice, IsCustomerBillGenFormatQuotation;
+        public Boolean IsCustomerBillPrintFormatInvoice, IsCustomerBillPrintFormatQuotation;
 
         public void ReadSettingsFromNode(XmlNode Node)
         {
@@ -175,6 +177,10 @@ namespace SalesOrdersReport
                 SettingsNode = Node;
                 String Value;
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "SummaryLocation", out Value)) SummaryLocation = Int32.Parse(Value);
+                if (XMLFileUtils.GetChildNodeValue(SettingsNode, "CustomerBillGenFormatInvoice", out Value)) IsCustomerBillGenFormatInvoice = Boolean.Parse(Value);
+                if (XMLFileUtils.GetChildNodeValue(SettingsNode, "CustomerBillGenFormatQuotation", out Value)) IsCustomerBillGenFormatQuotation = Boolean.Parse(Value);
+                if (XMLFileUtils.GetChildNodeValue(SettingsNode, "CustomerBillPrintFormatInvoice", out Value)) IsCustomerBillPrintFormatInvoice = Boolean.Parse(Value);
+                if (XMLFileUtils.GetChildNodeValue(SettingsNode, "CustomerBillPrintFormatQuotation", out Value)) IsCustomerBillPrintFormatQuotation = Boolean.Parse(Value);
             }
             catch (Exception ex)
             {
@@ -187,6 +193,10 @@ namespace SalesOrdersReport
             try
             {
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "SummaryLocation", SummaryLocation.ToString());
+                XMLFileUtils.SetChildNodeValue(SettingsNode, "CustomerBillGenFormatInvoice", IsCustomerBillGenFormatInvoice.ToString());
+                XMLFileUtils.SetChildNodeValue(SettingsNode, "CustomerBillGenFormatQuotation", IsCustomerBillGenFormatQuotation.ToString());
+                XMLFileUtils.SetChildNodeValue(SettingsNode, "CustomerBillPrintFormatInvoice", IsCustomerBillPrintFormatInvoice.ToString());
+                XMLFileUtils.SetChildNodeValue(SettingsNode, "CustomerBillPrintFormatQuotation", IsCustomerBillPrintFormatQuotation.ToString());
             }
             catch (Exception ex)
             {

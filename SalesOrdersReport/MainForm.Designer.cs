@@ -196,8 +196,8 @@
             // createInvoiceToolStripMenuItem
             // 
             this.createInvoiceToolStripMenuItem.Name = "createInvoiceToolStripMenuItem";
-            this.createInvoiceToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.createInvoiceToolStripMenuItem.Text = "Create &Customer Invoice";
+            this.createInvoiceToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.createInvoiceToolStripMenuItem.Text = "Create &Customer Bill";
             this.createInvoiceToolStripMenuItem.Click += new System.EventHandler(this.createInvoiceToolStripMenuItem_Click);
             // 
             // vendorMenu
@@ -366,7 +366,7 @@
             // toolStripStatusLabel
             // 
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(606, 17);
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(575, 17);
             this.toolStripStatusLabel.Spring = true;
             this.toolStripStatusLabel.Text = "Status";
             this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

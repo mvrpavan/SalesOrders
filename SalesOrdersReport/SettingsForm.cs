@@ -44,6 +44,10 @@ namespace SalesOrdersReport
                 ddlSummaryLocation.Items.Add("Invoice");
                 ddlSummaryLocation.Items.Add("Quotation");
                 ddlSummaryLocation.SelectedIndex = CommonFunctions.ObjGeneralSettings.SummaryLocation;
+                chkBoxInstBillGenInvoice.Checked = CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatInvoice;
+                chkBoxInstBillGenQuot.Checked = CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatQuotation;
+                chkBoxInstBillPrintInvoice.Checked = CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatInvoice;
+                chkBoxInstBillPrintQuot.Checked = CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatQuotation;
 
                 //Load Invoice Settings from CommonFunctions Module
                 ReportSettings CurrSettings = CommonFunctions.ObjInvoiceSettings;
@@ -114,6 +118,10 @@ namespace SalesOrdersReport
             {
                 //Apply General Settings to CommonFunctions Module
                 CommonFunctions.ObjGeneralSettings.SummaryLocation = ddlSummaryLocation.SelectedIndex;
+                CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatInvoice = chkBoxInstBillGenInvoice.Checked;
+                CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatQuotation = chkBoxInstBillGenQuot.Checked;
+                CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatInvoice = chkBoxInstBillPrintInvoice.Checked;
+                CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatQuotation = chkBoxInstBillPrintQuot.Checked;
 
                 //Apply Invoice Settings to CommonFunctions Module
                 ReportSettings CurrSettings = CommonFunctions.ObjInvoiceSettings;
@@ -310,6 +318,48 @@ namespace SalesOrdersReport
                 cmbBoxProductLines.Items.Add(ObjProductLine.Name);
             }
             cmbBoxProductLines.SelectedIndex = CommonFunctions.SelectedProductLineIndex - 1;
+        }
+
+        private void chkBoxInstBillGenInvoice_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                chkBoxInstBillPrintInvoice.Enabled = false;
+                if (!chkBoxInstBillGenInvoice.Checked)
+                {
+                    if (!chkBoxInstBillGenQuot.Checked) chkBoxInstBillGenQuot.Checked = true;
+                    chkBoxInstBillPrintInvoice.Checked = false;
+                }
+                else
+                {
+                    chkBoxInstBillPrintInvoice.Enabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("SettingsForm.chkBoxInstBillGenInvoice_CheckedChanged()", ex);
+            }
+        }
+
+        private void chkBoxInstBillGenQuot_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                chkBoxInstBillPrintQuot.Enabled = false;
+                if (!chkBoxInstBillGenQuot.Checked)
+                {
+                    if (!chkBoxInstBillGenInvoice.Checked) chkBoxInstBillGenInvoice.Checked = true;
+                    chkBoxInstBillPrintQuot.Checked = false;
+                }
+                else
+                {
+                    chkBoxInstBillPrintQuot.Enabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("SettingsForm.chkBoxInstBillGenQuot_CheckedChanged()", ex);
+            }
         }
     }
 }

@@ -297,6 +297,8 @@
     <None Include="Resources\list %281%29.png" />
     <None Include="Resources\list %282%29.png" />
     <None Include="Resources\open-archive.png" />
+    <None Include="Resources\loading.gif" />
+    <None Include="Resources\loading_small.gif" />
     <Content Include="Settings.xml">
       <SubType>Designer</SubType>
     </Content>
