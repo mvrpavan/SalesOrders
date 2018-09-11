@@ -23,7 +23,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                DiscountPerc = 0; DiscountValue = 0;
+                DiscountPerc = -999; DiscountValue = -999;
                 if (radBtnDiscPerc.Checked) DiscountPerc = (Double)numUpDownDiscPerc.Value;
                 if (radBtnDiscVal.Checked) DiscountValue = (Double)numUpDownDiscValue.Value;
             }

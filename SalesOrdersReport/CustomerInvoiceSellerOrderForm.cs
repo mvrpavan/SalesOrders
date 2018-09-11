@@ -84,6 +84,7 @@ namespace SalesOrdersReport
                     btnBrowseSalesQuotFile.Enabled = false;
                     btnCnclInvOrd.Enabled = false;
                     lblStatus.Text = "Please choose Invoice/Quotation date";
+                    dtGridViewInvOrdProdList.Columns[PriceColIndex].ReadOnly = false;
                 }
 
                 this.IsSellerOrder = IsSellerOrder;
@@ -92,6 +93,8 @@ namespace SalesOrdersReport
                 txtSalesOrderFilePath.ReadOnly = true;
                 btnBrowseSalesOrderFile.Enabled = false;
                 picBoxLoading.Visible = false;
+                dtGridViewProdListForSelection.SelectionMode = DataGridViewSelectionMode.CellSelect;
+                dtGridViewInvOrdProdList.SelectionMode = DataGridViewSelectionMode.CellSelect;
             }
             catch (Exception ex)
             {
@@ -1127,16 +1130,17 @@ namespace SalesOrdersReport
                 if (diagRes == DialogResult.Cancel) return;
 
                 DiscountPerc = 0; DiscountValue = 0;
-                if (objDiscForm.DiscountPerc > 0)
+                if (objDiscForm.DiscountPerc > -999)
                 {
                     DiscountPerc = objDiscForm.DiscountPerc;
                 }
-                if (objDiscForm.DiscountValue > 0)
+                if (objDiscForm.DiscountValue > -999)
                 {
                     DiscountValue = objDiscForm.DiscountValue;
                 }
 
-                if (DiscountPerc > 0 || DiscountValue > 0) UpdateSummaryDetails();
+                //if (DiscountPerc > 0 || DiscountValue > 0) UpdateSummaryDetails();
+                UpdateSummaryDetails();
             }
             catch (Exception ex)
             {
@@ -1160,10 +1164,28 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (e.ColumnIndex != 3 || e.RowIndex < 0) return;
+                if ((e.ColumnIndex != QtyColIndex && e.ColumnIndex != PriceColIndex) || e.RowIndex < 0) return;
+
+                if (e.ColumnIndex == PriceColIndex)
+                {
+                    DataGridViewCell cell = dtGridViewInvOrdProdList.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    cell.ErrorText = null;
+                    Double result;
+                    if (!Double.TryParse(cell.Value.ToString(), out result))
+                    {
+                        cell.ErrorText = "Must be a valid Price";
+                        return;
+                    }
+
+                    if (result < 0)
+                    {
+                        cell.ErrorText = "Must be a valid Price";
+                        return;
+                    }
+                    cell.Value = result.ToString("F");
+                }
 
                 dtGridViewInvOrdProdList.CommitEdit(DataGridViewDataErrorContexts.Commit);
-
                 UpdateSummaryDetails();
             }
             catch (Exception ex)
@@ -1687,7 +1709,7 @@ namespace SalesOrdersReport
                 Int32 ValidItemCount = dtGridViewInvOrdProdList.Rows.Count;
                 Int32 ProgressBarCount = ValidItemCount;
                 Int32 Counter = 0, SLNo = 0;
-                Double Quantity;
+                Double Quantity, Price;
 
                 SLNo = 0;
                 SellerDetails ObjCurrentSeller = CommonFunctions.ObjSellerMaster.GetSellerDetails(cmbBoxSellerCustomer.SelectedValue.ToString());
@@ -1745,6 +1767,7 @@ namespace SalesOrdersReport
                     Quantity = Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[QtyColIndex].Value.ToString());
                     ItemName = dtGridViewInvOrdProdList.Rows[i].Cells[ItemColIndex].Value.ToString();
                     if (Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[QtyColIndex].Value.ToString()) == 0) continue;
+                    Price = Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[PriceColIndex].Value.ToString());
 
                     SLNo++;
                     ProductDetailsForInvoice ObjProductDetailsForInvoice = new ProductDetailsForInvoice();
@@ -1762,7 +1785,7 @@ namespace SalesOrdersReport
                     ObjProductDetailsForInvoice.UnitsOfMeasurement = ObjProductDetails.UnitsOfMeasurement;
                     ObjProductDetailsForInvoice.OrderQuantity = Quantity;
                     ObjProductDetailsForInvoice.SaleQuantity = Quantity;
-                    ObjProductDetailsForInvoice.Rate = CommonFunctions.ObjProductMaster.GetPriceForProduct(ObjProductDetails.ItemName, ObjCurrentSeller.PriceGroupIndex);
+                    ObjProductDetailsForInvoice.Rate = Price; //CommonFunctions.ObjProductMaster.GetPriceForProduct(ObjProductDetails.ItemName, ObjCurrentSeller.PriceGroupIndex);
 
                     Double[] TaxRates = CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(ObjProductDetails.ItemName);
                     ObjProductDetailsForInvoice.CGSTDetails = new TaxDetails();

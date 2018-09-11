@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.lblSelectName = new System.Windows.Forms.Label();
             this.cmbBoxSellerCustomer = new System.Windows.Forms.ComboBox();
             this.dtGridViewProdListForSelection = new System.Windows.Forms.DataGridView();
@@ -120,7 +120,7 @@
             this.cmbBoxSellerCustomer.FormattingEnabled = true;
             this.cmbBoxSellerCustomer.Location = new System.Drawing.Point(151, 69);
             this.cmbBoxSellerCustomer.Name = "cmbBoxSellerCustomer";
-            this.cmbBoxSellerCustomer.Size = new System.Drawing.Size(212, 21);
+            this.cmbBoxSellerCustomer.Size = new System.Drawing.Size(212, 24);
             this.cmbBoxSellerCustomer.TabIndex = 1;
             this.cmbBoxSellerCustomer.SelectedIndexChanged += new System.EventHandler(this.cmbBoxSellerCustomer_SelectedIndexChanged);
             // 
@@ -138,15 +138,15 @@
             this.Column4,
             this.Column3,
             this.Column6});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dtGridViewProdListForSelection.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dtGridViewProdListForSelection.DefaultCellStyle = dataGridViewCellStyle3;
             this.dtGridViewProdListForSelection.Location = new System.Drawing.Point(3, 3);
             this.dtGridViewProdListForSelection.MultiSelect = false;
             this.dtGridViewProdListForSelection.Name = "dtGridViewProdListForSelection";
@@ -165,7 +165,7 @@
             this.Column7.HeaderText = "Category";
             this.Column7.Name = "Column7";
             this.Column7.ReadOnly = true;
-            this.Column7.Width = 76;
+            this.Column7.Width = 96;
             // 
             // Column2
             // 
@@ -173,7 +173,7 @@
             this.Column2.HeaderText = "Item";
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
-            this.Column2.Width = 54;
+            this.Column2.Width = 65;
             // 
             // Column4
             // 
@@ -181,7 +181,7 @@
             this.Column4.HeaderText = "Price";
             this.Column4.Name = "Column4";
             this.Column4.ReadOnly = true;
-            this.Column4.Width = 58;
+            this.Column4.Width = 71;
             // 
             // Column3
             // 
@@ -189,7 +189,7 @@
             this.Column3.HeaderText = "Quantity";
             this.Column3.Name = "Column3";
             this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column3.Width = 54;
+            this.Column3.Width = 69;
             // 
             // Column6
             // 
@@ -211,7 +211,7 @@
             this.cmbBoxProduct.FormattingEnabled = true;
             this.cmbBoxProduct.Location = new System.Drawing.Point(504, 96);
             this.cmbBoxProduct.Name = "cmbBoxProduct";
-            this.cmbBoxProduct.Size = new System.Drawing.Size(253, 21);
+            this.cmbBoxProduct.Size = new System.Drawing.Size(253, 24);
             this.cmbBoxProduct.TabIndex = 3;
             this.cmbBoxProduct.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProduct_SelectedIndexChanged);
             // 
@@ -220,7 +220,7 @@
             this.cmbBoxProdCat.FormattingEnabled = true;
             this.cmbBoxProdCat.Location = new System.Drawing.Point(151, 96);
             this.cmbBoxProdCat.Name = "cmbBoxProdCat";
-            this.cmbBoxProdCat.Size = new System.Drawing.Size(212, 21);
+            this.cmbBoxProdCat.Size = new System.Drawing.Size(212, 24);
             this.cmbBoxProdCat.TabIndex = 2;
             this.cmbBoxProdCat.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProdCat_SelectedIndexChanged);
             // 
@@ -237,7 +237,7 @@
             // 
             this.dtTmPckrInvOrdDate.Location = new System.Drawing.Point(151, 17);
             this.dtTmPckrInvOrdDate.Name = "dtTmPckrInvOrdDate";
-            this.dtTmPckrInvOrdDate.Size = new System.Drawing.Size(212, 20);
+            this.dtTmPckrInvOrdDate.Size = new System.Drawing.Size(212, 22);
             this.dtTmPckrInvOrdDate.TabIndex = 0;
             this.dtTmPckrInvOrdDate.ValueChanged += new System.EventHandler(this.dtTmPckrInvOrdDate_ValueChanged);
             // 
@@ -263,8 +263,8 @@
             // 
             this.txtBoxInvOrdNumber.Location = new System.Drawing.Point(504, 17);
             this.txtBoxInvOrdNumber.Name = "txtBoxInvOrdNumber";
-            this.txtBoxInvOrdNumber.Size = new System.Drawing.Size(84, 20);
-            this.txtBoxInvOrdNumber.TabIndex = 6;
+            this.txtBoxInvOrdNumber.Size = new System.Drawing.Size(84, 22);
+            this.txtBoxInvOrdNumber.TabIndex = 13;
             // 
             // btnCnclInvOrd
             // 
@@ -312,15 +312,15 @@
             this.Column11,
             this.Column12,
             this.Column14});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dtGridViewInvOrdProdList.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dtGridViewInvOrdProdList.DefaultCellStyle = dataGridViewCellStyle4;
             this.dtGridViewInvOrdProdList.Location = new System.Drawing.Point(3, 3);
             this.dtGridViewInvOrdProdList.MultiSelect = false;
             this.dtGridViewInvOrdProdList.Name = "dtGridViewInvOrdProdList";
@@ -328,7 +328,7 @@
             this.dtGridViewInvOrdProdList.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.dtGridViewInvOrdProdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dtGridViewInvOrdProdList.Size = new System.Drawing.Size(460, 203);
-            this.dtGridViewInvOrdProdList.TabIndex = 2;
+            this.dtGridViewInvOrdProdList.TabIndex = 0;
             this.dtGridViewInvOrdProdList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewInvOrdProdList_CellContentClick);
             this.dtGridViewInvOrdProdList.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewInvOrdProdList_CellEndEdit);
             // 
@@ -338,7 +338,7 @@
             this.Column8.HeaderText = "Category";
             this.Column8.Name = "Column8";
             this.Column8.ReadOnly = true;
-            this.Column8.Width = 76;
+            this.Column8.Width = 96;
             // 
             // Column10
             // 
@@ -346,7 +346,7 @@
             this.Column10.HeaderText = "Item";
             this.Column10.Name = "Column10";
             this.Column10.ReadOnly = true;
-            this.Column10.Width = 54;
+            this.Column10.Width = 65;
             // 
             // Column11
             // 
@@ -354,14 +354,14 @@
             this.Column11.HeaderText = "Price";
             this.Column11.Name = "Column11";
             this.Column11.ReadOnly = true;
-            this.Column11.Width = 58;
+            this.Column11.Width = 71;
             // 
             // Column12
             // 
             this.Column12.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Column12.HeaderText = "Quantity";
             this.Column12.Name = "Column12";
-            this.Column12.Width = 73;
+            this.Column12.Width = 92;
             // 
             // Column14
             // 
@@ -510,7 +510,7 @@
             this.label8.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label8.Location = new System.Drawing.Point(3, 139);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(99, 19);
+            this.label8.Size = new System.Drawing.Size(122, 23);
             this.label8.TabIndex = 0;
             this.label8.Text = "Grand Total";
             // 
@@ -532,7 +532,7 @@
             this.label7.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label7.Location = new System.Drawing.Point(3, 112);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(76, 19);
+            this.label7.Size = new System.Drawing.Size(93, 23);
             this.label7.TabIndex = 0;
             this.label7.Text = "Total Tax";
             // 
@@ -554,7 +554,7 @@
             this.label6.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label6.Location = new System.Drawing.Point(3, 85);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(74, 19);
+            this.label6.Size = new System.Drawing.Size(94, 23);
             this.label6.TabIndex = 0;
             this.label6.Text = "Discount";
             // 
@@ -576,7 +576,7 @@
             this.label5.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label5.Location = new System.Drawing.Point(3, 56);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(78, 19);
+            this.label5.Size = new System.Drawing.Size(96, 23);
             this.label5.TabIndex = 0;
             this.label5.Text = "Sub Total";
             // 
@@ -598,7 +598,7 @@
             this.label1.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label1.Location = new System.Drawing.Point(3, 29);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(114, 19);
+            this.label1.Size = new System.Drawing.Size(144, 23);
             this.label1.TabIndex = 0;
             this.label1.Text = "Total Quantity";
             // 
@@ -620,7 +620,7 @@
             this.label4.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label4.Location = new System.Drawing.Point(3, 3);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(97, 19);
+            this.label4.Size = new System.Drawing.Size(128, 23);
             this.label4.TabIndex = 0;
             this.label4.Text = "No. of Items";
             // 
@@ -634,7 +634,7 @@
             this.btnClose.Location = new System.Drawing.Point(771, 234);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(65, 38);
-            this.btnClose.TabIndex = 3;
+            this.btnClose.TabIndex = 4;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
@@ -657,7 +657,7 @@
             this.lblCustomerDetails.ForeColor = System.Drawing.Color.Gray;
             this.lblCustomerDetails.Location = new System.Drawing.Point(3, 35);
             this.lblCustomerDetails.Name = "lblCustomerDetails";
-            this.lblCustomerDetails.Size = new System.Drawing.Size(120, 15);
+            this.lblCustomerDetails.Size = new System.Drawing.Size(151, 20);
             this.lblCustomerDetails.TabIndex = 0;
             this.lblCustomerDetails.Text = "Customer Details";
             // 
@@ -668,7 +668,7 @@
             this.label9.ForeColor = System.Drawing.Color.DarkOrange;
             this.label9.Location = new System.Drawing.Point(3, 8);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(145, 18);
+            this.label9.Size = new System.Drawing.Size(178, 23);
             this.label9.TabIndex = 0;
             this.label9.Text = "Customer Details";
             // 
@@ -714,7 +714,7 @@
             this.btnBrowseSalesOrderFile.Location = new System.Drawing.Point(371, 36);
             this.btnBrowseSalesOrderFile.Name = "btnBrowseSalesOrderFile";
             this.btnBrowseSalesOrderFile.Size = new System.Drawing.Size(30, 27);
-            this.btnBrowseSalesOrderFile.TabIndex = 10;
+            this.btnBrowseSalesOrderFile.TabIndex = 16;
             this.toolTip1.SetToolTip(this.btnBrowseSalesOrderFile, "Browse File");
             this.btnBrowseSalesOrderFile.UseVisualStyleBackColor = true;
             this.btnBrowseSalesOrderFile.Click += new System.EventHandler(this.btnSalesOrderFilePath_Click);
@@ -729,7 +729,7 @@
             this.btnCancelChanges.Location = new System.Drawing.Point(683, 234);
             this.btnCancelChanges.Name = "btnCancelChanges";
             this.btnCancelChanges.Size = new System.Drawing.Size(82, 38);
-            this.btnCancelChanges.TabIndex = 2;
+            this.btnCancelChanges.TabIndex = 3;
             this.btnCancelChanges.Text = "Cancel";
             this.toolTip1.SetToolTip(this.btnCancelChanges, "Cancel Changes");
             this.btnCancelChanges.UseVisualStyleBackColor = false;
@@ -739,8 +739,8 @@
             // 
             this.txtSalesOrderFilePath.Location = new System.Drawing.Point(151, 43);
             this.txtSalesOrderFilePath.Name = "txtSalesOrderFilePath";
-            this.txtSalesOrderFilePath.Size = new System.Drawing.Size(214, 20);
-            this.txtSalesOrderFilePath.TabIndex = 11;
+            this.txtSalesOrderFilePath.Size = new System.Drawing.Size(214, 22);
+            this.txtSalesOrderFilePath.TabIndex = 14;
             // 
             // lblInvOrdFile
             // 
@@ -777,7 +777,7 @@
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(9, 576);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(55, 16);
+            this.label10.Size = new System.Drawing.Size(69, 20);
             this.label10.TabIndex = 13;
             this.label10.Text = "Status:";
             // 
@@ -787,7 +787,7 @@
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.Location = new System.Drawing.Point(70, 576);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(51, 16);
+            this.lblStatus.Size = new System.Drawing.Size(63, 20);
             this.lblStatus.TabIndex = 13;
             this.lblStatus.Text = "Status";
             // 
@@ -795,8 +795,8 @@
             // 
             this.txtBoxSalesQuotFilePath.Location = new System.Drawing.Point(504, 43);
             this.txtBoxSalesQuotFilePath.Name = "txtBoxSalesQuotFilePath";
-            this.txtBoxSalesQuotFilePath.Size = new System.Drawing.Size(214, 20);
-            this.txtBoxSalesQuotFilePath.TabIndex = 11;
+            this.txtBoxSalesQuotFilePath.Size = new System.Drawing.Size(214, 22);
+            this.txtBoxSalesQuotFilePath.TabIndex = 15;
             // 
             // lblQuotFile
             // 
@@ -824,7 +824,7 @@
             this.btnBrowseSalesQuotFile.Location = new System.Drawing.Point(724, 39);
             this.btnBrowseSalesQuotFile.Name = "btnBrowseSalesQuotFile";
             this.btnBrowseSalesQuotFile.Size = new System.Drawing.Size(30, 27);
-            this.btnBrowseSalesQuotFile.TabIndex = 10;
+            this.btnBrowseSalesQuotFile.TabIndex = 17;
             this.btnBrowseSalesQuotFile.UseVisualStyleBackColor = true;
             this.btnBrowseSalesQuotFile.Click += new System.EventHandler(this.btnSalesOrderFilePath_Click);
             // 

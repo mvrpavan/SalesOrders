@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesOrdersReport", "SalesOrdersReport.csproj", "{942C7724-0535-491A-9247-F9350A670C4D}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupProject", "SetupProject\SetupProject.vdproj", "{F02003C5-1A2D-4E1A-8FE3-A3F7A86E0B11}"
@@ -45,6 +47,7 @@ Global
 		{6F467268-1809-4AD6-9BD8-2D980D8A5951}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{6F467268-1809-4AD6-9BD8-2D980D8A5951}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{6F467268-1809-4AD6-9BD8-2D980D8A5951}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6F467268-1809-4AD6-9BD8-2D980D8A5951}.Debug|x86.Build.0 = Debug|Any CPU
 		{6F467268-1809-4AD6-9BD8-2D980D8A5951}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F467268-1809-4AD6-9BD8-2D980D8A5951}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6F467268-1809-4AD6-9BD8-2D980D8A5951}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -54,5 +57,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1224722A-AB0E-43C2-92C8-86EAFF788CDC}
 	EndGlobalSection
 EndGlobal
