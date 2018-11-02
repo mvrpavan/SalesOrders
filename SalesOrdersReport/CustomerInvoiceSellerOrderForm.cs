@@ -1596,6 +1596,7 @@ namespace SalesOrdersReport
 
                 CurrRow = SummaryStartRow + 1;
                 CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Sl#";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Line";
                 CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Bill#";
                 CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Seller Name";
                 CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Sale";
@@ -1842,6 +1843,7 @@ namespace SalesOrdersReport
                     Int32 CurrRow = xlSellerSummaryWorkSheet.UsedRange.Rows.Count + 1;// ListSheetNames.Count + SummaryStartRow;
                     Int32 CurrCol = 0;
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = CurrRow - 2;// ListSheetNames.Count;
+                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ObjCurrentSeller.Line;
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = InvoiceNumber;
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ObjCurrentSeller.Name;
                     CurrCol++; Excel.Range xlRangeSale = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];

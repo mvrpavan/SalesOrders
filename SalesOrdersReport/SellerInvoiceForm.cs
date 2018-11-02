@@ -546,6 +546,7 @@ namespace SalesOrdersReport
 
                 CurrRow = SummaryStartRow + 1;
                 CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Sl#";
+                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Line";
                 CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Bill#";
                 CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Seller Name";
                 CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Sale";
@@ -576,6 +577,7 @@ namespace SalesOrdersReport
                         tmpdrSellers.Add(drSellers[i]);
                 }
                 drSellers = tmpdrSellers.ToArray();
+                Int32 SellerNameCol = 1;
 
                 for (int i = 0; i < drSellers.Length; i++)
                 {
@@ -587,8 +589,10 @@ namespace SalesOrdersReport
                     CurrRow = SellersCount + SummaryStartRow + 1;
                     CurrCol = 0;
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = SellersCount;
+                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = drSellers[i]["Line"].ToString();
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = (IsSellerOnlyInSummary ? "-1" : drSellers[i]["InvoiceNumber"].ToString());
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = drSellers[i]["SellerName"].ToString();
+                    SellerNameCol = CurrCol;
                     CurrCol++; Excel.Range xlRangeSale = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     CurrCol++; Excel.Range xlRangeCancel = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     CurrCol++; Excel.Range xlRangeReturn = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
@@ -615,12 +619,12 @@ namespace SalesOrdersReport
                     xlRangeOldBalance.NumberFormat = "#,##0.00"; xlRangeCash.NumberFormat = "#,##0.00";
                 }
                 CurrRow = SellersCount + SummaryStartRow + 2;
-                Excel.Range xlRange = xlSellerSummaryWorkSheet.Cells[CurrRow, 3];
+                Excel.Range xlRange = xlSellerSummaryWorkSheet.Cells[CurrRow, SellerNameCol];
                 xlRange.Value = "Total";
                 xlRange.Font.Bold = true;
                 xlRange.Font.Color = Color.Red;
 
-                for (int i = 4; i <= LastCol; i++)
+                for (int i = 5; i <= LastCol; i++)
                 {
                     CurrCol = i;
                     Excel.Range xlRangeTotal = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
@@ -639,6 +643,8 @@ namespace SalesOrdersReport
                 xlRange = xlSellerSummaryWorkSheet.Columns["B"];
                 xlRange.ColumnWidth = 7;
                 xlRange = xlSellerSummaryWorkSheet.Columns["C"];
+                xlRange.ColumnWidth = 7;
+                xlRange = xlSellerSummaryWorkSheet.Columns["D"];
                 xlRange.ColumnWidth = 24;
                 
                 AddPageHeaderAndFooter(ref xlSellerSummaryWorkSheet, "Sellerwise Summary", CurrReportSettings);

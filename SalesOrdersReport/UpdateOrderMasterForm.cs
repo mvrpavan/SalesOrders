@@ -250,7 +250,7 @@ namespace SalesOrdersReport
                 ReportProgressFunc(0);
 
                 lblStatus.Text = "Reading Seller Summary...";
-                DataTable dtSellerSummary = CommonFunctions.ReturnDataTableFromExcelWorksheet("Seller Summary", SellerSummaryFilePath, "*", "A2:K100000");
+                DataTable dtSellerSummary = CommonFunctions.ReturnDataTableFromExcelWorksheet("Seller Summary", SellerSummaryFilePath, "*", "A2:L100000");
                 if (dtSellerSummary == null)
                 {
                     MessageBox.Show(this, "Provided Seller Summary file doesn't contain \"Seller Summary\" Sheet.\nPlease provide correct file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -452,10 +452,10 @@ namespace SalesOrdersReport
                     {
                         xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn].Value = SummaryCreationDate.ToString("dd-MMM-yyyy");
                         xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn + 1].Value = DateTime.Now.ToString("dd-MMM-yyyy");
-                        for (int j = 1; j < dtRow.ItemArray.Length; j++)
+                        for (int j = 2; j < dtRow.ItemArray.Length; j++)
                         {
-                            xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn + 1 + j].Value = dtRow[j].ToString();
-                            if (j >= 3) xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn + 1 + j].NumberFormat = "#,##0.00";
+                            xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn + j].Value = dtRow[j].ToString();
+                            if (j >= 4) xlSellerHistoryWorksheet.Cells[StartRow + LastRow, StartColumn + j].NumberFormat = "#,##0.00";
                         }
 
                         LastRow++;
