@@ -506,7 +506,7 @@ namespace SalesOrdersReport
                     Int32 Count = 0;
                     while (true)
                     {
-                        dtSellerInvoice = ObjInvoice.LoadInvoice(SheetName + ((Count > 0) ? "" : " " + Count), SellerSummaryFilePath);
+                        dtSellerInvoice = ObjInvoice.LoadInvoice(SheetName + ((Count == 0) ? "" : " " + Count), SellerSummaryFilePath);
                         if (dtSellerInvoice == null) break;
                         dtSellerInvoice.DefaultView.RowFilter = "IsNull([Sl No], 0) > 0";
                         DataRow[] drProducts = dtSellerInvoice.DefaultView.ToTable().Select("", "[Sl No] asc");
