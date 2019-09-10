@@ -216,3 +216,6 @@ pip-log.txt
 .mr.developer.cfg
 SalesOrdersReport/SalesOrdersReport.suo
 *.suo
+SalesOrdersReport/.vs/SalesOrdersReport/v15/Server/sqlite3/storage.ide
+SalesOrdersReport/.vs/SalesOrdersReport/v15/Server/sqlite3/storage.ide-shm
+SalesOrdersReport/.vs/SalesOrdersReport/v15/Server/sqlite3/storage.ide-wal
