@@ -87,6 +87,12 @@
     <Compile Include="DiscountForm.Designer.cs">
       <DependentUpon>DiscountForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditOldBalanceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditOldBalanceForm.Designer.cs">
+      <DependentUpon>EditOldBalanceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Invoice.cs" />
     <Compile Include="InvoiceGST.cs" />
     <Compile Include="InvoiceVAT.cs" />
@@ -188,6 +194,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DiscountForm.resx">
       <DependentUpon>DiscountForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditOldBalanceForm.resx">
+      <DependentUpon>EditOldBalanceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SellerOrderSheetForm.resx">
       <DependentUpon>SellerOrderSheetForm.cs</DependentUpon>
@@ -299,6 +308,10 @@
     <None Include="Resources\open-archive.png" />
     <None Include="Resources\loading.gif" />
     <None Include="Resources\loading_small.gif" />
+    <Content Include="Images\your_logo_here.png" />
+    <Content Include="Resources\reset.png" />
+    <None Include="Resources\reset1.png" />
+    <None Include="Resources\reset_small.png" />
     <Content Include="Settings.xml">
       <SubType>Designer</SubType>
     </Content>

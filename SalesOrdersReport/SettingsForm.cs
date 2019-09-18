@@ -48,6 +48,7 @@ namespace SalesOrdersReport
                 chkBoxInstBillGenQuot.Checked = CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatQuotation;
                 chkBoxInstBillPrintInvoice.Checked = CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatInvoice;
                 chkBoxInstBillPrintQuot.Checked = CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatQuotation;
+                txtBoxPrintCopies.Text = CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies.ToString();
 
                 //Load Invoice Settings from CommonFunctions Module
                 ReportSettings CurrSettings = CommonFunctions.ObjInvoiceSettings;
@@ -117,6 +118,16 @@ namespace SalesOrdersReport
             try
             {
                 //Apply General Settings to CommonFunctions Module
+                Int32 result;
+                if (Int32.TryParse(txtBoxPrintCopies.Text, out result))
+                {
+                    CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies = result;
+                }
+                else
+                {
+                    MessageBox.Show(this, "Invalid Print Copies setting!", "Print Invoice/Quotation", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
                 CommonFunctions.ObjGeneralSettings.SummaryLocation = ddlSummaryLocation.SelectedIndex;
                 CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatInvoice = chkBoxInstBillGenInvoice.Checked;
                 CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatQuotation = chkBoxInstBillGenQuot.Checked;

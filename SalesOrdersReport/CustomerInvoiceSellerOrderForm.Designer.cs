@@ -29,8 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomerInvoiceSellerOrderForm));
             this.lblSelectName = new System.Windows.Forms.Label();
             this.cmbBoxSellerCustomer = new System.Windows.Forms.ComboBox();
             this.dtGridViewProdListForSelection = new System.Windows.Forms.DataGridView();
@@ -82,16 +83,22 @@
             this.btnDiscount = new System.Windows.Forms.Button();
             this.btnHoldOrder = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.btnBrowseSalesOrderFile = new System.Windows.Forms.Button();
             this.btnCancelChanges = new System.Windows.Forms.Button();
+            this.btnBrowseSalesOrderFile = new System.Windows.Forms.Button();
+            this.btnResetBalanceAmount = new System.Windows.Forms.Button();
+            this.btnEditBalanceAmount = new System.Windows.Forms.Button();
             this.txtSalesOrderFilePath = new System.Windows.Forms.TextBox();
             this.lblInvOrdFile = new System.Windows.Forms.Label();
             this.opnFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.panelOrderControls = new System.Windows.Forms.Panel();
+            this.lblBalanceAmountValue = new System.Windows.Forms.Label();
+            this.lblBalanceAmountText = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
             this.txtBoxSalesQuotFilePath = new System.Windows.Forms.TextBox();
             this.lblQuotFile = new System.Windows.Forms.Label();
+            this.lblSelectBillNum = new System.Windows.Forms.Label();
+            this.cmbBoxBillNumber = new System.Windows.Forms.ComboBox();
             this.picBoxLoading = new System.Windows.Forms.PictureBox();
             this.btnBrowseSalesQuotFile = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProdListForSelection)).BeginInit();
@@ -120,7 +127,7 @@
             this.cmbBoxSellerCustomer.FormattingEnabled = true;
             this.cmbBoxSellerCustomer.Location = new System.Drawing.Point(151, 69);
             this.cmbBoxSellerCustomer.Name = "cmbBoxSellerCustomer";
-            this.cmbBoxSellerCustomer.Size = new System.Drawing.Size(212, 24);
+            this.cmbBoxSellerCustomer.Size = new System.Drawing.Size(212, 21);
             this.cmbBoxSellerCustomer.TabIndex = 1;
             this.cmbBoxSellerCustomer.SelectedIndexChanged += new System.EventHandler(this.cmbBoxSellerCustomer_SelectedIndexChanged);
             // 
@@ -138,15 +145,15 @@
             this.Column4,
             this.Column3,
             this.Column6});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dtGridViewProdListForSelection.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dtGridViewProdListForSelection.DefaultCellStyle = dataGridViewCellStyle1;
             this.dtGridViewProdListForSelection.Location = new System.Drawing.Point(3, 3);
             this.dtGridViewProdListForSelection.MultiSelect = false;
             this.dtGridViewProdListForSelection.Name = "dtGridViewProdListForSelection";
@@ -165,7 +172,7 @@
             this.Column7.HeaderText = "Category";
             this.Column7.Name = "Column7";
             this.Column7.ReadOnly = true;
-            this.Column7.Width = 96;
+            this.Column7.Width = 76;
             // 
             // Column2
             // 
@@ -173,7 +180,7 @@
             this.Column2.HeaderText = "Item";
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
-            this.Column2.Width = 65;
+            this.Column2.Width = 54;
             // 
             // Column4
             // 
@@ -181,7 +188,7 @@
             this.Column4.HeaderText = "Price";
             this.Column4.Name = "Column4";
             this.Column4.ReadOnly = true;
-            this.Column4.Width = 71;
+            this.Column4.Width = 58;
             // 
             // Column3
             // 
@@ -189,7 +196,7 @@
             this.Column3.HeaderText = "Quantity";
             this.Column3.Name = "Column3";
             this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column3.Width = 69;
+            this.Column3.Width = 54;
             // 
             // Column6
             // 
@@ -211,7 +218,7 @@
             this.cmbBoxProduct.FormattingEnabled = true;
             this.cmbBoxProduct.Location = new System.Drawing.Point(504, 96);
             this.cmbBoxProduct.Name = "cmbBoxProduct";
-            this.cmbBoxProduct.Size = new System.Drawing.Size(253, 24);
+            this.cmbBoxProduct.Size = new System.Drawing.Size(253, 21);
             this.cmbBoxProduct.TabIndex = 3;
             this.cmbBoxProduct.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProduct_SelectedIndexChanged);
             // 
@@ -220,7 +227,7 @@
             this.cmbBoxProdCat.FormattingEnabled = true;
             this.cmbBoxProdCat.Location = new System.Drawing.Point(151, 96);
             this.cmbBoxProdCat.Name = "cmbBoxProdCat";
-            this.cmbBoxProdCat.Size = new System.Drawing.Size(212, 24);
+            this.cmbBoxProdCat.Size = new System.Drawing.Size(212, 21);
             this.cmbBoxProdCat.TabIndex = 2;
             this.cmbBoxProdCat.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProdCat_SelectedIndexChanged);
             // 
@@ -237,7 +244,7 @@
             // 
             this.dtTmPckrInvOrdDate.Location = new System.Drawing.Point(151, 17);
             this.dtTmPckrInvOrdDate.Name = "dtTmPckrInvOrdDate";
-            this.dtTmPckrInvOrdDate.Size = new System.Drawing.Size(212, 22);
+            this.dtTmPckrInvOrdDate.Size = new System.Drawing.Size(212, 20);
             this.dtTmPckrInvOrdDate.TabIndex = 0;
             this.dtTmPckrInvOrdDate.ValueChanged += new System.EventHandler(this.dtTmPckrInvOrdDate_ValueChanged);
             // 
@@ -263,7 +270,7 @@
             // 
             this.txtBoxInvOrdNumber.Location = new System.Drawing.Point(504, 17);
             this.txtBoxInvOrdNumber.Name = "txtBoxInvOrdNumber";
-            this.txtBoxInvOrdNumber.Size = new System.Drawing.Size(84, 22);
+            this.txtBoxInvOrdNumber.Size = new System.Drawing.Size(84, 20);
             this.txtBoxInvOrdNumber.TabIndex = 13;
             // 
             // btnCnclInvOrd
@@ -312,15 +319,15 @@
             this.Column11,
             this.Column12,
             this.Column14});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dtGridViewInvOrdProdList.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dtGridViewInvOrdProdList.DefaultCellStyle = dataGridViewCellStyle2;
             this.dtGridViewInvOrdProdList.Location = new System.Drawing.Point(3, 3);
             this.dtGridViewInvOrdProdList.MultiSelect = false;
             this.dtGridViewInvOrdProdList.Name = "dtGridViewInvOrdProdList";
@@ -338,7 +345,7 @@
             this.Column8.HeaderText = "Category";
             this.Column8.Name = "Column8";
             this.Column8.ReadOnly = true;
-            this.Column8.Width = 96;
+            this.Column8.Width = 76;
             // 
             // Column10
             // 
@@ -346,7 +353,7 @@
             this.Column10.HeaderText = "Item";
             this.Column10.Name = "Column10";
             this.Column10.ReadOnly = true;
-            this.Column10.Width = 65;
+            this.Column10.Width = 54;
             // 
             // Column11
             // 
@@ -354,14 +361,14 @@
             this.Column11.HeaderText = "Price";
             this.Column11.Name = "Column11";
             this.Column11.ReadOnly = true;
-            this.Column11.Width = 71;
+            this.Column11.Width = 58;
             // 
             // Column12
             // 
             this.Column12.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Column12.HeaderText = "Quantity";
             this.Column12.Name = "Column12";
-            this.Column12.Width = 92;
+            this.Column12.Width = 73;
             // 
             // Column14
             // 
@@ -398,7 +405,7 @@
             // 
             this.btnSelectAll.FlatAppearance.BorderSize = 0;
             this.btnSelectAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSelectAll.Image = global::SalesOrdersReport.Properties.Resources.list__2_;
+            this.btnSelectAll.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectAll.Image")));
             this.btnSelectAll.Location = new System.Drawing.Point(469, 26);
             this.btnSelectAll.Name = "btnSelectAll";
             this.btnSelectAll.Size = new System.Drawing.Size(30, 27);
@@ -412,7 +419,7 @@
             // 
             this.btnAddItem.FlatAppearance.BorderSize = 0;
             this.btnAddItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddItem.Image = global::SalesOrdersReport.Properties.Resources.add;
+            this.btnAddItem.Image = ((System.Drawing.Image)(resources.GetObject("btnAddItem.Image")));
             this.btnAddItem.Location = new System.Drawing.Point(469, 59);
             this.btnAddItem.Name = "btnAddItem";
             this.btnAddItem.Size = new System.Drawing.Size(30, 27);
@@ -426,7 +433,7 @@
             // 
             this.btnSelectAllToRemove.FlatAppearance.BorderSize = 0;
             this.btnSelectAllToRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSelectAllToRemove.Image = global::SalesOrdersReport.Properties.Resources.list__2_;
+            this.btnSelectAllToRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectAllToRemove.Image")));
             this.btnSelectAllToRemove.Location = new System.Drawing.Point(469, 25);
             this.btnSelectAllToRemove.Name = "btnSelectAllToRemove";
             this.btnSelectAllToRemove.Size = new System.Drawing.Size(30, 27);
@@ -440,7 +447,7 @@
             // 
             this.btnItemDiscount.FlatAppearance.BorderSize = 0;
             this.btnItemDiscount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnItemDiscount.Image = global::SalesOrdersReport.Properties.Resources.discount;
+            this.btnItemDiscount.Image = ((System.Drawing.Image)(resources.GetObject("btnItemDiscount.Image")));
             this.btnItemDiscount.Location = new System.Drawing.Point(469, 88);
             this.btnItemDiscount.Name = "btnItemDiscount";
             this.btnItemDiscount.Size = new System.Drawing.Size(30, 27);
@@ -455,7 +462,7 @@
             // 
             this.btnRemItem.FlatAppearance.BorderSize = 0;
             this.btnRemItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRemItem.Image = global::SalesOrdersReport.Properties.Resources.negative;
+            this.btnRemItem.Image = ((System.Drawing.Image)(resources.GetObject("btnRemItem.Image")));
             this.btnRemItem.Location = new System.Drawing.Point(469, 58);
             this.btnRemItem.Name = "btnRemItem";
             this.btnRemItem.Size = new System.Drawing.Size(30, 27);
@@ -510,7 +517,7 @@
             this.label8.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label8.Location = new System.Drawing.Point(3, 139);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(122, 23);
+            this.label8.Size = new System.Drawing.Size(99, 19);
             this.label8.TabIndex = 0;
             this.label8.Text = "Grand Total";
             // 
@@ -532,7 +539,7 @@
             this.label7.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label7.Location = new System.Drawing.Point(3, 112);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(93, 23);
+            this.label7.Size = new System.Drawing.Size(76, 19);
             this.label7.TabIndex = 0;
             this.label7.Text = "Total Tax";
             // 
@@ -554,7 +561,7 @@
             this.label6.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label6.Location = new System.Drawing.Point(3, 85);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(94, 23);
+            this.label6.Size = new System.Drawing.Size(74, 19);
             this.label6.TabIndex = 0;
             this.label6.Text = "Discount";
             // 
@@ -576,7 +583,7 @@
             this.label5.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label5.Location = new System.Drawing.Point(3, 56);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(96, 23);
+            this.label5.Size = new System.Drawing.Size(78, 19);
             this.label5.TabIndex = 0;
             this.label5.Text = "Sub Total";
             // 
@@ -598,7 +605,7 @@
             this.label1.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label1.Location = new System.Drawing.Point(3, 29);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(144, 23);
+            this.label1.Size = new System.Drawing.Size(114, 19);
             this.label1.TabIndex = 0;
             this.label1.Text = "Total Quantity";
             // 
@@ -620,7 +627,7 @@
             this.label4.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.label4.Location = new System.Drawing.Point(3, 3);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(128, 23);
+            this.label4.Size = new System.Drawing.Size(97, 19);
             this.label4.TabIndex = 0;
             this.label4.Text = "No. of Items";
             // 
@@ -641,13 +648,14 @@
             // 
             // panel2
             // 
+            this.panel2.AutoScroll = true;
             this.panel2.BackColor = System.Drawing.Color.SeaShell;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.lblCustomerDetails);
             this.panel2.Controls.Add(this.label9);
-            this.panel2.Location = new System.Drawing.Point(528, 278);
+            this.panel2.Location = new System.Drawing.Point(528, 321);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(308, 157);
+            this.panel2.Size = new System.Drawing.Size(308, 114);
             this.panel2.TabIndex = 9;
             // 
             // lblCustomerDetails
@@ -657,7 +665,7 @@
             this.lblCustomerDetails.ForeColor = System.Drawing.Color.Gray;
             this.lblCustomerDetails.Location = new System.Drawing.Point(3, 35);
             this.lblCustomerDetails.Name = "lblCustomerDetails";
-            this.lblCustomerDetails.Size = new System.Drawing.Size(151, 20);
+            this.lblCustomerDetails.Size = new System.Drawing.Size(120, 15);
             this.lblCustomerDetails.TabIndex = 0;
             this.lblCustomerDetails.Text = "Customer Details";
             // 
@@ -668,7 +676,7 @@
             this.label9.ForeColor = System.Drawing.Color.DarkOrange;
             this.label9.Location = new System.Drawing.Point(3, 8);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(178, 23);
+            this.label9.Size = new System.Drawing.Size(145, 18);
             this.label9.TabIndex = 0;
             this.label9.Text = "Customer Details";
             // 
@@ -706,19 +714,6 @@
             this.btnHoldOrder.Visible = false;
             this.btnHoldOrder.Click += new System.EventHandler(this.btnHoldOrder_Click);
             // 
-            // btnBrowseSalesOrderFile
-            // 
-            this.btnBrowseSalesOrderFile.FlatAppearance.BorderSize = 0;
-            this.btnBrowseSalesOrderFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBrowseSalesOrderFile.Image = global::SalesOrdersReport.Properties.Resources.open_archive;
-            this.btnBrowseSalesOrderFile.Location = new System.Drawing.Point(371, 36);
-            this.btnBrowseSalesOrderFile.Name = "btnBrowseSalesOrderFile";
-            this.btnBrowseSalesOrderFile.Size = new System.Drawing.Size(30, 27);
-            this.btnBrowseSalesOrderFile.TabIndex = 16;
-            this.toolTip1.SetToolTip(this.btnBrowseSalesOrderFile, "Browse File");
-            this.btnBrowseSalesOrderFile.UseVisualStyleBackColor = true;
-            this.btnBrowseSalesOrderFile.Click += new System.EventHandler(this.btnSalesOrderFilePath_Click);
-            // 
             // btnCancelChanges
             // 
             this.btnCancelChanges.BackColor = System.Drawing.Color.DarkOrange;
@@ -735,11 +730,52 @@
             this.btnCancelChanges.UseVisualStyleBackColor = false;
             this.btnCancelChanges.Click += new System.EventHandler(this.btnCancelChanges_Click);
             // 
+            // btnBrowseSalesOrderFile
+            // 
+            this.btnBrowseSalesOrderFile.FlatAppearance.BorderSize = 0;
+            this.btnBrowseSalesOrderFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBrowseSalesOrderFile.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowseSalesOrderFile.Image")));
+            this.btnBrowseSalesOrderFile.Location = new System.Drawing.Point(371, 36);
+            this.btnBrowseSalesOrderFile.Name = "btnBrowseSalesOrderFile";
+            this.btnBrowseSalesOrderFile.Size = new System.Drawing.Size(30, 27);
+            this.btnBrowseSalesOrderFile.TabIndex = 16;
+            this.toolTip1.SetToolTip(this.btnBrowseSalesOrderFile, "Browse File");
+            this.btnBrowseSalesOrderFile.UseVisualStyleBackColor = true;
+            this.btnBrowseSalesOrderFile.Click += new System.EventHandler(this.btnSalesOrderFilePath_Click);
+            // 
+            // btnResetBalanceAmount
+            // 
+            this.btnResetBalanceAmount.FlatAppearance.BorderSize = 0;
+            this.btnResetBalanceAmount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetBalanceAmount.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnResetBalanceAmount.Image = global::SalesOrdersReport.Properties.Resources.reset_small;
+            this.btnResetBalanceAmount.Location = new System.Drawing.Point(801, 285);
+            this.btnResetBalanceAmount.Name = "btnResetBalanceAmount";
+            this.btnResetBalanceAmount.Size = new System.Drawing.Size(24, 24);
+            this.btnResetBalanceAmount.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.btnResetBalanceAmount, "Reset Balance");
+            this.btnResetBalanceAmount.UseVisualStyleBackColor = true;
+            this.btnResetBalanceAmount.Click += new System.EventHandler(this.btnResetBalanceAmountValue_Click);
+            // 
+            // btnEditBalanceAmount
+            // 
+            this.btnEditBalanceAmount.FlatAppearance.BorderSize = 0;
+            this.btnEditBalanceAmount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnEditBalanceAmount.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnEditBalanceAmount.Image = ((System.Drawing.Image)(resources.GetObject("btnEditBalanceAmount.Image")));
+            this.btnEditBalanceAmount.Location = new System.Drawing.Point(771, 285);
+            this.btnEditBalanceAmount.Name = "btnEditBalanceAmount";
+            this.btnEditBalanceAmount.Size = new System.Drawing.Size(24, 24);
+            this.btnEditBalanceAmount.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.btnEditBalanceAmount, "Edit Balance Amount");
+            this.btnEditBalanceAmount.UseVisualStyleBackColor = true;
+            this.btnEditBalanceAmount.Click += new System.EventHandler(this.btnEditBalanceAmount_Click);
+            // 
             // txtSalesOrderFilePath
             // 
             this.txtSalesOrderFilePath.Location = new System.Drawing.Point(151, 43);
             this.txtSalesOrderFilePath.Name = "txtSalesOrderFilePath";
-            this.txtSalesOrderFilePath.Size = new System.Drawing.Size(214, 22);
+            this.txtSalesOrderFilePath.Size = new System.Drawing.Size(214, 20);
             this.txtSalesOrderFilePath.TabIndex = 14;
             // 
             // lblInvOrdFile
@@ -757,7 +793,11 @@
             // 
             // panelOrderControls
             // 
+            this.panelOrderControls.Controls.Add(this.btnResetBalanceAmount);
+            this.panelOrderControls.Controls.Add(this.btnEditBalanceAmount);
             this.panelOrderControls.Controls.Add(this.splitContainer1);
+            this.panelOrderControls.Controls.Add(this.lblBalanceAmountValue);
+            this.panelOrderControls.Controls.Add(this.lblBalanceAmountText);
             this.panelOrderControls.Controls.Add(this.btnCreateInvOrd);
             this.panelOrderControls.Controls.Add(this.panel2);
             this.panelOrderControls.Controls.Add(this.btnDiscount);
@@ -771,13 +811,35 @@
             this.panelOrderControls.Size = new System.Drawing.Size(836, 441);
             this.panelOrderControls.TabIndex = 12;
             // 
+            // lblBalanceAmountValue
+            // 
+            this.lblBalanceAmountValue.AutoSize = true;
+            this.lblBalanceAmountValue.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBalanceAmountValue.ForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.lblBalanceAmountValue.Location = new System.Drawing.Point(691, 286);
+            this.lblBalanceAmountValue.Name = "lblBalanceAmountValue";
+            this.lblBalanceAmountValue.Size = new System.Drawing.Size(40, 19);
+            this.lblBalanceAmountValue.TabIndex = 0;
+            this.lblBalanceAmountValue.Text = "0.00";
+            // 
+            // lblBalanceAmountText
+            // 
+            this.lblBalanceAmountText.AutoSize = true;
+            this.lblBalanceAmountText.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBalanceAmountText.ForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.lblBalanceAmountText.Location = new System.Drawing.Point(531, 286);
+            this.lblBalanceAmountText.Name = "lblBalanceAmountText";
+            this.lblBalanceAmountText.Size = new System.Drawing.Size(140, 19);
+            this.lblBalanceAmountText.TabIndex = 0;
+            this.lblBalanceAmountText.Text = "Balance Amount";
+            // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(9, 576);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(69, 20);
+            this.label10.Size = new System.Drawing.Size(55, 16);
             this.label10.TabIndex = 13;
             this.label10.Text = "Status:";
             // 
@@ -787,7 +849,7 @@
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.Location = new System.Drawing.Point(70, 576);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(63, 20);
+            this.lblStatus.Size = new System.Drawing.Size(51, 16);
             this.lblStatus.TabIndex = 13;
             this.lblStatus.Text = "Status";
             // 
@@ -795,7 +857,7 @@
             // 
             this.txtBoxSalesQuotFilePath.Location = new System.Drawing.Point(504, 43);
             this.txtBoxSalesQuotFilePath.Name = "txtBoxSalesQuotFilePath";
-            this.txtBoxSalesQuotFilePath.Size = new System.Drawing.Size(214, 22);
+            this.txtBoxSalesQuotFilePath.Size = new System.Drawing.Size(214, 20);
             this.txtBoxSalesQuotFilePath.TabIndex = 15;
             // 
             // lblQuotFile
@@ -807,9 +869,30 @@
             this.lblQuotFile.Text = "Quotation File";
             this.lblQuotFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // lblSelectBillNum
+            // 
+            this.lblSelectBillNum.Location = new System.Drawing.Point(426, 72);
+            this.lblSelectBillNum.Name = "lblSelectBillNum";
+            this.lblSelectBillNum.Size = new System.Drawing.Size(72, 13);
+            this.lblSelectBillNum.TabIndex = 0;
+            this.lblSelectBillNum.Text = "Select Bill#";
+            this.lblSelectBillNum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblSelectBillNum.Visible = false;
+            // 
+            // cmbBoxBillNumber
+            // 
+            this.cmbBoxBillNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxBillNumber.FormattingEnabled = true;
+            this.cmbBoxBillNumber.Location = new System.Drawing.Point(504, 69);
+            this.cmbBoxBillNumber.Name = "cmbBoxBillNumber";
+            this.cmbBoxBillNumber.Size = new System.Drawing.Size(97, 21);
+            this.cmbBoxBillNumber.TabIndex = 3;
+            this.cmbBoxBillNumber.Visible = false;
+            this.cmbBoxBillNumber.SelectedIndexChanged += new System.EventHandler(this.cmbBoxBillNumber_SelectedIndexChanged);
+            // 
             // picBoxLoading
             // 
-            this.picBoxLoading.Image = global::SalesOrdersReport.Properties.Resources.loading_small;
+            this.picBoxLoading.Image = ((System.Drawing.Image)(resources.GetObject("picBoxLoading.Image")));
             this.picBoxLoading.Location = new System.Drawing.Point(824, 570);
             this.picBoxLoading.Name = "picBoxLoading";
             this.picBoxLoading.Size = new System.Drawing.Size(24, 24);
@@ -820,7 +903,7 @@
             // 
             this.btnBrowseSalesQuotFile.FlatAppearance.BorderSize = 0;
             this.btnBrowseSalesQuotFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBrowseSalesQuotFile.Image = global::SalesOrdersReport.Properties.Resources.open_archive;
+            this.btnBrowseSalesQuotFile.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowseSalesQuotFile.Image")));
             this.btnBrowseSalesQuotFile.Location = new System.Drawing.Point(724, 39);
             this.btnBrowseSalesQuotFile.Name = "btnBrowseSalesQuotFile";
             this.btnBrowseSalesQuotFile.Size = new System.Drawing.Size(30, 27);
@@ -849,7 +932,9 @@
             this.Controls.Add(this.cmbBoxSellerCustomer);
             this.Controls.Add(this.cmbBoxProdCat);
             this.Controls.Add(this.lblInvoiceNumber);
+            this.Controls.Add(this.cmbBoxBillNumber);
             this.Controls.Add(this.cmbBoxProduct);
+            this.Controls.Add(this.lblSelectBillNum);
             this.Controls.Add(this.lblQuotFile);
             this.Controls.Add(this.lblInvOrdFile);
             this.Controls.Add(this.lblInvoiceDate);
@@ -858,7 +943,7 @@
             this.Name = "CustomerInvoiceSellerOrderForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "CustomerInvoiceForm";
+            this.Text = "\';;";
             this.Load += new System.EventHandler(this.CustomerInvoiceForm_Load);
             this.Shown += new System.EventHandler(this.CustomerInvoiceSellerOrderForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProdListForSelection)).EndInit();
@@ -872,6 +957,7 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panelOrderControls.ResumeLayout(false);
+            this.panelOrderControls.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxLoading)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -943,5 +1029,11 @@
         private System.Windows.Forms.Button btnBrowseSalesQuotFile;
         private System.Windows.Forms.PictureBox picBoxLoading;
         private System.Windows.Forms.Button btnCancelChanges;
+        private System.Windows.Forms.Label lblSelectBillNum;
+        private System.Windows.Forms.ComboBox cmbBoxBillNumber;
+        private System.Windows.Forms.Button btnEditBalanceAmount;
+        private System.Windows.Forms.Label lblBalanceAmountValue;
+        private System.Windows.Forms.Label lblBalanceAmountText;
+        private System.Windows.Forms.Button btnResetBalanceAmount;
     }
 }

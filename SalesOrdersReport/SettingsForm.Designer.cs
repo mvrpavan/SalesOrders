@@ -31,6 +31,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.tabControlSettings = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.chkBoxInstBillPrintQuot = new System.Windows.Forms.CheckBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.chkBoxInstBillGenQuot = new System.Windows.Forms.CheckBox();
+            this.chkBoxInstBillGenInvoice = new System.Windows.Forms.CheckBox();
+            this.chkBoxInstBillPrintInvoice = new System.Windows.Forms.CheckBox();
             this.ddlSummaryLocation = new System.Windows.Forms.ComboBox();
             this.lblSummaryLocation = new System.Windows.Forms.Label();
             this.tabPageInvoice = new System.Windows.Forms.TabPage();
@@ -126,20 +133,15 @@
             this.colorDialogSettings = new System.Windows.Forms.ColorDialog();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbBoxProductLines = new System.Windows.Forms.ComboBox();
-            this.label32 = new System.Windows.Forms.Label();
-            this.chkBoxInstBillGenInvoice = new System.Windows.Forms.CheckBox();
-            this.chkBoxInstBillGenQuot = new System.Windows.Forms.CheckBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.chkBoxInstBillPrintInvoice = new System.Windows.Forms.CheckBox();
-            this.chkBoxInstBillPrintQuot = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.txtBoxPrintCopies = new System.Windows.Forms.TextBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.tabPageInvoice.SuspendLayout();
             this.tabPageQuotation.SuspendLayout();
             this.tabPagePurchaseOrder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDownPeriodValue)).BeginInit();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlSettings
@@ -169,6 +171,83 @@
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.ToolTipText = "General Settings";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.txtBoxPrintCopies);
+            this.groupBox1.Controls.Add(this.label32);
+            this.groupBox1.Controls.Add(this.chkBoxInstBillPrintQuot);
+            this.groupBox1.Controls.Add(this.label34);
+            this.groupBox1.Controls.Add(this.label33);
+            this.groupBox1.Controls.Add(this.chkBoxInstBillGenQuot);
+            this.groupBox1.Controls.Add(this.chkBoxInstBillGenInvoice);
+            this.groupBox1.Controls.Add(this.chkBoxInstBillPrintInvoice);
+            this.groupBox1.Location = new System.Drawing.Point(75, 97);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(334, 119);
+            this.groupBox1.TabIndex = 6;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Customer Bill Settings";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(6, 33);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(97, 13);
+            this.label32.TabIndex = 4;
+            this.label32.Text = "Generate in Format";
+            // 
+            // chkBoxInstBillPrintQuot
+            // 
+            this.chkBoxInstBillPrintQuot.AutoSize = true;
+            this.chkBoxInstBillPrintQuot.Location = new System.Drawing.Point(205, 64);
+            this.chkBoxInstBillPrintQuot.Name = "chkBoxInstBillPrintQuot";
+            this.chkBoxInstBillPrintQuot.Size = new System.Drawing.Size(72, 17);
+            this.chkBoxInstBillPrintQuot.TabIndex = 5;
+            this.chkBoxInstBillPrintQuot.Text = "Quotation";
+            this.chkBoxInstBillPrintQuot.UseVisualStyleBackColor = true;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(29, 64);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(74, 13);
+            this.label33.TabIndex = 4;
+            this.label33.Text = "Print in Format";
+            // 
+            // chkBoxInstBillGenQuot
+            // 
+            this.chkBoxInstBillGenQuot.AutoSize = true;
+            this.chkBoxInstBillGenQuot.Location = new System.Drawing.Point(205, 33);
+            this.chkBoxInstBillGenQuot.Name = "chkBoxInstBillGenQuot";
+            this.chkBoxInstBillGenQuot.Size = new System.Drawing.Size(72, 17);
+            this.chkBoxInstBillGenQuot.TabIndex = 5;
+            this.chkBoxInstBillGenQuot.Text = "Quotation";
+            this.chkBoxInstBillGenQuot.UseVisualStyleBackColor = true;
+            this.chkBoxInstBillGenQuot.CheckedChanged += new System.EventHandler(this.chkBoxInstBillGenQuot_CheckedChanged);
+            // 
+            // chkBoxInstBillGenInvoice
+            // 
+            this.chkBoxInstBillGenInvoice.AutoSize = true;
+            this.chkBoxInstBillGenInvoice.Location = new System.Drawing.Point(127, 33);
+            this.chkBoxInstBillGenInvoice.Name = "chkBoxInstBillGenInvoice";
+            this.chkBoxInstBillGenInvoice.Size = new System.Drawing.Size(61, 17);
+            this.chkBoxInstBillGenInvoice.TabIndex = 5;
+            this.chkBoxInstBillGenInvoice.Text = "Invoice";
+            this.chkBoxInstBillGenInvoice.UseVisualStyleBackColor = true;
+            this.chkBoxInstBillGenInvoice.CheckedChanged += new System.EventHandler(this.chkBoxInstBillGenInvoice_CheckedChanged);
+            // 
+            // chkBoxInstBillPrintInvoice
+            // 
+            this.chkBoxInstBillPrintInvoice.AutoSize = true;
+            this.chkBoxInstBillPrintInvoice.Location = new System.Drawing.Point(127, 64);
+            this.chkBoxInstBillPrintInvoice.Name = "chkBoxInstBillPrintInvoice";
+            this.chkBoxInstBillPrintInvoice.Size = new System.Drawing.Size(61, 17);
+            this.chkBoxInstBillPrintInvoice.TabIndex = 5;
+            this.chkBoxInstBillPrintInvoice.Text = "Invoice";
+            this.chkBoxInstBillPrintInvoice.UseVisualStyleBackColor = true;
             // 
             // ddlSummaryLocation
             // 
@@ -1087,80 +1166,21 @@
             this.cmbBoxProductLines.TabIndex = 0;
             this.cmbBoxProductLines.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProductLines_SelectedIndexChanged);
             // 
-            // label32
+            // label34
             // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(6, 33);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(97, 13);
-            this.label32.TabIndex = 4;
-            this.label32.Text = "Generate in Format";
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(40, 91);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(63, 13);
+            this.label34.TabIndex = 4;
+            this.label34.Text = "Print Copies";
             // 
-            // chkBoxInstBillGenInvoice
+            // txtBoxPrintCopies
             // 
-            this.chkBoxInstBillGenInvoice.AutoSize = true;
-            this.chkBoxInstBillGenInvoice.Location = new System.Drawing.Point(127, 33);
-            this.chkBoxInstBillGenInvoice.Name = "chkBoxInstBillGenInvoice";
-            this.chkBoxInstBillGenInvoice.Size = new System.Drawing.Size(61, 17);
-            this.chkBoxInstBillGenInvoice.TabIndex = 5;
-            this.chkBoxInstBillGenInvoice.Text = "Invoice";
-            this.chkBoxInstBillGenInvoice.UseVisualStyleBackColor = true;
-            this.chkBoxInstBillGenInvoice.CheckedChanged += new System.EventHandler(this.chkBoxInstBillGenInvoice_CheckedChanged);
-            // 
-            // chkBoxInstBillGenQuot
-            // 
-            this.chkBoxInstBillGenQuot.AutoSize = true;
-            this.chkBoxInstBillGenQuot.Location = new System.Drawing.Point(205, 33);
-            this.chkBoxInstBillGenQuot.Name = "chkBoxInstBillGenQuot";
-            this.chkBoxInstBillGenQuot.Size = new System.Drawing.Size(72, 17);
-            this.chkBoxInstBillGenQuot.TabIndex = 5;
-            this.chkBoxInstBillGenQuot.Text = "Quotation";
-            this.chkBoxInstBillGenQuot.UseVisualStyleBackColor = true;
-            this.chkBoxInstBillGenQuot.CheckedChanged += new System.EventHandler(this.chkBoxInstBillGenQuot_CheckedChanged);
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(29, 64);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(74, 13);
-            this.label33.TabIndex = 4;
-            this.label33.Text = "Print in Format";
-            // 
-            // chkBoxInstBillPrintInvoice
-            // 
-            this.chkBoxInstBillPrintInvoice.AutoSize = true;
-            this.chkBoxInstBillPrintInvoice.Location = new System.Drawing.Point(127, 64);
-            this.chkBoxInstBillPrintInvoice.Name = "chkBoxInstBillPrintInvoice";
-            this.chkBoxInstBillPrintInvoice.Size = new System.Drawing.Size(61, 17);
-            this.chkBoxInstBillPrintInvoice.TabIndex = 5;
-            this.chkBoxInstBillPrintInvoice.Text = "Invoice";
-            this.chkBoxInstBillPrintInvoice.UseVisualStyleBackColor = true;
-            // 
-            // chkBoxInstBillPrintQuot
-            // 
-            this.chkBoxInstBillPrintQuot.AutoSize = true;
-            this.chkBoxInstBillPrintQuot.Location = new System.Drawing.Point(205, 64);
-            this.chkBoxInstBillPrintQuot.Name = "chkBoxInstBillPrintQuot";
-            this.chkBoxInstBillPrintQuot.Size = new System.Drawing.Size(72, 17);
-            this.chkBoxInstBillPrintQuot.TabIndex = 5;
-            this.chkBoxInstBillPrintQuot.Text = "Quotation";
-            this.chkBoxInstBillPrintQuot.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label32);
-            this.groupBox1.Controls.Add(this.chkBoxInstBillPrintQuot);
-            this.groupBox1.Controls.Add(this.label33);
-            this.groupBox1.Controls.Add(this.chkBoxInstBillGenQuot);
-            this.groupBox1.Controls.Add(this.chkBoxInstBillGenInvoice);
-            this.groupBox1.Controls.Add(this.chkBoxInstBillPrintInvoice);
-            this.groupBox1.Location = new System.Drawing.Point(75, 97);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(334, 100);
-            this.groupBox1.TabIndex = 6;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Customer Bill Settings";
+            this.txtBoxPrintCopies.Location = new System.Drawing.Point(127, 88);
+            this.txtBoxPrintCopies.Name = "txtBoxPrintCopies";
+            this.txtBoxPrintCopies.Size = new System.Drawing.Size(26, 20);
+            this.txtBoxPrintCopies.TabIndex = 6;
             // 
             // SettingsForm
             // 
@@ -1185,6 +1205,8 @@
             this.tabControlSettings.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.tabPageGeneral.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tabPageInvoice.ResumeLayout(false);
             this.tabPageInvoice.PerformLayout();
             this.tabPageQuotation.ResumeLayout(false);
@@ -1192,8 +1214,6 @@
             this.tabPagePurchaseOrder.ResumeLayout(false);
             this.tabPagePurchaseOrder.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDownPeriodValue)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1305,5 +1325,7 @@
         private System.Windows.Forms.CheckBox chkBoxInstBillGenQuot;
         private System.Windows.Forms.CheckBox chkBoxInstBillGenInvoice;
         private System.Windows.Forms.CheckBox chkBoxInstBillPrintInvoice;
+        private System.Windows.Forms.TextBox txtBoxPrintCopies;
+        private System.Windows.Forms.Label label34;
     }
 }

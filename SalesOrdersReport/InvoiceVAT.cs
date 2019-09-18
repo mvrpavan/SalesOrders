@@ -248,7 +248,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                DataTable dtSellerInvoice = CommonFunctions.ReturnDataTableFromExcelWorksheet(SheetName, ExcelWorkbookPath, "*", "A6:F100000");
+                DataTable dtSellerInvoice = CommonFunctions.ReturnDataTableFromExcelWorksheet(SheetName, ExcelWorkbookPath, "*", "A6:F");
                 if (dtSellerInvoice == null) return null;
 
                 dtSellerInvoice.Columns.Add(new DataColumn("TotalTax", Type.GetType("System.Double"), "0"));

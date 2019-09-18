@@ -375,7 +375,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                DataTable dtSellerInvoice = CommonFunctions.ReturnDataTableFromExcelWorksheet(SheetName, ExcelWorkbookPath, "*", "A8:P100000");
+                DataTable dtSellerInvoice = CommonFunctions.ReturnDataTableFromExcelWorksheet(SheetName, ExcelWorkbookPath, "*", "A8:P");
                 if (dtSellerInvoice == null) return null;
                 dtSellerInvoice.Rows.RemoveAt(0);
                 dtSellerInvoice.Columns["Description of Goods"].ColumnName = "Item Name";

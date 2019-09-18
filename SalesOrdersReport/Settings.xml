@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Settings>
   <Application>
-    <MainFormTitle>Ceren Sales Orders Software</MainFormTitle>
-    <LogoFileName>CerenLogo.png</LogoFileName>
+    <MainFormTitle>Sales Orders Software</MainFormTitle>
+    <LogoFileName>your_logo_here.png</LogoFileName>
     <LogoImageHeight>80</LogoImageHeight>
     <ReportRowsFromTop>7</ReportRowsFromTop>
     <ReportAppendRowsAtBottom>7</ReportAppendRowsAtBottom>
@@ -15,118 +15,56 @@
         <CustomerBillGenFormatQuotation>True</CustomerBillGenFormatQuotation>
         <CustomerBillPrintFormatInvoice>False</CustomerBillPrintFormatInvoice>
         <CustomerBillPrintFormatQuotation>True</CustomerBillPrintFormatQuotation>
+        <InvoiceQuotationNoOfCopiesToPrint>1</InvoiceQuotationNoOfCopiesToPrint>
       </General>
       <Invoice>
-        <HeaderTitle>Default Title</HeaderTitle>
-        <HeaderSubTitle>Default SubTitle</HeaderSubTitle>
+        <HeaderTitle>Invoice Title</HeaderTitle>
+        <HeaderSubTitle>Invoice Header SubTitle</HeaderSubTitle>
         <HeaderTitleColor>-6927541</HeaderTitleColor>
         <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
-        <FooterTitle>Footer Title</FooterTitle>
+        <FooterTitle>Invoice Footer Title</FooterTitle>
         <FooterTitleColor>-6960825</FooterTitleColor>
         <FooterTextColor>-6927541</FooterTextColor>
-        <Address>Bangalore-560032</Address>
+        <Address>Company Full Address</Address> 
         <PhoneNumber>1234567890</PhoneNumber>
-        <EMailID>a@gmail.com</EMailID>
+        <EMailID>Company Email ID</EMailID>
         <TINNumber>1234567890</TINNumber>
         <GSTINumber>1234567890ABCD</GSTINumber>
         <LastNumber>0</LastNumber>
         <VATPercent>5.5</VATPercent>
-    </Invoice>
+      </Invoice>
       <Quotation>
-        <HeaderTitle>Default Title</HeaderTitle>
-        <HeaderSubTitle>Default SubTitle</HeaderSubTitle>
+        <HeaderTitle>Quotation Title</HeaderTitle>
+        <HeaderSubTitle>Quotation Header SubTitle</HeaderSubTitle>
         <HeaderTitleColor>-6927541</HeaderTitleColor>
         <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
-        <FooterTitle>Footer Title</FooterTitle>
+        <FooterTitle>Quotation Footer Title</FooterTitle>
         <FooterTitleColor>-6960825</FooterTitleColor>
         <FooterTextColor>-6927541</FooterTextColor>
-        <Address>Bangalore-560032</Address>
+        <Address>Company Full Address</Address>
         <PhoneNumber>1234567890</PhoneNumber>
-        <EMailID>a@gmail.com</EMailID>
+        <EMailID>Company Email ID</EMailID>
         <TINNumber>
         </TINNumber>
         <GSTINumber>1234567890ABCD</GSTINumber>
         <LastNumber>0</LastNumber>
       </Quotation>
       <PurchaseOrder>
-        <HeaderTitle>Default Purchase Order</HeaderTitle>
-        <HeaderSubTitle>
-        </HeaderSubTitle>
+        <HeaderTitle>Purchase Order Title</HeaderTitle>
+        <HeaderSubTitle>Purchase Order SubTitle</HeaderSubTitle>
         <HeaderTitleColor>-6927541</HeaderTitleColor>
         <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
-        <FooterTitle>Ceren Business Group</FooterTitle>
+        <FooterTitle>Purchase Order Footer Title</FooterTitle>
         <FooterTitleColor>-6960825</FooterTitleColor>
         <FooterTextColor>-6927541</FooterTextColor>
-        <Address>No.40, 5th Main, 6th Cross, Krishnappa Block, Ganganagar Extn., RT Nagar, Bangalore-560032</Address>
-        <PhoneNumber>+917022037919</PhoneNumber>
-        <EMailID>cerenbusinessgroup@gmail.com</EMailID>
+        <Address>Company Full Address</Address>
+        <PhoneNumber>123445667890</PhoneNumber>
+        <EMailID>Company Email ID</EMailID>
         <TINNumber>
         </TINNumber>
         <GSTINumber>1234567890ABCD</GSTINumber>
         <VATPercent>5.5</VATPercent>
         <LastNumber>103</LastNumber>
-        <PastSalesPeriod>
-          <Value>10</Value>
-          <Units>Days</Units>
-        </PastSalesPeriod>
-      </PurchaseOrder>
-    </ProductLine>
-    <ProductLine Name="Vegetables">
-      <General>
-        <SummaryLocation>0</SummaryLocation>
-        <CustomerBillGenFormatInvoice>True</CustomerBillGenFormatInvoice>
-        <CustomerBillGenFormatQuotation>True</CustomerBillGenFormatQuotation>
-        <CustomerBillPrintFormatInvoice>False</CustomerBillPrintFormatInvoice>
-        <CustomerBillPrintFormatQuotation>True</CustomerBillPrintFormatQuotation>
-      </General>
-      <Invoice>
-        <HeaderTitle>Veg Invoice12345678</HeaderTitle>
-        <HeaderSubTitle>
-        </HeaderSubTitle>
-        <HeaderTitleColor>-6927541</HeaderTitleColor>
-        <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
-        <FooterTitle>Ceren Business Group</FooterTitle>
-        <FooterTitleColor>-6960825</FooterTitleColor>
-        <FooterTextColor>-6927541</FooterTextColor>
-        <Address>No.40, 5th Main, 6th Cross, Krishnappa Block, Ganganagar Extn., RT Nagar, Bangalore-560032</Address>
-        <PhoneNumber>+917022037919</PhoneNumber>
-        <EMailID>cerenbusinessgroup@gmail.com</EMailID>
-        <TINNumber>29271403793</TINNumber>
-        <LastNumber>225</LastNumber>
-        <VATPercent>5.5</VATPercent>
-      </Invoice>
-      <Quotation>
-        <HeaderTitle>Veg Order Quotation</HeaderTitle>
-        <HeaderSubTitle>
-        </HeaderSubTitle>
-        <HeaderTitleColor>-6927541</HeaderTitleColor>
-        <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
-        <FooterTitle>Ceren Business Group</FooterTitle>
-        <FooterTitleColor>-6960825</FooterTitleColor>
-        <FooterTextColor>-6927541</FooterTextColor>
-        <Address>No.40, 5th Main, 6th Cross, Krishnappa Block, Ganganagar Extn., RT Nagar, Bangalore-560032</Address>
-        <PhoneNumber>+917022037919</PhoneNumber>
-        <EMailID>cerenbusinessgroup@gmail.com</EMailID>
-        <TINNumber>
-        </TINNumber>
-        <LastNumber>212</LastNumber>
-      </Quotation>
-      <PurchaseOrder>
-        <HeaderTitle>Veg Purchase Order</HeaderTitle>
-        <HeaderSubTitle>
-        </HeaderSubTitle>
-        <HeaderTitleColor>-6927541</HeaderTitleColor>
-        <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
-        <FooterTitle>Ceren Business Group</FooterTitle>
-        <FooterTitleColor>-6960825</FooterTitleColor>
-        <FooterTextColor>-6927541</FooterTextColor>
-        <Address>No.40, 5th Main, 6th Cross, Krishnappa Block, Ganganagar Extn., RT Nagar, Bangalore-560032</Address>
-        <PhoneNumber>+917022037919</PhoneNumber>
-        <EMailID>cerenbusinessgroup@gmail.com</EMailID>
-        <TINNumber>
-        </TINNumber>
-        <VATPercent>5.5</VATPercent>
-        <LastNumber>121</LastNumber>
         <PastSalesPeriod>
           <Value>10</Value>
           <Units>Days</Units>
@@ -135,59 +73,59 @@
     </ProductLine>
     <ProductLine Name="Bakery">
       <General>
-        <SummaryLocation>1</SummaryLocation>
+        <SummaryLocation>0</SummaryLocation>
         <CustomerBillGenFormatInvoice>True</CustomerBillGenFormatInvoice>
         <CustomerBillGenFormatQuotation>True</CustomerBillGenFormatQuotation>
         <CustomerBillPrintFormatInvoice>False</CustomerBillPrintFormatInvoice>
         <CustomerBillPrintFormatQuotation>True</CustomerBillPrintFormatQuotation>
+        <InvoiceQuotationNoOfCopiesToPrint>1</InvoiceQuotationNoOfCopiesToPrint>
       </General>
       <Invoice>
-        <HeaderTitle>Bakery Invoice</HeaderTitle>
-        <HeaderSubTitle>
-        </HeaderSubTitle>
+        <HeaderTitle>Invoice Title</HeaderTitle>
+        <HeaderSubTitle>Invoice Header SubTitle</HeaderSubTitle>
         <HeaderTitleColor>-6927541</HeaderTitleColor>
         <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
-        <FooterTitle>Ceren Business Group</FooterTitle>
+        <FooterTitle>Invoice Footer Title</FooterTitle>
         <FooterTitleColor>-6960825</FooterTitleColor>
         <FooterTextColor>-6927541</FooterTextColor>
-        <Address>No.40, 5th Main, 6th Cross, Krishnappa Block, Ganganagar Extn., RT Nagar, Bangalore-560032</Address>
-        <PhoneNumber>+917022037919</PhoneNumber>
-        <EMailID>cerenbusinessgroup@gmail.com</EMailID>
-        <TINNumber>29271403793123</TINNumber>
-        <LastNumber>13511</LastNumber>
+        <Address>Company Full Address</Address>
+        <PhoneNumber>1234567890</PhoneNumber>
+        <EMailID>Company Email ID</EMailID>
+        <TINNumber>1234567890</TINNumber>
+        <GSTINumber>1234567890ABCD</GSTINumber>
+        <LastNumber>0</LastNumber>
         <VATPercent>5.5</VATPercent>
       </Invoice>
       <Quotation>
-        <HeaderTitle>Bakery Order Quotation</HeaderTitle>
-        <HeaderSubTitle>
-        </HeaderSubTitle>
+        <HeaderTitle>Quotation Title</HeaderTitle>
+        <HeaderSubTitle>Quotation Header SubTitle</HeaderSubTitle>
         <HeaderTitleColor>-6927541</HeaderTitleColor>
         <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
-        <FooterTitle>Ceren Business Group</FooterTitle>
+        <FooterTitle>Quotation Footer Title</FooterTitle>
         <FooterTitleColor>-6960825</FooterTitleColor>
         <FooterTextColor>-6927541</FooterTextColor>
-        <Address>No.40, 5th Main, 6th Cross, Krishnappa Block, Ganganagar Extn., RT Nagar, Bangalore-560032</Address>
-        <PhoneNumber>+917022037919</PhoneNumber>
-        <EMailID>cerenbusinessgroup@gmail.com</EMailID>
+        <Address>Company Full Address</Address>
+        <PhoneNumber>1234567890</PhoneNumber>
+        <EMailID>Company Email ID</EMailID>
         <TINNumber>
         </TINNumber>
-        <LastNumber>103</LastNumber>
+        <GSTINumber>1234567890ABCD</GSTINumber>
+        <LastNumber>0</LastNumber>
       </Quotation>
       <PurchaseOrder>
-        <HeaderTitle>Bakery Purchase Order</HeaderTitle>
-        <HeaderSubTitle>
-        </HeaderSubTitle>
+        <HeaderTitle>Purchase Order Title</HeaderTitle>
+        <HeaderSubTitle>Purchase Order SubTitle</HeaderSubTitle>
         <HeaderTitleColor>-6927541</HeaderTitleColor>
         <HeaderSubTitleColor>-6960825</HeaderSubTitleColor>
-        <FooterTitle>Ceren Business Group</FooterTitle>
+        <FooterTitle>Purchase Order Footer Title</FooterTitle>
         <FooterTitleColor>-6960825</FooterTitleColor>
         <FooterTextColor>-6927541</FooterTextColor>
-        <Address>
-        </Address>
-        <PhoneNumber>+917022037919</PhoneNumber>
-        <EMailID>cerenbusinessgroup@gmail.com</EMailID>
+        <Address>Company Full Address</Address>
+        <PhoneNumber>123445667890</PhoneNumber>
+        <EMailID>Company Email ID</EMailID>
         <TINNumber>
         </TINNumber>
+        <GSTINumber>1234567890ABCD</GSTINumber>
         <VATPercent>5.5</VATPercent>
         <LastNumber>103</LastNumber>
         <PastSalesPeriod>

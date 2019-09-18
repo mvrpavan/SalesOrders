@@ -60,6 +60,11 @@ namespace SalesOrdersReport
         {
             return x.Name.ToUpper().CompareTo(y.Name.ToUpper());
         }
+
+        public SellerDetails Clone()
+        {
+            return (SellerDetails)this.MemberwiseClone();
+        }
     }
 
     class SellerMaster

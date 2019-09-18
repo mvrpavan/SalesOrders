@@ -39,12 +39,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9FE7DAFB20044320A21FE7D8F858E6A7"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A864B4ED4A6DD7140F9932FA158D2DB8"
         "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
         "MsmSig" = "8:_UNDEFINED"
@@ -58,6 +52,12 @@
         "Entry"
         {
         "MsmKey" = "8:_B44D9FBD296F48C38BDA77E518B27B77"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CF1330B5C23A48FEA3398795CF4ECB7A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -88,13 +88,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A864B4ED4A6DD7140F9932FA158D2DB8"
+        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
+        "OwnerKey" = "8:_A864B4ED4A6DD7140F9932FA158D2DB8"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -262,26 +262,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9FE7DAFB20044320A21FE7D8F858E6A7"
-            {
-            "SourcePath" = "8:..\\Images\\CerenLogo.png"
-            "TargetName" = "8:CerenLogo.png"
-            "Tag" = "8:"
-            "Folder" = "8:_27EDEBA610894B7585869B75FBD11038"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A864B4ED4A6DD7140F9932FA158D2DB8"
             {
             "AssemblyRegister" = "3:1"
@@ -289,6 +269,11 @@
             "AssemblyAsmDisplayName" = "8:ExcelDna.Integration, Version=0.34.6373.42344, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_A864B4ED4A6DD7140F9932FA158D2DB8"
+                    {
+                    "Name" = "8:ExcelDna.Integration.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:ExcelDna.Integration.dll"
             "TargetName" = "8:"
@@ -314,6 +299,26 @@
             "TargetName" = "8:InvoiceIcon.ico"
             "Tag" = "8:"
             "Folder" = "8:_F80B6BE5128A4CA9884787E001FEE4B6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CF1330B5C23A48FEA3398795CF4ECB7A"
+            {
+            "SourcePath" = "8:..\\Images\\your_logo_here.png"
+            "TargetName" = "8:your_logo_here.png"
+            "Tag" = "8:"
+            "Folder" = "8:_27EDEBA610894B7585869B75FBD11038"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -446,15 +451,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sales Orders Invoice"
-        "ProductCode" = "8:{CAB1FD10-AC5B-4D5F-8D74-00D112934C97}"
-        "PackageCode" = "8:{A76378C6-543E-4D41-9C13-92882567D814}"
-        "UpgradeCode" = "8:{0C621456-DA16-47E0-818B-DF056ACA9FE7}"
+        "ProductCode" = "8:{451FC858-3D5A-4AAA-94A3-3439C5C8CC7F}"
+        "PackageCode" = "8:{415B43CD-EDB9-4581-9A6C-82A7F32D2B07}"
+        "UpgradeCode" = "8:{7B88452B-4D1F-41DF-8583-2158C4238CF8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:7.0.30"
+        "ProductVersion" = "8:7.1.1"
         "Manufacturer" = "8:Freelance Projects Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1024,7 +1029,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B44D9FBD296F48C38BDA77E518B27B77"
             {
-            "SourcePath" = "8:"
+            "SourcePath" = "8:..\\obj\\x86\\Release\\SalesOrdersReport.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F80B6BE5128A4CA9884787E001FEE4B6"
@@ -1052,7 +1057,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D2C5570EEE2149E2A969AF0EE4969D93"
             {
-            "SourcePath" = "8:"
+            "SourcePath" = "8:..\\SalesOrdersExcelToolPack\\obj\\Release\\SalesOrdersExcelToolPack.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"

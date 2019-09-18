@@ -169,6 +169,7 @@ namespace SalesOrdersReport
         public Int32 SummaryLocation = 0;
         public Boolean IsCustomerBillGenFormatInvoice, IsCustomerBillGenFormatQuotation;
         public Boolean IsCustomerBillPrintFormatInvoice, IsCustomerBillPrintFormatQuotation;
+        public Int32 InvoiceQuotPrintCopies = 1;
 
         public void ReadSettingsFromNode(XmlNode Node)
         {
@@ -181,6 +182,7 @@ namespace SalesOrdersReport
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "CustomerBillGenFormatQuotation", out Value)) IsCustomerBillGenFormatQuotation = Boolean.Parse(Value);
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "CustomerBillPrintFormatInvoice", out Value)) IsCustomerBillPrintFormatInvoice = Boolean.Parse(Value);
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "CustomerBillPrintFormatQuotation", out Value)) IsCustomerBillPrintFormatQuotation = Boolean.Parse(Value);
+                if (XMLFileUtils.GetChildNodeValue(SettingsNode, "InvoiceQuotationNoOfCopiesToPrint", out Value)) InvoiceQuotPrintCopies = Int32.Parse(Value);
             }
             catch (Exception ex)
             {
@@ -197,6 +199,7 @@ namespace SalesOrdersReport
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "CustomerBillGenFormatQuotation", IsCustomerBillGenFormatQuotation.ToString());
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "CustomerBillPrintFormatInvoice", IsCustomerBillPrintFormatInvoice.ToString());
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "CustomerBillPrintFormatQuotation", IsCustomerBillPrintFormatQuotation.ToString());
+                XMLFileUtils.SetChildNodeValue(SettingsNode, "InvoiceQuotationNoOfCopiesToPrint", InvoiceQuotPrintCopies.ToString());
             }
             catch (Exception ex)
             {

@@ -36,6 +36,12 @@ namespace SalesOrdersReport
 
                 LoadSettingsFile();
 
+                if (!File.Exists(CommonFunctions.AppDataFolder + "\\" + CommonFunctions.ObjApplicationSettings.LogoFileName))
+                {
+                    File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\Images\" + CommonFunctions.ObjApplicationSettings.LogoFileName,
+                        CommonFunctions.AppDataFolder + @"\" + CommonFunctions.ObjApplicationSettings.LogoFileName, false);
+                }
+
                 ListSelectedSellers = new List<String>();
                 ListSelectedVendors = new List<String>();
             }
@@ -94,6 +100,16 @@ namespace SalesOrdersReport
                 conOleDbCon = new OleDbConnection(strConnectionString);
                 cmdCommand = new OleDbCommand(strCommandText, conOleDbCon);
                 conOleDbCon.Open();
+                //DataTable dtSchema = conOleDbCon.GetSchema();
+
+                //DataTable dtExcelsheetname = conOleDbCon.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
+                //string[] excelSheets = new String[dtExcelsheetname.Rows.Count];
+                //int j = 0;
+                //foreach (DataRow row in dtExcelsheetname.Rows)
+                //{
+                //    excelSheets[j] = row["TABLE_NAME"].ToString();
+                //    j++;
+                //}
 
                 OleDbDataAdapter dapAdapter = new OleDbDataAdapter(strCommandText, conOleDbCon);
                 DataTable dtbInput = new DataTable();
@@ -101,9 +117,10 @@ namespace SalesOrdersReport
                 conOleDbCon.Close();
                 return dtbInput;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error Occured in CommonFunctions.ReturnDataTableFromExcelWorksheet()");
+                ShowErrorDialog("CommonFunctions.ReturnDataTableFromExcelWorksheet", ex);
+                //Console.WriteLine("Error Occured in CommonFunctions.ReturnDataTableFromExcelWorksheet()");
                 return null;
             }
         }
