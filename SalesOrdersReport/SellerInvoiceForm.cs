@@ -618,7 +618,9 @@ namespace SalesOrdersReport
                     xlRangeTotalTax.NumberFormat = "#,##0.00"; xlRangeNetSale.NumberFormat = "#,##0.00";
                     xlRangeOldBalance.NumberFormat = "#,##0.00"; xlRangeCash.NumberFormat = "#,##0.00";
                 }
-                CurrRow = SellersCount + SummaryStartRow + 2;
+                CurrRow = SellersCount + SummaryStartRow;
+                Excel.Range xlRange = null;
+                /*CurrRow = SellersCount + SummaryStartRow + 2;
                 Excel.Range xlRange = xlSellerSummaryWorkSheet.Cells[CurrRow, SellerNameCol];
                 xlRange.Value = "Total";
                 xlRange.Font.Bold = true;
@@ -633,7 +635,7 @@ namespace SalesOrdersReport
                     xlRangeTotal.Formula = "=Sum(" + xlRangeTotalFrom.Address[false, false] + ":" + xlRangeTotalTo.Address[false, false] + ")";
                     xlRangeTotal.NumberFormat = "#,##0.00";
                     xlRangeTotal.Font.Bold = true;
-                }
+                }*/
 
                 xlRange = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 1], xlSellerSummaryWorkSheet.Cells[CurrRow + 1, LastCol]];
                 SetAllBorders(xlRange);

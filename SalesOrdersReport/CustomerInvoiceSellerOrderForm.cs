@@ -1242,7 +1242,6 @@ namespace SalesOrdersReport
                     DiscountValue = objDiscForm.DiscountValue;
                 }
 
-                //if (DiscountPerc > 0 || DiscountValue > 0) UpdateSummaryDetails();
                 UpdateSummaryDetails();
             }
             catch (Exception ex)
