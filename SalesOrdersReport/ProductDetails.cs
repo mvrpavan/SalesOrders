@@ -100,6 +100,7 @@ namespace SalesOrdersReport
 
     class ProductDetails : IComparer<ProductDetails>
     {
+        public Int32 ItemID;
         public String ItemName, StockName, VendorName, HSNCode, UnitsOfMeasurement, CategoryName;
         public Double PurchasePrice, SellingPrice, Units;
         public Int32 StockProductIndex, HSNCodeIndex;

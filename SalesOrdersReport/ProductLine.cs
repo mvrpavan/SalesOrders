@@ -78,6 +78,7 @@ namespace SalesOrdersReport
                     DataRow dtRow = dtProductMaster.Rows[i];
                     //SlNo	ItemName	VendorName	PurchasePrice	SellingPrice	Wholesale	Retail  StockName   HSNCode UnitsOfMeasurement
                     ProductDetails ObjProductDetails = new ProductDetails();
+                    ObjProductDetails.ItemID = Int32.Parse(dtRow["SlNo"].ToString());
                     ObjProductDetails.ItemName = dtRow["ItemName"].ToString();
                     ObjProductDetails.CategoryName = dtRow["Category"].ToString();
                     ObjProductDetails.StockName = dtRow["StockName"].ToString();

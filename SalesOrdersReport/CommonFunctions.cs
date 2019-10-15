@@ -100,16 +100,11 @@ namespace SalesOrdersReport
                 conOleDbCon = new OleDbConnection(strConnectionString);
                 cmdCommand = new OleDbCommand(strCommandText, conOleDbCon);
                 conOleDbCon.Open();
-                //DataTable dtSchema = conOleDbCon.GetSchema();
 
-                //DataTable dtExcelsheetname = conOleDbCon.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
-                //string[] excelSheets = new String[dtExcelsheetname.Rows.Count];
-                //int j = 0;
-                //foreach (DataRow row in dtExcelsheetname.Rows)
-                //{
-                //    excelSheets[j] = row["TABLE_NAME"].ToString();
-                //    j++;
-                //}
+                DataTable dtSheets = conOleDbCon.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                SheetName += "$";
+                if (SheetName.Contains(" ")) SheetName = "'" + SheetName + "'";
+                if (!dtSheets.Select().ToList().Exists(sheet => sheet["TABLE_NAME"].ToString().Trim().Equals(SheetName, StringComparison.InvariantCultureIgnoreCase))) return null;
 
                 OleDbDataAdapter dapAdapter = new OleDbDataAdapter(strCommandText, conOleDbCon);
                 DataTable dtbInput = new DataTable();

@@ -137,6 +137,7 @@ namespace SalesOrdersReport
                 cmbBoxProdCat.SelectedIndex = -1;
 
                 ListAllProducts = CommonFunctions.ObjProductMaster.GetProductListForCategory("<ALL>");
+                ListAllProducts = ListAllProducts.OrderBy(p => p.ItemID).ToList();
                 List<String> ListItems = new List<String>();
                 ListItems.Add("<ALL>");
                 ListItems.AddRange(ListAllProducts.Select(s => s.ItemName));
@@ -241,7 +242,15 @@ namespace SalesOrdersReport
                     }
                     else
                     {
+                        BackgroundTask = 7;
+#if DEBUG
+                        backgroundWorker1_DoWork(null, null);
                         backgroundWorker1_RunWorkerCompleted(null, null);
+#else
+                        ReportProgress = backgroundWorker1.ReportProgress;
+                        backgroundWorker1.RunWorkerAsync();
+                        backgroundWorker1.WorkerReportsProgress = true;
+#endif
                     }
                 }
 
@@ -561,7 +570,8 @@ namespace SalesOrdersReport
                         LoadSalesOrderForCurrSeller();
                         break;
                     case 3:     //Update Seller Order details
-                        if (IsSellerOrder) UpdateSalesOrderSheetForCurrSeller();
+                        if (IsSellerOrder)
+                            UpdateSalesOrderSheetForCurrSeller();
                         if (IsCustomerBill)
                         {
                             if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatInvoice)
@@ -586,6 +596,10 @@ namespace SalesOrdersReport
                         break;
                     case 6:     //Load Seller Invoice/Quotation details
                         LoadInvQuotDataForCurrSeller();
+                        break;
+                    case 7:
+                        if (IsSellerOrder)
+                            CreateSalesInvoiceForCurrOrder(ReportType.QUOTATION, false, true);
                         break;
                     default:
                         break;
@@ -664,6 +678,7 @@ namespace SalesOrdersReport
                         MessageBox.Show(this, "Loaded Sales Order data for selected Seller", "Sales Order", MessageBoxButtons.OK);
                         break;
                     case 3:     //Update Seller Order for Current Seller or Create Sales Invoice
+                    case 7:
                         cmbBoxSellerCustomer.SelectedIndex = -1;
                         ResetControls();
                         picBoxLoading.Visible = false;
@@ -814,6 +829,7 @@ namespace SalesOrdersReport
                 if (cmbBoxProdCat.SelectedIndex < 0 || !LoadCompleted) return;
 
                 ListProducts = CommonFunctions.ObjProductMaster.GetProductListForCategory(cmbBoxProdCat.SelectedItem.ToString());
+                ListProducts = ListProducts.OrderBy(p => p.ItemID).ToList();
                 List<String> ListItems = new List<String>();
                 ListItems.Add("<ALL>");
                 ListItems.AddRange(ListProducts.Select(s => s.ItemName));
@@ -1909,7 +1925,7 @@ namespace SalesOrdersReport
             }
         }
 
-        void CreateSalesInvoiceForCurrOrder(ReportType EnumReportType)
+        void CreateSalesInvoiceForCurrOrder(ReportType EnumReportType, Boolean CreateSummarySheet = true, Boolean IsDummyBill = false)
         {
             try
             {
@@ -1946,8 +1962,13 @@ namespace SalesOrdersReport
                     default:
                         return;
                 }
+                CreateSummary &= CreateSummarySheet;
+                if (IsDummyBill)
+                {
+                    SaveFileName = Path.GetDirectoryName(SaveFileName) + "\\" + Path.GetFileNameWithoutExtension(SaveFileName) + "_Dummy" + Path.GetExtension(SaveFileName);
+                }
 
-                Boolean IsExistingBill = !cmbBoxBillNumber.SelectedItem.ToString().Equals("<New>");
+                Boolean IsExistingBill = (IsDummyBill ? false : !cmbBoxBillNumber.SelectedItem.ToString().Equals("<New>"));
                 Int32 InvoiceNumber = CurrReportSettings.LastNumber + 1;
                 if (IsExistingBill) InvoiceNumber = Int32.Parse(cmbBoxBillNumber.SelectedItem.ToString());
                 Int32 ValidItemCount = dtGridViewInvOrdProdList.Rows.Count;
@@ -1960,7 +1981,7 @@ namespace SalesOrdersReport
                 DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(ObjCurrentSeller.Name);
 
                 Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
-                ObjInvoice.SerialNumber = InvoiceNumber.ToString();
+                ObjInvoice.SerialNumber = (IsDummyBill ? "Dummy" : InvoiceNumber.ToString());
                 ObjInvoice.InvoiceNumberText = BillNumberText;
                 ObjInvoice.ObjSellerDetails = ObjCurrentSeller.Clone();
                 ObjInvoice.ObjSellerDetails.OldBalance = Double.Parse(lblBalanceAmountValue.Text);
@@ -1970,7 +1991,7 @@ namespace SalesOrdersReport
                 ObjInvoice.UseNumberToWordsFormula = false;
                 ObjInvoice.ListProducts = new List<ProductDetailsForInvoice>();
 
-                Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(SaveFileName);
+                Excel.Workbook xlWorkbook = (IsDummyBill ? xlApp.Workbooks.Add() : xlApp.Workbooks.Open(SaveFileName));
                 Excel.Worksheet xlWorkSheet = null;
 
                 #region Change SheetName
@@ -2159,10 +2180,10 @@ namespace SalesOrdersReport
                 #endregion
 
                 #region Write InvoiceNumber to Settings File
-                if (!IsExistingBill) CurrReportSettings.LastNumber = InvoiceNumber;
+                if (!IsExistingBill && !IsDummyBill) CurrReportSettings.LastNumber = InvoiceNumber;
                 #endregion
 
-                xlWorkbook.Close(SaveChanges: true);
+                xlWorkbook.Close(SaveChanges: !IsDummyBill);
                 CommonFunctions.ReleaseCOMObject(xlWorkbook);
             }
             catch (Exception ex)
