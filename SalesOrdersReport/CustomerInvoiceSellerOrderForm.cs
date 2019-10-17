@@ -570,7 +570,10 @@ namespace SalesOrdersReport
                         break;
                     case 3:     //Update Seller Order details
                         if (IsSellerOrder)
+                        {
                             UpdateSalesOrderSheetForCurrSeller();
+                            CreateSalesInvoiceForCurrOrder(ReportType.QUOTATION, false, true);
+                        }
                         if (IsCustomerBill)
                         {
                             if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatInvoice)
@@ -2067,7 +2070,7 @@ namespace SalesOrdersReport
                     ObjProductDetailsForInvoice.HSNCode = ObjProductDetails.HSNCode;
                     ObjProductDetailsForInvoice.UnitsOfMeasurement = ObjProductDetails.UnitsOfMeasurement;
                     ObjProductDetailsForInvoice.OrderQuantity = Quantity;
-                    ObjProductDetailsForInvoice.SaleQuantity = Quantity;
+                    ObjProductDetailsForInvoice.SaleQuantity = (IsDummyBill ? 0 : Quantity);
                     ObjProductDetailsForInvoice.Rate = Price; //CommonFunctions.ObjProductMaster.GetPriceForProduct(ObjProductDetails.ItemName, ObjCurrentSeller.PriceGroupIndex);
 
                     Double[] TaxRates = CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(ObjProductDetails.ItemName);
