@@ -468,5 +468,20 @@ namespace SalesOrdersReport
             }
         }
         #endregion
+
+        private void mergeSalesOrderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+
+                MergeSalesOrdersForm ObjMergeSalesOrdersForm = new MergeSalesOrdersForm();
+                ShowChildForm(ObjMergeSalesOrdersForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.mergeSalesOrderToolStripMenuItem_Click()", ex);
+            }
+        }
     }
 }

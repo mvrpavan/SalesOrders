@@ -14,7 +14,7 @@ namespace SalesOrdersReport
     public partial class CustomerInvoiceSellerOrderForm : Form
     {
         String MasterFilePath, FormTitle = "", OrderInvoice = "";
-        Boolean IsSellerOrder, IsCustomerBill, IsUpdateCustomerBill;
+        Boolean IsSellerOrder, IsCustomerBill;
         List<ProductDetails> ListAllProducts, ListProducts;
         List<String> ListSellerNames;
         SellerDetails CurrSellerDetails;
@@ -39,7 +39,7 @@ namespace SalesOrdersReport
         Int32 cmbBoxBillNumberIndex = -1;
         Double OriginalBalanceAmount = -1;
 
-        public CustomerInvoiceSellerOrderForm(Boolean IsSellerOrder, Boolean IsCustomerBill, Boolean IsUpdateCustomerBill = false)
+        public CustomerInvoiceSellerOrderForm(Boolean IsSellerOrder, Boolean IsCustomerBill)
         {
             try
             {
@@ -101,7 +101,6 @@ namespace SalesOrdersReport
 
                 this.IsSellerOrder = IsSellerOrder;
                 this.IsCustomerBill = IsCustomerBill;
-                this.IsUpdateCustomerBill = IsUpdateCustomerBill;
                 this.Text = FormTitle;
                 txtSalesOrderFilePath.ReadOnly = true;
                 btnBrowseSalesOrderFile.Enabled = false;
@@ -473,7 +472,7 @@ namespace SalesOrdersReport
                     backgroundWorker1_RunWorkerCompleted(null, null);
                 }
 
-                if (IsCustomerBill || IsUpdateCustomerBill)
+                if (IsCustomerBill)
                 {
                     BackgroundTask = 4;
                     DialogResult diagResult = MessageBox.Show(this, "Are you sure to cancel the Bill?", "Cancel Bill", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);

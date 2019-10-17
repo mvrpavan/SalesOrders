@@ -15,36 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_2866DAF251614E70AD164860BAD25BE4"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4A31CBD423374977AFD37138F84A4820"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6DB107BA48A542D1BEB40D9897C2D754"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7BFAC013077C4133A38A7A6D816BD660"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A864B4ED4A6DD7140F9932FA158D2DB8"
-        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A8C1658A60AA45F391FACBD75B5E423A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -69,14 +39,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_DC73B5FF07F54C2BA59360B4F0887F21"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E675F78D97174D7086FBF1A34230842A"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_E8839BC50C3CB1A270E3444E373C119B"
+        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -88,13 +52,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A864B4ED4A6DD7140F9932FA158D2DB8"
+        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
+        "OwnerKey" = "8:_E8839BC50C3CB1A270E3444E373C119B"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -182,112 +146,6 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2866DAF251614E70AD164860BAD25BE4"
-            {
-            "SourcePath" = "8:..\\SalesOrdersExcelToolPack\\bin\\Release\\SalesOrdersExcelToolPack-AddIn64.xll"
-            "TargetName" = "8:SalesOrdersExcelToolPack-AddIn64.xll"
-            "Tag" = "8:"
-            "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4A31CBD423374977AFD37138F84A4820"
-            {
-            "SourcePath" = "8:..\\SalesOrdersExcelToolPack\\bin\\Release\\SalesOrdersExcelToolPack-AddIn64.dna"
-            "TargetName" = "8:SalesOrdersExcelToolPack-AddIn64.dna"
-            "Tag" = "8:"
-            "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6DB107BA48A542D1BEB40D9897C2D754"
-            {
-            "SourcePath" = "8:..\\SalesOrdersExcelToolPack\\bin\\Release\\SalesOrdersExcelToolPack-AddIn-packed.xll"
-            "TargetName" = "8:SalesOrdersExcelToolPack-AddIn-packed.xll"
-            "Tag" = "8:"
-            "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7BFAC013077C4133A38A7A6D816BD660"
-            {
-            "SourcePath" = "8:..\\SalesOrdersExcelToolPack\\bin\\Release\\SalesOrdersExcelToolPack-AddIn.dna"
-            "TargetName" = "8:SalesOrdersExcelToolPack-AddIn.dna"
-            "Tag" = "8:"
-            "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A864B4ED4A6DD7140F9932FA158D2DB8"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ExcelDna.Integration, Version=0.34.6373.42344, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:ExcelDna.Integration.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A8C1658A60AA45F391FACBD75B5E423A"
             {
             "SourcePath" = "8:..\\Images\\InvoiceIcon.ico"
@@ -328,10 +186,21 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DC73B5FF07F54C2BA59360B4F0887F21"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E8839BC50C3CB1A270E3444E373C119B"
             {
-            "SourcePath" = "8:..\\SalesOrdersExcelToolPack\\bin\\Release\\SalesOrdersExcelToolPack-AddIn.xll"
-            "TargetName" = "8:SalesOrdersExcelToolPack-AddIn.xll"
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ExcelDna.Integration, Version=0.34.6373.42344, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_E8839BC50C3CB1A270E3444E373C119B"
+                    {
+                    "Name" = "8:ExcelDna.Integration.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ExcelDna.Integration.dll"
+            "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"
             "Condition" = "8:"
@@ -345,27 +214,7 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E675F78D97174D7086FBF1A34230842A"
-            {
-            "SourcePath" = "8:..\\SalesOrdersExcelToolPack\\bin\\Release\\SalesOrdersExcelToolPack-AddIn64-packed.xll"
-            "TargetName" = "8:SalesOrdersExcelToolPack-AddIn64-packed.xll"
-            "Tag" = "8:"
-            "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -446,15 +295,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sales Orders Invoice"
-        "ProductCode" = "8:{F1112BE6-79E5-495F-A42C-7A176A757761}"
-        "PackageCode" = "8:{46241917-EADA-4E10-8839-63EE0A7E4ACE}"
+        "ProductCode" = "8:{CF4F09C4-52E2-4796-B8AD-5506F5DD7A85}"
+        "PackageCode" = "8:{A0BD5875-D0C2-4F43-9329-B3639DEE5C88}"
         "UpgradeCode" = "8:{0C28CE4F-5425-4B7E-9338-863EBFC410AC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:7.2.0"
+        "ProductVersion" = "8:7.3.0"
         "Manufacturer" = "8:Freelance Projects Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1024,7 +873,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B44D9FBD296F48C38BDA77E518B27B77"
             {
-            "SourcePath" = "8:"
+            "SourcePath" = "8:..\\obj\\x86\\Release\\SalesOrdersReport.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F80B6BE5128A4CA9884787E001FEE4B6"
@@ -1052,7 +901,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D2C5570EEE2149E2A969AF0EE4969D93"
             {
-            "SourcePath" = "8:"
+            "SourcePath" = "8:..\\SalesOrdersExcelToolPack\\obj\\Release\\SalesOrdersExcelToolPack.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"

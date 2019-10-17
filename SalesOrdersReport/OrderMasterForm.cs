@@ -26,7 +26,7 @@ namespace SalesOrdersReport
                 openFileDialog1.Multiselect = false;
                 openFileDialog1.FileName = "OrderMaster.xlsx";
                 DialogResult dlgResult = openFileDialog1.ShowDialog();
-                if (dlgResult == System.Windows.Forms.DialogResult.OK || dlgResult == System.Windows.Forms.DialogResult.Yes)
+                if (dlgResult == DialogResult.OK || dlgResult == DialogResult.Yes)
                 {
                     txtBoxMasterFilePath.Text = openFileDialog1.FileName;
                     btnOK.Enabled = true;

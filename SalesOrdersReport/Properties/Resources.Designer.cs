@@ -73,6 +73,16 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap add_file_48 {
+            get {
+                object obj = ResourceManager.GetObject("add_file_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Close_Black {
             get {
                 object obj = ResourceManager.GetObject("Close_Black", resourceCulture);
@@ -96,6 +106,16 @@ namespace SalesOrdersReport.Properties {
         internal static System.Drawing.Bitmap database_5_16 {
             get {
                 object obj = ResourceManager.GetObject("database-5-16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap delete_48 {
+            get {
+                object obj = ResourceManager.GetObject("delete_48", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -127,6 +147,16 @@ namespace SalesOrdersReport.Properties {
             get {
                 object obj = ResourceManager.GetObject("edit_", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Folder_Add {
+            get {
+                object obj = ResourceManager.GetObject("Folder_Add", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         
@@ -196,6 +226,16 @@ namespace SalesOrdersReport.Properties {
         internal static System.Drawing.Bitmap open_archive {
             get {
                 object obj = ResourceManager.GetObject("open-archive", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Open_Folder_Add_icon {
+            get {
+                object obj = ResourceManager.GetObject("Open_Folder_Add_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
