@@ -76,7 +76,7 @@ namespace SalesOrdersReport
                 xlRange = xlWorkSheet.Cells[CustDetailsStartRow, TotalColNum - 1];
                 xlRange.Value = "Date";
                 xlRange.Font.Bold = true;
-                xlWorkSheet.Cells[CustDetailsStartRow, TotalColNum].Value = DateTime.Today.ToString("dd-MMM-yyyy");
+                xlWorkSheet.Cells[CustDetailsStartRow, TotalColNum].Value = DateOfInvoice.ToString("dd-MMM-yyyy");
 
                 xlRange = xlWorkSheet.Cells[1 + CustDetailsStartRow, TotalColNum - 1];
                 xlRange.Value = InvoiceNumberText;
