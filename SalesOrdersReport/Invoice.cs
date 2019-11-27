@@ -11,7 +11,8 @@ namespace SalesOrdersReport
     {
         public Int32 SerialNumber;
         public String Description, HSNCode;
-        public Double OrderQuantity, SaleQuantity, Rate;
+        public String OrderQuantity;
+        public Double SaleQuantity, Rate;
         public String UnitsOfMeasurement;
         public TaxDetails CGSTDetails, SGSTDetails, IGSTDetails;
         public DiscountGroupDetails DiscountGroup;

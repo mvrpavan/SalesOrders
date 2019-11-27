@@ -374,7 +374,7 @@ namespace SalesOrdersReport
                         ObjProductDetailsForInvoice.Description = ObjProductDetails.ItemName;
                         ObjProductDetailsForInvoice.HSNCode = ObjProductDetails.HSNCode;
                         ObjProductDetailsForInvoice.UnitsOfMeasurement = ObjProductDetails.UnitsOfMeasurement;
-                        ObjProductDetailsForInvoice.OrderQuantity = Quantity;
+                        ObjProductDetailsForInvoice.OrderQuantity = Quantity.ToString();
                         ObjProductDetailsForInvoice.SaleQuantity = 0;
                         if (chkBoxUseOrdQty.Checked == true) ObjProductDetailsForInvoice.SaleQuantity = Quantity;
                         ObjProductDetailsForInvoice.Rate = CommonFunctions.ObjProductMaster.GetPriceForProduct(ObjProductDetails.ItemName, ObjCurrentSeller.PriceGroupIndex);

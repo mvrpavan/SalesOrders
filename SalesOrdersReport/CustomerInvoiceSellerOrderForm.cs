@@ -22,7 +22,7 @@ namespace SalesOrdersReport
         SellerOrderDetails CurrSellerOrderDetails;
         Dictionary<String, Int32> DictItemToColIndexes, DictSellerToRowIndexes;
         List<SellerOrderDetails> ListSellerOrderDetails;
-        Int32 CategoryColIndex = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4;
+        Int32 CategoryColIndex = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4, OrdQtyColIndex = 3, SaleQtyColIndex = 4, ItemSelectionSelectColIndex = 5;
         Int32 PaddingSpace = 6;
         Char PaddingChar = ' ', CurrencyChar = '\u20B9';
         Int32 BackgroundTask = -1;
@@ -70,6 +70,11 @@ namespace SalesOrdersReport
 
                     btnEditBalanceAmount.Enabled = false;
                     btnResetBalanceAmount.Enabled = false;
+
+                    //DataGridViewColumn dtColumn = new DataGridViewColumn(dtGridViewInvOrdProdList.Columns[OrdQtyColIndex].CellTemplate);
+                    //dtColumn.Name = "OrderQty1"; dtColumn.HeaderText = "OrderQty";
+                    //dtColumn.ValueType = Type.GetType("System.String");
+                    //dtGridViewInvOrdProdList.Columns.Insert(OrdQtyColIndex, dtColumn);
                 }
                 else if (IsCustomerBill)
                 {
@@ -97,6 +102,11 @@ namespace SalesOrdersReport
                     cmbBoxBillNumber.Visible = true;
                     lblStatus.Text = "Please choose Invoice/Quotation date";
                     dtGridViewInvOrdProdList.Columns[PriceColIndex].ReadOnly = false;
+
+                    //DataGridViewColumn dtColumn = new DataGridViewColumn(dtGridViewInvOrdProdList.Columns[OrdQtyColIndex].CellTemplate);
+                    //dtColumn.Name = "OrderQty1"; dtColumn.HeaderText = "OrderQty";
+                    //dtColumn.ValueType = Type.GetType("System.String");
+                    //dtGridViewInvOrdProdList.Columns.Insert(OrdQtyColIndex, dtColumn);
                 }
 
                 this.IsSellerOrder = IsSellerOrder;
@@ -205,6 +215,12 @@ namespace SalesOrdersReport
         {
             try
             {
+                if (!IsDataValidInGridViewInvOrdProdList())
+                {
+                    MessageBox.Show(this, "One or multiple errors in selected Item list. Please correct and retry.", "Item list Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 if (IsSellerOrder)
                 {
                     //Update Order Details to CurrSellerOrderDetails
@@ -221,7 +237,7 @@ namespace SalesOrdersReport
                     foreach (DataGridViewRow item in dtGridViewInvOrdProdList.Rows)
                     {
                         String ItemName = item.Cells[ItemColIndex].Value.ToString();
-                        CurrSellerOrderDetails.ListItemQuantity[DictItemToColIndexes[ItemName.ToUpper()]] = Double.Parse(item.Cells[QtyColIndex].Value.ToString());
+                        CurrSellerOrderDetails.ListItemQuantity[DictItemToColIndexes[ItemName.ToUpper()]] = Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString());
                     }
                     CurrSellerOrderDetails.OrderItemCount = CurrSellerOrderDetails.ListItemQuantity.Count(s => s > 0);
 
@@ -265,7 +281,7 @@ namespace SalesOrdersReport
                     Boolean IsValid = false;
                     for (int i = 0; i < dtGridViewInvOrdProdList.Rows.Count; i++)
                     {
-                        if (Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[QtyColIndex].Value.ToString()) > 0)
+                        if (Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[SaleQtyColIndex].Value.ToString()) > 0)
                         {
                             IsValid = true;
                             break;
@@ -662,11 +678,11 @@ namespace SalesOrdersReport
                                 Double Qty = CurrSellerOrderDetails.ListItemQuantity[DictItemToColIndexes[item.ItemName.ToUpper()]];
                                 if (Qty <= 0) continue;
 
-                                Object[] row = new Object[5];
+                                Object[] row = new Object[6];
                                 row[CategoryColIndex] = item.CategoryName; row[ItemColIndex] = item.ItemName;
                                 Double Price = CommonFunctions.ObjProductMaster.GetPriceForProduct(item.ItemName, CurrSellerDetails.PriceGroupIndex);
                                 row[PriceColIndex] = Price.ToString("F");
-                                row[QtyColIndex] = Qty; row[SelectColIndex] = false;
+                                row[OrdQtyColIndex] = Qty; row[SaleQtyColIndex] = Qty; row[ItemSelectionSelectColIndex] = false;
 
                                 Int32 Index = dtGridViewInvOrdProdList.Rows.Add(row);
                                 DictItemsSelected.Add(item.ItemName, dtGridViewInvOrdProdList.Rows[Index]);
@@ -911,7 +927,9 @@ namespace SalesOrdersReport
                 List<DataGridViewRow> ListSelectedRows = new List<DataGridViewRow>();
                 if (ListSelectedRowIndexesToAdd.Count == 0)
                 {
-                    ListSelectedRows.Add(dtGridViewProdListForSelection.SelectedRows[0]);
+                    if (dtGridViewProdListForSelection.SelectedRows.Count > 0)
+                        ListSelectedRows.Add(dtGridViewProdListForSelection.SelectedRows[0]);
+                    else return;
                 }
                 else
                 {
@@ -923,12 +941,17 @@ namespace SalesOrdersReport
 
                 for (int j = 0; j < ListSelectedRows.Count; j++)
                 {
-                    Object[] row = new Object[dtGridViewProdListForSelection.Columns.Count];
-                    for (int i = 0; i < row.Length; i++)
-                    {
-                        row[i] = ListSelectedRows[j].Cells[i].Value;
-                    }
-                    row[SelectColIndex] = false;
+                    Object[] row = new Object[dtGridViewInvOrdProdList.Columns.Count];
+                    //for (int i = 0; i < row.Length; i++)
+                    //{
+                    //    row[i] = ListSelectedRows[j].Cells[i].Value;
+                    //}
+                    row[CategoryColIndex] = ListSelectedRows[j].Cells[CategoryColIndex].Value;
+                    row[ItemColIndex] = ListSelectedRows[j].Cells[ItemColIndex].Value;
+                    row[PriceColIndex] = ListSelectedRows[j].Cells[PriceColIndex].Value;
+                    row[ItemSelectionSelectColIndex] = false;
+                    row[OrdQtyColIndex] = ListSelectedRows[j].Cells[QtyColIndex].Value;
+                    row[SaleQtyColIndex] = ListSelectedRows[j].Cells[QtyColIndex].Value;
                     ListSelectedRows[j].Cells[SelectColIndex].Value = false;
                     ListSelectedRows[j].Cells[QtyColIndex].Value = 0;
 
@@ -939,7 +962,7 @@ namespace SalesOrdersReport
                     }
                     else
                     {
-                        DictItemsSelected[row[ItemColIndex].ToString()].Cells[QtyColIndex].Value = Double.Parse(DictItemsSelected[row[ItemColIndex].ToString()].Cells[QtyColIndex].Value.ToString()) + Double.Parse(row[QtyColIndex].ToString());
+                        DictItemsSelected[row[ItemColIndex].ToString()].Cells[SaleQtyColIndex].Value = Double.Parse(DictItemsSelected[row[ItemColIndex].ToString()].Cells[SaleQtyColIndex].Value.ToString()) + Double.Parse(row[SaleQtyColIndex].ToString());
                     }
                 }
 
@@ -963,7 +986,9 @@ namespace SalesOrdersReport
                 List<DataGridViewRow> ListSelectedRows = new List<DataGridViewRow>();
                 if (ListSelectedRowIndexesToRemove.Count == 0)
                 {
-                    ListSelectedRows.Add(dtGridViewInvOrdProdList.SelectedRows[0]);
+                    if (dtGridViewProdListForSelection.SelectedRows.Count > 0)
+                        ListSelectedRows.Add(dtGridViewInvOrdProdList.SelectedRows[0]);
+                    else return;
                 }
                 else
                 {
@@ -992,11 +1017,11 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (e.ColumnIndex != SelectColIndex || e.RowIndex < 0) return;
+                if (e.ColumnIndex != ItemSelectionSelectColIndex || e.RowIndex < 0) return;
 
                 dtGridViewInvOrdProdList.CommitEdit(DataGridViewDataErrorContexts.Commit);
 
-                if (Boolean.Parse(dtGridViewInvOrdProdList.Rows[e.RowIndex].Cells[SelectColIndex].Value.ToString()))
+                if (Boolean.Parse(dtGridViewInvOrdProdList.Rows[e.RowIndex].Cells[ItemSelectionSelectColIndex].Value.ToString()))
                 {
                     if (!ListSelectedRowIndexesToRemove.Contains(e.RowIndex)) ListSelectedRowIndexesToRemove.Add(e.RowIndex);
                 }
@@ -1041,7 +1066,7 @@ namespace SalesOrdersReport
                 foreach (DataGridViewRow item in dtGridViewInvOrdProdList.Rows)
                 {
                     Double Price = Double.Parse(item.Cells[PriceColIndex].Value.ToString());
-                    Double Qty = Double.Parse(item.Cells[QtyColIndex].Value.ToString());
+                    Double Qty = Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString());
                     Double Total = (Price * Qty);
                     Double tmpDiscount = 0;
                     Quantity += Qty;
@@ -1110,7 +1135,7 @@ namespace SalesOrdersReport
                                 String ItemName = item.Cells[ItemColIndex].Value.ToString();
                                 Double Qty = CurrSellerOrderDetails.ListItemQuantity[DictItemToColIndexes[ItemName.ToUpper()]];
 
-                                if (Qty != Double.Parse(item.Cells[QtyColIndex].Value.ToString()))
+                                if (Qty != Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString()))
                                 {
                                     WarnUser = true;
                                     break;
@@ -1284,12 +1309,12 @@ namespace SalesOrdersReport
         {
             try
             {
-                if ((e.ColumnIndex != QtyColIndex && e.ColumnIndex != PriceColIndex) || e.RowIndex < 0) return;
+                if ((e.ColumnIndex != OrdQtyColIndex && e.ColumnIndex != SaleQtyColIndex && e.ColumnIndex != PriceColIndex) || e.RowIndex < 0) return;
 
+                DataGridViewCell cell = dtGridViewInvOrdProdList.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                cell.ErrorText = null;
                 if (e.ColumnIndex == PriceColIndex)
                 {
-                    DataGridViewCell cell = dtGridViewInvOrdProdList.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                    cell.ErrorText = null;
                     Double result;
                     if (!Double.TryParse(cell.Value.ToString(), out result))
                     {
@@ -1305,12 +1330,73 @@ namespace SalesOrdersReport
                     cell.Value = result.ToString("F");
                 }
 
+                if (e.ColumnIndex == SaleQtyColIndex)
+                {
+                    Double result;
+                    if (!Double.TryParse(cell.Value.ToString(), out result))
+                    {
+                        cell.ErrorText = "Must be a valid Sale Quantity";
+                        return;
+                    }
+
+                    if (result < 0)
+                    {
+                        cell.ErrorText = "Must be a valid Sale Quantity";
+                        return;
+                    }
+                }
+
+                if (e.ColumnIndex == OrdQtyColIndex)
+                {
+                    String CellText = cell.Value.ToString();
+                    Double result;
+                    Boolean IsValid = true;
+                    String[] Tokens = null;
+                    if (CellText.Contains("+") || CellText.Contains("-"))
+                        Tokens = CellText.Split(new Char[] { '+', '-' });
+                    else
+                        Tokens = new String[] { CellText };
+
+                    for (int i = 0; i < Tokens.Length; i++)
+                    {
+                        if (String.IsNullOrEmpty(Tokens[i].Trim()) || !Double.TryParse(Tokens[i], out result))
+                        {
+                            IsValid = false;
+                            break;
+                        }
+                    }
+
+                    if (!IsValid)
+                    {
+                        cell.ErrorText = "Must be a valid Order Quantity";
+                        return;
+                    }
+                }
+
                 dtGridViewInvOrdProdList.CommitEdit(DataGridViewDataErrorContexts.Commit);
                 UpdateSummaryDetails();
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.dtGridViewInvOrdProdList_CellEndEdit()", ex);
+            }
+        }
+
+        private Boolean IsDataValidInGridViewInvOrdProdList()
+        {
+            try
+            {
+                for (int i = 0; i < dtGridViewInvOrdProdList.Rows.Count; i++)
+                {
+                    if (!String.IsNullOrEmpty(dtGridViewInvOrdProdList.Rows[i].Cells[OrdQtyColIndex].ErrorText)
+                        || !String.IsNullOrEmpty(dtGridViewInvOrdProdList.Rows[i].Cells[SaleQtyColIndex].ErrorText)) return false;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.IsDataValidInGridViewInvOrdProdList()", ex);
+                return false;
             }
         }
 
@@ -1345,7 +1431,7 @@ namespace SalesOrdersReport
                 Int32 Index = 0;
                 foreach (DataGridViewRow item in dtGridViewInvOrdProdList.Rows)
                 {
-                    item.Cells[SelectColIndex].Value = Checked;
+                    item.Cells[ItemSelectionSelectColIndex].Value = Checked;
                     if (Checked) ListSelectedRowIndexesToRemove.Add(Index);
                     Index++;
                 }
@@ -1416,17 +1502,19 @@ namespace SalesOrdersReport
                 }
 
                 //Load item details from Invoice/Quotation
-                Int32 OrdQtyColNdx = -1, PriceColIndex = -1, BalanceAmountColIndex = -1;
+                Int32 OrdQtyColNdx = -1, SaleQtyColNdx = -1, PriceColIndex = -1, BalanceAmountColIndex = -1;
 
                 if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatQuotation)
                 {
                     OrdQtyColNdx = 2;
+                    SaleQtyColNdx = 3;
                     PriceColIndex = 4;
                     BalanceAmountColIndex = 5;
                 }
                 else if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatInvoice)
                 {
                     OrdQtyColNdx = 3;
+                    SaleQtyColNdx = 4;
                     PriceColIndex = 6;
                 }
 
@@ -1438,11 +1526,12 @@ namespace SalesOrdersReport
                     if (ItemIndex < 0) continue;
                     ProductDetails item = ListAllProducts[ItemIndex];
 
-                    Object[] row = new Object[5];
+                    Object[] row = new Object[6];
                     row[CategoryColIndex] = item.CategoryName; row[ItemColIndex] = item.ItemName;
                     Double Price = Double.Parse(dtRow[PriceColIndex].ToString());
                     row[this.PriceColIndex] = Price.ToString("F");
-                    row[QtyColIndex] = dtRow[OrdQtyColNdx]; row[SelectColIndex] = false;
+                    row[OrdQtyColIndex] = dtRow[OrdQtyColNdx];
+                    row[SaleQtyColIndex] = dtRow[SaleQtyColNdx]; row[ItemSelectionSelectColIndex] = false;
 
                     Int32 Index = dtGridViewInvOrdProdList.Rows.Add(row);
                     DictItemsSelected.Add(item.ItemName, dtGridViewInvOrdProdList.Rows[Index]);
@@ -1977,6 +2066,7 @@ namespace SalesOrdersReport
                 Int32 ProgressBarCount = ValidItemCount;
                 Int32 Counter = 0, SLNo = 0;
                 Double Quantity, Price;
+                String OrderQuantity = "";
 
                 SLNo = 0;
                 SellerDetails ObjCurrentSeller = CommonFunctions.ObjSellerMaster.GetSellerDetails(cmbBoxSellerCustomer.SelectedValue.ToString());
@@ -2049,9 +2139,10 @@ namespace SalesOrdersReport
                     Counter++;
                     ReportProgressFunc((Counter * 100) / ProgressBarCount);
 
-                    Quantity = Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[QtyColIndex].Value.ToString());
+                    OrderQuantity = dtGridViewInvOrdProdList.Rows[i].Cells[OrdQtyColIndex].Value.ToString();
+                    Quantity = Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[SaleQtyColIndex].Value.ToString());
                     ItemName = dtGridViewInvOrdProdList.Rows[i].Cells[ItemColIndex].Value.ToString();
-                    if (Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[QtyColIndex].Value.ToString()) == 0) continue;
+                    if (Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[SaleQtyColIndex].Value.ToString()) == 0) continue;
                     Price = Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[PriceColIndex].Value.ToString());
                     Price = Price / ((CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(ItemName).Sum() + 100) / 100);
 
@@ -2069,7 +2160,7 @@ namespace SalesOrdersReport
                     ObjProductDetailsForInvoice.Description = ObjProductDetails.ItemName;
                     ObjProductDetailsForInvoice.HSNCode = ObjProductDetails.HSNCode;
                     ObjProductDetailsForInvoice.UnitsOfMeasurement = ObjProductDetails.UnitsOfMeasurement;
-                    ObjProductDetailsForInvoice.OrderQuantity = Quantity;
+                    ObjProductDetailsForInvoice.OrderQuantity = OrderQuantity;
                     ObjProductDetailsForInvoice.SaleQuantity = (IsDummyBill ? 0 : Quantity);
                     ObjProductDetailsForInvoice.Rate = Price; //CommonFunctions.ObjProductMaster.GetPriceForProduct(ObjProductDetails.ItemName, ObjCurrentSeller.PriceGroupIndex);
 
