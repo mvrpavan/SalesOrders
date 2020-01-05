@@ -70,11 +70,7 @@ namespace SalesOrdersReport
 
                     btnEditBalanceAmount.Enabled = false;
                     btnResetBalanceAmount.Enabled = false;
-
-                    //DataGridViewColumn dtColumn = new DataGridViewColumn(dtGridViewInvOrdProdList.Columns[OrdQtyColIndex].CellTemplate);
-                    //dtColumn.Name = "OrderQty1"; dtColumn.HeaderText = "OrderQty";
-                    //dtColumn.ValueType = Type.GetType("System.String");
-                    //dtGridViewInvOrdProdList.Columns.Insert(OrdQtyColIndex, dtColumn);
+                    dtGridViewInvOrdProdList.Columns[OrdQtyColIndex].ReadOnly = true;
                 }
                 else if (IsCustomerBill)
                 {
@@ -102,11 +98,6 @@ namespace SalesOrdersReport
                     cmbBoxBillNumber.Visible = true;
                     lblStatus.Text = "Please choose Invoice/Quotation date";
                     dtGridViewInvOrdProdList.Columns[PriceColIndex].ReadOnly = false;
-
-                    //DataGridViewColumn dtColumn = new DataGridViewColumn(dtGridViewInvOrdProdList.Columns[OrdQtyColIndex].CellTemplate);
-                    //dtColumn.Name = "OrderQty1"; dtColumn.HeaderText = "OrderQty";
-                    //dtColumn.ValueType = Type.GetType("System.String");
-                    //dtGridViewInvOrdProdList.Columns.Insert(OrdQtyColIndex, dtColumn);
                 }
 
                 this.IsSellerOrder = IsSellerOrder;

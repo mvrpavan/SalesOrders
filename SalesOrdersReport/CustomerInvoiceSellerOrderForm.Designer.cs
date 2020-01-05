@@ -35,6 +35,11 @@
             this.lblSelectName = new System.Windows.Forms.Label();
             this.cmbBoxSellerCustomer = new System.Windows.Forms.ComboBox();
             this.dtGridViewProdListForSelection = new System.Windows.Forms.DataGridView();
+            this.CategoryCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.QuantityCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SelectCol = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.cmbBoxProduct = new System.Windows.Forms.ComboBox();
             this.cmbBoxProdCat = new System.Windows.Forms.ComboBox();
@@ -46,6 +51,12 @@
             this.btnCnclInvOrd = new System.Windows.Forms.Button();
             this.btnCreateInvOrd = new System.Windows.Forms.Button();
             this.dtGridViewInvOrdProdList = new System.Windows.Forms.DataGridView();
+            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OrdQtyCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column14 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btnSelectAll = new System.Windows.Forms.Button();
             this.btnAddItem = new System.Windows.Forms.Button();
@@ -91,17 +102,6 @@
             this.cmbBoxBillNumber = new System.Windows.Forms.ComboBox();
             this.picBoxLoading = new System.Windows.Forms.PictureBox();
             this.btnBrowseSalesQuotFile = new System.Windows.Forms.Button();
-            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.OrdQtyCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column14 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.CategoryCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.QuantityCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SelectCol = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProdListForSelection)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvOrdProdList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -167,6 +167,48 @@
             this.dtGridViewProdListForSelection.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewProdListForSelection_CellEndEdit);
             this.dtGridViewProdListForSelection.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewProdListForSelection_CellValueChanged);
             // 
+            // CategoryCol
+            // 
+            this.CategoryCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.CategoryCol.HeaderText = "Category";
+            this.CategoryCol.MinimumWidth = 76;
+            this.CategoryCol.Name = "CategoryCol";
+            this.CategoryCol.ReadOnly = true;
+            this.CategoryCol.Width = 76;
+            // 
+            // ItemCol
+            // 
+            this.ItemCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ItemCol.HeaderText = "Item";
+            this.ItemCol.MinimumWidth = 54;
+            this.ItemCol.Name = "ItemCol";
+            this.ItemCol.ReadOnly = true;
+            this.ItemCol.Width = 54;
+            // 
+            // PriceCol
+            // 
+            this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.PriceCol.HeaderText = "Price";
+            this.PriceCol.MinimumWidth = 58;
+            this.PriceCol.Name = "PriceCol";
+            this.PriceCol.ReadOnly = true;
+            this.PriceCol.Width = 58;
+            // 
+            // QuantityCol
+            // 
+            this.QuantityCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.QuantityCol.HeaderText = "Quantity";
+            this.QuantityCol.MinimumWidth = 200;
+            this.QuantityCol.Name = "QuantityCol";
+            this.QuantityCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.QuantityCol.Width = 200;
+            // 
+            // SelectCol
+            // 
+            this.SelectCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.SelectCol.HeaderText = "Select";
+            this.SelectCol.Name = "SelectCol";
+            // 
             // label2
             // 
             this.label2.Location = new System.Drawing.Point(438, 99);
@@ -209,7 +251,7 @@
             this.dtTmPckrInvOrdDate.Name = "dtTmPckrInvOrdDate";
             this.dtTmPckrInvOrdDate.Size = new System.Drawing.Size(212, 20);
             this.dtTmPckrInvOrdDate.TabIndex = 0;
-            this.dtTmPckrInvOrdDate.ValueChanged += new System.EventHandler(this.dtTmPckrInvOrdDate_ValueChanged);
+            this.dtTmPckrInvOrdDate.CloseUp += new System.EventHandler(this.dtTmPckrInvOrdDate_ValueChanged);
             // 
             // lblInvoiceDate
             // 
@@ -302,6 +344,53 @@
             this.dtGridViewInvOrdProdList.TabIndex = 0;
             this.dtGridViewInvOrdProdList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewInvOrdProdList_CellContentClick);
             this.dtGridViewInvOrdProdList.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewInvOrdProdList_CellEndEdit);
+            // 
+            // Column8
+            // 
+            this.Column8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Column8.HeaderText = "Category";
+            this.Column8.MinimumWidth = 76;
+            this.Column8.Name = "Column8";
+            this.Column8.ReadOnly = true;
+            this.Column8.Width = 76;
+            // 
+            // Column10
+            // 
+            this.Column10.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Column10.HeaderText = "Item";
+            this.Column10.MinimumWidth = 54;
+            this.Column10.Name = "Column10";
+            this.Column10.ReadOnly = true;
+            this.Column10.Width = 54;
+            // 
+            // Column11
+            // 
+            this.Column11.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Column11.HeaderText = "Price";
+            this.Column11.MinimumWidth = 58;
+            this.Column11.Name = "Column11";
+            this.Column11.ReadOnly = true;
+            this.Column11.Width = 58;
+            // 
+            // OrdQtyCol
+            // 
+            this.OrdQtyCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.OrdQtyCol.HeaderText = "Order Quantity";
+            this.OrdQtyCol.MinimumWidth = 100;
+            this.OrdQtyCol.Name = "OrdQtyCol";
+            this.OrdQtyCol.Width = 102;
+            // 
+            // Column12
+            // 
+            this.Column12.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Column12.HeaderText = "Sale Quantity";
+            this.Column12.MinimumWidth = 100;
+            this.Column12.Name = "Column12";
+            // 
+            // Column14
+            // 
+            this.Column14.HeaderText = "Select";
+            this.Column14.Name = "Column14";
             // 
             // splitContainer1
             // 
@@ -838,95 +927,6 @@
             this.btnBrowseSalesQuotFile.TabIndex = 17;
             this.btnBrowseSalesQuotFile.UseVisualStyleBackColor = true;
             this.btnBrowseSalesQuotFile.Click += new System.EventHandler(this.btnSalesOrderFilePath_Click);
-            // 
-            // Column8
-            // 
-            this.Column8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Column8.HeaderText = "Category";
-            this.Column8.MinimumWidth = 76;
-            this.Column8.Name = "Column8";
-            this.Column8.ReadOnly = true;
-            this.Column8.Width = 76;
-            // 
-            // Column10
-            // 
-            this.Column10.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Column10.HeaderText = "Item";
-            this.Column10.MinimumWidth = 54;
-            this.Column10.Name = "Column10";
-            this.Column10.ReadOnly = true;
-            this.Column10.Width = 54;
-            // 
-            // Column11
-            // 
-            this.Column11.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Column11.HeaderText = "Price";
-            this.Column11.MinimumWidth = 58;
-            this.Column11.Name = "Column11";
-            this.Column11.ReadOnly = true;
-            this.Column11.Width = 58;
-            // 
-            // OrdQtyCol
-            // 
-            this.OrdQtyCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.OrdQtyCol.HeaderText = "Order Quantity";
-            this.OrdQtyCol.MinimumWidth = 100;
-            this.OrdQtyCol.Name = "OrdQtyCol";
-            this.OrdQtyCol.Width = 102;
-            // 
-            // Column12
-            // 
-            this.Column12.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Column12.HeaderText = "Sale Quantity";
-            this.Column12.MinimumWidth = 100;
-            this.Column12.Name = "Column12";
-            // 
-            // Column14
-            // 
-            this.Column14.HeaderText = "Select";
-            this.Column14.Name = "Column14";
-            // 
-            // CategoryCol
-            // 
-            this.CategoryCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.CategoryCol.HeaderText = "Category";
-            this.CategoryCol.MinimumWidth = 76;
-            this.CategoryCol.Name = "CategoryCol";
-            this.CategoryCol.ReadOnly = true;
-            this.CategoryCol.Width = 76;
-            // 
-            // ItemCol
-            // 
-            this.ItemCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ItemCol.HeaderText = "Item";
-            this.ItemCol.MinimumWidth = 54;
-            this.ItemCol.Name = "ItemCol";
-            this.ItemCol.ReadOnly = true;
-            this.ItemCol.Width = 54;
-            // 
-            // PriceCol
-            // 
-            this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.PriceCol.HeaderText = "Price";
-            this.PriceCol.MinimumWidth = 58;
-            this.PriceCol.Name = "PriceCol";
-            this.PriceCol.ReadOnly = true;
-            this.PriceCol.Width = 58;
-            // 
-            // QuantityCol
-            // 
-            this.QuantityCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.QuantityCol.HeaderText = "Quantity";
-            this.QuantityCol.MinimumWidth = 200;
-            this.QuantityCol.Name = "QuantityCol";
-            this.QuantityCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.QuantityCol.Width = 200;
-            // 
-            // SelectCol
-            // 
-            this.SelectCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.SelectCol.HeaderText = "Select";
-            this.SelectCol.Name = "SelectCol";
             // 
             // CustomerInvoiceSellerOrderForm
             // 
