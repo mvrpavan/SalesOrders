@@ -52,13 +52,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
+        "OwnerKey" = "8:_E8839BC50C3CB1A270E3444E373C119B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E8839BC50C3CB1A270E3444E373C119B"
+        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -193,11 +193,6 @@
             "AssemblyAsmDisplayName" = "8:ExcelDna.Integration, Version=0.34.6373.42344, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_E8839BC50C3CB1A270E3444E373C119B"
-                    {
-                    "Name" = "8:ExcelDna.Integration.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ExcelDna.Integration.dll"
             "TargetName" = "8:"
@@ -295,15 +290,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sales Orders Invoice"
-        "ProductCode" = "8:{360385AF-DE79-43C0-BF20-0DF73120DBDF}"
-        "PackageCode" = "8:{4D4F79B0-442E-46A2-8D1B-D2AE25F8176D}"
+        "ProductCode" = "8:{D12762F9-99FC-426C-98DD-D8AEBACE69D7}"
+        "PackageCode" = "8:{C392DE11-D33B-4E53-9A94-71551AEF547D}"
         "UpgradeCode" = "8:{0C28CE4F-5425-4B7E-9338-863EBFC410AC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:7.4.3"
+        "ProductVersion" = "8:7.4.4"
         "Manufacturer" = "8:Freelance Projects Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -873,7 +868,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B44D9FBD296F48C38BDA77E518B27B77"
             {
-            "SourcePath" = "8:..\\obj\\x86\\Release\\SalesOrdersReport.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F80B6BE5128A4CA9884787E001FEE4B6"
@@ -901,7 +896,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D2C5570EEE2149E2A969AF0EE4969D93"
             {
-            "SourcePath" = "8:..\\SalesOrdersExcelToolPack\\obj\\Release\\SalesOrdersExcelToolPack.dll"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"
