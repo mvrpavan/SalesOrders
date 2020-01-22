@@ -52,13 +52,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E8839BC50C3CB1A270E3444E373C119B"
+        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
+        "OwnerKey" = "8:_E8839BC50C3CB1A270E3444E373C119B"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -290,15 +290,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sales Orders Invoice"
-        "ProductCode" = "8:{D12762F9-99FC-426C-98DD-D8AEBACE69D7}"
-        "PackageCode" = "8:{C392DE11-D33B-4E53-9A94-71551AEF547D}"
+        "ProductCode" = "8:{BD7C616A-ABDB-4CA4-BEA7-DE2A6EB6D92B}"
+        "PackageCode" = "8:{2AA3F4F0-882C-4A46-A6E1-9D38E5DFD86E}"
         "UpgradeCode" = "8:{0C28CE4F-5425-4B7E-9338-863EBFC410AC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:7.4.4"
+        "ProductVersion" = "8:7.4.5"
         "Manufacturer" = "8:Freelance Projects Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

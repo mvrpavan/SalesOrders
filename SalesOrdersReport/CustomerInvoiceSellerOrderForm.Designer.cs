@@ -961,6 +961,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "\';;";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CustomerInvoiceSellerOrderForm_FormClosing);
             this.Load += new System.EventHandler(this.CustomerInvoiceForm_Load);
             this.Shown += new System.EventHandler(this.CustomerInvoiceSellerOrderForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProdListForSelection)).EndInit();

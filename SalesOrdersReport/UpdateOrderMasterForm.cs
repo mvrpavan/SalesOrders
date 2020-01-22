@@ -339,13 +339,16 @@ namespace SalesOrdersReport
                 {
                     if (xlSellerMasterWorksheet.Cells[i, StartColumn + 1].Value == null) continue;
                     String SellerName = xlSellerMasterWorksheet.Cells[i, StartColumn + 1].Value;
-                    Int32 SellerIndex = -1;
+                    Int32 SellerIndex = -1, MaxBillNumber = -999;
                     for (int j = 0; j < drSellers.Length; j++)
                     {
                         if (drSellers[j]["Seller Name"].ToString().Trim().Equals(SellerName.Trim(), StringComparison.InvariantCultureIgnoreCase))
                         {
-                            SellerIndex = j;
-                            break;
+                            if (MaxBillNumber < Int32.Parse(drSellers[j]["Bill#"].ToString()))
+                            {
+                                MaxBillNumber = Int32.Parse(drSellers[j]["Bill#"].ToString());
+                                SellerIndex = j;
+                            }
                         }
                     }
 

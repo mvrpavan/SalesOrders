@@ -1568,6 +1568,11 @@ namespace SalesOrdersReport
             }
         }
 
+        private void CustomerInvoiceSellerOrderForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CommonFunctions.WriteToSettingsFile();
+        }
+
         public void UpdateBalanceAmount(Double NewBalanceAmount)
         {
             try
@@ -2208,9 +2213,10 @@ namespace SalesOrdersReport
                     Excel.Worksheet xlSellerSummaryWorkSheet = CommonFunctions.GetWorksheet(xlWorkbook, "Seller Summary");
                     //Int32 SummaryStartRow = 2;
                     Int32 CurrRow = xlSellerSummaryWorkSheet.UsedRange.Rows.Count + 1;// ListSheetNames.Count + SummaryStartRow;
+                    Int32 SerialNumber = CurrRow - 2;
                     if (IsExistingBill)
                     {
-                        for (int i = 2; i <= xlSellerSummaryWorkSheet.UsedRange.Rows.Count; i++)
+                        for (int i = 3; i <= xlSellerSummaryWorkSheet.UsedRange.Rows.Count; i++)
                         {
                             if (xlSellerSummaryWorkSheet.Cells[i, 3].Value.ToString().Equals(InvoiceNumber.ToString()))
                             {
@@ -2219,8 +2225,25 @@ namespace SalesOrdersReport
                             }
                         }
                     }
+                    else
+                    {
+                        for (int i = 3; i <= xlSellerSummaryWorkSheet.UsedRange.Rows.Count; i++)
+                        {
+                            if (!String.IsNullOrEmpty(xlSellerSummaryWorkSheet.Cells[i, 3].Value.ToString()) && Int32.Parse(xlSellerSummaryWorkSheet.Cells[i, 3].Value.ToString()) < 0)
+                            {
+                                CurrRow = i;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (CurrRow < xlSellerSummaryWorkSheet.UsedRange.Rows.Count + 1)
+                    {
+                        xlSellerSummaryWorkSheet.Rows[CurrRow].Insert(CurrRow);
+                    }
+
                     Int32 CurrCol = 0;
-                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = CurrRow - 2;// ListSheetNames.Count;
+                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = SerialNumber; // CurrRow - 2;// ListSheetNames.Count;
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ObjCurrentSeller.Line;
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = InvoiceNumber;
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ObjCurrentSeller.Name;
@@ -2245,6 +2268,12 @@ namespace SalesOrdersReport
                     xlRangeReturn.NumberFormat = "#,##0.00"; xlRangeDiscount.NumberFormat = "#,##0.00";
                     xlRangeTotalTax.NumberFormat = "#,##0.00"; xlRangeNetSale.NumberFormat = "#,##0.00";
                     xlRangeOldBalance.NumberFormat = "#,##0.00"; xlRangeCash.NumberFormat = "#,##0.00";
+
+                    if (CurrRow == 3)
+                    {
+                        Excel.Range xlRange1 = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[CurrRow, 1], xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol]];
+                        xlRange1.Font.Bold = false;
+                    }
                 }
                 #endregion
 
