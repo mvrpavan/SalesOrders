@@ -150,6 +150,8 @@ namespace SalesOrdersReport
                     xlRange = xlWorkSheet.Cells[ItemDetailsStartRow + i, DictColNumbers[ItemNameCol]];
                     xlRange.Value = CurrProd.Description; xlRange.WrapText = true;
                     xlWorkSheet.Cells[ItemDetailsStartRow + i, DictColNumbers[HSNCol]].Value = CurrProd.HSNCode;
+                    xlWorkSheet.Cells[ItemDetailsStartRow + i, DictColNumbers[OrderQtyCol]].NumberFormat = "@";
+                    xlWorkSheet.Cells[ItemDetailsStartRow + i, DictColNumbers[OrderQtyCol]].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
                     xlWorkSheet.Cells[ItemDetailsStartRow + i, DictColNumbers[OrderQtyCol]].Value = CurrProd.OrderQuantity;
                     xlWorkSheet.Cells[ItemDetailsStartRow + i, DictColNumbers[SaleQtyCol]].Value = CurrProd.SaleQuantity;
                     xlRange = xlWorkSheet.Cells[ItemDetailsStartRow + i, DictColNumbers[UnitsCol]];

@@ -96,6 +96,8 @@ namespace SalesOrdersReport
                 }
 
                 //strConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + FilePath + ";Extended Properties=Excel 14.0";
+                String OrigSheetName = SheetName;
+                SheetName = SheetName.Replace(".", "#").Replace("!", "_");
                 strCommandText = "Select " + ColumnNames + " from [" + SheetName + "$" + UsedRange + "]";
                 conOleDbCon = new OleDbConnection(strConnectionString);
                 cmdCommand = new OleDbCommand(strCommandText, conOleDbCon);
@@ -103,8 +105,13 @@ namespace SalesOrdersReport
 
                 DataTable dtSheets = conOleDbCon.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
                 SheetName += "$";
-                if (SheetName.Contains(" ")) SheetName = "'" + SheetName + "'";
-                if (!dtSheets.Select().ToList().Exists(sheet => sheet["TABLE_NAME"].ToString().Trim().Equals(SheetName, StringComparison.InvariantCultureIgnoreCase))) return null;
+                if (SheetName.Contains(" ") || SheetName.Contains("#") || SheetName.Contains(",") || OrigSheetName.Contains("!") || SheetName.Contains("&"))
+                    SheetName = "'" + SheetName + "'";
+                if (!dtSheets.Select().ToList().Exists(sheet => sheet["TABLE_NAME"].ToString().Trim().Equals(SheetName, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    conOleDbCon.Close();
+                    return null;
+                }
 
                 OleDbDataAdapter dapAdapter = new OleDbDataAdapter(strCommandText, conOleDbCon);
                 DataTable dtbInput = new DataTable();

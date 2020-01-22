@@ -341,19 +341,30 @@ namespace SalesOrdersReport
                 {
                     if (xlSellerMasterWorksheet.Cells[i, StartColumn + 1].Value == null) continue;
                     String SellerName = xlSellerMasterWorksheet.Cells[i, StartColumn + 1].Value;
-                    Int32 SellerIndex = -1;
+                    Int32 SellerIndex = -1, MaxBillNumber = -999;
                     for (int j = 0; j < drSellers.Length; j++)
                     {
                         if (drSellers[j]["Seller Name"].ToString().Trim().Equals(SellerName.Trim(), StringComparison.InvariantCultureIgnoreCase))
                         {
-                            SellerIndex = j;
-                            break;
+                            if (MaxBillNumber < Int32.Parse(drSellers[j]["Bill#"].ToString()))
+                            {
+                                MaxBillNumber = Int32.Parse(drSellers[j]["Bill#"].ToString());
+                                SellerIndex = j;
+                            }
                         }
                     }
 
                     if (SellerIndex < 0) continue;
                     CurrSellerCount++;
 
+                    Double NetSale = ((DBNull.Value != drSellers[SellerIndex]["Net Sale"]) ? Double.Parse(drSellers[SellerIndex]["Net Sale"].ToString()) : 0);
+                    Double Cancel = ((DBNull.Value != drSellers[SellerIndex]["Cancel"]) ? Double.Parse(drSellers[SellerIndex]["Cancel"].ToString()) : 0);
+                    Double Return = ((DBNull.Value != drSellers[SellerIndex]["Return"]) ? Double.Parse(drSellers[SellerIndex]["Return"].ToString()) : 0);
+                    Double Discount = ((DBNull.Value != drSellers[SellerIndex]["Discount"]) ? Double.Parse(drSellers[SellerIndex]["Discount"].ToString()) : 0);
+                    Double TotalTax = ((DBNull.Value != drSellers[SellerIndex]["Total Tax"]) ? Double.Parse(drSellers[SellerIndex]["Total Tax"].ToString()) : 0);
+                    Double Cash = ((DBNull.Value != drSellers[SellerIndex]["Cash"]) ? Double.Parse(drSellers[SellerIndex]["Cash"].ToString()) : 0);
+                    if (Math.Abs(NetSale) <= 1E-6 && Math.Abs(Cancel) <= 1E-6 && Math.Abs(Return) <= 1E-6 && Math.Abs(Discount) <= 1E-6 && Math.Abs(TotalTax) <= 1E-6 && Math.Abs(Cash) <= 1E-6)
+                        continue;
                     xlSellerMasterWorksheet.Cells[i, OldBalanceColIndex].Value = drSellers[SellerIndex]["Balance"];
 
                     ReportProgressFunc((CurrSellerCount * 100) / ProgressBarCount);
@@ -412,8 +423,8 @@ namespace SalesOrdersReport
                 {
                     DataTable dtSellerHistory = CommonFunctions.ReturnDataTableFromExcelWorksheet("Seller History", SellerHistoryFilePath, "[Create Date], [Bill#], [Seller Name]");
                     ListSellerKeys = dtSellerHistory.AsEnumerable().Select(s => s.Field<DateTime>("Create Date").ToString("dd-MMM-yyyy")
-                                                + "||" + s.Field<Double>("Bill#").ToString()
-                                                + "||" + s.Field<String>("Seller Name").Trim().ToUpper()).Distinct().ToList();
+                                                + "||" + s["Bill#"].ToString()
+                                                + "||" + s["Seller Name"].ToString().Trim().ToUpper()).Distinct().ToList();
 
                     xlSellerHistoryWorkbook = xlApp.Workbooks.Open(SellerHistoryFilePath);
                     xlSellerHistoryWorksheet = CommonFunctions.GetWorksheet(xlSellerHistoryWorkbook, "Seller History");
