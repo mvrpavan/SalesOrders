@@ -2216,30 +2216,38 @@ namespace SalesOrdersReport
                     Int32 SerialNumber = CurrRow - 2;
                     if (IsExistingBill)
                     {
-                        for (int i = 3; i <= xlSellerSummaryWorkSheet.UsedRange.Rows.Count; i++)
+                        for (Int32 i = 3; i <= xlSellerSummaryWorkSheet.UsedRange.Rows.Count; i++)
                         {
                             if (xlSellerSummaryWorkSheet.Cells[i, 3].Value.ToString().Equals(InvoiceNumber.ToString()))
                             {
                                 CurrRow = i;
+                                SerialNumber = Int32.Parse(xlSellerSummaryWorkSheet.Cells[i, 1].Value.ToString());
                                 break;
                             }
                         }
                     }
                     else
                     {
-                        for (int i = 3; i <= xlSellerSummaryWorkSheet.UsedRange.Rows.Count; i++)
+                        for (Int32 i = 3; i <= xlSellerSummaryWorkSheet.UsedRange.Rows.Count; i++)
                         {
-                            if (!String.IsNullOrEmpty(xlSellerSummaryWorkSheet.Cells[i, 3].Value.ToString()) && Int32.Parse(xlSellerSummaryWorkSheet.Cells[i, 3].Value.ToString()) < 0)
+                            try
                             {
-                                CurrRow = i;
-                                break;
+                                if (!String.IsNullOrEmpty(xlSellerSummaryWorkSheet.Cells[i, 3].Value.ToString()) && Int32.Parse(xlSellerSummaryWorkSheet.Cells[i, 3].Value.ToString()) < 0)
+                                {
+                                    CurrRow = i;
+                                    break;
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                continue;
                             }
                         }
-                    }
 
-                    if (CurrRow < xlSellerSummaryWorkSheet.UsedRange.Rows.Count + 1)
-                    {
-                        xlSellerSummaryWorkSheet.Rows[CurrRow].Insert(CurrRow);
+                        if (CurrRow < xlSellerSummaryWorkSheet.UsedRange.Rows.Count + 1)
+                        {
+                            xlSellerSummaryWorkSheet.Rows[CurrRow].Insert(CurrRow);
+                        }
                     }
 
                     Int32 CurrCol = 0;
