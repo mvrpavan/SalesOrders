@@ -711,6 +711,8 @@ namespace SalesOrdersReport
                         CurrSellerOrderDetails = null;
                         CurrSellerDetails = null;
                         CurrSellerDiscountGroup = null;
+
+                        CommonFunctions.WriteToSettingsFile();
                         break;
                     case 4:     //Cancel Seller Order for Current Seller or Cancel Sales Invoice
                         cmbBoxSellerCustomer.SelectedIndex = -1;
