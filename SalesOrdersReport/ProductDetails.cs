@@ -634,7 +634,22 @@ namespace SalesOrdersReport
                     ProductDetails ObjProductDetails = GetProductDetails(dr["Item Name"].ToString().Trim());
                     if (ObjProductDetails == null) continue;
                     StockProductDetails ObjStockProductDetails = ListStockProducts[ObjProductDetails.StockProductIndex];
-                    ObjStockProductDetails.OrderQty += (Double.Parse(dr["Order Quantity"].ToString().Trim()) * ObjProductDetails.Units);
+                    Double value;
+                    if (!String.IsNullOrEmpty(dr["Order Quantity"].ToString().Trim()) 
+                        && Double.TryParse(dr["Order Quantity"].ToString().Trim(), out value))
+                    {
+                        ObjStockProductDetails.OrderQty += (value * ObjProductDetails.Units);
+                    }
+                    else if (!String.IsNullOrEmpty(dr["Order Quantity"].ToString().Trim()) 
+                        && Double.TryParse(dr["Order Quantity"].ToString().Trim().Split(new char[] { ' ', '+', '-', '*', '/', '\\' })[0], out value))
+                    {
+                        ObjStockProductDetails.OrderQty += (value * ObjProductDetails.Units);
+                    }
+                    else
+                    {
+                        if (dr["Sales Quantity"] != DBNull.Value)
+                            ObjStockProductDetails.OrderQty += (Double.Parse(dr["Sales Quantity"].ToString().Trim()) * ObjProductDetails.Units);
+                    }
                     if (dr["Sales Quantity"] == DBNull.Value) continue;
                     ObjStockProductDetails.RecvdQty += (Double.Parse(dr["Sales Quantity"].ToString().Trim()) * ObjProductDetails.Units);
                     if (dr["Total"] != DBNull.Value)

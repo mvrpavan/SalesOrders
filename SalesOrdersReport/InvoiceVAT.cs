@@ -102,6 +102,8 @@ namespace SalesOrdersReport
                     SlNo++;
                     xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, SlNoColNum].Value = SlNo;
                     xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, ItemNameColNum].Value = CurrProd.Description;
+                    xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, OrdQtyColNum].NumberFormat = "@";
+                    xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, OrdQtyColNum].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
                     xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, OrdQtyColNum].Value = CurrProd.OrderQuantity;
                     xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, SalQtyColNum].Value = CurrProd.SaleQuantity;
                     xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, PriceColNum].Value = CurrProd.Rate * (1 + CurrProd.CGSTDetails.TaxRate + CurrProd.SGSTDetails.TaxRate);
