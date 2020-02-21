@@ -18,6 +18,7 @@ namespace SalesOrdersReport
         public LoginForm()
         {
             CommonFunctions.Initialize();
+            CommonFunctions.CurrentForm = this;
             InitializeComponent();
           
         }
@@ -34,7 +35,36 @@ namespace SalesOrdersReport
                 //    ObjConfig.ObjDatabaseConfig.IntegUserID, ObjConfig.ObjDatabaseConfig.IntegPassword);
 
                 //tmpIntegDBHelper.OpenConnection("APEXDEV0719", "SALES",
-//    "nisha", "nisha");
+                //    "nisha", "nisha");
+
+                if (CommonFunctions.ObjApplicationSettings.Server == null || CommonFunctions.ObjApplicationSettings.Server == string.Empty)
+                {
+                    var Result = MessageBox.Show("DB is not Configured! Configure Now?", "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    // If the no button was pressed ...
+                    if (Result == DialogResult.Yes)
+                    {
+                      
+                        GetDBConnectionConfigForm ObjGetDBConnectionConfigForm = new GetDBConnectionConfigForm();
+                        //Application.Run(new GetDBConnectionConfigForm());
+                        //ObjGetDBConnectionConfigForm.Show();
+                        //Form tmp =  CommonFunctions.CurrentForm;
+                        //CommonFunctions.CurrentForm.Hide();
+                        //.CurrentForm = ObjGetDBConnectionConfigForm;
+                        //ObjGetDBConnectionConfigForm.ShowIcon = true;
+                        //ObjGetDBConnectionConfigForm.ShowInTaskbar = true;
+                        //ObjGetDBConnectionConfigForm.MinimizeBox = true;
+                        //ObjGetDBConnectionConfigForm.MaximizeBox = true;
+                        //ObjGetDBConnectionConfigForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+                        //ObjGetDBConnectionConfigForm.StartPosition = FormStartPosition.CenterScreen;
+                        ObjGetDBConnectionConfigForm.FormClosed += new FormClosedEventHandler(GetDBConnectionConfigForm_Closed); //add handler to catch when child form is closed
+                        ObjGetDBConnectionConfigForm.Show();
+                        this.Hide();
+
+                    }
+                      
+                }
+
+
                 tmpIntegDBHelper.OpenConnection(CommonFunctions.ObjApplicationSettings.Server, CommonFunctions.ObjApplicationSettings.DatabaseName, CommonFunctions.ObjApplicationSettings.UserName, CommonFunctions.ObjApplicationSettings.Password);
                 
                 //EventProcessorMain.WriteToLogFileFunc("Connecting to IntegrationDB completed");
@@ -43,13 +73,16 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-               
+                CommonFunctions.ShowErrorDialog("LoginForm.CreateDBConnection()", ex);
                 //EventProcessorMain.WriteToLogFileFunc(String.Format("Error occured in {0}.CreateDBConnection()", this));
                 throw ex;
             }
         }
 
-
+        private void GetDBConnectionConfigForm_Closed(object sender, FormClosedEventArgs e)
+        {
+            this.Show();
+        }
         private void btnLogin_Click(object sender, EventArgs e)
         {
             if (txtUserName.Text == "")
@@ -76,41 +109,15 @@ namespace SalesOrdersReport
                     RunDBScript objRunDBScript = new RunDBScript();
                     objRunDBScript.CreateNecessaryTables();
                 }
+                bool ReturnVal = tmpIntegDBHelper.LoginCheck(txtUserName.Text, txtUserName.Text, myConnection);
 
-
-                    MySqlCommand myCommand = new MySqlCommand("SELECT Username,Password FROM Users WHERE Username = @Username AND Password = @Password", myConnection);
-
-                MySqlParameter uName = new MySqlParameter("@Username", MySqlDbType.VarChar);
-                MySqlParameter uPassword = new MySqlParameter("@Password", MySqlDbType.VarChar);
-
-                uName.Value = txtUserName.Text;
-                uPassword.Value = txtPassword.Text;
-
-                myCommand.Parameters.Add(uName);
-                myCommand.Parameters.Add(uPassword);
-
-                //myCommand.Connection.Open();
-
-                MySqlDataReader myReader = myCommand.ExecuteReader();
-
-                if (myReader.Read() == true)
+                if (ReturnVal)
                 {
-                    // string strSessionID;
-                    //HttpContext.Session["CurrentUserSessionID"] = Session.SessionID;
-                    //Session["SessionID"] = Guid.NewGuid().ToString();
-                    //session["firstname"] = fistname;
-                    //session["lastnane"] = lastname;
-                    //Session["MySession"] = "This is my session value";
-                    //var se = HttpContext.Current.Session;
-                    //HttpContext.Current.Session["SessionID"] = Guid.NewGuid().ToString();
-                    //HttpContext.Current.Session["USER"] = uName.Value;
-                    tmpIntegDBHelper.CurrentUser = txtUserName.Text;
-                    
-                    MessageBox.Show("You have logged in successfully " + txtUserName.Text);
+                    MessageBox.Show("You have logged in successfully " + txtUserName);
                     //Hide the login form
                     MainForm objMainForm = new MainForm();
                     objMainForm.lblCurrentUser.Text = tmpIntegDBHelper.CurrentUser;
-                    this.Hide();
+                    this.Close();
                     objMainForm.Show();
                 }
                 else
@@ -120,15 +127,57 @@ namespace SalesOrdersReport
                     txtPassword.Clear();
                     txtUserName.Focus();
                 }
-                myReader.Close();
-                //if (myConnection.State == ConnectionState.Open)
-                //{
-                //    myConnection.Dispose();
-                //}
+                //MySqlCommand myCommand = new MySqlCommand("SELECT Username,Password FROM Users WHERE Username = @Username AND Password = @Password", myConnection);
+
+                    //MySqlParameter uName = new MySqlParameter("@Username", MySqlDbType.VarChar);
+                    //MySqlParameter uPassword = new MySqlParameter("@Password", MySqlDbType.VarChar);
+
+                    //uName.Value = txtUserName.Text;
+                    //uPassword.Value = txtPassword.Text;
+
+                    //myCommand.Parameters.Add(uName);
+                    //myCommand.Parameters.Add(uPassword);
+
+                    ////myCommand.Connection.Open();
+
+                    //MySqlDataReader myReader = myCommand.ExecuteReader();
+
+                    //if (myReader.Read() == true)
+                    //{
+                    //    // string strSessionID;
+                    //    //HttpContext.Session["CurrentUserSessionID"] = Session.SessionID;
+                    //    //Session["SessionID"] = Guid.NewGuid().ToString();
+                    //    //session["firstname"] = fistname;
+                    //    //session["lastnane"] = lastname;
+                    //    //Session["MySession"] = "This is my session value";
+                    //    //var se = HttpContext.Current.Session;
+                    //    //HttpContext.Current.Session["SessionID"] = Guid.NewGuid().ToString();
+                    //    //HttpContext.Current.Session["USER"] = uName.Value;
+                    //    tmpIntegDBHelper.CurrentUser = txtUserName.Text;
+
+                    //    MessageBox.Show("You have logged in successfully " + txtUserName.Text);
+                    //    //Hide the login form
+                    //    MainForm objMainForm = new MainForm();
+                    //    objMainForm.lblCurrentUser.Text = tmpIntegDBHelper.CurrentUser;
+                    //    this.Hide();
+                    //    objMainForm.Show();
+                    //}
+                    //else
+                    //{
+                    //    MessageBox.Show("Login Failed...Try again !", "Login Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //    txtUserName.Clear();
+                    //    txtPassword.Clear();
+                    //    txtUserName.Focus();
+                    //}
+                    //myReader.Close();
+                    //if (myConnection.State == ConnectionState.Open)
+                    //{
+                    //    myConnection.Dispose();
+                    //}
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonFunctions.ShowErrorDialog("LoginForm.btnLogin_Click()", ex);
             }
         }
 

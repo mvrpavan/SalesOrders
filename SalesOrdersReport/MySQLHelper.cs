@@ -33,9 +33,10 @@ namespace SalesOrdersReport
             {
                 return ObjMySqlHelper;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                CommonFunctions.ShowErrorDialog("MySQLHelper.GetMySqlHelperObj()", ex);
+                throw ex;
             }
         }
 
@@ -60,7 +61,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                // EventProcessorMain.WriteToLogFileFunc(String.Format("Error occured in {0}.OpenConnection()", this));
+                CommonFunctions.ShowErrorDialog("MySQLHelper.OpenConnection()", ex);
                 throw ex;
             }
         }
@@ -71,9 +72,45 @@ namespace SalesOrdersReport
             {
                 ObjDbConnection.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.CloseConnection()", ex);
                 throw;
+            }
+        }
+
+
+        public bool LoginCheck(string txtUserName, string txtPassword, MySqlConnection myConnection)
+        {
+            try
+            {
+                bool returnval = true;
+                MySqlCommand myCommand = new MySqlCommand("SELECT Username,Password FROM Users WHERE Username = @Username AND Password = @Password", myConnection);
+
+                MySqlParameter uName = new MySqlParameter("@Username", MySqlDbType.VarChar);
+                MySqlParameter uPassword = new MySqlParameter("@Password", MySqlDbType.VarChar);
+
+                uName.Value = txtUserName;
+                uPassword.Value = txtPassword;
+
+                myCommand.Parameters.Add(uName);
+                myCommand.Parameters.Add(uPassword);
+
+                //myCommand.Connection.Open();
+
+                MySqlDataReader myReader = myCommand.ExecuteReader();
+
+                if (myReader.Read() == true) CurrentUser = txtUserName;
+                else returnval = false;
+       
+                myReader.Close();
+
+                return returnval;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.LoginCheck()" , ex);
+                throw ex;
             }
         }
 
@@ -97,7 +134,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-
+                CommonFunctions.ShowErrorDialog("MySQLHelper.CheckTableExists()", ex);
                 throw ex;
             }
         }
@@ -161,7 +198,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-
+                CommonFunctions.ShowErrorDialog("MySQLHelper.GetAllUsers()", ex);
                 throw ex;
             }
 
@@ -187,7 +224,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-
+                CommonFunctions.ShowErrorDialog("MySQLHelper.GetAllRoles()", ex);
                 throw ex;
             }
             
@@ -213,7 +250,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-
+                CommonFunctions.ShowErrorDialog("MySQLHelper.UpdateAnyTableDetails()", ex);
                 throw ex;
             }
         }
@@ -234,19 +271,19 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                // EventProcessorMain.WriteToLogFileFunc(String.Format("Error occured in {0}.CreateTable(ListFields)", this));
+                CommonFunctions.ShowErrorDialog("MySQLHelper.DeleteRow()", ex);
                 throw ex;
             }
         }
 
-        public Int32 CreateNewRole(string NewRoleName,string Previleages)
+        public Int32 CreateNewRole(string NewRoleName,string Privileges)
         {
             try
             {
 
 
-               // String CreateRoleQuery = "INSERT INTO ROLE (ROLENAME,PREVILEAGE) VALUES ('" + NewRoleName + "','" + Previleages + "')";
-                String CreateRoleQuery = "INSERT INTO ROLE (ROLENAME, PREVILEAGE) SELECT * FROM (SELECT ' " + NewRoleName + "','" + Previleages + "') AS tmp WHERE NOT EXISTS("
+                // String CreateRoleQuery = "INSERT INTO ROLE (ROLENAME,PRIVILEGE) VALUES ('" + NewRoleName + "','" + Privileges + "')";
+                String CreateRoleQuery = "INSERT INTO ROLE (ROLENAME, PRIVILEGE) SELECT * FROM (SELECT ' " + NewRoleName + "','" + Privileges + "') AS tmp WHERE NOT EXISTS("
                                           + " SELECT ROLENAME FROM ROLE WHERE ROLENAME = '" + NewRoleName + "') LIMIT 1"; 
                 CreateRoleQuery += ";";
                 ObjDbCommand.CommandText = CreateRoleQuery;
@@ -254,7 +291,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-
+                CommonFunctions.ShowErrorDialog("MySQLHelper.CreateNewRole()", ex);
                 throw ex;
             }
         }
@@ -290,7 +327,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-
+                CommonFunctions.ShowErrorDialog("MySQLHelper.CreateNewUser()", ex);
                 throw ex;
             }
         }
@@ -339,7 +376,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-
+                CommonFunctions.ShowErrorDialog("MySQLHelper.CreateTable()", ex);
                 throw ex;
             }
         }
@@ -357,7 +394,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-
+                CommonFunctions.ShowErrorDialog("MySQLHelper.DropTable()", ex);
                 throw ex;
             }
         }
@@ -373,7 +410,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                // EventProcessorMain.WriteToLogFileFunc(String.Format("Error occured in {0}.DeleteTableContent()", this));
+                CommonFunctions.ShowErrorDialog("MySQLHelper.DeleteTableContent()", ex);
                 throw ex;
             }
         }
@@ -404,7 +441,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                // EventProcessorMain.WriteToLogFileFunc(String.Format("Error occured in {0}.ExecuteNonQuery()", this));
+                CommonFunctions.ShowErrorDialog("MySQLHelper.ExecuteNonQuery()", ex);
                 throw ex;
             }
         }
@@ -416,10 +453,10 @@ namespace SalesOrdersReport
                 ObjDbCommand.CommandText = Query;
                 return ObjDbCommand.ExecuteReader();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //EventProcessorMain.WriteToLogFileFunc(String.Format("Error occured in {0}.ExecuteReader()", this));
-                throw;
+                CommonFunctions.ShowErrorDialog("MySQLHelper.ExecuteReader()", ex);
+                throw ex;
             }
         }
 
@@ -447,10 +484,10 @@ namespace SalesOrdersReport
 
                 return 1;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                CommonFunctions.ShowErrorDialog("MySQLHelper.CreateIndex()", ex);
+                throw ex;
             }
         }
 
@@ -460,10 +497,10 @@ namespace SalesOrdersReport
             {
                 return ObjDbConnection;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                CommonFunctions.ShowErrorDialog("MySQLHelper.GetDbConnection()", ex);
+                throw ex;
             }
         }
 
@@ -506,10 +543,10 @@ namespace SalesOrdersReport
 
                 return objMySqlBulk.Load();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                CommonFunctions.ShowErrorDialog("MySQLHelper.BulkLoadToDBTable()", ex);
+                throw ex;
             }
         }
 
@@ -545,10 +582,10 @@ namespace SalesOrdersReport
                 dbAdapter.Fill(dtResult);
                 return dtResult;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                CommonFunctions.ShowErrorDialog("MySQLHelper.GetQueryResultInDataTable()", ex);
+                throw ex;
             }
         }
 

@@ -25,14 +25,14 @@ namespace SalesOrdersReport
                 txtCreateNewRole.Focus();
                 return;
             }
-            //if (txtNewPrevileage.Text == "")
+            //if (txtNewPrivilege.Text == "")
             //{
             //    MessageBox.Show("Please enter privileage/s", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    txtNewPrevileage.Focus();
+            //    txtNewPrivilege.Focus();
             //    return;
             //}
             MySQLHelper tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
-             int ResultVal= tmpMySQLHelper.CreateNewRole(txtCreateNewRole.Text, txtNewPrevileage.Text);
+             int ResultVal= tmpMySQLHelper.CreateNewRole(txtCreateNewRole.Text, txtNewPrivilege.Text);
             if (ResultVal < 0) MessageBox.Show("Wasnt able to create  role", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (ResultVal == 0) MessageBox.Show("Role already Exists, Please try adding new Role", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else MessageBox.Show("New Role :: " + txtCreateNewRole.Text + " added successfully");
@@ -41,7 +41,7 @@ namespace SalesOrdersReport
         private void btnReset_Click(object sender, EventArgs e)
         {
             txtCreateNewRole.Clear();
-            txtNewPrevileage.Clear();
+            txtNewPrivilege.Clear();
             txtCreateNewRole.Focus();
         }
     }

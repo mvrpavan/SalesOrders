@@ -41,7 +41,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                List<string> ListRoleCol = new List<string>() {"ROLEID", "ROLENAME", "PREVILEAGE"};
+                List<string> ListRoleCol = new List<string>() {"ROLEID", "ROLENAME", "PRIVILEGE" };
                 tmpMySQLHelper.CreateTable("ROLE", ListRoleCol);
                 tmpMySQLHelper.CreateNewRole("admin", "all");
             }

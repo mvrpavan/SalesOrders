@@ -81,7 +81,7 @@ namespace SalesOrdersReport
             }
         }
 
-        void ShowChildForm(Form ObjForm)
+        public void ShowChildForm(Form ObjForm)
         {
             try
             {
@@ -551,6 +551,6 @@ namespace SalesOrdersReport
             }
         }
 
-
+        
     }
 }

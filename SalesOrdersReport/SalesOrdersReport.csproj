@@ -125,6 +125,12 @@
     <Compile Include="EditUserForm.Designer.cs">
       <DependentUpon>EditUserForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GetDBConnectionConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GetDBConnectionConfigForm.Designer.cs">
+      <DependentUpon>GetDBConnectionConfigForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Invoice.cs" />
     <Compile Include="InvoiceGST.cs" />
     <Compile Include="InvoiceVAT.cs" />
@@ -255,6 +261,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EditUserForm.resx">
       <DependentUpon>EditUserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GetDBConnectionConfigForm.resx">
+      <DependentUpon>GetDBConnectionConfigForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
