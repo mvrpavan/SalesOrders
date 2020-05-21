@@ -229,6 +229,60 @@ namespace SalesOrdersReport
             }
             
         }
+        public List<string> GetAllStatus()
+        {
+            try
+            {
+                List<string> ListStatus = new List<string>();
+
+
+                String CreateTableQuery = "SELECT ROLENAME FROM ROLE ";
+                CreateTableQuery += ";";
+
+                ObjDbCommand.CommandText = CreateTableQuery;
+                MySqlDataReader dr = ObjDbCommand.ExecuteReader();
+                while (dr.Read())
+                {
+                    ListStatus.Add(dr.GetValue(0).ToString());
+                }
+                dr.Close();
+                return ListStatus;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.GetAllStatus()", ex);
+                throw ex;
+            }
+        }
+
+        public List<string> GetAllStores()
+        {
+            try
+            {
+                List<string> ListStores = new List<string>();
+
+
+                String CreateTableQuery = "SELECT STORENAME FROM STOREMASTER";
+                CreateTableQuery += ";";
+
+                ObjDbCommand.CommandText = CreateTableQuery;
+                MySqlDataReader dr = ObjDbCommand.ExecuteReader();
+                while (dr.Read())
+                {
+                    ListStores.Add(dr.GetValue(0).ToString());
+                }
+                dr.Close();
+                return ListStores;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.GetAllStores()", ex);
+                throw ex;
+            }
+        }
+  
+
+
         public Int32 UpdateAnyTableDetails(string TableName, List<string> ListColumnNames, List<string> ListColumnValues , string WhereCondition)
         {
             try

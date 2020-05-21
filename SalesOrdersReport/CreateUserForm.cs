@@ -18,6 +18,7 @@ namespace SalesOrdersReport
             cmbxSelectRoleID.Items.Clear();
             FillRoles();
             cmbxSelectRoleID.SelectedIndex = 0;
+            cmbxSelectStore.SelectedIndex = 0;
         }
         private void FillRoles()
         {
@@ -38,6 +39,45 @@ namespace SalesOrdersReport
                 throw;
             }
         }
+
+        private void FillStores()
+        {
+            try
+            {
+                MySQLHelper tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+                List<string> ListStores = tmpMySQLHelper.GetAllStores();
+                cmbxSelectStore.Items.Add("Select Store");
+                foreach (var item in ListStores)
+                {
+                    //cmbxSelectRoleID.Items.Add(item.Cast<object>());
+                    cmbxSelectStore.Items.Add(item);
+                }
+            }
+            catch (Exception)
+            { 
+
+                throw;
+            }
+        }
+        //private void FillStatus()
+        //{
+        //    try
+        //    {
+        //        MySQLHelper tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+        //        List<string> ListStatus = tmpMySQLHelper.GetAllStatus();
+        //        cmbxSelectStatus.Items.Add("Select Status");
+        //        foreach (var item in ListStatus)
+        //        {
+        //            //cmbxSelectRoleID.Items.Add(item.Cast<object>());
+        //            cmbxSelectStatus.Items.Add(item);
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
         private void btnReset_Click(object sender, EventArgs e)
         {
             txtCreateUserName.Clear();
