@@ -15,7 +15,7 @@ namespace SalesOrdersReport
 
         public MainForm()
         {
-            CommonFunctions.Initialize();
+           // CommonFunctions.Initialize();
 
             InitializeComponent();
 
@@ -28,7 +28,7 @@ namespace SalesOrdersReport
             }
 #endif
             this.Text = CommonFunctions.ObjApplicationSettings.MainFormTitleText;
-
+           
             toolStripOrderMasterPath.Text = "";
             CommonFunctions.ToolStripProgressBarMainForm = this.toolStripProgressBar;
             CommonFunctions.ToolStripProgressBarMainFormStatus = this.toolStripProgress;
@@ -81,7 +81,7 @@ namespace SalesOrdersReport
             }
         }
 
-        void ShowChildForm(Form ObjForm)
+        public void ShowChildForm(Form ObjForm)
         {
             try
             {
@@ -302,6 +302,8 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("MainForm.updateSalesToolStripMenuItem_Click()", ex);
             }
         }
+
+
         #endregion
 
         #region Products Menu Item
@@ -483,5 +485,72 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("MainForm.mergeSalesOrderToolStripMenuItem_Click()", ex);
             }
         }
+
+        private void createUserToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+
+                CreateUserForm ObjCreateUserForm = new CreateUserForm();
+                ShowChildForm(ObjCreateUserForm);
+                
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.createUserToolStripMenuItem_Click()", ex);
+            }
+
+        }
+
+        private void editProfileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+
+                EditProfileForm ObjEditProfileForm = new EditProfileForm();
+                ShowChildForm(ObjEditProfileForm);
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.editProfileToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void editUserToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+
+                EditUserForm ObjEditUserForm = new EditUserForm();
+                ShowChildForm(ObjEditUserForm);
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.editUserToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void createRoleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+
+                CreateRoleForm ObjCreateRoleForm = new CreateRoleForm();
+                ShowChildForm(ObjCreateRoleForm);
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.createRoleToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        
     }
 }

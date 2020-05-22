@@ -1,4 +1,6 @@
-﻿namespace SalesOrdersReport
+﻿using System;
+
+namespace SalesOrdersReport
 {
     partial class MainForm
     {
@@ -61,6 +63,11 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripComboBoxProductLine = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
+            this.userToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createUserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editUserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createRoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripOrderMasterPath = new System.Windows.Forms.ToolStripStatusLabel();
@@ -70,6 +77,7 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.picBoxBackgroundLogo = new System.Windows.Forms.PictureBox();
+            this.lblCurrentUser = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -85,9 +93,10 @@
             this.vendorMenu,
             this.productMenu,
             this.reportsMenu,
-            this.helpMenu,
+            this.userToolStripMenuItem,
             this.toolStripComboBoxProductLine,
-            this.toolStripTextBox1});
+            this.toolStripTextBox1,
+            this.helpMenu});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(844, 27);
@@ -309,11 +318,12 @@
             this.helpMenu.Name = "helpMenu";
             this.helpMenu.Size = new System.Drawing.Size(44, 23);
             this.helpMenu.Text = "&Help";
+         
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -343,6 +353,45 @@
             this.toolStripTextBox1.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.toolStripTextBox1.ToolTipText = "Select Product Line";
             // 
+            // userToolStripMenuItem
+            // 
+            this.userToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createUserToolStripMenuItem,
+            this.editProfileToolStripMenuItem,
+            this.editUserToolStripMenuItem,
+            this.createRoleToolStripMenuItem});
+            this.userToolStripMenuItem.Name = "userToolStripMenuItem";
+            this.userToolStripMenuItem.Size = new System.Drawing.Size(42, 23);
+            this.userToolStripMenuItem.Text = "&User";
+            // 
+            // createUserToolStripMenuItem
+            // 
+            this.createUserToolStripMenuItem.Name = "createUserToolStripMenuItem";
+            this.createUserToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.createUserToolStripMenuItem.Text = "Create User";
+            this.createUserToolStripMenuItem.Click += new System.EventHandler(this.createUserToolStripMenuItem_Click);
+            // 
+            // editProfileToolStripMenuItem
+            // 
+            this.editProfileToolStripMenuItem.Name = "editProfileToolStripMenuItem";
+            this.editProfileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.editProfileToolStripMenuItem.Text = "Edit Profile";
+            this.editProfileToolStripMenuItem.Click += new System.EventHandler(this.editProfileToolStripMenuItem_Click);
+            // 
+            // editUserToolStripMenuItem
+            // 
+            this.editUserToolStripMenuItem.Name = "editUserToolStripMenuItem";
+            this.editUserToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.editUserToolStripMenuItem.Text = "Edit User";
+            this.editUserToolStripMenuItem.Click += new System.EventHandler(this.editUserToolStripMenuItem_Click);
+            // 
+            // createRoleToolStripMenuItem
+            // 
+            this.createRoleToolStripMenuItem.Name = "createRoleToolStripMenuItem";
+            this.createRoleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.createRoleToolStripMenuItem.Text = "Create Role";
+            this.createRoleToolStripMenuItem.Click += new System.EventHandler(this.createRoleToolStripMenuItem_Click);
+            // 
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -367,7 +416,7 @@
             // 
             // toolStripOrderMasterPath
             // 
-            this.toolStripOrderMasterPath.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.toolStripOrderMasterPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.toolStripOrderMasterPath.Name = "toolStripOrderMasterPath";
             this.toolStripOrderMasterPath.Size = new System.Drawing.Size(31, 17);
             this.toolStripOrderMasterPath.Text = "Path";
@@ -413,11 +462,20 @@
             this.picBoxBackgroundLogo.TabIndex = 6;
             this.picBoxBackgroundLogo.TabStop = false;
             // 
+            // lblCurrentUser
+            // 
+            this.lblCurrentUser.AutoSize = true;
+            this.lblCurrentUser.Location = new System.Drawing.Point(590, 9);
+            this.lblCurrentUser.Name = "lblCurrentUser";
+            this.lblCurrentUser.Size = new System.Drawing.Size(0, 13);
+            this.lblCurrentUser.TabIndex = 10;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(844, 572);
+            this.Controls.Add(this.lblCurrentUser);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.picBoxBackgroundLogo);
             this.Controls.Add(this.statusStrip);
@@ -440,8 +498,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.picBoxBackgroundLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
+
+  
         #endregion
 
 
@@ -485,6 +544,12 @@
         private System.Windows.Forms.ToolStripMenuItem customerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createInvoiceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mergeSalesOrderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem userToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createUserToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editProfileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editUserToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createRoleToolStripMenuItem;
+        public System.Windows.Forms.Label lblCurrentUser;
     }
 }
 

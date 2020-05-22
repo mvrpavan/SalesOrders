@@ -13,7 +13,7 @@ namespace SalesOrdersReport
         XmlNode SettingsNode;
         public String MainFormTitleText, LogoFileName;
         public Int32 ReportRowsFromTop, ReportAppendRowsAtBottom, LogoImageHeight;
-
+        public string Server="", DatabaseName="", UserName="", Password="";
         public void ReadSettingsFromNode(XmlNode Node)
         {
             try
@@ -26,6 +26,16 @@ namespace SalesOrdersReport
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "ReportAppendRowsAtBottom", out Value)) ReportAppendRowsAtBottom = Int32.Parse(Value);
                 XMLFileUtils.GetChildNodeValue(SettingsNode, "LogoFileName", out LogoFileName);
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "LogoImageHeight", out Value)) LogoImageHeight = Int32.Parse(Value);
+                //Server = "" DatabaseName = "" User = "" Password = ""
+                XmlNode DatabaseNode;
+                XMLFileUtils.GetChildNode(SettingsNode, "Database", out DatabaseNode);
+                
+
+                XMLFileUtils.GetAttributeValue(DatabaseNode, "Server", out Server);
+                XMLFileUtils.GetAttributeValue(DatabaseNode, "DatabaseName", out DatabaseName);
+                XMLFileUtils.GetAttributeValue(DatabaseNode, "UserName", out UserName);
+                XMLFileUtils.GetAttributeValue(DatabaseNode, "Password", out Password);
+
             }
             catch (Exception ex)
             {
@@ -42,6 +52,14 @@ namespace SalesOrdersReport
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "ReportAppendRowsAtBottom", ReportAppendRowsAtBottom.ToString());
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "LogoFileName", LogoFileName);
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "LogoImageHeight", LogoImageHeight.ToString());
+
+                //XmlNode DatabaseNode;
+                //XMLFileUtils.SetChildNodeValue(SettingsNode, "Database", "");
+                //XMLFileUtils.SetAttributeValue(DatabaseNode, "Server", Server);
+                //XMLFileUtils.SetAttributeValue(DatabaseNode, "DatabaseName", out DatabaseName);
+                //XMLFileUtils.SetAttributeValue(DatabaseNode, "UserName", out UserName);
+                //XMLFileUtils.SetAttributeValue(DatabaseNode, "Password", out Password);
+              
             }
             catch (Exception ex)
             {

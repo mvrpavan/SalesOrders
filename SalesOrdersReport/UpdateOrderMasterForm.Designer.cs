@@ -44,13 +44,13 @@
             this.chkBoxUpdSellerMaster = new System.Windows.Forms.CheckBox();
             this.chkBoxUpdSellerHistory = new System.Windows.Forms.CheckBox();
             this.groupBoxHistoryUpdate = new System.Windows.Forms.GroupBox();
-            this.chkBoxUpdProductSales = new System.Windows.Forms.CheckBox();
-            this.btnBrowseProductInvFile = new System.Windows.Forms.Button();
-            this.txtBoxProductInventoryFile = new System.Windows.Forms.TextBox();
-            this.lblProductInventoryFile = new System.Windows.Forms.Label();
-            this.btnBrowseProductStockHistoryFile = new System.Windows.Forms.Button();
-            this.txtBoxProductStockHistoryFile = new System.Windows.Forms.TextBox();
             this.lblProductStockHistoryFile = new System.Windows.Forms.Label();
+            this.txtBoxProductStockHistoryFile = new System.Windows.Forms.TextBox();
+            this.lblProductInventoryFile = new System.Windows.Forms.Label();
+            this.txtBoxProductInventoryFile = new System.Windows.Forms.TextBox();
+            this.btnBrowseProductStockHistoryFile = new System.Windows.Forms.Button();
+            this.btnBrowseProductInvFile = new System.Windows.Forms.Button();
+            this.chkBoxUpdProductSales = new System.Windows.Forms.CheckBox();
             this.groupBoxHistoryUpdate.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -144,6 +144,7 @@
             this.txtBoxSellerHistoryFile.Name = "txtBoxSellerHistoryFile";
             this.txtBoxSellerHistoryFile.Size = new System.Drawing.Size(220, 20);
             this.txtBoxSellerHistoryFile.TabIndex = 5;
+        
             // 
             // btnBrowseSellerHistory
             // 
@@ -194,33 +195,21 @@
             this.groupBoxHistoryUpdate.TabIndex = 13;
             this.groupBoxHistoryUpdate.TabStop = false;
             // 
-            // chkBoxUpdProductSales
+            // lblProductStockHistoryFile
             // 
-            this.chkBoxUpdProductSales.AutoSize = true;
-            this.chkBoxUpdProductSales.Location = new System.Drawing.Point(288, 58);
-            this.chkBoxUpdProductSales.Name = "chkBoxUpdProductSales";
-            this.chkBoxUpdProductSales.Size = new System.Drawing.Size(130, 17);
-            this.chkBoxUpdProductSales.TabIndex = 4;
-            this.chkBoxUpdProductSales.Text = "Update Product Sales";
-            this.chkBoxUpdProductSales.UseVisualStyleBackColor = true;
-            this.chkBoxUpdProductSales.CheckedChanged += new System.EventHandler(this.chkBoxUpdProductSales_CheckedChanged);
+            this.lblProductStockHistoryFile.AutoSize = true;
+            this.lblProductStockHistoryFile.Location = new System.Drawing.Point(11, 88);
+            this.lblProductStockHistoryFile.Name = "lblProductStockHistoryFile";
+            this.lblProductStockHistoryFile.Size = new System.Drawing.Size(110, 13);
+            this.lblProductStockHistoryFile.TabIndex = 0;
+            this.lblProductStockHistoryFile.Text = "Product Stock History";
             // 
-            // btnBrowseProductInvFile
+            // txtBoxProductStockHistoryFile
             // 
-            this.btnBrowseProductInvFile.Location = new System.Drawing.Point(348, 51);
-            this.btnBrowseProductInvFile.Name = "btnBrowseProductInvFile";
-            this.btnBrowseProductInvFile.Size = new System.Drawing.Size(75, 23);
-            this.btnBrowseProductInvFile.TabIndex = 8;
-            this.btnBrowseProductInvFile.Text = "Br&owse";
-            this.btnBrowseProductInvFile.UseVisualStyleBackColor = true;
-            this.btnBrowseProductInvFile.Click += new System.EventHandler(this.btnBrowseProductInvFile_Click);
-            // 
-            // txtBoxProductInventoryFile
-            // 
-            this.txtBoxProductInventoryFile.Location = new System.Drawing.Point(122, 53);
-            this.txtBoxProductInventoryFile.Name = "txtBoxProductInventoryFile";
-            this.txtBoxProductInventoryFile.Size = new System.Drawing.Size(220, 20);
-            this.txtBoxProductInventoryFile.TabIndex = 7;
+            this.txtBoxProductStockHistoryFile.Location = new System.Drawing.Point(122, 85);
+            this.txtBoxProductStockHistoryFile.Name = "txtBoxProductStockHistoryFile";
+            this.txtBoxProductStockHistoryFile.Size = new System.Drawing.Size(220, 20);
+            this.txtBoxProductStockHistoryFile.TabIndex = 9;
             // 
             // lblProductInventoryFile
             // 
@@ -230,6 +219,13 @@
             this.lblProductInventoryFile.Size = new System.Drawing.Size(110, 13);
             this.lblProductInventoryFile.TabIndex = 0;
             this.lblProductInventoryFile.Text = "Product Inventory File";
+            // 
+            // txtBoxProductInventoryFile
+            // 
+            this.txtBoxProductInventoryFile.Location = new System.Drawing.Point(122, 53);
+            this.txtBoxProductInventoryFile.Name = "txtBoxProductInventoryFile";
+            this.txtBoxProductInventoryFile.Size = new System.Drawing.Size(220, 20);
+            this.txtBoxProductInventoryFile.TabIndex = 7;
             // 
             // btnBrowseProductStockHistoryFile
             // 
@@ -241,21 +237,26 @@
             this.btnBrowseProductStockHistoryFile.UseVisualStyleBackColor = true;
             this.btnBrowseProductStockHistoryFile.Click += new System.EventHandler(this.btnBrowseProductStockHistoryFile_Click);
             // 
-            // txtBoxProductStockHistoryFile
+            // btnBrowseProductInvFile
             // 
-            this.txtBoxProductStockHistoryFile.Location = new System.Drawing.Point(122, 85);
-            this.txtBoxProductStockHistoryFile.Name = "txtBoxProductStockHistoryFile";
-            this.txtBoxProductStockHistoryFile.Size = new System.Drawing.Size(220, 20);
-            this.txtBoxProductStockHistoryFile.TabIndex = 9;
+            this.btnBrowseProductInvFile.Location = new System.Drawing.Point(348, 51);
+            this.btnBrowseProductInvFile.Name = "btnBrowseProductInvFile";
+            this.btnBrowseProductInvFile.Size = new System.Drawing.Size(75, 23);
+            this.btnBrowseProductInvFile.TabIndex = 8;
+            this.btnBrowseProductInvFile.Text = "Br&owse";
+            this.btnBrowseProductInvFile.UseVisualStyleBackColor = true;
+            this.btnBrowseProductInvFile.Click += new System.EventHandler(this.btnBrowseProductInvFile_Click);
             // 
-            // lblProductStockHistoryFile
+            // chkBoxUpdProductSales
             // 
-            this.lblProductStockHistoryFile.AutoSize = true;
-            this.lblProductStockHistoryFile.Location = new System.Drawing.Point(11, 88);
-            this.lblProductStockHistoryFile.Name = "lblProductStockHistoryFile";
-            this.lblProductStockHistoryFile.Size = new System.Drawing.Size(110, 13);
-            this.lblProductStockHistoryFile.TabIndex = 0;
-            this.lblProductStockHistoryFile.Text = "Product Stock History";
+            this.chkBoxUpdProductSales.AutoSize = true;
+            this.chkBoxUpdProductSales.Location = new System.Drawing.Point(288, 58);
+            this.chkBoxUpdProductSales.Name = "chkBoxUpdProductSales";
+            this.chkBoxUpdProductSales.Size = new System.Drawing.Size(130, 17);
+            this.chkBoxUpdProductSales.TabIndex = 4;
+            this.chkBoxUpdProductSales.Text = "Update Product Sales";
+            this.chkBoxUpdProductSales.UseVisualStyleBackColor = true;
+            this.chkBoxUpdProductSales.CheckedChanged += new System.EventHandler(this.chkBoxUpdProductSales_CheckedChanged);
             // 
             // UpdateOrderMasterForm
             // 
