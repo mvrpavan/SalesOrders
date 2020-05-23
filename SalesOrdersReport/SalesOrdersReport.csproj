@@ -77,222 +77,231 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="About.cs">
+    <Compile Include="Views\About.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="About.Designer.cs">
+    <Compile Include="Views\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="CreateRoleForm.cs">
+    <Compile Include="Views\CreateRoleForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CreateRoleForm.Designer.cs">
+    <Compile Include="Views\CreateRoleForm.Designer.cs">
       <DependentUpon>CreateRoleForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CreateUserForm.cs">
+    <Compile Include="Views\CreateUserForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CreateUserForm.Designer.cs">
+    <Compile Include="Views\CreateUserForm.Designer.cs">
       <DependentUpon>CreateUserForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomerInvoiceSellerOrderForm.cs">
+    <Compile Include="Views\CustomerInvoiceSellerOrderForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CustomerInvoiceSellerOrderForm.Designer.cs">
+    <Compile Include="Views\CustomerInvoiceSellerOrderForm.Designer.cs">
       <DependentUpon>CustomerInvoiceSellerOrderForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DiscountForm.cs">
+    <Compile Include="Views\DiscountForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DiscountForm.Designer.cs">
+    <Compile Include="Views\DiscountForm.Designer.cs">
       <DependentUpon>DiscountForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditOldBalanceForm.cs">
+    <Compile Include="Views\EditOldBalanceForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditOldBalanceForm.Designer.cs">
+    <Compile Include="Views\EditOldBalanceForm.Designer.cs">
       <DependentUpon>EditOldBalanceForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditProfileForm.cs">
+    <Compile Include="Views\EditProfileForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditProfileForm.Designer.cs">
+    <Compile Include="Views\EditProfileForm.Designer.cs">
       <DependentUpon>EditProfileForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditUserForm.cs">
+    <Compile Include="Views\EditUserForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditUserForm.Designer.cs">
+    <Compile Include="Views\EditUserForm.Designer.cs">
       <DependentUpon>EditUserForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GetDBConnectionConfigForm.cs">
+    <Compile Include="Views\GetDBConnectionConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GetDBConnectionConfigForm.Designer.cs">
+    <Compile Include="Views\GetDBConnectionConfigForm.Designer.cs">
       <DependentUpon>GetDBConnectionConfigForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Invoice.cs" />
-    <Compile Include="InvoiceGST.cs" />
-    <Compile Include="InvoiceVAT.cs" />
-    <Compile Include="LoginForm.cs">
+    <Compile Include="Models\Invoice.cs" />
+    <Compile Include="Models\InvoiceGST.cs" />
+    <Compile Include="Models\InvoiceVAT.cs" />
+    <Compile Include="Views\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoginForm.Designer.cs">
+    <Compile Include="Views\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MergeSalesOrdersForm.cs">
+    <Compile Include="Views\MergeSalesOrdersForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MergeSalesOrdersForm.Designer.cs">
+    <Compile Include="Views\MergeSalesOrdersForm.Designer.cs">
       <DependentUpon>MergeSalesOrdersForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MySQLHelper.cs" />
-    <Compile Include="RunDBScript.cs" />
-    <Compile Include="SellerOrderSheetForm.cs">
+    <Compile Include="CommonModules\MySQLHelper.cs" />
+    <Compile Include="Views\ProductsMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SellerOrderSheetForm.Designer.cs">
+    <Compile Include="Views\ProductsMainForm.Designer.cs">
+      <DependentUpon>ProductsMainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommonModules\RunDBScript.cs" />
+    <Compile Include="Views\SellerOrderSheetForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\SellerOrderSheetForm.Designer.cs">
       <DependentUpon>SellerOrderSheetForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommonFunctions.cs" />
-    <Compile Include="UpdateProductPurchasesForm.cs">
+    <Compile Include="CommonModules\CommonFunctions.cs" />
+    <Compile Include="Views\UpdateProductPurchasesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UpdateProductPurchasesForm.Designer.cs">
+    <Compile Include="Views\UpdateProductPurchasesForm.Designer.cs">
       <DependentUpon>UpdateProductPurchasesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="VendorDetails.cs" />
-    <Compile Include="VendorListForm.cs">
+    <Compile Include="Models\VendorDetails.cs" />
+    <Compile Include="Views\VendorListForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="VendorListForm.Designer.cs">
+    <Compile Include="Views\VendorListForm.Designer.cs">
       <DependentUpon>VendorListForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="VendorOrderSheetForm.cs">
+    <Compile Include="Views\VendorOrderSheetForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="VendorOrderSheetForm.Designer.cs">
+    <Compile Include="Views\VendorOrderSheetForm.Designer.cs">
       <DependentUpon>VendorOrderSheetForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ItemMaster.cs">
+    <Compile Include="Models\ItemMaster.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainForm.cs">
+    <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Views\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SellerInvoiceForm.cs">
+    <Compile Include="Views\SellerInvoiceForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SellerInvoiceForm.Designer.cs">
+    <Compile Include="Views\SellerInvoiceForm.Designer.cs">
       <DependentUpon>SellerInvoiceForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ManageProductLineForm.cs">
+    <Compile Include="Views\ManageProductLineForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ManageProductLineForm.Designer.cs">
+    <Compile Include="Views\ManageProductLineForm.Designer.cs">
       <DependentUpon>ManageProductLineForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="OrderMasterForm.cs">
+    <Compile Include="Views\OrderMasterForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OrderMasterForm.Designer.cs">
+    <Compile Include="Views\OrderMasterForm.Designer.cs">
       <DependentUpon>OrderMasterForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductDetails.cs" />
-    <Compile Include="ProductLine.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Models\ProductDetails.cs" />
+    <Compile Include="Models\ProductLine.cs" />
+    <Compile Include="Models\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SellerDetails.cs" />
-    <Compile Include="SellerHistoryReportForm.cs">
+    <Compile Include="Models\SellerDetails.cs" />
+    <Compile Include="Views\SellerHistoryReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SellerHistoryReportForm.Designer.cs">
+    <Compile Include="Views\SellerHistoryReportForm.Designer.cs">
       <DependentUpon>SellerHistoryReportForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SellerListForm.cs">
+    <Compile Include="Views\SellerListForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SellerListForm.Designer.cs">
+    <Compile Include="Views\SellerListForm.Designer.cs">
       <DependentUpon>SellerListForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
-    <Compile Include="SettingsForm.cs">
+    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Views\SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsForm.Designer.cs">
+    <Compile Include="Views\SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UpdateOrderMasterForm.cs">
+    <Compile Include="Views\UpdateOrderMasterForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UpdateOrderMasterForm.Designer.cs">
+    <Compile Include="Views\UpdateOrderMasterForm.Designer.cs">
       <DependentUpon>UpdateOrderMasterForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="VendorPurchaseOrderForm.cs">
+    <Compile Include="Views\VendorPurchaseOrderForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="VendorPurchaseOrderForm.Designer.cs">
+    <Compile Include="Views\VendorPurchaseOrderForm.Designer.cs">
       <DependentUpon>VendorPurchaseOrderForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="XMLFileUtils.cs" />
-    <EmbeddedResource Include="About.resx">
+    <Compile Include="CommonModules\XMLFileUtils.cs" />
+    <EmbeddedResource Include="Views\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CreateRoleForm.resx">
+    <EmbeddedResource Include="Views\CreateRoleForm.resx">
       <DependentUpon>CreateRoleForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CreateUserForm.resx">
+    <EmbeddedResource Include="Views\CreateUserForm.resx">
       <DependentUpon>CreateUserForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CustomerInvoiceSellerOrderForm.resx">
+    <EmbeddedResource Include="Views\CustomerInvoiceSellerOrderForm.resx">
       <DependentUpon>CustomerInvoiceSellerOrderForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DiscountForm.resx">
+    <EmbeddedResource Include="Views\DiscountForm.resx">
       <DependentUpon>DiscountForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditOldBalanceForm.resx">
+    <EmbeddedResource Include="Views\EditOldBalanceForm.resx">
       <DependentUpon>EditOldBalanceForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditProfileForm.resx">
+    <EmbeddedResource Include="Views\EditProfileForm.resx">
       <DependentUpon>EditProfileForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditUserForm.resx">
+    <EmbeddedResource Include="Views\EditUserForm.resx">
       <DependentUpon>EditUserForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GetDBConnectionConfigForm.resx">
+    <EmbeddedResource Include="Views\GetDBConnectionConfigForm.resx">
       <DependentUpon>GetDBConnectionConfigForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoginForm.resx">
+    <EmbeddedResource Include="Views\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MergeSalesOrdersForm.resx">
+    <EmbeddedResource Include="Views\MergeSalesOrdersForm.resx">
       <DependentUpon>MergeSalesOrdersForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SellerOrderSheetForm.resx">
+    <EmbeddedResource Include="Views\ProductsMainForm.resx">
+      <DependentUpon>ProductsMainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\SellerOrderSheetForm.resx">
       <DependentUpon>SellerOrderSheetForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UpdateProductPurchasesForm.resx">
+    <EmbeddedResource Include="Views\UpdateProductPurchasesForm.resx">
       <DependentUpon>UpdateProductPurchasesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="VendorListForm.resx">
+    <EmbeddedResource Include="Views\VendorListForm.resx">
       <DependentUpon>VendorListForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="VendorOrderSheetForm.resx">
+    <EmbeddedResource Include="Views\VendorOrderSheetForm.resx">
       <DependentUpon>VendorOrderSheetForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SellerInvoiceForm.resx">
+    <EmbeddedResource Include="Views\SellerInvoiceForm.resx">
       <DependentUpon>SellerInvoiceForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ManageProductLineForm.resx">
+    <EmbeddedResource Include="Views\ManageProductLineForm.resx">
       <DependentUpon>ManageProductLineForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OrderMasterForm.resx">
+    <EmbeddedResource Include="Views\OrderMasterForm.resx">
       <DependentUpon>OrderMasterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -305,19 +314,19 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SellerHistoryReportForm.resx">
+    <EmbeddedResource Include="Views\SellerHistoryReportForm.resx">
       <DependentUpon>SellerHistoryReportForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SellerListForm.resx">
+    <EmbeddedResource Include="Views\SellerListForm.resx">
       <DependentUpon>SellerListForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsForm.resx">
+    <EmbeddedResource Include="Views\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UpdateOrderMasterForm.resx">
+    <EmbeddedResource Include="Views\UpdateOrderMasterForm.resx">
       <DependentUpon>UpdateOrderMasterForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="VendorPurchaseOrderForm.resx">
+    <EmbeddedResource Include="Views\VendorPurchaseOrderForm.resx">
       <DependentUpon>VendorPurchaseOrderForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="App.config">
@@ -381,11 +390,13 @@
     <None Include="Resources\open-archive.png" />
     <None Include="Resources\loading.gif" />
     <None Include="Resources\loading_small.gif" />
+    <Content Include="Images\add_user.ico" />
     <Content Include="Images\your_logo_here.png" />
     <None Include="Resources\Folder-Add.ico" />
     <None Include="Resources\Open-Folder-Add-icon.png" />
     <None Include="Resources\add-file-48.png" />
     <None Include="Resources\delete-48.png" />
+    <None Include="Resources\add_user %281%29.ico" />
     <Content Include="Resources\reset.png" />
     <None Include="Resources\reset1.png" />
     <None Include="Resources\reset_small.png" />
