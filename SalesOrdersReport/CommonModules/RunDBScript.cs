@@ -26,7 +26,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                List<string> ListUserCol = new List<string>() { "USERID", "USERNAME", "PASSWORD", "ROLEID", "LASTLOGIN", "LASTPASSWORDCHANGED", "ACTIVE", "PHONENO", "ADDRESS" };
+                List<string> ListUserCol = new List<string>() { "USERID,int", "USERNAME,varchar(50)", "PASSWORD,varchar(50)", "ROLEID,int", "LASTLOGIN,datetime not Null", "LASTPASSWORDCHANGED,datetime not Null", "ACTIVE,tinyint(1)", "PHONENO,varchar(15)", "ADDRESS,varchar(100)" };
                 tmpMySQLHelper.CreateTable("USERS", ListUserCol);
                 tmpMySQLHelper.CreateNewUser("admin", "admin", "", "", "1");
             }
@@ -41,7 +41,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                List<string> ListRoleCol = new List<string>() {"ROLEID", "ROLENAME", "PRIVILEGE" };
+                List<string> ListRoleCol = new List<string>() {"ROLEID,int", "ROLENAME,varchar(50)", "PRIVILEGE,varchar(100)" };
                 tmpMySQLHelper.CreateTable("ROLE", ListRoleCol);
                 tmpMySQLHelper.CreateNewRole("admin", "all");
             }

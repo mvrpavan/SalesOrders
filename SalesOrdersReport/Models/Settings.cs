@@ -26,16 +26,13 @@ namespace SalesOrdersReport
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "ReportAppendRowsAtBottom", out Value)) ReportAppendRowsAtBottom = Int32.Parse(Value);
                 XMLFileUtils.GetChildNodeValue(SettingsNode, "LogoFileName", out LogoFileName);
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "LogoImageHeight", out Value)) LogoImageHeight = Int32.Parse(Value);
-                //Server = "" DatabaseName = "" User = "" Password = ""
+
                 XmlNode DatabaseNode;
                 XMLFileUtils.GetChildNode(SettingsNode, "Database", out DatabaseNode);
-                
-
                 XMLFileUtils.GetAttributeValue(DatabaseNode, "Server", out Server);
                 XMLFileUtils.GetAttributeValue(DatabaseNode, "DatabaseName", out DatabaseName);
                 XMLFileUtils.GetAttributeValue(DatabaseNode, "UserName", out UserName);
                 XMLFileUtils.GetAttributeValue(DatabaseNode, "Password", out Password);
-
             }
             catch (Exception ex)
             {

@@ -41,6 +41,7 @@
             // 
             // btnExit
             // 
+            this.btnExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnExit.Location = new System.Drawing.Point(236, 119);
@@ -83,7 +84,7 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(6, 66);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(76, 21);
+            this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 3;
             this.label2.Text = "Password";
             // 
@@ -93,7 +94,7 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(6, 28);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(88, 21);
+            this.label1.Size = new System.Drawing.Size(60, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "User Name";
             // 
@@ -102,27 +103,30 @@
             this.txtPassword.Location = new System.Drawing.Point(113, 66);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(208, 29);
+            this.txtPassword.Size = new System.Drawing.Size(208, 20);
             this.txtPassword.TabIndex = 1;
             // 
             // txtUserName
             // 
             this.txtUserName.Location = new System.Drawing.Point(113, 28);
             this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(208, 29);
+            this.txtUserName.Size = new System.Drawing.Size(208, 20);
             this.txtUserName.TabIndex = 0;
             // 
             // LoginForm
             // 
+            this.AcceptButton = this.btnLogin;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnExit;
             this.ClientSize = new System.Drawing.Size(367, 172);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.groupBox1);
             this.Name = "LoginForm";
             this.ShowIcon = false;
-            this.Text = "Welcome !";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Login to Sales Orders";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

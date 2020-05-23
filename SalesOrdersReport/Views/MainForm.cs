@@ -314,7 +314,17 @@ namespace SalesOrdersReport
 
         private void addModifyItemToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            try
+            {
+                //if (!IsValidToOpenChildForm()) return;
 
+                ProductsMainForm productsMainForm = new ProductsMainForm();
+                ShowChildForm(productsMainForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.addModifyItemToolStripMenuItem_Click()", ex);
+            }
         }
         #endregion
 
@@ -550,7 +560,5 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("MainForm.createRoleToolStripMenuItem_Click()", ex);
             }
         }
-
-        
     }
 }

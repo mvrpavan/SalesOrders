@@ -386,8 +386,8 @@ namespace SalesOrdersReport
             }
         }
 
-            public Int32 CreateTable(String TableName, List<String> Columns,
-            Boolean InMemory = false, Boolean DropIfExists = false, Boolean TruncateIfExists = false)
+        public Int32 CreateTable(String TableName, List<String> Columns,
+        Boolean InMemory = false, Boolean DropIfExists = false, Boolean TruncateIfExists = false)
         {
             try
             {
