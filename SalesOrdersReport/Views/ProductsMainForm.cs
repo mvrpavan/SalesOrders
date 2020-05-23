@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SalesOrdersReport.Properties
+namespace SalesOrdersReport
 {
     public partial class ProductsMainForm : Form
     {

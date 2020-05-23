@@ -209,7 +209,7 @@
     </Compile>
     <Compile Include="Models\ProductDetails.cs" />
     <Compile Include="Models\ProductLine.cs" />
-    <Compile Include="Models\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\SellerDetails.cs" />
     <Compile Include="Views\SellerHistoryReportForm.cs">
@@ -397,6 +397,8 @@
     <None Include="Resources\add-file-48.png" />
     <None Include="Resources\delete-48.png" />
     <None Include="Resources\add_user %281%29.ico" />
+    <None Include="Resources\edit_user.ico" />
+    <None Include="Resources\gtk_refresh.ico" />
     <Content Include="Resources\reset.png" />
     <None Include="Resources\reset1.png" />
     <None Include="Resources\reset_small.png" />

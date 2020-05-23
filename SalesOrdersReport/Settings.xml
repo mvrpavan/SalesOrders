@@ -6,7 +6,7 @@
     <LogoImageHeight>80</LogoImageHeight>
     <ReportRowsFromTop>7</ReportRowsFromTop>
     <ReportAppendRowsAtBottom>7</ReportAppendRowsAtBottom>
-    <Database Server="APEXDEV0719" DatabaseName="SALES" UserName="nisha" Password="nisha"/>
+    <Database Server="localhost" DatabaseName="SALES_ORDERS" UserName="pavan" Password="Pavan1024"/>
   </Application>
   <ProductLines>
     <ProductLine Name="&lt;Default&gt;">

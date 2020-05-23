@@ -161,12 +161,32 @@ namespace SalesOrdersReport.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap edit_user {
+            get {
+                object obj = ResourceManager.GetObject("edit_user", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon Folder_Add {
             get {
                 object obj = ResourceManager.GetObject("Folder_Add", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap gtk_refresh {
+            get {
+                object obj = ResourceManager.GetObject("gtk_refresh", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
