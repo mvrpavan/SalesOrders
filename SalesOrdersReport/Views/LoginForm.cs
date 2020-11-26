@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.Text;
+using System.Data;
 
 namespace SalesOrdersReport
 {
@@ -12,46 +14,25 @@ namespace SalesOrdersReport
             CommonFunctions.Initialize();
             CommonFunctions.CurrentForm = this;
             InitializeComponent();
+            txtUserName.Focus();
         }
 
         private MySqlConnection CreateDBConnection()
         {
             try
             {
-                 tmpIntegDBHelper = MySQLHelper.GetMySqlHelperObj();
-
-                // EventProcessorMain.WriteToLogFileFunc("Connecting to IntegrationDB started");
-                //SQLConnection.ConnectionString = @"Data Source = (localdb)\MSSQLLocalDB; Initial Catalog = SubscriptionPriceDB; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = True; ApplicationIntent = ReadWrite; MultiSubnetFailover = False;";
-                //tmpIntegDBHelper.OpenConnection(ObjConfig.ObjDatabaseConfig.IntegServer, ObjConfig.ObjDatabaseConfig.IntegDatabase,
-                //    ObjConfig.ObjDatabaseConfig.IntegUserID, ObjConfig.ObjDatabaseConfig.IntegPassword);
+                tmpIntegDBHelper = MySQLHelper.GetMySqlHelperObj();
 
                 if (CommonFunctions.ObjApplicationSettings.Server == null || CommonFunctions.ObjApplicationSettings.Server == string.Empty)
                 {
-                    var Result = MessageBox.Show("DB is not Configured! Configure Now?", "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    // If the no button was pressed ...
-                    if (Result == DialogResult.Yes)
-                    {
-                      
-                        GetDBConnectionConfigForm ObjGetDBConnectionConfigForm = new GetDBConnectionConfigForm();
-                        //Application.Run(new GetDBConnectionConfigForm());
-                        //ObjGetDBConnectionConfigForm.Show();
-                        //Form tmp =  CommonFunctions.CurrentForm;
-                        //CommonFunctions.CurrentForm.Hide();
-                        //.CurrentForm = ObjGetDBConnectionConfigForm;
-                        //ObjGetDBConnectionConfigForm.ShowIcon = true;
-                        //ObjGetDBConnectionConfigForm.ShowInTaskbar = true;
-                        //ObjGetDBConnectionConfigForm.MinimizeBox = true;
-                        //ObjGetDBConnectionConfigForm.MaximizeBox = true;
-                        //ObjGetDBConnectionConfigForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-                        //ObjGetDBConnectionConfigForm.StartPosition = FormStartPosition.CenterScreen;
-                        ObjGetDBConnectionConfigForm.FormClosed += new FormClosedEventHandler(GetDBConnectionConfigForm_Closed); //add handler to catch when child form is closed
-                        ObjGetDBConnectionConfigForm.Show();
-                        this.Hide();
-                    }
+                    MessageBox.Show("DB is not Configured! Please Configure");
+                    return null;
                 }
-                tmpIntegDBHelper.OpenConnection(CommonFunctions.ObjApplicationSettings.Server, CommonFunctions.ObjApplicationSettings.DatabaseName, CommonFunctions.ObjApplicationSettings.UserName, CommonFunctions.ObjApplicationSettings.Password);
-                
-               return tmpIntegDBHelper.GetDbConnection();
+                if (tmpIntegDBHelper.ObjDbConnection == null || tmpIntegDBHelper.ObjDbConnection.State == ConnectionState.Closed)
+                {
+                    tmpIntegDBHelper.OpenConnection(CommonFunctions.ObjApplicationSettings.Server, CommonFunctions.ObjApplicationSettings.DatabaseName, CommonFunctions.ObjApplicationSettings.UserName, CommonFunctions.ObjApplicationSettings.Password);
+                }
+                return tmpIntegDBHelper.GetDbConnection();
             }
             catch (Exception ex)
             {
@@ -62,12 +43,19 @@ namespace SalesOrdersReport
 
         private void GetDBConnectionConfigForm_Closed(object sender, FormClosedEventArgs e)
         {
-            this.Show();
+            try
+            {
+                this.Show();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("LoginForm.GetDBConnectionConfigForm_Closed()", ex);
+                throw ex;
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            txtUserName.Text = "a"; txtPassword.Text = "a";
             if (txtUserName.Text == "")
             {
                 MessageBox.Show("Please enter user name", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -80,33 +68,29 @@ namespace SalesOrdersReport
                 txtPassword.Focus();
                 return;
             }
-
             try
             {
-               
                 MySqlConnection myConnection = CreateDBConnection();
-                //myConnection = new SqlConnection(cs);
-
-                if (!tmpIntegDBHelper.CheckTableExists("Users"))
+                if (myConnection == null) return;
+                if (!tmpIntegDBHelper.CheckTableExists("USERMASTER"))
                 {
-                    RunDBScript objRunDBScript = new RunDBScript();
-                    objRunDBScript.CreateNecessaryTables();
+                    RunDBScript ObjRunDBScript = new RunDBScript();
+                    ObjRunDBScript.CreateNecessaryTables();
                 }
-                bool ReturnVal = true; //tmpIntegDBHelper.LoginCheck(txtUserName.Text, txtUserName.Text, myConnection);
 
-                if (ReturnVal)
+                int ReturnVal = CommonFunctions.ObjUserMasterModel.LoginCheck(txtUserName.Text, txtPassword.Text, myConnection);
+
+                if (ReturnVal == 0)
                 {
-                    MessageBox.Show("You have logged in successfully " + txtUserName.Text);
-                    //Hide the login form
-                    MainForm objMainForm = new MainForm();
-                    objMainForm.lblCurrentUser.Text = tmpIntegDBHelper.CurrentUser;
-                    objMainForm.FormClosed += ObjMainForm_FormClosed;
-                    objMainForm.Show();
-                    this.Hide();
+                    CommonFunctions.CurrentUserName = tmpIntegDBHelper.CurrentUser;
+                    CommonFunctions.ObjUserMasterModel.LoadAllUserMasterTables();
+                    this.Close();
+                    DialogResult = DialogResult.OK;
                 }
                 else
                 {
-                    MessageBox.Show("Login Failed...Try again !", "Login Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (ReturnVal == -2) MessageBox.Show("User InActive! Pls Contact Admin", "InActive User",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    else MessageBox.Show("Login Failed...Try again !", "Login Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtUserName.Clear();
                     txtPassword.Clear();
                     txtUserName.Focus();
@@ -118,14 +102,36 @@ namespace SalesOrdersReport
             }
         }
 
+
         private void ObjMainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            this.Close();
+            try
+            {
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("LoginForm.ObjMainForm_FormClosed()", ex);
+                throw ex;
+            }
         }
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            try
+            {
+                Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("LoginForm.btnExit_Click()", ex);
+                throw ex;
+            }
+        }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+            txtUserName.Focus();
         }
     }
 }

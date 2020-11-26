@@ -1,7 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\SalesOrdersReport"
+    "\\SalesOrdersReport",
+    "\\SalesOrdersReport\\CommonModules",
+    "\\SalesOrdersReport\\Models",
+    "\\SalesOrdersReport\\SetupProject",
+    "\\SalesOrdersReport\\Views"
   ],
+  "SelectedNode": "\\SalesOrdersReport",
   "PreviewInSolutionExplorer": false
 }

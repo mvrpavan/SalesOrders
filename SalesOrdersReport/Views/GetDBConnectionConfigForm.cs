@@ -20,13 +20,21 @@ namespace SalesOrdersReport
 
         private void btnCreateDBConnection_Click(object sender, EventArgs e)
         {
-            CommonFunctions.ObjApplicationSettings.Server = txtServerName.Text;
-            CommonFunctions.ObjApplicationSettings.DatabaseName = txtDatabaseName.Text;
-            CommonFunctions.ObjApplicationSettings.UserName = txtUserName.Text;
-            CommonFunctions.ObjApplicationSettings.Password = txtDBPwd.Text;
+            try
+            {
+                CommonFunctions.ObjApplicationSettings.Server = txtServerName.Text;
+                CommonFunctions.ObjApplicationSettings.DatabaseName = txtDatabaseName.Text;
+                CommonFunctions.ObjApplicationSettings.UserName = txtUserName.Text;
+                CommonFunctions.ObjApplicationSettings.Password = txtDBPwd.Text;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("GetDBConnectionConfigForm.btnCreateDBConnection_Click()", ex);
+                throw;
+            }
 
         }
-        
+
         private void btnReset_Click(object sender, EventArgs e)
         {
             txtDBPwd.Clear();
@@ -35,6 +43,6 @@ namespace SalesOrdersReport
             txtUserName.Focus();
         }
 
-     
+
     }
 }

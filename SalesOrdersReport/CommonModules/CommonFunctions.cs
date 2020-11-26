@@ -9,10 +9,13 @@ using System.IO;
 using System.Xml;
 using System.Drawing;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Text.RegularExpressions;
+using SalesOrdersReport.CommonModules;
+using MySql.Data.MySqlClient;
 
 namespace SalesOrdersReport
 {
-    class CommonFunctions
+ class CommonFunctions
     {
         public static List<ProductLine> ListProductLines;
         public static Int32 SelectedProductLineIndex;
@@ -22,6 +25,8 @@ namespace SalesOrdersReport
         public static ToolStripProgressBar ToolStripProgressBarMainForm;
         public static ToolStripLabel ToolStripProgressBarMainFormStatus;
         public static Form CurrentForm = null;
+        public static UserMasterModel ObjUserMasterModel;
+        public static string CurrentUserName = "";
 
         public static void Initialize()
         {
@@ -35,15 +40,18 @@ namespace SalesOrdersReport
                 SelectedProductLineIndex = 1;
 
                 LoadSettingsFile();
+                ObjUserMasterModel = new UserMasterModel();
+                ObjUserMasterModel.Initialize();
 
                 if (!File.Exists(CommonFunctions.AppDataFolder + "\\" + CommonFunctions.ObjApplicationSettings.LogoFileName))
                 {
                     File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\Images\" + CommonFunctions.ObjApplicationSettings.LogoFileName,
-                        CommonFunctions.AppDataFolder + @"\" + CommonFunctions.ObjApplicationSettings.LogoFileName, false);
+                     CommonFunctions.AppDataFolder + @"\" + CommonFunctions.ObjApplicationSettings.LogoFileName, false);
                 }
 
                 ListSelectedSellers = new List<String>();
                 ListSelectedVendors = new List<String>();
+
             }
             catch (Exception ex)
             {
@@ -53,10 +61,78 @@ namespace SalesOrdersReport
 
         public static void ShowErrorDialog(String Method, Exception ex)
         {
-            if (CurrentForm != null)
-                MessageBox.Show(CurrentForm, "Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
-            else
-                MessageBox.Show("Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+            try
+            {
+                if (CurrentForm != null)
+                    MessageBox.Show(CurrentForm, "Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+                else
+                    MessageBox.Show("Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        public static List<Control> GetAllControlsOfAForm(Control root)
+        {
+            try
+            {
+                List<Control> ListTemp = new List<Control>();
+                foreach (Control control in root.Controls)
+                {
+                    ListTemp.Add(control);
+                    if (control.Controls != null)
+                    {
+                        ListTemp.AddRange(GetAllControlsOfAForm(control));
+                    }
+                }
+                return ListTemp;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.GetAllControlsOfAForm", ex);
+                throw ex;
+            }
+
+        }
+        public static void ApplyPrivilegeControl(Form ObjForm)
+        {
+            try
+            {
+                List<PrivilegeControlDetails> ListPrivilegeControlDtls = ObjUserMasterModel.GetPrivilegeControlDetailsForAnUser(CurrentUserName);
+
+                bool FirstTime = true;
+                List<Control> ListAllControls = new List<Control>();
+                foreach (PrivilegeControlDetails item in ListPrivilegeControlDtls)
+                {
+                    if (ObjForm.Name == item.FormName)
+                    {
+                        if (FirstTime)
+                        {
+                            foreach (Control FormRootControl in ObjForm.Controls)
+                            {
+                                ListAllControls.AddRange(GetAllControlsOfAForm(FormRootControl));
+                            }
+                            FirstTime = false;
+                        }
+                        foreach (var FormAllChildControlItem in ListAllControls)
+                        {
+                            if (FormAllChildControlItem.Name == item.ControlName)
+                            {
+                                FormAllChildControlItem.Enabled = item.IsEnabled;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.ApplyPrivilegeControl", ex);
+                throw ex;
+            }
         }
 
         public static void ReleaseCOMObject(object obj)
@@ -127,6 +203,65 @@ namespace SalesOrdersReport
             }
         }
 
+        public static MySqlDbType GetMySqlDbType(string DataTypeStr)
+        {
+            try
+            {
+                MySqlDbType ObjMySqlDbType = MySqlDbType.VarChar;
+
+                switch (DataTypeStr.ToUpper())
+                {
+                    case "DECIMAL": ObjMySqlDbType = MySqlDbType.Decimal; break;
+                    case "BYTE": ObjMySqlDbType = MySqlDbType.Byte; break;
+                    case "INT16": ObjMySqlDbType = MySqlDbType.Int16; break;
+                    case "INT24": ObjMySqlDbType = MySqlDbType.Int24; break;
+                    case "INT32": ObjMySqlDbType = MySqlDbType.Int32; break;
+                    case "INT64": ObjMySqlDbType = MySqlDbType.Int64; break;
+                    case "FLOAT": ObjMySqlDbType = MySqlDbType.Float; break;
+                    case "DOUBLE": ObjMySqlDbType = MySqlDbType.Double; break;
+                    case "TIMESTAMP": ObjMySqlDbType = MySqlDbType.Timestamp; break;
+                    case "DATE": ObjMySqlDbType = MySqlDbType.Date; break;
+                    case "TIME": ObjMySqlDbType = MySqlDbType.Time; break;
+                    case "DATETIME": ObjMySqlDbType = MySqlDbType.DateTime; break;
+                    case "YEAR": ObjMySqlDbType = MySqlDbType.Year; break;
+                    case "NEWDATE": ObjMySqlDbType = MySqlDbType.Newdate; break;
+                    case "VARSTRING": ObjMySqlDbType = MySqlDbType.VarString; break;
+                    case "BIT": ObjMySqlDbType = MySqlDbType.Bit; break;
+                    case "JSON": ObjMySqlDbType = MySqlDbType.JSON; break;
+                    case "NEWDECIMAL": ObjMySqlDbType = MySqlDbType.NewDecimal; break;
+                    case "ENUM": ObjMySqlDbType = MySqlDbType.Enum; break;
+                    case "SET": ObjMySqlDbType = MySqlDbType.Set; break;
+                    case "TINYBLOB": ObjMySqlDbType = MySqlDbType.TinyBlob; break;
+                    case "MEDIUMBLOB": ObjMySqlDbType = MySqlDbType.MediumBlob; break;
+                    case "LONGBLOB": ObjMySqlDbType = MySqlDbType.LongBlob; break;
+                    case "BLOB": ObjMySqlDbType = MySqlDbType.Blob; break;
+                    case "VARCHAR": ObjMySqlDbType = MySqlDbType.VarChar; break;
+                    case "STRING": ObjMySqlDbType = MySqlDbType.String; break;
+                    case "GEOMETRY": ObjMySqlDbType = MySqlDbType.Geometry; break;
+                    case "UBYTE": ObjMySqlDbType = MySqlDbType.UByte; break;
+                    case "UINT16": ObjMySqlDbType = MySqlDbType.UInt16; break;
+                    case "UINT24": ObjMySqlDbType = MySqlDbType.UInt24; break;
+                    case "UINT32": ObjMySqlDbType = MySqlDbType.UInt32; break;
+                    case "UINT64": ObjMySqlDbType = MySqlDbType.UInt64; break;
+                    case "BINARY": ObjMySqlDbType = MySqlDbType.Binary; break;
+                    case "VARBINARY": ObjMySqlDbType = MySqlDbType.VarBinary; break;
+                    case "TINYTEXT": ObjMySqlDbType = MySqlDbType.TinyText; break;
+                    case "MEDIUMTEXT": ObjMySqlDbType = MySqlDbType.MediumText; break;
+                    case "LONGTEXT": ObjMySqlDbType = MySqlDbType.LongText; break;
+                    case "TEXT": ObjMySqlDbType = MySqlDbType.Text; break;
+                    case "GUID": ObjMySqlDbType = MySqlDbType.Guid; break;
+
+                }
+
+                return ObjMySqlDbType;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.GetMySqlDbType", ex);
+                //Console.WriteLine("Error Occured in CommonFunctions.ReturnDataTableFromExcelWorksheet()");
+                return MySqlDbType.VarChar;
+            }
+        }
         public static Excel.Worksheet GetWorksheet(Excel.Workbook ObjWorkbook, String Sheetname)
         {
             try
@@ -362,7 +497,7 @@ namespace SalesOrdersReport
             }
         }
 
-        public static Boolean ValidateFile_Overwrite_TakeBackup(Form ParentForm, String DirectoryPath, ref String FilePath, 
+        public static Boolean ValidateFile_Overwrite_TakeBackup(Form ParentForm, String DirectoryPath, ref String FilePath,
                                                 String ValidFileName, String FileDesc)
         {
             try
@@ -411,6 +546,7 @@ namespace SalesOrdersReport
                 throw;
             }
         }
+
 
         public static String NumberToWords(String number)
         {
@@ -509,6 +645,116 @@ namespace SalesOrdersReport
             {
                 ShowErrorDialog("CommonFunctions.GetInvoiceTemplate()", ex);
                 throw;
+            }
+        }
+
+        public static bool CheckForPasswordLength(string PwdStr)
+        {
+            try
+            {
+                if (PwdStr.Length < 5 || PwdStr.Length > 20)
+                {
+                    return false;
+                }
+                else return true;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.CheckForPasswordLength()", ex);
+                throw;
+            }
+        }
+
+          public static string GetHashedPassword(string Password, Guid UserGuid)
+        {
+            try
+            {
+                return CryptoGraphy.HashSHA1(Password + UserGuid.ToString());
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.GetHashedPassword()", ex);
+                throw;
+            }
+        }
+        public static bool CompareNwPwdConfrmPwd(string NwPwdStr, string ConfirmPwd)
+        {
+            try
+            {
+                if (NwPwdStr == ConfirmPwd)
+                {
+                    return true;
+                }
+                else return false;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.CompareNwPwdConfrmPwd()", ex);
+                throw;
+            }
+        }
+        public static bool ValidateEmail(string EmailIdStr)
+        {
+            try
+            {
+                Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+                Match match = regex.Match(EmailIdStr);
+                if (match.Success)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.ValidateEmail()", ex);
+                throw;
+            }
+        }
+        public static bool ValidatePhoneNo(string PhoneNoStr)
+        {
+            try
+            {
+                /*
+                 9775876662
+                0 9754845789
+                0-9778545896
+                +91 9456211568
+                91 9857842356
+                919578965389
+                03595-259506
+                03592 245902
+                03598245785
+                 */
+                //Regex regex = new Regex(@"((\+*)((0[ -]+)*|(91 )*)(\d{12}+|\d{10}+))|\d{5}([- ]*)\d{6}");
+                Regex regex = new Regex(@"((\+*)((0[ -]+)*|(91 )*)(\d{12}|\d{10}))|\d{5}([- ]*)\d{6}");
+                Match match = regex.Match(PhoneNoStr);
+                if (match.Success)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.ValidatePhoneNo()", ex);
+                throw;
+            }
+        }
+        public static void ShowDialog(Form ObjForm, Form Owner)
+        {
+            try
+            {
+                ObjForm.ShowInTaskbar = false;
+                ObjForm.ShowIcon = false;
+                ObjForm.StartPosition = FormStartPosition.CenterParent;
+                ObjForm.MaximizeBox = false;
+                ObjForm.MinimizeBox = false;
+                // ObjForm.ControlBox = false;
+                ApplyPrivilegeControl(ObjForm);
+                ObjForm.ShowDialog(Owner);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CommonFunctions.ShowDialog()", ex);
             }
         }
     }

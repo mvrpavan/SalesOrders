@@ -32,25 +32,32 @@ namespace SalesOrdersReport
         private void InitializeComponent()
         {
             this.btnReset = new System.Windows.Forms.Button();
-            this.btnCreate = new System.Windows.Forms.Button();
+            this.btnCreateUser = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.chkbxActiveNo = new System.Windows.Forms.CheckBox();
-            this.chkbxActiveYes = new System.Windows.Forms.CheckBox();
+            this.lblCreatePwdValidMsg = new System.Windows.Forms.Label();
+            this.lblCreatePhoneValidMsg = new System.Windows.Forms.Label();
+            this.lblCreateEmailIdValidMsg = new System.Windows.Forms.Label();
+            this.lblCommonErrorMsg = new System.Windows.Forms.Label();
+            this.lblRoleAsterik = new System.Windows.Forms.Label();
+            this.lblActiveAsterik = new System.Windows.Forms.Label();
+            this.lblFullNameAsterik = new System.Windows.Forms.Label();
+            this.lblCreatePwdAsterik = new System.Windows.Forms.Label();
+            this.lblCreateUserAsterik = new System.Windows.Forms.Label();
+            this.lblIsActive = new System.Windows.Forms.Label();
+            this.rdbtnActiveNo = new System.Windows.Forms.RadioButton();
+            this.rdbtnActiveYes = new System.Windows.Forms.RadioButton();
             this.cmbxSelectStore = new System.Windows.Forms.ComboBox();
-            this.label9 = new System.Windows.Forms.Label();
+            this.lblCreateStoreName = new System.Windows.Forms.Label();
             this.txtEmailID = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.lblCreateEmailID = new System.Windows.Forms.Label();
             this.cmbxSelectRoleID = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtAddress = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
+            this.lblCreateRoleID = new System.Windows.Forms.Label();
             this.txtPhone = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.lblCreatePhoneNo = new System.Windows.Forms.Label();
             this.txtFullName = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblCreateFullName = new System.Windows.Forms.Label();
+            this.lblCreatePassword = new System.Windows.Forms.Label();
+            this.lblCreateUserName = new System.Windows.Forms.Label();
             this.txtCreatePassword = new System.Windows.Forms.TextBox();
             this.txtCreateUserName = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
@@ -58,211 +65,288 @@ namespace SalesOrdersReport
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(216, 468);
+            this.btnReset.Location = new System.Drawing.Point(214, 361);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(97, 39);
-            this.btnReset.TabIndex = 5;
+            this.btnReset.TabIndex = 10;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
-            // btnCreate
+            // btnCreateUser
             // 
-            this.btnCreate.Location = new System.Drawing.Point(113, 468);
-            this.btnCreate.Name = "btnCreate";
-            this.btnCreate.Size = new System.Drawing.Size(97, 39);
-            this.btnCreate.TabIndex = 4;
-            this.btnCreate.Text = "CreateUser";
-            this.btnCreate.UseVisualStyleBackColor = true;
-            this.btnCreate.Click += new System.EventHandler(this.btnCreateUser_Click);
+            this.btnCreateUser.Location = new System.Drawing.Point(111, 361);
+            this.btnCreateUser.Name = "btnCreateUser";
+            this.btnCreateUser.Size = new System.Drawing.Size(97, 39);
+            this.btnCreateUser.TabIndex = 9;
+            this.btnCreateUser.Text = "CreateUser";
+            this.btnCreateUser.UseVisualStyleBackColor = true;
+            this.btnCreateUser.Click += new System.EventHandler(this.btnCreateUser_Click);
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Controls.Add(this.chkbxActiveNo);
-            this.groupBox1.Controls.Add(this.chkbxActiveYes);
+            this.groupBox1.Controls.Add(this.lblCreatePwdValidMsg);
+            this.groupBox1.Controls.Add(this.lblCreatePhoneValidMsg);
+            this.groupBox1.Controls.Add(this.lblCreateEmailIdValidMsg);
+            this.groupBox1.Controls.Add(this.lblCommonErrorMsg);
+            this.groupBox1.Controls.Add(this.lblRoleAsterik);
+            this.groupBox1.Controls.Add(this.lblActiveAsterik);
+            this.groupBox1.Controls.Add(this.lblFullNameAsterik);
+            this.groupBox1.Controls.Add(this.lblCreatePwdAsterik);
+            this.groupBox1.Controls.Add(this.lblCreateUserAsterik);
+            this.groupBox1.Controls.Add(this.lblIsActive);
+            this.groupBox1.Controls.Add(this.rdbtnActiveNo);
+            this.groupBox1.Controls.Add(this.rdbtnActiveYes);
             this.groupBox1.Controls.Add(this.cmbxSelectStore);
-            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.lblCreateStoreName);
             this.groupBox1.Controls.Add(this.txtEmailID);
-            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.lblCreateEmailID);
             this.groupBox1.Controls.Add(this.cmbxSelectRoleID);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.txtAddress);
-            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.lblCreateRoleID);
             this.groupBox1.Controls.Add(this.txtPhone);
-            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.lblCreatePhoneNo);
             this.groupBox1.Controls.Add(this.txtFullName);
-            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.lblCreateFullName);
             this.groupBox1.Controls.Add(this.btnReset);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.btnCreate);
-            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.lblCreatePassword);
+            this.groupBox1.Controls.Add(this.btnCreateUser);
+            this.groupBox1.Controls.Add(this.lblCreateUserName);
             this.groupBox1.Controls.Add(this.txtCreatePassword);
             this.groupBox1.Controls.Add(this.txtCreateUserName);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(332, 513);
-            this.groupBox1.TabIndex = 3;
+            this.groupBox1.Size = new System.Drawing.Size(344, 444);
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Create User";
             // 
-            // label8
+            // lblCreatePwdValidMsg
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(6, 386);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(37, 13);
-            this.label8.TabIndex = 22;
-            this.label8.Text = "Active";
+            this.lblCreatePwdValidMsg.AutoSize = true;
+            this.lblCreatePwdValidMsg.ForeColor = System.Drawing.Color.Red;
+            this.lblCreatePwdValidMsg.Location = new System.Drawing.Point(108, 87);
+            this.lblCreatePwdValidMsg.Name = "lblCreatePwdValidMsg";
+            this.lblCreatePwdValidMsg.Size = new System.Drawing.Size(0, 13);
+            this.lblCreatePwdValidMsg.TabIndex = 32;
             // 
-            // chkbxActiveNo
+            // lblCreatePhoneValidMsg
             // 
-            this.chkbxActiveNo.AutoSize = true;
-            this.chkbxActiveNo.Location = new System.Drawing.Point(216, 392);
-            this.chkbxActiveNo.Name = "chkbxActiveNo";
-            this.chkbxActiveNo.Size = new System.Drawing.Size(40, 17);
-            this.chkbxActiveNo.TabIndex = 21;
-            this.chkbxActiveNo.Text = "No";
-            this.chkbxActiveNo.UseVisualStyleBackColor = true;
+            this.lblCreatePhoneValidMsg.AutoSize = true;
+            this.lblCreatePhoneValidMsg.ForeColor = System.Drawing.Color.Red;
+            this.lblCreatePhoneValidMsg.Location = new System.Drawing.Point(110, 208);
+            this.lblCreatePhoneValidMsg.Name = "lblCreatePhoneValidMsg";
+            this.lblCreatePhoneValidMsg.Size = new System.Drawing.Size(0, 13);
+            this.lblCreatePhoneValidMsg.TabIndex = 31;
             // 
-            // chkbxActiveYes
+            // lblCreateEmailIdValidMsg
             // 
-            this.chkbxActiveYes.AutoSize = true;
-            this.chkbxActiveYes.Location = new System.Drawing.Point(113, 386);
-            this.chkbxActiveYes.Name = "chkbxActiveYes";
-            this.chkbxActiveYes.Size = new System.Drawing.Size(44, 17);
-            this.chkbxActiveYes.TabIndex = 20;
-            this.chkbxActiveYes.Text = "Yes";
-            this.chkbxActiveYes.UseVisualStyleBackColor = true;
+            this.lblCreateEmailIdValidMsg.AutoSize = true;
+            this.lblCreateEmailIdValidMsg.ForeColor = System.Drawing.Color.Red;
+            this.lblCreateEmailIdValidMsg.Location = new System.Drawing.Point(110, 168);
+            this.lblCreateEmailIdValidMsg.Name = "lblCreateEmailIdValidMsg";
+            this.lblCreateEmailIdValidMsg.Size = new System.Drawing.Size(0, 13);
+            this.lblCreateEmailIdValidMsg.TabIndex = 30;
+            // 
+            // lblCommonErrorMsg
+            // 
+            this.lblCommonErrorMsg.AutoSize = true;
+            this.lblCommonErrorMsg.ForeColor = System.Drawing.Color.Red;
+            this.lblCommonErrorMsg.Location = new System.Drawing.Point(108, 328);
+            this.lblCommonErrorMsg.Name = "lblCommonErrorMsg";
+            this.lblCommonErrorMsg.Size = new System.Drawing.Size(0, 13);
+            this.lblCommonErrorMsg.TabIndex = 29;
+            // 
+            // lblRoleAsterik
+            // 
+            this.lblRoleAsterik.AutoSize = true;
+            this.lblRoleAsterik.ForeColor = System.Drawing.Color.Red;
+            this.lblRoleAsterik.Location = new System.Drawing.Point(41, 296);
+            this.lblRoleAsterik.Name = "lblRoleAsterik";
+            this.lblRoleAsterik.Size = new System.Drawing.Size(11, 13);
+            this.lblRoleAsterik.TabIndex = 28;
+            this.lblRoleAsterik.Text = "*";
+            // 
+            // lblActiveAsterik
+            // 
+            this.lblActiveAsterik.AutoSize = true;
+            this.lblActiveAsterik.ForeColor = System.Drawing.Color.Red;
+            this.lblActiveAsterik.Location = new System.Drawing.Point(38, 262);
+            this.lblActiveAsterik.Name = "lblActiveAsterik";
+            this.lblActiveAsterik.Size = new System.Drawing.Size(11, 13);
+            this.lblActiveAsterik.TabIndex = 27;
+            this.lblActiveAsterik.Text = "*";
+            // 
+            // lblFullNameAsterik
+            // 
+            this.lblFullNameAsterik.AutoSize = true;
+            this.lblFullNameAsterik.ForeColor = System.Drawing.Color.Red;
+            this.lblFullNameAsterik.Location = new System.Drawing.Point(55, 102);
+            this.lblFullNameAsterik.Name = "lblFullNameAsterik";
+            this.lblFullNameAsterik.Size = new System.Drawing.Size(11, 13);
+            this.lblFullNameAsterik.TabIndex = 26;
+            this.lblFullNameAsterik.Text = "*";
+            // 
+            // lblCreatePwdAsterik
+            // 
+            this.lblCreatePwdAsterik.AutoSize = true;
+            this.lblCreatePwdAsterik.ForeColor = System.Drawing.Color.Red;
+            this.lblCreatePwdAsterik.Location = new System.Drawing.Point(55, 66);
+            this.lblCreatePwdAsterik.Name = "lblCreatePwdAsterik";
+            this.lblCreatePwdAsterik.Size = new System.Drawing.Size(11, 13);
+            this.lblCreatePwdAsterik.TabIndex = 25;
+            this.lblCreatePwdAsterik.Text = "*";
+            // 
+            // lblCreateUserAsterik
+            // 
+            this.lblCreateUserAsterik.AutoSize = true;
+            this.lblCreateUserAsterik.ForeColor = System.Drawing.Color.Red;
+            this.lblCreateUserAsterik.Location = new System.Drawing.Point(61, 28);
+            this.lblCreateUserAsterik.Name = "lblCreateUserAsterik";
+            this.lblCreateUserAsterik.Size = new System.Drawing.Size(11, 13);
+            this.lblCreateUserAsterik.TabIndex = 24;
+            this.lblCreateUserAsterik.Text = "*";
+            // 
+            // lblIsActive
+            // 
+            this.lblIsActive.AutoSize = true;
+            this.lblIsActive.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIsActive.Location = new System.Drawing.Point(6, 262);
+            this.lblIsActive.Name = "lblIsActive";
+            this.lblIsActive.Size = new System.Drawing.Size(37, 13);
+            this.lblIsActive.TabIndex = 22;
+            this.lblIsActive.Text = "Active";
+            // 
+            // rdbtnActiveNo
+            // 
+            this.rdbtnActiveNo.AutoSize = true;
+            this.rdbtnActiveNo.Location = new System.Drawing.Point(192, 263);
+            this.rdbtnActiveNo.Name = "rdbtnActiveNo";
+            this.rdbtnActiveNo.Size = new System.Drawing.Size(39, 17);
+            this.rdbtnActiveNo.TabIndex = 7;
+            this.rdbtnActiveNo.Text = "No";
+            this.rdbtnActiveNo.UseVisualStyleBackColor = true;
+            // 
+            // rdbtnActiveYes
+            // 
+            this.rdbtnActiveYes.AutoSize = true;
+            this.rdbtnActiveYes.Location = new System.Drawing.Point(113, 263);
+            this.rdbtnActiveYes.Name = "rdbtnActiveYes";
+            this.rdbtnActiveYes.Size = new System.Drawing.Size(43, 17);
+            this.rdbtnActiveYes.TabIndex = 6;
+            this.rdbtnActiveYes.Text = "Yes";
+            this.rdbtnActiveYes.UseVisualStyleBackColor = true;
             // 
             // cmbxSelectStore
             // 
             this.cmbxSelectStore.FormattingEnabled = true;
-            this.cmbxSelectStore.Location = new System.Drawing.Point(113, 341);
+            this.cmbxSelectStore.Location = new System.Drawing.Point(111, 226);
             this.cmbxSelectStore.Name = "cmbxSelectStore";
             this.cmbxSelectStore.Size = new System.Drawing.Size(121, 21);
-            this.cmbxSelectStore.TabIndex = 19;
+            this.cmbxSelectStore.TabIndex = 5;
             this.cmbxSelectStore.Text = "Select Store";
+            this.cmbxSelectStore.Click += new System.EventHandler(this.cmbxSelectStore_Click);
             // 
-            // label9
+            // lblCreateStoreName
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(6, 344);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(32, 13);
-            this.label9.TabIndex = 18;
-            this.label9.Text = "Store";
+            this.lblCreateStoreName.AutoSize = true;
+            this.lblCreateStoreName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCreateStoreName.Location = new System.Drawing.Point(6, 226);
+            this.lblCreateStoreName.Name = "lblCreateStoreName";
+            this.lblCreateStoreName.Size = new System.Drawing.Size(32, 13);
+            this.lblCreateStoreName.TabIndex = 18;
+            this.lblCreateStoreName.Text = "Store";
             // 
             // txtEmailID
             // 
             this.txtEmailID.Location = new System.Drawing.Point(113, 145);
             this.txtEmailID.Name = "txtEmailID";
             this.txtEmailID.Size = new System.Drawing.Size(208, 20);
-            this.txtEmailID.TabIndex = 15;
+            this.txtEmailID.TabIndex = 3;
             // 
-            // label7
+            // lblCreateEmailID
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(6, 144);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(46, 13);
-            this.label7.TabIndex = 14;
-            this.label7.Text = "Email ID";
+            this.lblCreateEmailID.AutoSize = true;
+            this.lblCreateEmailID.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCreateEmailID.Location = new System.Drawing.Point(6, 144);
+            this.lblCreateEmailID.Name = "lblCreateEmailID";
+            this.lblCreateEmailID.Size = new System.Drawing.Size(46, 13);
+            this.lblCreateEmailID.TabIndex = 14;
+            this.lblCreateEmailID.Text = "Email ID";
             // 
             // cmbxSelectRoleID
             // 
             this.cmbxSelectRoleID.FormattingEnabled = true;
-            this.cmbxSelectRoleID.Location = new System.Drawing.Point(111, 423);
+            this.cmbxSelectRoleID.Location = new System.Drawing.Point(111, 293);
             this.cmbxSelectRoleID.Name = "cmbxSelectRoleID";
             this.cmbxSelectRoleID.Size = new System.Drawing.Size(121, 21);
-            this.cmbxSelectRoleID.TabIndex = 13;
+            this.cmbxSelectRoleID.TabIndex = 8;
             this.cmbxSelectRoleID.Text = "Select Role";
+            this.cmbxSelectRoleID.Click += new System.EventHandler(this.cmbxSelectRoleID_Click);
             // 
-            // label6
+            // lblCreateRoleID
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(6, 426);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(40, 13);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "RoleID";
-            // 
-            // txtAddress
-            // 
-            this.txtAddress.Location = new System.Drawing.Point(113, 234);
-            this.txtAddress.Multiline = true;
-            this.txtAddress.Name = "txtAddress";
-            this.txtAddress.Size = new System.Drawing.Size(208, 85);
-            this.txtAddress.TabIndex = 11;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(6, 234);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(45, 13);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "Address";
+            this.lblCreateRoleID.AutoSize = true;
+            this.lblCreateRoleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCreateRoleID.Location = new System.Drawing.Point(6, 296);
+            this.lblCreateRoleID.Name = "lblCreateRoleID";
+            this.lblCreateRoleID.Size = new System.Drawing.Size(40, 13);
+            this.lblCreateRoleID.TabIndex = 12;
+            this.lblCreateRoleID.Text = "RoleID";
             // 
             // txtPhone
             // 
             this.txtPhone.Location = new System.Drawing.Point(113, 185);
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.Size = new System.Drawing.Size(208, 20);
-            this.txtPhone.TabIndex = 9;
+            this.txtPhone.TabIndex = 4;
             // 
-            // label4
+            // lblCreatePhoneNo
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(6, 188);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(38, 13);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Phone";
+            this.lblCreatePhoneNo.AutoSize = true;
+            this.lblCreatePhoneNo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCreatePhoneNo.Location = new System.Drawing.Point(6, 188);
+            this.lblCreatePhoneNo.Name = "lblCreatePhoneNo";
+            this.lblCreatePhoneNo.Size = new System.Drawing.Size(38, 13);
+            this.lblCreatePhoneNo.TabIndex = 8;
+            this.lblCreatePhoneNo.Text = "Phone";
             // 
             // txtFullName
             // 
             this.txtFullName.Location = new System.Drawing.Point(113, 103);
             this.txtFullName.Name = "txtFullName";
             this.txtFullName.Size = new System.Drawing.Size(208, 20);
-            this.txtFullName.TabIndex = 7;
+            this.txtFullName.TabIndex = 2;
             // 
-            // label3
+            // lblCreateFullName
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(6, 102);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Full Name";
+            this.lblCreateFullName.AutoSize = true;
+            this.lblCreateFullName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCreateFullName.Location = new System.Drawing.Point(6, 102);
+            this.lblCreateFullName.Name = "lblCreateFullName";
+            this.lblCreateFullName.Size = new System.Drawing.Size(54, 13);
+            this.lblCreateFullName.TabIndex = 6;
+            this.lblCreateFullName.Text = "Full Name";
             // 
-            // label2
+            // lblCreatePassword
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(6, 66);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Password";
+            this.lblCreatePassword.AutoSize = true;
+            this.lblCreatePassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCreatePassword.Location = new System.Drawing.Point(6, 66);
+            this.lblCreatePassword.Name = "lblCreatePassword";
+            this.lblCreatePassword.Size = new System.Drawing.Size(53, 13);
+            this.lblCreatePassword.TabIndex = 12;
+            this.lblCreatePassword.Text = "Password";
             // 
-            // label1
+            // lblCreateUserName
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(6, 28);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "User Name";
+            this.lblCreateUserName.AutoSize = true;
+            this.lblCreateUserName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCreateUserName.Location = new System.Drawing.Point(6, 28);
+            this.lblCreateUserName.Name = "lblCreateUserName";
+            this.lblCreateUserName.Size = new System.Drawing.Size(60, 13);
+            this.lblCreateUserName.TabIndex = 11;
+            this.lblCreateUserName.Text = "User Name";
             // 
             // txtCreatePassword
             // 
@@ -277,17 +361,19 @@ namespace SalesOrdersReport
             this.txtCreateUserName.Location = new System.Drawing.Point(113, 28);
             this.txtCreateUserName.Name = "txtCreateUserName";
             this.txtCreateUserName.Size = new System.Drawing.Size(208, 20);
-            this.txtCreateUserName.TabIndex = 4;
+            this.txtCreateUserName.TabIndex = 0;
             // 
             // CreateUserForm
             // 
+            this.AcceptButton = this.btnCreateUser;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(405, 537);
+            this.ClientSize = new System.Drawing.Size(368, 471);
             this.Controls.Add(this.groupBox1);
             this.Name = "CreateUserForm";
             this.ShowIcon = false;
-            this.Text = "CreateUserForm";
+            this.Text = "Create User Form";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CreateUserForm_FormClosed);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -297,28 +383,37 @@ namespace SalesOrdersReport
      
 
         private System.Windows.Forms.Button btnReset;
-        private System.Windows.Forms.Button btnCreate;
+        private System.Windows.Forms.Button btnCreateUser;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblCreatePassword;
+        private System.Windows.Forms.Label lblCreateUserName;
         private System.Windows.Forms.TextBox txtCreatePassword;
         private System.Windows.Forms.TextBox txtCreateUserName;
         #endregion
 
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblCreateFullName;
         private System.Windows.Forms.TextBox txtFullName;
-        private System.Windows.Forms.TextBox txtAddress;
-        private System.Windows.Forms.Label label5;
+        //private System.Windows.Forms.TextBox txtAddress;
+        //private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtPhone;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblCreatePhoneNo;
+        private System.Windows.Forms.Label lblCreateRoleID;
         private System.Windows.Forms.ComboBox cmbxSelectRoleID;
         private System.Windows.Forms.TextBox txtEmailID;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lblCreateEmailID;
         private System.Windows.Forms.ComboBox cmbxSelectStore;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.CheckBox chkbxActiveNo;
-        private System.Windows.Forms.CheckBox chkbxActiveYes;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblCreateStoreName;
+        private System.Windows.Forms.RadioButton rdbtnActiveNo;
+        private System.Windows.Forms.RadioButton rdbtnActiveYes;
+        private System.Windows.Forms.Label lblIsActive;
+        private System.Windows.Forms.Label lblCreateUserAsterik;
+        private System.Windows.Forms.Label lblRoleAsterik;
+        private System.Windows.Forms.Label lblActiveAsterik;
+        private System.Windows.Forms.Label lblFullNameAsterik;
+        private System.Windows.Forms.Label lblCreatePwdAsterik;
+        private System.Windows.Forms.Label lblCreatePhoneValidMsg;
+        private System.Windows.Forms.Label lblCreateEmailIdValidMsg;
+        private System.Windows.Forms.Label lblCommonErrorMsg;
+        private System.Windows.Forms.Label lblCreatePwdValidMsg;
     }
 }

@@ -68,10 +68,13 @@ namespace SalesOrdersReport
             this.editProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editUserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createRoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripComboBoxProductLine = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.helpMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.UserProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.LogOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cntxtMenuStripUserProfile = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripOrderMasterPath = new System.Windows.Forms.ToolStripStatusLabel();
@@ -81,7 +84,6 @@ namespace SalesOrdersReport
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.picBoxBackgroundLogo = new System.Windows.Forms.PictureBox();
-            this.lblCurrentUser = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -99,9 +101,9 @@ namespace SalesOrdersReport
             this.reportsMenu,
             this.administrationToolStripMenuItem,
             this.userToolStripMenuItem,
-            this.toolStripComboBoxProductLine,
             this.toolStripTextBox1,
-            this.helpMenu});
+            this.helpMenu,
+            this.UserProfileToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(844, 27);
@@ -331,6 +333,7 @@ namespace SalesOrdersReport
             this.manageUsersToolStripMenuItem.Name = "manageUsersToolStripMenuItem";
             this.manageUsersToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.manageUsersToolStripMenuItem.Text = "Manage Users";
+            this.manageUsersToolStripMenuItem.Click += new System.EventHandler(this.manageUsersToolStripMenuItem_Click);
             // 
             // manageProductsToolStripMenuItem
             // 
@@ -367,7 +370,7 @@ namespace SalesOrdersReport
             this.editProfileToolStripMenuItem.Name = "editProfileToolStripMenuItem";
             this.editProfileToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.editProfileToolStripMenuItem.Text = "Edit Profile";
-            this.editProfileToolStripMenuItem.Click += new System.EventHandler(this.editProfileToolStripMenuItem_Click);
+            this.editProfileToolStripMenuItem.Click += new System.EventHandler(this.ProfileToolStripMenuItem_Click);
             // 
             // editUserToolStripMenuItem
             // 
@@ -383,31 +386,10 @@ namespace SalesOrdersReport
             this.createRoleToolStripMenuItem.Text = "Create Role";
             this.createRoleToolStripMenuItem.Click += new System.EventHandler(this.createRoleToolStripMenuItem_Click);
             // 
-            // toolStripComboBoxProductLine
-            // 
-            this.toolStripComboBoxProductLine.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripComboBoxProductLine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolStripComboBoxProductLine.Items.AddRange(new object[] {
-            "Vegetables",
-            "Bakery"});
-            this.toolStripComboBoxProductLine.Name = "toolStripComboBoxProductLine";
-            this.toolStripComboBoxProductLine.Size = new System.Drawing.Size(121, 23);
-            this.toolStripComboBoxProductLine.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxProductLine_SelectedIndexChanged);
-            // 
             // toolStripTextBox1
             // 
-            this.toolStripTextBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripTextBox1.BackColor = System.Drawing.SystemColors.Menu;
-            this.toolStripTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.toolStripTextBox1.Margin = new System.Windows.Forms.Padding(1, 2, 10, 0);
-            this.toolStripTextBox1.MaxLength = 20;
             this.toolStripTextBox1.Name = "toolStripTextBox1";
-            this.toolStripTextBox1.ReadOnly = true;
-            this.toolStripTextBox1.ShortcutsEnabled = false;
-            this.toolStripTextBox1.Size = new System.Drawing.Size(80, 21);
-            this.toolStripTextBox1.Text = "Product Line";
-            this.toolStripTextBox1.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.toolStripTextBox1.ToolTipText = "Select Product Line";
+            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 23);
             // 
             // helpMenu
             // 
@@ -423,6 +405,42 @@ namespace SalesOrdersReport
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // UserProfileToolStripMenuItem
+            // 
+            this.UserProfileToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.UserProfileToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
+            this.UserProfileToolStripMenuItem.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.UserProfileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ProfileToolStripMenuItem,
+            this.LogOutToolStripMenuItem});
+            this.UserProfileToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UserProfileToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
+            this.UserProfileToolStripMenuItem.ImageAlign = System.Drawing.ContentAlignment.TopRight;
+            this.UserProfileToolStripMenuItem.Name = "UserProfileToolStripMenuItem";
+            this.UserProfileToolStripMenuItem.Size = new System.Drawing.Size(12, 23);
+            this.UserProfileToolStripMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.UserProfileToolStripMenuItem.Click += new System.EventHandler(this.btnUserProfile_Click);
+            this.UserProfileToolStripMenuItem.Paint += new System.Windows.Forms.PaintEventHandler(this.btnUserProfile_Paint);
+            // 
+            // ProfileToolStripMenuItem
+            // 
+            this.ProfileToolStripMenuItem.Name = "ProfileToolStripMenuItem";
+            this.ProfileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ProfileToolStripMenuItem.Text = "Profile";
+            this.ProfileToolStripMenuItem.Click += new System.EventHandler(this.ProfileToolStripMenuItem_Click);
+            // 
+            // LogOutToolStripMenuItem
+            // 
+            this.LogOutToolStripMenuItem.Name = "LogOutToolStripMenuItem";
+            this.LogOutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.LogOutToolStripMenuItem.Text = "Log Out";
+            this.LogOutToolStripMenuItem.Click += new System.EventHandler(this.LogOutToolStripMenuItem_Click);
+            // 
+            // cntxtMenuStripUserProfile
+            // 
+            this.cntxtMenuStripUserProfile.Name = "cntxtMenuStripUserProfile";
+            this.cntxtMenuStripUserProfile.Size = new System.Drawing.Size(61, 4);
             // 
             // statusStrip
             // 
@@ -476,7 +494,7 @@ namespace SalesOrdersReport
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.pictureBox1.Location = new System.Drawing.Point(0, 27);
             this.pictureBox1.Name = "pictureBox1";
@@ -494,20 +512,11 @@ namespace SalesOrdersReport
             this.picBoxBackgroundLogo.TabIndex = 6;
             this.picBoxBackgroundLogo.TabStop = false;
             // 
-            // lblCurrentUser
-            // 
-            this.lblCurrentUser.AutoSize = true;
-            this.lblCurrentUser.Location = new System.Drawing.Point(590, 9);
-            this.lblCurrentUser.Name = "lblCurrentUser";
-            this.lblCurrentUser.Size = new System.Drawing.Size(0, 13);
-            this.lblCurrentUser.TabIndex = 10;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(844, 572);
-            this.Controls.Add(this.lblCurrentUser);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.picBoxBackgroundLogo);
             this.Controls.Add(this.statusStrip);
@@ -522,6 +531,8 @@ namespace SalesOrdersReport
             this.Text = "Main Form";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -533,7 +544,9 @@ namespace SalesOrdersReport
 
         }
 
-  
+ 
+
+
         #endregion
 
 
@@ -565,7 +578,8 @@ namespace SalesOrdersReport
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.ToolStripMenuItem chooseMasterFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel toolStripProgress;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxProductLine;
+        //private System.Windows.Forms.ToolStripComboBox toolStripComboBoxProductLine;
+        private System.Windows.Forms.ContextMenuStrip cntxtMenuStripUserProfile;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripOrderMasterPath;
@@ -582,11 +596,15 @@ namespace SalesOrdersReport
         private System.Windows.Forms.ToolStripMenuItem editProfileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editUserToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createRoleToolStripMenuItem;
-        public System.Windows.Forms.Label lblCurrentUser;
+        //public System.Windows.Forms.Label lblCurrentUser;
         private System.Windows.Forms.ToolStripMenuItem administrationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manageUsersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manageProductsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem applicationSettingsToolStripMenuItem;
+        //public System.Windows.Forms.Button btnUserProfile;
+        private System.Windows.Forms.ToolStripMenuItem ProfileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem LogOutToolStripMenuItem;
+        public System.Windows.Forms.ToolStripMenuItem UserProfileToolStripMenuItem;
     }
 }
 

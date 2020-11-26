@@ -4,6 +4,7 @@ using MySql.Data.MySqlClient;
 using System.Data.Common;
 using System.Data;
 using System.Windows.Forms;
+using SalesOrdersReport.CommonModules;
 
 namespace SalesOrdersReport
 {
@@ -13,6 +14,7 @@ namespace SalesOrdersReport
         public MySqlConnectionStringBuilder ObjDbConnectionStringBuilder;
         public MySqlCommand ObjDbCommand;
         public string CurrentUser;
+        public DateTime LoginTime;
         static MySQLHelper ObjMySqlHelper = new MySQLHelper();
         private MySQLHelper()
         {
@@ -50,6 +52,7 @@ namespace SalesOrdersReport
                 ObjDbConnectionStringBuilder.Add("Password", DBPassword);
                 ObjDbConnectionStringBuilder.Add("persistsecurityinfo", "True");
                 ObjDbConnectionStringBuilder.Add("Allow Zero Datetime", "True");
+                ObjDbConnectionStringBuilder.Add("Allow User Variables", "True");
 
                 ObjDbConnection.ConnectionString = ObjDbConnectionStringBuilder.ConnectionString;
                 ObjDbConnection.Open();
@@ -76,41 +79,6 @@ namespace SalesOrdersReport
             {
                 CommonFunctions.ShowErrorDialog("MySQLHelper.CloseConnection()", ex);
                 throw;
-            }
-        }
-
-
-        public bool LoginCheck(string txtUserName, string txtPassword, MySqlConnection myConnection)
-        {
-            try
-            {
-                bool returnval = true;
-                MySqlCommand myCommand = new MySqlCommand("SELECT Username,Password FROM Users WHERE Username = @Username AND Password = @Password", myConnection);
-
-                MySqlParameter uName = new MySqlParameter("@Username", MySqlDbType.VarChar);
-                MySqlParameter uPassword = new MySqlParameter("@Password", MySqlDbType.VarChar);
-
-                uName.Value = txtUserName;
-                uPassword.Value = txtPassword;
-
-                myCommand.Parameters.Add(uName);
-                myCommand.Parameters.Add(uPassword);
-
-                //myCommand.Connection.Open();
-
-                MySqlDataReader myReader = myCommand.ExecuteReader();
-
-                if (myReader.Read() == true) CurrentUser = txtUserName;
-                else returnval = false;
-       
-                myReader.Close();
-
-                return returnval;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.LoginCheck()" , ex);
-                throw ex;
             }
         }
 
@@ -164,160 +132,16 @@ namespace SalesOrdersReport
         //    }
         //}
 
-        public string GetUserID(string User)
-        {
-            try
-            {
-                return "";
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public List<string> GetAllUsers()
-        {
-            try
-            {
-                List<string> ListUsers = new List<string>();
-
-
-                String CreateTableQuery = "SELECT USERNAME FROM USERS ";
-                CreateTableQuery += ";";
-
-                ObjDbCommand.CommandText = CreateTableQuery;
-                MySqlDataReader dr = ObjDbCommand.ExecuteReader();
-                while (dr.Read())
-                {
-                    ListUsers.Add(dr.GetValue(0).ToString());
-                }
-                dr.Close();
-                return ListUsers;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.GetAllUsers()", ex);
-                throw ex;
-            }
-
-        }
-        public List<string> GetAllRoles()
-        {
-            try
-            {
-                List<string> ListRoles = new List<string>();
-       
-             
-                String CreateTableQuery = "SELECT ROLENAME FROM ROLE ";
-                CreateTableQuery += ";";
-
-                 ObjDbCommand.CommandText = CreateTableQuery;
-                 MySqlDataReader dr =  ObjDbCommand.ExecuteReader();
-                while (dr.Read())
-                {
-                    ListRoles.Add(dr.GetValue(0).ToString());
-                }
-                dr.Close();
-                return ListRoles;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.GetAllRoles()", ex);
-                throw ex;
-            }
-            
-        }
-        public List<string> GetAllStatus()
-        {
-            try
-            {
-                List<string> ListStatus = new List<string>();
-
-
-                String CreateTableQuery = "SELECT ROLENAME FROM ROLE ";
-                CreateTableQuery += ";";
-
-                ObjDbCommand.CommandText = CreateTableQuery;
-                MySqlDataReader dr = ObjDbCommand.ExecuteReader();
-                while (dr.Read())
-                {
-                    ListStatus.Add(dr.GetValue(0).ToString());
-                }
-                dr.Close();
-                return ListStatus;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.GetAllStatus()", ex);
-                throw ex;
-            }
-        }
-
-        public List<string> GetAllStores()
-        {
-            try
-            {
-                List<string> ListStores = new List<string>();
-
-
-                String CreateTableQuery = "SELECT STORENAME FROM STOREMASTER";
-                CreateTableQuery += ";";
-
-                ObjDbCommand.CommandText = CreateTableQuery;
-                MySqlDataReader dr = ObjDbCommand.ExecuteReader();
-                while (dr.Read())
-                {
-                    ListStores.Add(dr.GetValue(0).ToString());
-                }
-                dr.Close();
-                return ListStores;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.GetAllStores()", ex);
-                throw ex;
-            }
-        }
-  
-
-
-        public Int32 UpdateAnyTableDetails(string TableName, List<string> ListColumnNames, List<string> ListColumnValues , string WhereCondition)
+        public Int32 DeleteRow(string TableName, string ColumnName, string ColumnValue)
         {
             try
             {
                 if (CheckTableExists(TableName))
                 {
-                    String CreateTableQuery = "SET SQL_SAFE_UPDATES=0;" + "UPDATE " + TableName + " SET ";
-                    for (int i = 0; i < ListColumnNames.Count; i++)
-                    {
-                        CreateTableQuery += ListColumnNames[i] + " = '" + ListColumnValues[i] + "', ";
-                    }
-                        CreateTableQuery = CreateTableQuery.Remove(CreateTableQuery.Length - 1, 1);
-                        CreateTableQuery += " WHERE "+WhereCondition + ";";
-                        ObjDbCommand.CommandText = CreateTableQuery;
+                    String DeleteQuery = "DELETE FROM " + TableName + " WHERE " + ColumnName + " = '" + ColumnValue + "'";
+                    DeleteQuery += ";";
 
-                       return ObjDbCommand.ExecuteNonQuery();                   
-                }
-                return -1;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.UpdateAnyTableDetails()", ex);
-                throw ex;
-            }
-        }
-        public Int32 DeleteRow(string TableName,string ColumnName,string ColumnValue)
-        {
-            try
-            {
-                if (CheckTableExists(TableName))
-                {
-                    String CreateTableQuery = "DELETE FROM " + TableName + " WHERE " + ColumnName + " = '" + ColumnValue + "'";
-                    CreateTableQuery += ";";
-
-                    ObjDbCommand.CommandText = CreateTableQuery;
+                    ObjDbCommand.CommandText = DeleteQuery;
                     return ObjDbCommand.ExecuteNonQuery();
                 }
 
@@ -330,110 +154,6 @@ namespace SalesOrdersReport
             }
         }
 
-        public Int32 CreateNewRole(string NewRoleName,string Privileges)
-        {
-            try
-            {
-
-
-                // String CreateRoleQuery = "INSERT INTO ROLE (ROLENAME,PRIVILEGE) VALUES ('" + NewRoleName + "','" + Privileges + "')";
-                String CreateRoleQuery = "INSERT INTO ROLE (ROLENAME, PRIVILEGE) SELECT * FROM (SELECT ' " + NewRoleName + "','" + Privileges + "') AS tmp WHERE NOT EXISTS("
-                                          + " SELECT ROLENAME FROM ROLE WHERE ROLENAME = '" + NewRoleName + "') LIMIT 1"; 
-                CreateRoleQuery += ";";
-                ObjDbCommand.CommandText = CreateRoleQuery;
-                return ObjDbCommand.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.CreateNewRole()", ex);
-                throw ex;
-            }
-        }
-
-        public Int32 CreateNewUser(string UserName, string Password,string PhoneNo,string Address,string RoleName)
-        {
-            try
-            {
-
-                String CreateTableQuery = "SELECT ROLEID FROM ROLE WHERE ROLENAME = '" + RoleName + "'";
-                CreateTableQuery += ";";
-                ObjDbCommand.CommandText = CreateTableQuery;
-                string tmpRoleID = ObjDbCommand.ExecuteScalar().ToString();
-
-                CreateTableQuery = "SELECT USERNAME FROM USERS WHERE USERNAME = '" + CreateTableQuery + "';";
-                ObjDbCommand.CommandText = CreateTableQuery;
-               string tmpUserName = ObjDbCommand.ExecuteScalar().ToString();
-                if (tmpUserName != string.Empty)
-                {
-                    var Result = MessageBox.Show("User Name already exists.Do you want to add any way? ", "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    // If the no button was pressed ...
-                    if (Result == DialogResult.No) return 2;
-              }
-                CreateTableQuery = "INSERT INTO USERS (USERNAME,PASSWORD,PHONENO,ADDRESS,ROLEID) VALUES (@username, @password, @phoneno,@address,@roleid)";
-                CreateTableQuery += ";";
-                ObjDbCommand.CommandText = CreateTableQuery;
-                ObjDbCommand.Parameters.Add("@username", MySqlDbType.VarChar).Value = UserName;
-                ObjDbCommand.Parameters.Add("@password", MySqlDbType.VarChar).Value = Password;
-                if (PhoneNo != "") ObjDbCommand.Parameters.Add("@phoneno", MySqlDbType.Int64).Value = int.Parse(PhoneNo);
-                ObjDbCommand.Parameters.Add("@address", MySqlDbType.VarChar).Value = Address;
-                ObjDbCommand.Parameters.Add("@roleid", MySqlDbType.Int16).Value = int.Parse(tmpRoleID);
-                return ObjDbCommand.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.CreateNewUser()", ex);
-                throw ex;
-            }
-        }
-
-        public Int32 CreateTable(String TableName, List<String> Columns,
-        Boolean InMemory = false, Boolean DropIfExists = false, Boolean TruncateIfExists = false)
-        {
-            try
-            {
-                if (CheckTableExists(TableName))
-                {
-                    if (!DropIfExists && !TruncateIfExists) return 1;
-                    if (DropIfExists && TruncateIfExists) TruncateIfExists = false;
-                    if (DropIfExists) DropTable(TableName);
-                    if (TruncateIfExists) DeleteTableContent(TableName);
-                }
-
-                String CreateTableQuery = " CREATE TABLE ";
-                CreateTableQuery += "`" + ObjDbConnection.Database + "`" + "." + "`" + TableName + "`";
-                CreateTableQuery += "  (";
-
-                for (int i = 0; i < Columns.Count; ++i)
-                {
-                    String[] Tokens = Columns[i].Split(',');
-                    if (Columns[i].ToUpper().Contains("Primary".ToUpper()))
-                    {
-                        CreateTableQuery += " " + Tokens[0];
-                        CreateTableQuery += "(`" + Tokens[1] + "`)";
-                    }
-                    else
-                    {
-                        CreateTableQuery += "`" + Tokens[0] + "`";
-                        CreateTableQuery += " " + String.Join(",", Tokens, 1, Tokens.Length - 1);
-
-                        if (i < (Columns.Count - 1))
-                            CreateTableQuery += ",";
-                    }
-                }
-                CreateTableQuery += ")";
-
-                if (InMemory == true) CreateTableQuery += " ENGINE = MEMORY ";
-                CreateTableQuery += ";";
-
-                ObjDbCommand.CommandText = CreateTableQuery;
-                return ObjDbCommand.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.CreateTable()", ex);
-                throw ex;
-            }
-        }
 
         public Int32 DropTable(String TableName, Boolean IsTemporary = false)
         {
@@ -499,8 +219,35 @@ namespace SalesOrdersReport
                 throw ex;
             }
         }
+        public object ExecuteScalar(String Query)
+        {
+            try
+            {
+                ObjDbCommand.CommandText = Query;
+                return ObjDbCommand.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.ExecuteScalar()", ex);
+                throw ex;
+            }
+        }
 
-        public DbDataReader ExecuteReader(String Query)
+        //public DbDataReader ExecuteReader(String Query)
+        //{
+        //    try
+        //    {
+        //        ObjDbCommand.CommandText = Query;
+        //        return ObjDbCommand.ExecuteReader();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CommonFunctions.ShowErrorDialog("MySQLHelper.ExecuteReader()", ex);
+        //        throw ex;
+        //    }
+        //}
+
+        public MySqlDataReader ExecuteReader(String Query)
         {
             try
             {
@@ -523,7 +270,7 @@ namespace SalesOrdersReport
                                 + "' AND index_name = '" + IndexName + "'";
 
                 Boolean IndexExists = false;
-                DbDataReader dataReader = ExecuteReader(Query);
+                MySqlDataReader dataReader = ExecuteReader(Query);
                 if (dataReader.Read())
                 {
                     if (Int32.Parse(dataReader[0].ToString()) > 0) IndexExists = true;
@@ -626,10 +373,84 @@ namespace SalesOrdersReport
         //    }
         //}
 
+
+        public Int32 AlterTblAddColumn(String TableName, string ColumnName, string ColumnDataType)
+        {
+            try
+            {
+                if (CheckTableExists(TableName))
+                {
+                    String AlterTableQuery = " ALTER TABLE ";
+                    AlterTableQuery += "`" + TableName + "`";
+                    AlterTableQuery += " ADD COLUMN " + ColumnName + " " + ColumnDataType + ";";
+                    ObjDbCommand.CommandText = AlterTableQuery;
+                    return ObjDbCommand.ExecuteNonQuery();
+                }
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.AlterTblAddColumn()", ex);
+                throw ex;
+            }
+        }
+
+
+
+        public Int32 CreateTable(String TableName, List<String> Columns,
+     Boolean DropIfExists = false, Boolean TruncateIfExists = false)
+        {
+            try
+            {
+                if (CheckTableExists(TableName))
+                {
+                    if (!DropIfExists && !TruncateIfExists) return 1;
+                    if (DropIfExists && TruncateIfExists) TruncateIfExists = false;
+                    if (DropIfExists) DropTable(TableName);
+                    if (TruncateIfExists) DeleteTableContent(TableName);
+                }
+
+                String CreateTableQuery = " CREATE TABLE ";
+                CreateTableQuery += "`" + TableName + "`";
+                CreateTableQuery += "  (";
+
+                for (int i = 0; i < Columns.Count; ++i)
+                {
+                    String[] Tokens = Columns[i].Split(',');
+                    if (Columns[i].ToUpper().Contains("Primary".ToUpper()))
+                    {
+                        CreateTableQuery += " " + Tokens[0];
+                        CreateTableQuery += "(`" + Tokens[1] + "`)";
+                    }
+                    else
+                    {
+                        CreateTableQuery += "`" + Tokens[0] + "`";
+                        CreateTableQuery += " " + String.Join(",", Tokens, 1, Tokens.Length - 1);
+
+                        if (i < (Columns.Count - 1))
+                            CreateTableQuery += ",";
+                    }
+                }
+                CreateTableQuery += ") ENGINE = InnoDB DEFAULT CHARSET = utf8";
+
+                //if (InMemory == true) CreateTableQuery += " ENGINE = MEMORY ";
+                CreateTableQuery += ";";
+
+                ObjDbCommand.CommandText = CreateTableQuery;
+                return ObjDbCommand.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.CreateTable()", ex);
+                throw ex;
+            }
+        }
         public DataTable GetQueryResultInDataTable(String Query)
         {
             try
             {
+
                 ObjDbCommand.CommandText = Query;
                 DbDataAdapter dbAdapter = new MySqlDataAdapter((MySqlCommand)ObjDbCommand);
                 DataTable dtResult = new DataTable();
@@ -654,7 +475,6 @@ namespace SalesOrdersReport
         //        throw;
         //    }
         //}
-
 
     }
 }

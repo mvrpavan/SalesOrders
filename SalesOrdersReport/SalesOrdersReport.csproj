@@ -77,11 +77,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonModules\CryptoGraphy.cs" />
+    <Compile Include="Models\UserDetails.cs" />
+    <Compile Include="Models\UserMasterModel.cs" />
     <Compile Include="Views\About.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreateStoreForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CreateStoreForm.designer.cs">
+      <DependentUpon>CreateStoreForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DefineRoleForm.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\CreateRoleForm.cs">
       <SubType>Form</SubType>
@@ -101,6 +113,9 @@
     <Compile Include="Views\CustomerInvoiceSellerOrderForm.Designer.cs">
       <DependentUpon>CustomerInvoiceSellerOrderForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\DefineRoleForm.Designer.cs">
+      <DependentUpon>DefineRoleForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\DiscountForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,13 +131,19 @@
     <Compile Include="Views\EditProfileForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\EditProfileForm.Designer.cs">
+    <Compile Include="Views\EditProfileForm.designer.cs">
       <DependentUpon>EditProfileForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditStoreForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\EditStoreForm.designer.cs">
+      <DependentUpon>EditStoreForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\EditUserForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\EditUserForm.Designer.cs">
+    <Compile Include="Views\EditUserForm.designer.cs">
       <DependentUpon>EditUserForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\GetDBConnectionConfigForm.cs">
@@ -139,6 +160,12 @@
     </Compile>
     <Compile Include="Views\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ManageUsersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ManageUsersForm.Designer.cs">
+      <DependentUpon>ManageUsersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\MergeSalesOrdersForm.cs">
       <SubType>Form</SubType>
@@ -247,6 +274,12 @@
     <EmbeddedResource Include="Views\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\CreateStoreForm.resx">
+      <DependentUpon>CreateStoreForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\DefineRoleForm.resx">
+      <DependentUpon>DefineRoleForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\CreateRoleForm.resx">
       <DependentUpon>CreateRoleForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -265,6 +298,9 @@
     <EmbeddedResource Include="Views\EditProfileForm.resx">
       <DependentUpon>EditProfileForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\EditStoreForm.resx">
+      <DependentUpon>EditStoreForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\EditUserForm.resx">
       <DependentUpon>EditUserForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -273,6 +309,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ManageUsersForm.resx">
+      <DependentUpon>ManageUsersForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MergeSalesOrdersForm.resx">
       <DependentUpon>MergeSalesOrdersForm.cs</DependentUpon>
@@ -399,9 +438,36 @@
     <None Include="Resources\add_user %281%29.ico" />
     <None Include="Resources\edit_user.ico" />
     <None Include="Resources\gtk_refresh.ico" />
+    <None Include="Resources\delete_user.ico" />
+    <None Include="Resources\delete-icon 32.png" />
+    <None Include="Resources\edit-icon 32.png" />
+    <None Include="Resources\math-add-icon 32.png" />
+    <None Include="Resources\Refresh-icon 32.png" />
+    <None Include="Resources\arrow.png" />
+    <None Include="Resources\arrow32.png" />
+    <None Include="Resources\editrole2345.png" />
+    <None Include="Resources\editrole23_32.png" />
+    <None Include="Resources\editrole2345_32.png" />
+    <None Include="Resources\addbutton.jfif" />
+    <None Include="Resources\addbtn32.jfif" />
+    <None Include="Resources\addbtn1_32.jfif" />
+    <None Include="Resources\editstore_32.jpg" />
+    <None Include="Resources\editstore5_32.jpg" />
+    <None Include="Resources\butn.jfif" />
+    <None Include="Resources\btn32.jfif" />
+    <None Include="Resources\arrow2_32.jfif" />
+    <None Include="Resources\arro1.png" />
+    <None Include="Resources\arrow32_.png" />
     <Content Include="Resources\reset.png" />
     <None Include="Resources\reset1.png" />
     <None Include="Resources\reset_small.png" />
+    <None Include="Resources\role32new.png" />
+    <None Include="Resources\role332.jpg" />
+    <None Include="Resources\rolenew32.png" />
+    <None Include="Resources\rolenew1232.png" />
+    <None Include="Resources\store_32.jpg" />
+    <None Include="Resources\store1_32.png" />
+    <None Include="Resources\store3_32.png" />
     <Content Include="Settings.xml">
       <SubType>Designer</SubType>
     </Content>
