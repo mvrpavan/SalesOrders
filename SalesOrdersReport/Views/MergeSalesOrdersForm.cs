@@ -34,7 +34,7 @@ namespace SalesOrdersReport
 
                 //Populate Item Names
                 ListAllProducts = CommonFunctions.ObjProductMaster.GetProductListForCategory("<ALL>");
-                ListAllProducts = ListAllProducts.OrderBy(p => p.ItemID).ToList();
+                ListAllProducts = ListAllProducts.OrderBy(p => p.ProductID).ToList();
 
                 ObjOpenFileDialog.Filter = "Excel File|*.xls;*.xlsx";
                 ObjOpenFileDialog.CheckFileExists = true;

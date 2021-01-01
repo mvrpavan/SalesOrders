@@ -498,7 +498,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                ProductMaster ObjProductMaster = CommonFunctions.ObjProductMaster;
+                ProductMasterModel ObjProductMaster = CommonFunctions.ObjProductMaster;
                 lblStatus.Text = "Loading Product Inventory file";
                 DataTable dtProductInventory = CommonFunctions.ReturnDataTableFromExcelWorksheet("Inventory", ProductInventoryFilePath, "*");
                 DataRow[] drProductsInventory = dtProductInventory.DefaultView.ToTable().Select("", "[StockName] asc");

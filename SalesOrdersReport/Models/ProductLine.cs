@@ -12,11 +12,26 @@ namespace SalesOrdersReport
         public String Name;
         public Settings ObjSettings;
         public XmlNode ProductLineNode;
-        public ProductMaster ObjProductMaster;
+        public ProductMasterModel ObjProductMaster;
         public SellerMaster ObjSellerMaster;
         public VendorMaster ObjVendorMaster;
+        MySQLHelper ObjMySQLHelper;
 
-        public Boolean LoadDetailsFromNode(XmlNode ProductLineNode)
+        public ProductLine()
+        {
+            try
+            {
+                ObjProductMaster = new ProductMasterModel();
+                ObjProductMaster.Initialize();
+                ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductLine.ctor()", ex);
+            }
+        }
+
+        public Boolean LoadConfigDetailsFromNode(XmlNode ProductLineNode)
         {
             try
             {
@@ -44,69 +59,39 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("ProductLine.LoadDetailsFromNode()", ex);
+                CommonFunctions.ShowErrorDialog("ProductLine.LoadConfigDetailsFromNode()", ex);
                 return false;
             }
         }
 
-        public void LoadProductMaster(DataTable dtProductMaster, DataTable dtPriceGroupMaster, DataTable dtHSNMaster)
+        public void LoadAllProductMasterTables()
         {
             try
             {
-                ObjProductMaster = new ProductMaster();
-                ObjProductMaster.Initialize();
+                String Query = "Select * from PriceGroupMaster Order by PriceGroupName;";
+                DataTable dtPriceGroupMaster = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                ObjProductMaster.LoadPriceGroupMaster(dtPriceGroupMaster);
 
-                for (int i = 0; i < dtPriceGroupMaster.Rows.Count; i++)
-                {
-                    DataRow dtRow = dtPriceGroupMaster.Rows[i];
-                    //PriceGroup	Discount	DiscountType	Description	Default
+                Query = "Select * from TaxMaster Order by HSNCode;";
+                DataTable dtTaxMaster = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                ObjProductMaster.LoadTaxMaster(dtTaxMaster);
 
-                    PriceGroupDetails ObjPriceGroupDetails = new PriceGroupDetails();
-                    ObjPriceGroupDetails.Name = dtRow["PriceGroup"].ToString().Trim();
-                    ObjPriceGroupDetails.Discount = Double.Parse(dtRow["Discount"].ToString().Trim());
-                    ObjPriceGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(dtRow["DiscountType"].ToString().Trim());
-                    ObjPriceGroupDetails.IsDefault = (Int32.Parse(dtRow["Default"].ToString().Trim()) == 1);
-                    ObjPriceGroupDetails.Description = dtRow["Description"].ToString();
+                Query = "Select * from ProductCategoryMaster Order by CategoryID;";
+                DataTable dtCategoryMaster = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                ObjProductMaster.LoadProductCategoryMaster(dtCategoryMaster);
 
-                    ObjProductMaster.AddPriceGroupToCache(ObjPriceGroupDetails);
-                }
+                Query = "Select * from ProductInventory Order by StockName;";
+                DataTable dtProductInventory = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                ObjProductMaster.LoadProductInventory(dtProductInventory);
 
-                LoadHSNMasterData(dtHSNMaster);
-
-                for (int i = 0; i < dtProductMaster.Rows.Count; i++)
-                {
-                    DataRow dtRow = dtProductMaster.Rows[i];
-                    //SlNo	ItemName	VendorName	PurchasePrice	SellingPrice	Wholesale	Retail  StockName   HSNCode UnitsOfMeasurement
-                    ProductDetails ObjProductDetails = new ProductDetails();
-                    ObjProductDetails.ItemID = Int32.Parse(dtRow["SlNo"].ToString());
-                    ObjProductDetails.ItemName = dtRow["ItemName"].ToString();
-                    ObjProductDetails.CategoryName = dtRow["Category"].ToString();
-                    ObjProductDetails.StockName = dtRow["StockName"].ToString();
-                    ObjProductDetails.VendorName = dtRow["VendorName"].ToString();
-                    ObjProductDetails.Units = Double.Parse(dtRow["Units"].ToString());
-                    ObjProductDetails.PurchasePrice = Double.Parse(dtRow["PurchasePrice"].ToString());
-                    ObjProductDetails.SellingPrice = Double.Parse(dtRow["SellingPrice"].ToString());
-                    ObjProductDetails.HSNCode = dtRow["HSNCode"].ToString();
-                    ObjProductDetails.UnitsOfMeasurement = dtRow["UnitOfMeasurement"].ToString();
-                    ObjProductDetails.ListPrices = new Double[ObjProductMaster.ListPriceGroups.Count];
-                    for (int j = 0; j < ObjProductDetails.ListPrices.Length; j++)
-                    {
-                        ObjProductDetails.ListPrices[j] = Double.NaN;
-                        if (!dtRow.Table.Columns.Contains(ObjProductMaster.ListPriceGroups[j].Name)) continue;
-                        if (dtRow[ObjProductMaster.ListPriceGroups[j].Name] == DBNull.Value) continue;
-                        if (String.IsNullOrEmpty(dtRow[ObjProductMaster.ListPriceGroups[j].Name].ToString().Trim())) continue;
-                        ObjProductDetails.ListPrices[j] = Double.Parse(dtRow[ObjProductMaster.ListPriceGroups[j].Name].ToString().Trim());
-                    }
-
-                    ObjProductMaster.AddProductToCache(ObjProductDetails);
-                }
-
-                ObjProductMaster.UpdateStockProductIndexes();
-                ObjProductMaster.UpdateHSNProductIndexes();
+                Query = "Select * from ProductMaster Order by ProductName;";
+                DataTable dtProductMaster = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                ObjProductMaster.LoadProductMaster(dtProductMaster);
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("ProductLine.LoadProductMaster()", ex);
+                throw ex;
             }
         }
 
@@ -259,59 +244,6 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("ProductLine.LoadVendorMaster()", ex);
-            }
-        }
-
-        void LoadHSNMasterData(DataTable dtHSNMaster)
-        {
-            try
-            {
-                List<TaxGroupDetails> ListTaxGroupDetails = ObjProductMaster.ListTaxGroupDetails;
-                ListTaxGroupDetails.Clear();
-
-                String[] ArrTaxName = new String[] { "CGST", "SGST", "IGST" };
-                String[] ArrTaxDesc = new String[] { "Central Goods and Service Tax", "State Goods and Service Tax", "Inter Goods and Service Tax" };
-                for (int i = 0; i < ArrTaxName.Length; i++)
-                {
-                    TaxGroupDetails ObjTaxGroupDetails = new TaxGroupDetails();
-                    ObjTaxGroupDetails.Name = ArrTaxName[i]; ObjTaxGroupDetails.Description = ArrTaxDesc[i];
-                    ObjTaxGroupDetails.TaxRate = 0;
-                    ListTaxGroupDetails.Add(ObjTaxGroupDetails);
-                }
-
-                Int32[] TaxColIndexes = new Int32[ListTaxGroupDetails.Count];
-                for (int i = 0; i < TaxColIndexes.Length; i++)
-                {
-                    for (int j = 0; j < dtHSNMaster.Columns.Count; j++)
-                    {
-                        if (dtHSNMaster.Columns[j].ColumnName.Equals(ListTaxGroupDetails[i].Name, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            TaxColIndexes[i] = j;
-                            break;
-                        }
-                    }
-                }
-
-                for (int i = 0; i < dtHSNMaster.Rows.Count; i++)
-                {
-                    DataRow dr = dtHSNMaster.Rows[i];
-
-                    if (dr["HSNCode"] == DBNull.Value || String.IsNullOrEmpty(dr["HSNCode"].ToString())) continue;
-
-                    HSNCodeDetails ObjHSNCodeDetails = new HSNCodeDetails();
-                    ObjHSNCodeDetails.HSNCode = dr["HSNCode"].ToString();
-                    ObjHSNCodeDetails.ListTaxRates = new Double[TaxColIndexes.Length];
-                    for (int j = 0; j < TaxColIndexes.Length; j++)
-                    {
-                        ObjHSNCodeDetails.ListTaxRates[j] = Double.Parse(dr[ListTaxGroupDetails[j].Name].ToString());
-                    }
-
-                    ObjProductMaster.AddHSNCode(ObjHSNCodeDetails);
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("ProductLine.LoadHSNMasterData()", ex);
             }
         }
     }

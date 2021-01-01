@@ -17,8 +17,9 @@ namespace SalesOrdersReport
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new MainForm());
 
-            Application.Run(new LoginForm());
+            //Application.Run(new LoginForm());
             //Application.Run(new GetDBConnectionConfigForm());
+            Application.Run(new Views.WelcomeSplashForm());
         }
     }
 }

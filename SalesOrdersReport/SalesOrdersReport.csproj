@@ -77,11 +77,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ProductMasterModel.cs" />
     <Compile Include="Views\About.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddProductCategoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\AddProductCategoryForm.Designer.cs">
+      <DependentUpon>AddProductCategoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddTaxForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\AddTaxForm.Designer.cs">
+      <DependentUpon>AddTaxForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\CreateRoleForm.cs">
       <SubType>Form</SubType>
@@ -100,6 +113,12 @@
     </Compile>
     <Compile Include="Views\CustomerInvoiceSellerOrderForm.Designer.cs">
       <DependentUpon>CustomerInvoiceSellerOrderForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CustomersMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CustomersMainForm.Designer.cs">
+      <DependentUpon>CustomersMainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\DiscountForm.cs">
       <SubType>Form</SubType>
@@ -134,6 +153,12 @@
     <Compile Include="Models\Invoice.cs" />
     <Compile Include="Models\InvoiceGST.cs" />
     <Compile Include="Models\InvoiceVAT.cs" />
+    <Compile Include="Views\ImportFromExcelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ImportFromExcelForm.Designer.cs">
+      <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +172,12 @@
       <DependentUpon>MergeSalesOrdersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CommonModules\MySQLHelper.cs" />
+    <Compile Include="Views\AddProductForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\AddProductForm.Designer.cs">
+      <DependentUpon>AddProductForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProductsMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -244,8 +275,20 @@
       <DependentUpon>VendorPurchaseOrderForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CommonModules\XMLFileUtils.cs" />
+    <Compile Include="Views\WelcomeSplashForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\WelcomeSplashForm.Designer.cs">
+      <DependentUpon>WelcomeSplashForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Views\About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\AddProductCategoryForm.resx">
+      <DependentUpon>AddProductCategoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\AddTaxForm.resx">
+      <DependentUpon>AddTaxForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\CreateRoleForm.resx">
       <DependentUpon>CreateRoleForm.cs</DependentUpon>
@@ -255,6 +298,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\CustomerInvoiceSellerOrderForm.resx">
       <DependentUpon>CustomerInvoiceSellerOrderForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CustomersMainForm.resx">
+      <DependentUpon>CustomersMainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\DiscountForm.resx">
       <DependentUpon>DiscountForm.cs</DependentUpon>
@@ -271,11 +317,17 @@
     <EmbeddedResource Include="Views\GetDBConnectionConfigForm.resx">
       <DependentUpon>GetDBConnectionConfigForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\ImportFromExcelForm.resx">
+      <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MergeSalesOrdersForm.resx">
       <DependentUpon>MergeSalesOrdersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\AddProductForm.resx">
+      <DependentUpon>AddProductForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ProductsMainForm.resx">
       <DependentUpon>ProductsMainForm.cs</DependentUpon>
@@ -328,6 +380,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\VendorPurchaseOrderForm.resx">
       <DependentUpon>VendorPurchaseOrderForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\WelcomeSplashForm.resx">
+      <DependentUpon>WelcomeSplashForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="App.config">
       <SubType>Designer</SubType>
@@ -399,9 +454,26 @@
     <None Include="Resources\add_user %281%29.ico" />
     <None Include="Resources\edit_user.ico" />
     <None Include="Resources\gtk_refresh.ico" />
+    <None Include="Resources\edit-icon.png" />
+    <None Include="Resources\delete-icon.png" />
+    <None Include="Resources\math-add-icon 32.png" />
+    <None Include="Resources\edit-icon 32.png" />
+    <None Include="Resources\Refresh-icon 32.png" />
+    <None Include="Resources\delete-icon 32.png" />
+    <None Include="Resources\Refresh-icon 321.png" />
+    <None Include="Resources\export-icon.png" />
+    <None Include="Resources\import-icon.png" />
+    <None Include="Resources\delete-icon_16.png" />
+    <None Include="Resources\delete-icon_24.png" />
+    <None Include="Resources\edit-icon_24.png" />
+    <None Include="Resources\math-add-icon_24.png" />
+    <None Include="Resources\3c-gradient-background.png" />
     <Content Include="Resources\reset.png" />
     <None Include="Resources\reset1.png" />
     <None Include="Resources\reset_small.png" />
+    <None Include="Resources\Search-icon.png" />
+    <None Include="Resources\Trash-icon.png" />
+    <None Include="Resources\Subtle-Lines-Abstract-Gradient-Background-Blue.jpg" />
     <Content Include="Settings.xml">
       <SubType>Designer</SubType>
     </Content>

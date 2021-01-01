@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using System.Data.OleDb;
@@ -152,12 +151,12 @@ namespace SalesOrdersReport
         public static ApplicationSettings ObjApplicationSettings;
         public static GeneralSettings ObjGeneralSettings;
         public static ReportSettings ObjInvoiceSettings, ObjQuotationSettings, ObjPurchaseOrderSettings;
-        public static ProductMaster ObjProductMaster;
+        public static ProductMasterModel ObjProductMaster;
         public static SellerMaster ObjSellerMaster;
         public static VendorMaster ObjVendorMaster;
         static Boolean SettingsFileUpdated = false;
 
-        public static void LoadSettingsFile()
+        static void LoadSettingsFile()
         {
             try
             {
@@ -183,7 +182,7 @@ namespace SalesOrdersReport
                 {
                     if (item.NodeType == XmlNodeType.CDATA || item.NodeType == XmlNodeType.Comment) continue;
                     ProductLine ObjProductLine = new ProductLine();
-                    if (ObjProductLine.LoadDetailsFromNode(item))
+                    if (ObjProductLine.LoadConfigDetailsFromNode(item))
                     {
                         ListProductLines.Add(ObjProductLine);
                     }
@@ -256,7 +255,7 @@ namespace SalesOrdersReport
                 XmlNode ProductLineNode = ListProductLines[UseSettingsOfProductLineIndex].ProductLineNode.CloneNode(true);
                 ProductLine ObjProductLine = new ProductLine();
                 XMLFileUtils.SetAttributeValue(ProductLineNode, "Name", Name);
-                ObjProductLine.LoadDetailsFromNode(ProductLineNode);
+                ObjProductLine.LoadConfigDetailsFromNode(ProductLineNode);
                 ListProductLines.Add(ObjProductLine);
                 ProductLinesNode.AppendChild(ProductLineNode);
             }
@@ -508,6 +507,68 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 ShowErrorDialog("CommonFunctions.GetInvoiceTemplate()", ex);
+                throw;
+            }
+        }
+
+        public static Boolean CreateDBConnection()
+        {
+            try
+            {
+                MySQLHelper tmpIntegDBHelper = MySQLHelper.GetMySqlHelperObj();
+
+                if (ObjApplicationSettings.Server == null || ObjApplicationSettings.Server == string.Empty)
+                {
+                    MessageBox.Show("Database settings are not found in Settings.xml. Please check!!!", "Invalid Database Settings", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                else
+                {
+                    tmpIntegDBHelper.OpenConnection(ObjApplicationSettings.Server, ObjApplicationSettings.DatabaseName, ObjApplicationSettings.UserName, ObjApplicationSettings.Password);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CommonFunctions.CreateDBConnection()", ex);
+                throw ex;
+            }
+        }
+
+        public static void ShowDialog(Form ObjForm, Form Owner)
+        {
+            try
+            {
+                ObjForm.ShowInTaskbar = false;
+                ObjForm.ShowIcon = false;
+                ObjForm.StartPosition = FormStartPosition.CenterParent;
+                ObjForm.MaximizeBox = false;
+                ObjForm.MinimizeBox = false;
+                ObjForm.ControlBox = false;
+                ObjForm.ShowDialog(Owner);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CommonFunctions.ShowDialog()", ex);
+            }
+        }
+
+        public static List<String> GetUOMList()
+        {
+            try
+            {
+                List<String> ListUOM = new List<String>();
+                ListUOM.Add("PIECES");
+                ListUOM.Add("KG");
+                ListUOM.Add("GM");
+                ListUOM.Add("LITRE");
+                ListUOM.Add("ML");
+
+                return ListUOM;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CommonFunctions.GetUOMList()", ex);
                 throw;
             }
         }

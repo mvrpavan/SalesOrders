@@ -47,7 +47,8 @@ namespace SalesOrdersReport
 
                 btnOK.Enabled = false;
 #if DEBUG
-                LoadDetailsFromOrderMaster();
+                bgWorkerOrderMaster_DoWork(null, null);
+                bgWorkerOrderMaster_RunWorkerCompleted(null, null);
 #else
                 ReportProgress = bgWorkerOrderMaster.ReportProgress;
                 bgWorkerOrderMaster.RunWorkerAsync();
@@ -117,12 +118,12 @@ namespace SalesOrdersReport
             {
                 ProductLine CurrProductLine = CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex];
 
-                DataTable dtProductMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("ItemMaster", CommonFunctions.MasterFilePath, "*");
-                DataTable dtPriceGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("PriceGroupMaster", CommonFunctions.MasterFilePath, "*");
-                DataTable dtHSNMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("HSNMaster", CommonFunctions.MasterFilePath, "*");
-                CurrProductLine.LoadProductMaster(dtProductMaster, dtPriceGroupMaster, dtHSNMaster);
-                lblStatus.Text = "Completed loading Product details";
-                ReportProgressFunc(25);
+                //DataTable dtProductMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("ItemMaster", CommonFunctions.MasterFilePath, "*");
+                //DataTable dtPriceGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("PriceGroupMaster", CommonFunctions.MasterFilePath, "*");
+                //DataTable dtHSNMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("HSNMaster", CommonFunctions.MasterFilePath, "*");
+                //CurrProductLine.LoadProductMaster(dtProductMaster, dtPriceGroupMaster, dtHSNMaster);
+                //lblStatus.Text = "Completed loading Product details";
+                //ReportProgressFunc(25);
 
                 DataTable dtDiscountGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("DiscountGroupMaster", CommonFunctions.MasterFilePath, "*");
                 DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", CommonFunctions.MasterFilePath, "*");

@@ -41,20 +41,17 @@ namespace SalesOrdersReport
             this.createOrderSheetToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.createInvoiceFromSalesOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createSellerOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addModifySellerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.discountGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeSalesOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateSalesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.customerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.invoicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createInvoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.customersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.productMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.vendorMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.createOrderSheetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addModifyVendorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updatePurchasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.productMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.addModifyItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.priceGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reportsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.sellerHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vendorHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,7 +66,6 @@ namespace SalesOrdersReport
             this.editUserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createRoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripComboBoxProductLine = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.helpMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -93,18 +89,18 @@ namespace SalesOrdersReport
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenu,
             this.sellerMenu,
-            this.customerToolStripMenuItem,
-            this.vendorMenu,
+            this.invoicesToolStripMenuItem,
+            this.customersToolStripMenuItem,
             this.productMenu,
+            this.vendorMenu,
             this.reportsMenu,
             this.administrationToolStripMenuItem,
             this.userToolStripMenuItem,
             this.toolStripComboBoxProductLine,
-            this.toolStripTextBox1,
             this.helpMenu});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(844, 27);
+            this.menuStrip.Size = new System.Drawing.Size(844, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "MenuStrip";
             // 
@@ -116,7 +112,7 @@ namespace SalesOrdersReport
             this.exitToolStripMenuItem});
             this.fileMenu.ImageTransparentColor = System.Drawing.SystemColors.ActiveBorder;
             this.fileMenu.Name = "fileMenu";
-            this.fileMenu.Size = new System.Drawing.Size(37, 23);
+            this.fileMenu.Size = new System.Drawing.Size(37, 20);
             this.fileMenu.Text = "&File";
             // 
             // chooseMasterFileToolStripMenuItem
@@ -151,70 +147,54 @@ namespace SalesOrdersReport
             this.createOrderSheetToolStripMenuItem1,
             this.createInvoiceFromSalesOrderToolStripMenuItem,
             this.createSellerOrderToolStripMenuItem,
-            this.addModifySellerToolStripMenuItem,
-            this.discountGroupToolStripMenuItem,
             this.mergeSalesOrderToolStripMenuItem,
             this.updateSalesToolStripMenuItem});
             this.sellerMenu.Name = "sellerMenu";
-            this.sellerMenu.Size = new System.Drawing.Size(47, 23);
-            this.sellerMenu.Text = "&Seller";
+            this.sellerMenu.Size = new System.Drawing.Size(54, 20);
+            this.sellerMenu.Text = "&Orders";
             // 
             // createOrderSheetToolStripMenuItem1
             // 
             this.createOrderSheetToolStripMenuItem1.Name = "createOrderSheetToolStripMenuItem1";
-            this.createOrderSheetToolStripMenuItem1.Size = new System.Drawing.Size(208, 22);
+            this.createOrderSheetToolStripMenuItem1.Size = new System.Drawing.Size(202, 22);
             this.createOrderSheetToolStripMenuItem1.Text = "Create Sales &Order Sheet";
             this.createOrderSheetToolStripMenuItem1.Click += new System.EventHandler(this.createSalesOrderSheetToolStripMenuItem_Click);
             // 
             // createInvoiceFromSalesOrderToolStripMenuItem
             // 
             this.createInvoiceFromSalesOrderToolStripMenuItem.Name = "createInvoiceFromSalesOrderToolStripMenuItem";
-            this.createInvoiceFromSalesOrderToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.createInvoiceFromSalesOrderToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.createInvoiceFromSalesOrderToolStripMenuItem.Text = "Create Seller &Invoices";
             this.createInvoiceFromSalesOrderToolStripMenuItem.Click += new System.EventHandler(this.createInvoiceFromSalesOrderToolStripMenuItem_Click);
             // 
             // createSellerOrderToolStripMenuItem
             // 
             this.createSellerOrderToolStripMenuItem.Name = "createSellerOrderToolStripMenuItem";
-            this.createSellerOrderToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.createSellerOrderToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.createSellerOrderToolStripMenuItem.Text = "Create &Seller Order";
             this.createSellerOrderToolStripMenuItem.Click += new System.EventHandler(this.createSellerOrderToolStripMenuItem_Click);
-            // 
-            // addModifySellerToolStripMenuItem
-            // 
-            this.addModifySellerToolStripMenuItem.Name = "addModifySellerToolStripMenuItem";
-            this.addModifySellerToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
-            this.addModifySellerToolStripMenuItem.Text = "&Manage Sellers";
-            this.addModifySellerToolStripMenuItem.Click += new System.EventHandler(this.addModifySellerToolStripMenuItem_Click);
-            // 
-            // discountGroupToolStripMenuItem
-            // 
-            this.discountGroupToolStripMenuItem.Name = "discountGroupToolStripMenuItem";
-            this.discountGroupToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
-            this.discountGroupToolStripMenuItem.Text = "Manage &Discount Groups";
-            this.discountGroupToolStripMenuItem.Click += new System.EventHandler(this.discountGroupToolStripMenuItem_Click);
             // 
             // mergeSalesOrderToolStripMenuItem
             // 
             this.mergeSalesOrderToolStripMenuItem.Name = "mergeSalesOrderToolStripMenuItem";
-            this.mergeSalesOrderToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.mergeSalesOrderToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.mergeSalesOrderToolStripMenuItem.Text = "M&erge Sales Order";
             this.mergeSalesOrderToolStripMenuItem.Click += new System.EventHandler(this.mergeSalesOrderToolStripMenuItem_Click);
             // 
             // updateSalesToolStripMenuItem
             // 
             this.updateSalesToolStripMenuItem.Name = "updateSalesToolStripMenuItem";
-            this.updateSalesToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.updateSalesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.updateSalesToolStripMenuItem.Text = "&Update Sales";
             this.updateSalesToolStripMenuItem.Click += new System.EventHandler(this.updateSalesToolStripMenuItem_Click);
             // 
-            // customerToolStripMenuItem
+            // invoicesToolStripMenuItem
             // 
-            this.customerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.invoicesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createInvoiceToolStripMenuItem});
-            this.customerToolStripMenuItem.Name = "customerToolStripMenuItem";
-            this.customerToolStripMenuItem.Size = new System.Drawing.Size(71, 23);
-            this.customerToolStripMenuItem.Text = "&Customer";
+            this.invoicesToolStripMenuItem.Name = "invoicesToolStripMenuItem";
+            this.invoicesToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
+            this.invoicesToolStripMenuItem.Text = "&Invoices";
             // 
             // createInvoiceToolStripMenuItem
             // 
@@ -222,6 +202,20 @@ namespace SalesOrdersReport
             this.createInvoiceToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.createInvoiceToolStripMenuItem.Text = "Create &Customer Bill";
             this.createInvoiceToolStripMenuItem.Click += new System.EventHandler(this.createInvoiceToolStripMenuItem_Click);
+            // 
+            // customersToolStripMenuItem
+            // 
+            this.customersToolStripMenuItem.Name = "customersToolStripMenuItem";
+            this.customersToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
+            this.customersToolStripMenuItem.Text = "&Customers";
+            this.customersToolStripMenuItem.Click += new System.EventHandler(this.customersToolStripMenuItem_Click);
+            // 
+            // productMenu
+            // 
+            this.productMenu.Name = "productMenu";
+            this.productMenu.Size = new System.Drawing.Size(66, 20);
+            this.productMenu.Text = "&Products";
+            this.productMenu.Click += new System.EventHandler(this.productMenu_Click);
             // 
             // vendorMenu
             // 
@@ -231,8 +225,8 @@ namespace SalesOrdersReport
             this.addModifyVendorToolStripMenuItem,
             this.updatePurchasesToolStripMenuItem});
             this.vendorMenu.Name = "vendorMenu";
-            this.vendorMenu.Size = new System.Drawing.Size(56, 23);
-            this.vendorMenu.Text = "&Vendor";
+            this.vendorMenu.Size = new System.Drawing.Size(61, 20);
+            this.vendorMenu.Text = "&Vendors";
             // 
             // createOrderSheetToolStripMenuItem
             // 
@@ -262,29 +256,6 @@ namespace SalesOrdersReport
             this.updatePurchasesToolStripMenuItem.Text = "&Update Purchases";
             this.updatePurchasesToolStripMenuItem.Click += new System.EventHandler(this.updatePurchasesToolStripMenuItem_Click);
             // 
-            // productMenu
-            // 
-            this.productMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addModifyItemToolStripMenuItem,
-            this.priceGroupsToolStripMenuItem});
-            this.productMenu.Name = "productMenu";
-            this.productMenu.Size = new System.Drawing.Size(61, 23);
-            this.productMenu.Text = "&Product";
-            // 
-            // addModifyItemToolStripMenuItem
-            // 
-            this.addModifyItemToolStripMenuItem.Name = "addModifyItemToolStripMenuItem";
-            this.addModifyItemToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.addModifyItemToolStripMenuItem.Text = "&Manage Products";
-            this.addModifyItemToolStripMenuItem.Click += new System.EventHandler(this.addModifyItemToolStripMenuItem_Click);
-            // 
-            // priceGroupsToolStripMenuItem
-            // 
-            this.priceGroupsToolStripMenuItem.Name = "priceGroupsToolStripMenuItem";
-            this.priceGroupsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.priceGroupsToolStripMenuItem.Text = "Manage &Price Groups";
-            this.priceGroupsToolStripMenuItem.Click += new System.EventHandler(this.priceGroupsToolStripMenuItem_Click);
-            // 
             // reportsMenu
             // 
             this.reportsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -292,7 +263,7 @@ namespace SalesOrdersReport
             this.vendorHistoryToolStripMenuItem,
             this.productStockToolStripMenuItem});
             this.reportsMenu.Name = "reportsMenu";
-            this.reportsMenu.Size = new System.Drawing.Size(59, 23);
+            this.reportsMenu.Size = new System.Drawing.Size(59, 20);
             this.reportsMenu.Text = "&Reports";
             // 
             // sellerHistoryToolStripMenuItem
@@ -323,7 +294,7 @@ namespace SalesOrdersReport
             this.manageProductsToolStripMenuItem,
             this.applicationSettingsToolStripMenuItem});
             this.administrationToolStripMenuItem.Name = "administrationToolStripMenuItem";
-            this.administrationToolStripMenuItem.Size = new System.Drawing.Size(98, 23);
+            this.administrationToolStripMenuItem.Size = new System.Drawing.Size(98, 20);
             this.administrationToolStripMenuItem.Text = "Administration";
             // 
             // manageUsersToolStripMenuItem
@@ -352,75 +323,60 @@ namespace SalesOrdersReport
             this.editUserToolStripMenuItem,
             this.createRoleToolStripMenuItem});
             this.userToolStripMenuItem.Name = "userToolStripMenuItem";
-            this.userToolStripMenuItem.Size = new System.Drawing.Size(42, 23);
+            this.userToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
             this.userToolStripMenuItem.Text = "&User";
             // 
             // createUserToolStripMenuItem
             // 
             this.createUserToolStripMenuItem.Name = "createUserToolStripMenuItem";
-            this.createUserToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.createUserToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.createUserToolStripMenuItem.Text = "Create User";
             this.createUserToolStripMenuItem.Click += new System.EventHandler(this.createUserToolStripMenuItem_Click);
             // 
             // editProfileToolStripMenuItem
             // 
             this.editProfileToolStripMenuItem.Name = "editProfileToolStripMenuItem";
-            this.editProfileToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.editProfileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.editProfileToolStripMenuItem.Text = "Edit Profile";
             this.editProfileToolStripMenuItem.Click += new System.EventHandler(this.editProfileToolStripMenuItem_Click);
             // 
             // editUserToolStripMenuItem
             // 
             this.editUserToolStripMenuItem.Name = "editUserToolStripMenuItem";
-            this.editUserToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.editUserToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.editUserToolStripMenuItem.Text = "Edit User";
             this.editUserToolStripMenuItem.Click += new System.EventHandler(this.editUserToolStripMenuItem_Click);
             // 
             // createRoleToolStripMenuItem
             // 
             this.createRoleToolStripMenuItem.Name = "createRoleToolStripMenuItem";
-            this.createRoleToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.createRoleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.createRoleToolStripMenuItem.Text = "Create Role";
             this.createRoleToolStripMenuItem.Click += new System.EventHandler(this.createRoleToolStripMenuItem_Click);
             // 
             // toolStripComboBoxProductLine
             // 
             this.toolStripComboBoxProductLine.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripComboBoxProductLine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toolStripComboBoxProductLine.Items.AddRange(new object[] {
             "Vegetables",
             "Bakery"});
             this.toolStripComboBoxProductLine.Name = "toolStripComboBoxProductLine";
             this.toolStripComboBoxProductLine.Size = new System.Drawing.Size(121, 23);
+            this.toolStripComboBoxProductLine.Visible = false;
             this.toolStripComboBoxProductLine.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxProductLine_SelectedIndexChanged);
-            // 
-            // toolStripTextBox1
-            // 
-            this.toolStripTextBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripTextBox1.BackColor = System.Drawing.SystemColors.Menu;
-            this.toolStripTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.toolStripTextBox1.Margin = new System.Windows.Forms.Padding(1, 2, 10, 0);
-            this.toolStripTextBox1.MaxLength = 20;
-            this.toolStripTextBox1.Name = "toolStripTextBox1";
-            this.toolStripTextBox1.ReadOnly = true;
-            this.toolStripTextBox1.ShortcutsEnabled = false;
-            this.toolStripTextBox1.Size = new System.Drawing.Size(80, 21);
-            this.toolStripTextBox1.Text = "Product Line";
-            this.toolStripTextBox1.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.toolStripTextBox1.ToolTipText = "Select Product Line";
             // 
             // helpMenu
             // 
             this.helpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpMenu.Name = "helpMenu";
-            this.helpMenu.Size = new System.Drawing.Size(44, 23);
+            this.helpMenu.Size = new System.Drawing.Size(44, 20);
             this.helpMenu.Text = "&Help";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -478,7 +434,7 @@ namespace SalesOrdersReport
             // 
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 27);
+            this.pictureBox1.Location = new System.Drawing.Point(0, 24);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(844, 23);
             this.pictureBox1.TabIndex = 8;
@@ -553,10 +509,6 @@ namespace SalesOrdersReport
         private System.Windows.Forms.ToolStripMenuItem createToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addModifyVendorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createOrderSheetToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem addModifySellerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addModifyItemToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem discountGroupToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem priceGroupsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reportsMenu;
         private System.Windows.Forms.ToolStripMenuItem vendorHistoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sellerHistoryToolStripMenuItem;
@@ -566,7 +518,6 @@ namespace SalesOrdersReport
         private System.Windows.Forms.ToolStripMenuItem chooseMasterFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel toolStripProgress;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBoxProductLine;
-        private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripOrderMasterPath;
         private System.Windows.Forms.ToolStripMenuItem updatePurchasesToolStripMenuItem;
@@ -574,7 +525,7 @@ namespace SalesOrdersReport
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolStripMenuItem createInvoiceFromSalesOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createSellerOrderToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem customerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem invoicesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createInvoiceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mergeSalesOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem userToolStripMenuItem;
@@ -587,6 +538,7 @@ namespace SalesOrdersReport
         private System.Windows.Forms.ToolStripMenuItem manageUsersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manageProductsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem applicationSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem customersToolStripMenuItem;
     }
 }
 

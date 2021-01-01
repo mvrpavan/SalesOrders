@@ -311,7 +311,7 @@ namespace SalesOrdersReport
 
                 if (chkBoxUpdStockHistory.Checked || chkBoxUpdProductInventory.Checked)
                 {
-                    ProductMaster ObjProductMaster = CommonFunctions.ObjProductMaster;
+                    ProductMasterModel ObjProductMaster = CommonFunctions.ObjProductMaster;
                     lblStatus.Text = "Loading Product Inventory file";
                     DataTable dtProductInventory = CommonFunctions.ReturnDataTableFromExcelWorksheet("Inventory", ProductInventoryFile, "*");
                     DataRow[] drProductsInventory = dtProductInventory.DefaultView.ToTable().Select("", "[StockName] asc");

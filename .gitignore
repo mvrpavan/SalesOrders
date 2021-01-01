@@ -222,3 +222,4 @@ SalesOrdersReport/.vs/SalesOrdersReport/v15/Server/sqlite3/storage.ide-wal
 SalesOrdersReport/.vs/*
 SalesOrdersReport/.vs/*.*
 .vs/
+*.zip

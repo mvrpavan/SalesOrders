@@ -137,7 +137,7 @@ namespace SalesOrdersReport
                 cmbBoxProdCat.SelectedIndex = -1;
 
                 ListAllProducts = CommonFunctions.ObjProductMaster.GetProductListForCategory("<ALL>");
-                ListAllProducts = ListAllProducts.OrderBy(p => p.ItemID).ToList();
+                ListAllProducts = ListAllProducts.OrderBy(p => p.ProductID).ToList();
                 List<String> ListItems = new List<String>();
                 ListItems.Add("<ALL>");
                 ListItems.AddRange(ListAllProducts.Select(s => s.ItemName));
@@ -840,7 +840,7 @@ namespace SalesOrdersReport
                 if (cmbBoxProdCat.SelectedIndex < 0 || !LoadCompleted) return;
 
                 ListProducts = CommonFunctions.ObjProductMaster.GetProductListForCategory(cmbBoxProdCat.SelectedItem.ToString());
-                ListProducts = ListProducts.OrderBy(p => p.ItemID).ToList();
+                ListProducts = ListProducts.OrderBy(p => p.ProductID).ToList();
                 List<String> ListItems = new List<String>();
                 ListItems.Add("<ALL>");
                 ListItems.AddRange(ListProducts.Select(s => s.ItemName));

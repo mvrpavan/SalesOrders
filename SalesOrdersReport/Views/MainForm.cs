@@ -41,14 +41,8 @@ namespace SalesOrdersReport
             fileMenu.Visible = true;
             sellerMenu.Visible = true;
             vendorMenu.Visible = true;
-            productMenu.Visible = false;
+            productMenu.Visible = true;
             reportsMenu.Visible = true;
-
-            addModifySellerToolStripMenuItem.Visible = false;
-            discountGroupToolStripMenuItem.Visible = false;
-
-            priceGroupsToolStripMenuItem.Visible = false;
-            addModifyItemToolStripMenuItem.Visible = false;
 
             addModifyVendorToolStripMenuItem.Visible = false;
 
@@ -264,30 +258,6 @@ namespace SalesOrdersReport
             }
         }
 
-        private void discountGroupToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.discountGroupToolStripMenuItem_Click()", ex);
-            }
-        }
-
-        private void addModifySellerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.addModifySellerToolStripMenuItem_Click()", ex);
-            }
-        }
-
         private void updateSalesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -304,28 +274,6 @@ namespace SalesOrdersReport
         }
 
 
-        #endregion
-
-        #region Products Menu Item
-        private void priceGroupsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void addModifyItemToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //if (!IsValidToOpenChildForm()) return;
-
-                ProductsMainForm productsMainForm = new ProductsMainForm();
-                ShowChildForm(productsMainForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.addModifyItemToolStripMenuItem_Click()", ex);
-            }
-        }
         #endregion
 
         #region Vendor Menu Item
@@ -558,6 +506,36 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("MainForm.createRoleToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void productMenu_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //if (!IsValidToOpenChildForm()) return;
+
+                Views.ProductsMainForm productsMainForm = new Views.ProductsMainForm();
+                ShowChildForm(productsMainForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.productMenu_Click()", ex);
+            }
+        }
+
+        private void customersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //if (!IsValidToOpenChildForm()) return;
+
+                Views.CustomersMainForm customersMainForm = new Views.CustomersMainForm();
+                ShowChildForm(customersMainForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.customersToolStripMenuItem_Click()", ex);
             }
         }
     }

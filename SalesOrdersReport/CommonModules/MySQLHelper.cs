@@ -18,8 +18,6 @@ namespace SalesOrdersReport
         {
             try
             {
-                ObjDbConnection = new MySqlConnection();
-                ObjDbConnectionStringBuilder = new MySqlConnectionStringBuilder();
                 CurrentUser = "";
             }
             catch (Exception)
@@ -44,6 +42,7 @@ namespace SalesOrdersReport
         {
             try
             {
+                ObjDbConnectionStringBuilder = new MySqlConnectionStringBuilder();
                 ObjDbConnectionStringBuilder.Add("Database", DBName);
                 ObjDbConnectionStringBuilder.Add("Data Source", DBServer);
                 ObjDbConnectionStringBuilder.Add("User Id", DBUsername);
@@ -51,6 +50,7 @@ namespace SalesOrdersReport
                 ObjDbConnectionStringBuilder.Add("persistsecurityinfo", "True");
                 ObjDbConnectionStringBuilder.Add("Allow Zero Datetime", "True");
 
+                ObjDbConnection = new MySqlConnection();
                 ObjDbConnection.ConnectionString = ObjDbConnectionStringBuilder.ConnectionString;
                 ObjDbConnection.Open();
 

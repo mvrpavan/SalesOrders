@@ -192,7 +192,7 @@ namespace SalesOrdersReport
             Excel.Application xlApp = new Excel.Application();
             try
             {
-                ProductMaster ObjProductMaster = CommonFunctions.ObjProductMaster;
+                ProductMasterModel ObjProductMaster = CommonFunctions.ObjProductMaster;
                 ObjProductMaster.ResetStockProducts();
                 lblStatus.Text = "Loading Product Inventory file";
                 DataTable dtProductInventory = CommonFunctions.ReturnDataTableFromExcelWorksheet("Inventory", ProductInventoryFile, "*");
@@ -306,7 +306,7 @@ namespace SalesOrdersReport
 
                     xlWorkSheet.Cells[PriceRowNum, StartCol + HeaderItems.Count + ProductCount].Value = item.Value["PurchasePrice"].ToString();
 
-                    StockProductDetails ObjStockProductDetails = ObjProductMaster.GetStockProductDetails(item.Key.Trim());
+                    ProductInventoryDetails ObjStockProductDetails = ObjProductMaster.GetStockProductDetails(item.Key.Trim());
                     if (ObjStockProductDetails != null)
                     {
                         xlWorkSheet.Cells[PastSaleRowNum, StartCol + HeaderItems.Count + ProductCount].Value = ObjStockProductDetails.SaleQty;
