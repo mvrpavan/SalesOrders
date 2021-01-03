@@ -25,7 +25,7 @@ namespace SalesOrdersReport
 
                 if (CommonFunctions.ObjApplicationSettings.Server == null || CommonFunctions.ObjApplicationSettings.Server == string.Empty)
                 {
-                    MessageBox.Show("DB is not Configured! Please Configure");
+                    MessageBox.Show("DB is not Configured! Please Configure", "Error");
                     return null;
                 }
                 if (tmpIntegDBHelper.ObjDbConnection == null || tmpIntegDBHelper.ObjDbConnection.State == ConnectionState.Closed)
@@ -56,18 +56,18 @@ namespace SalesOrdersReport
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            if (txtUserName.Text == "")
-            {
-                MessageBox.Show("Please enter user name", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtUserName.Focus();
-                return;
-            }
-            if (txtPassword.Text == "")
-            {
-                MessageBox.Show("Please enter password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtPassword.Focus();
-                return;
-            }
+            //if (txtUserName.Text == "")
+            //{
+            //    MessageBox.Show("Please enter user name", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    txtUserName.Focus();
+            //    return;
+            //}
+            //if (txtPassword.Text == "")
+            //{
+            //    MessageBox.Show("Please enter password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    txtPassword.Focus();
+            //    return;
+            //}
             try
             {
                 MySqlConnection myConnection = CreateDBConnection();
@@ -79,11 +79,14 @@ namespace SalesOrdersReport
                 }
 
                 int ReturnVal = CommonFunctions.ObjUserMasterModel.LoginCheck(txtUserName.Text, txtPassword.Text, myConnection);
-
+                //int ReturnVal = 0;
                 if (ReturnVal == 0)
                 {
                     CommonFunctions.CurrentUserName = tmpIntegDBHelper.CurrentUser;
+                    //CommonFunctions.CurrentUserName = tmpIntegDBHelper.CurrentUser = "admin";
+
                     CommonFunctions.ObjUserMasterModel.LoadAllUserMasterTables();
+                    CommonFunctions.ObjCustomerMasterModel.LoadAllCustomerMasterTables();
                     this.Close();
                     DialogResult = DialogResult.OK;
                 }

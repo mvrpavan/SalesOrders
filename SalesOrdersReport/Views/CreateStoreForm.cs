@@ -35,6 +35,8 @@ namespace SalesOrdersReport
                 txtStoreExcutivePhone.Clear();
                 //txtAddress.Clear();
                 txtCreateStoreName.Focus();
+                lblCreateStoreCommonValidMsg.Visible = false;
+                //lblCreateStoreValidMsg.Visible = false;
             }
             catch (Exception ex)
             {
@@ -48,8 +50,8 @@ namespace SalesOrdersReport
             {
                 if (txtCreateStoreName.Text.Trim() == string.Empty)
                 {
-                    lblCreateStoreValidMsg.Visible = true;
-                    lblCreateStoreValidMsg.Text = "Store Name Cannot be empty!";
+                    lblCreateStoreCommonValidMsg.Visible = true;
+                    lblCreateStoreCommonValidMsg.Text = "Store Name Cannot be empty!";
                     return;
                 }
 
@@ -96,30 +98,7 @@ namespace SalesOrdersReport
 
         }
 
-        private bool CheckForValidPwd()
-        {
-            try
-            {
-                bool IsValid = CommonFunctions.CheckForPasswordLength(txtStoreAddress.Text);
-                if (!IsValid)
-                {
-                    lblCreateStoreValidMsg.Visible = true;
-                    lblCreateStoreValidMsg.Text = "Password length should be of 5 to 20 characters";
-                    txtStoreAddress.Focus();
-                }
-                else
-                {
-                    lblCreateStoreValidMsg.Visible = false;
-                }
-                return IsValid;
 
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CreateStoreForm.CheckForValidPwd()", ex);
-                throw;
-            }
-        }
 
         private bool CheckForValidPhone()
         {
@@ -128,13 +107,13 @@ namespace SalesOrdersReport
                 bool IsValid = IsValid = CommonFunctions.ValidatePhoneNo(txtStoreExcutivePhone.Text);
                 if (!IsValid)
                 {
-                    lblCreateExecutivePhoneValidMsg.Visible = true;
-                    lblCreateExecutivePhoneValidMsg.Text = "Enter Valid Phone No!"; ;
+                    lblCreateStoreCommonValidMsg.Visible = true;
+                    lblCreateStoreCommonValidMsg.Text = "Enter Valid Phone No!"; ;
                     txtStoreExcutivePhone.Focus();
                 }
                 else
                 {
-                    lblCreateExecutivePhoneValidMsg.Visible = false;
+                    lblCreateStoreCommonValidMsg.Visible = false;
                 }
                 return IsValid;
             }

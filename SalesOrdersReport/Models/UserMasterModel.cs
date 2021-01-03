@@ -325,7 +325,7 @@ namespace SalesOrdersReport
                     CommonFunctions.ObjUserMasterModel.LoadRoleMaster(ObjMySQLHelper.GetQueryResultInDataTable("SELECT * FROM ROLEMASTER;"));
                 }
                 int Index = ListRoleDetails.BinarySearch(ObjRoleDetails, ObjRoleDetails);
-                if (Index < 0) MessageBox.Show("Error!! RoleName Not Found", "Eroor");
+                if (Index < 0) MessageBox.Show("Error!! RoleName Not Found", "Error");
                 return Index < 0 ? -1 : ListRoleDetails[Index].RoleID;
             }
             catch (Exception ex)
@@ -479,7 +479,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.CreateNewStore()", ex);
+                CommonFunctions.ShowErrorDialog("UserMasterModel.CreateNewStore()", ex);
                 throw ex;
             }
         }
@@ -670,7 +670,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("UserMasterModel.AddRoleDetailsToCache()", ex);
+                CommonFunctions.ShowErrorDialog("UserMasterModel.AddStoreDetailsToCache()", ex);
             }
         }
 
@@ -714,6 +714,22 @@ namespace SalesOrdersReport
             }
         }
 
+        void AddRoleDetailsToCache(RoleDetails ObjRoleDetails)
+        {
+            try
+            {
+
+                Int32 RoleIndex = ListRoleDetails.BinarySearch(ObjRoleDetails, ObjRoleDetails);
+                if (RoleIndex < 0)
+                {
+                    ListRoleDetails.Insert(~RoleIndex, ObjRoleDetails);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("UserMasterModel.AddRoleDetailsToCache()", ex);
+            }
+        }
         public void LoadPrivilegeControlMaster(DataTable dtPrivilegeControlMaster)
         {
             try
@@ -755,22 +771,7 @@ namespace SalesOrdersReport
             }
         }
 
-        void AddRoleDetailsToCache(RoleDetails ObjRoleDetails)
-        {
-            try
-            {
-
-                Int32 RoleIndex = ListRoleDetails.BinarySearch(ObjRoleDetails, ObjRoleDetails);
-                if (RoleIndex < 0)
-                {
-                    ListRoleDetails.Insert(~RoleIndex, ObjRoleDetails);
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("UserMasterModel.AddRoleDetailsToCache()", ex);
-            }
-        }
+       
 
         public void LoadUserMaster(DataTable dtUserMaster)
         {
@@ -829,7 +830,7 @@ namespace SalesOrdersReport
                     String UpdateAnyTableQuery = "SET SQL_SAFE_UPDATES=0;" + "UPDATE " + TableName + " SET ";
                     for (int i = 0; i < ListColumnNames.Count; i++)
                     {
-                        if (ListColumnValues[i] != "NULL" && ListColumnNames[i] != "ACTIVE") UpdateAnyTableQuery += ListColumnNames[i] + " = '" + ListColumnValues[i] + "',";
+                        if (ListColumnValues[i] != "NULL" && ListColumnNames[i] != "ACTIVE" && ListColumnNames[i] != "ISDEFAULT") UpdateAnyTableQuery += ListColumnNames[i] + " = '" + ListColumnValues[i] + "',";
                         else UpdateAnyTableQuery += ListColumnNames[i] + " = " + ListColumnValues[i] + ",";
                     }
                     UpdateAnyTableQuery = UpdateAnyTableQuery.Remove(UpdateAnyTableQuery.Length - 1, 1);
@@ -968,7 +969,7 @@ namespace SalesOrdersReport
                 }
 
 
-                return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery(); ;
+                return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery(); 
             }
             catch (Exception ex)
             {
@@ -1004,7 +1005,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("UserMasterModel.GetListUserCache()", ex);
+                CommonFunctions.ShowErrorDialog("UserMasterModel.GetStoreDetails()", ex);
             }
             return null;
         }

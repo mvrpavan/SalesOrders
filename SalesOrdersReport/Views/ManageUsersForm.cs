@@ -124,7 +124,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                this.BindGrid(true);
+                this.BindUserGrid(true);
             }
             catch (Exception ex)
             {
@@ -159,7 +159,7 @@ namespace SalesOrdersReport
                 //EnableOrDisableBtnBasedOnUserPrivilege();
 
 
-                this.BindGrid(false);
+                this.BindUserGrid(false); //&&&&& should be true?
                 dgvUserCache.AutoResizeColumns();
                 dgvUserCache.AutoResizeRows();
                 dgvUserCache.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
@@ -206,7 +206,7 @@ namespace SalesOrdersReport
 
 
         }
-        public void BindGrid(Boolean ReloadFromDB)
+        public void BindUserGrid(Boolean ReloadFromDB)
         {
             try
             {
@@ -221,7 +221,7 @@ namespace SalesOrdersReport
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("ManageUserForm.BindGrid()", ex);
+                CommonFunctions.ShowErrorDialog("ManageUserForm.BindUserGrid()", ex);
                 throw;
             }
         }
@@ -469,7 +469,7 @@ namespace SalesOrdersReport
                     List<string> ListColumnValues = new List<string>() { "0" };
                     CommonFunctions.ObjUserMasterModel.UpdateAnyTableDetails("USERMASTER", ListColumnNames, ListColumnValues, WhereCondition);
                 }
-                this.BindGrid(true);
+                this.BindUserGrid(true);
             }
             catch (Exception ex)
             {
@@ -500,7 +500,7 @@ namespace SalesOrdersReport
                 switch (Mode)
                 {
                     case 1:     //Add Product
-                        BindGrid(true);
+                        BindUserGrid(true);
                         //LoadUserDetailsDataGridView(true);
                         //if (!dgvUserCache.Controls.Contains(headerCheckBox))
                         //{

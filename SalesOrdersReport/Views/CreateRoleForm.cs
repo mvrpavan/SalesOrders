@@ -12,6 +12,7 @@ namespace SalesOrdersReport
     public partial class CreateRoleForm : Form
     {
         UpdateOnCloseDel UpdateOnClose = null;
+        MySQLHelper tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
         public CreateRoleForm(UpdateOnCloseDel UpdateOnClose)
         {
             InitializeComponent();
@@ -62,20 +63,21 @@ namespace SalesOrdersReport
             {
                 if (txtNewRoleName.Text.Trim() == "")
                 {
-                    MessageBox.Show("Please enter role name", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    lblCreateRoleValidateErrMsg.Visible = true;
+                    lblCreateRoleValidateErrMsg.Text = "Role Name Cannot be empty!";
                     txtNewRoleName.Focus();
                     return;
                 }
                 if (txtRoleDesc.Text.Trim() == "")
                 {
-                    MessageBox.Show("Please add description", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    lblCreateRoleValidateErrMsg.Visible = true;
+                    lblCreateRoleValidateErrMsg.Text = "Please add Description";
                     txtRoleDesc.Focus();
                     return;
                 }
 
                 List<string> ListColumnValues = new List<string>();
                 List<string> ListColumnNamesWithDataType = new List<string>();
-                MySQLHelper tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
                 List<string> ListTemp = new List<string>();
                 for (int i = 0; i < flpChsePrivilege.Controls.Count; i++)
                 {
@@ -119,6 +121,7 @@ namespace SalesOrdersReport
                 txtNewRoleName.Clear();
                 txtRoleDesc.Clear();
                 txtNewRoleName.Focus();
+                lblCreateRoleValidateErrMsg.Visible = false;
             }
             catch (Exception ex)
             {

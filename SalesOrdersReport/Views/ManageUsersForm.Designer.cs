@@ -1,4 +1,6 @@
-﻿namespace SalesOrdersReport
+﻿using System.Windows.Forms;
+
+namespace SalesOrdersReport
 {
     partial class ManageUsersForm
     {
@@ -171,15 +173,19 @@
             // dgvUserCache
             // 
             this.dgvUserCache.AllowUserToAddRows = false;
+            this.dgvUserCache.AllowUserToResizeColumns = false;
+            this.dgvUserCache.AllowUserToOrderColumns = false;
             this.dgvUserCache.AllowUserToDeleteRows = false;
             this.dgvUserCache.AllowUserToResizeRows = false;
-            this.dgvUserCache.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvUserCache.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvUserCache.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvUserCache.Location = new System.Drawing.Point(12, 111);
             this.dgvUserCache.MultiSelect = false;
             this.dgvUserCache.Name = "dgvUserCache";
             this.dgvUserCache.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvUserCache.Size = new System.Drawing.Size(719, 207);
             this.dgvUserCache.TabIndex = 3;
+            
             // 
             // ManageUsersForm
             // 

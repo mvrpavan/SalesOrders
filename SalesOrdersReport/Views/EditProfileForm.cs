@@ -102,6 +102,11 @@ namespace SalesOrdersReport
                 txtChangePhone.Clear();
                 txtbxEmailID.Clear();
                 txtOldPwd.Focus();
+                lblCnfrmPwdMsg.Visible = false;
+                lblEmailValidMsg.Visible = false;
+                lblNwPwdMsg.Visible = false;
+                lblOldPwdMsg.Visible = false;
+                lblPhoneMsg.Visible = false;
             }
             catch (Exception ex)
             {

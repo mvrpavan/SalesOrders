@@ -78,19 +78,81 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonModules\CryptoGraphy.cs" />
+    <Compile Include="Models\CustomerDetails.cs" />
+    <Compile Include="Models\CustomerMasterModel.cs" />
+    <Compile Include="Models\SellerDetails.cs" />
     <Compile Include="Models\UserDetails.cs" />
     <Compile Include="Models\UserMasterModel.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Views\About.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ImportFromExcelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ImportFromExcelForm.Designer.cs">
+      <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditCustomerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\EditCustomerForm.Designer.cs">
+      <DependentUpon>EditCustomerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditDiscountGroupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\EditDiscountGroupForm.Designer.cs">
+      <DependentUpon>EditDiscountGroupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreateDiscountGroupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CreateDiscountGroupForm.Designer.cs">
+      <DependentUpon>CreateDiscountGroupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditPriceGroupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\EditPriceGroupForm.Designer.cs">
+      <DependentUpon>EditPriceGroupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditLineForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\EditLineForm.Designer.cs">
+      <DependentUpon>EditLineForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreatePriceGroupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CreatePriceGroupForm.Designer.cs">
+      <DependentUpon>CreatePriceGroupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreateLineForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CreateLineForm.Designer.cs">
+      <DependentUpon>CreateLineForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\CreateStoreForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\CreateStoreForm.designer.cs">
       <DependentUpon>CreateStoreForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreateCustomerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CreateCustomerForm.Designer.cs">
+      <DependentUpon>CreateCustomerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\DefineRoleForm.cs">
       <SubType>Form</SubType>
@@ -160,6 +222,12 @@
     </Compile>
     <Compile Include="Views\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ManageCustomerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ManageCustomerForm.Designer.cs">
+      <DependentUpon>ManageCustomerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\ManageUsersForm.cs">
       <SubType>Form</SubType>
@@ -238,7 +306,6 @@
     <Compile Include="Models\ProductLine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\SellerDetails.cs" />
     <Compile Include="Views\SellerHistoryReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -274,8 +341,35 @@
     <EmbeddedResource Include="Views\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\ImportFromExcelForm.resx">
+      <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\EditCustomerForm.resx">
+      <DependentUpon>EditCustomerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\EditDiscountGroupForm.resx">
+      <DependentUpon>EditDiscountGroupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CreateDiscountGroupForm.resx">
+      <DependentUpon>CreateDiscountGroupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\EditPriceGroupForm.resx">
+      <DependentUpon>EditPriceGroupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\EditLineForm.resx">
+      <DependentUpon>EditLineForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CreatePriceGroupForm.resx">
+      <DependentUpon>CreatePriceGroupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CreateLineForm.resx">
+      <DependentUpon>CreateLineForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\CreateStoreForm.resx">
       <DependentUpon>CreateStoreForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CreateCustomerForm.resx">
+      <DependentUpon>CreateCustomerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\DefineRoleForm.resx">
       <DependentUpon>DefineRoleForm.cs</DependentUpon>
@@ -309,6 +403,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ManageCustomerForm.resx">
+      <DependentUpon>ManageCustomerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ManageUsersForm.resx">
       <DependentUpon>ManageUsersForm.cs</DependentUpon>
@@ -345,14 +442,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="Views\SellerHistoryReportForm.resx">
       <DependentUpon>SellerHistoryReportForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -458,6 +550,22 @@
     <None Include="Resources\arrow2_32.jfif" />
     <None Include="Resources\arro1.png" />
     <None Include="Resources\arrow32_.png" />
+    <None Include="Resources\CreateLine_32.png" />
+    <None Include="Resources\adddeliver4_32.png" />
+    <None Include="Resources\adddelive5_32.jpg" />
+    <None Include="Resources\addDelivery_32.png" />
+    <None Include="Resources\adddelivery2_32.png" />
+    <None Include="Resources\EditLine1_32.png" />
+    <None Include="Resources\EditLine32.png" />
+    <None Include="Resources\addDiscount_32.png" />
+    <None Include="Resources\addPrice_32.png" />
+    <None Include="Resources\EditUser_32.jpg" />
+    <None Include="Resources\adduser.jpg" />
+    <None Include="Resources\adduser_32.jpg" />
+    <None Include="Resources\CreateUser_32.png" />
+    <None Include="Resources\createUser2_32.jpg" />
+    <None Include="Resources\edituser3_32.png" />
+    <None Include="Resources\create-user_32.png" />
     <Content Include="Resources\reset.png" />
     <None Include="Resources\reset1.png" />
     <None Include="Resources\reset_small.png" />
@@ -468,6 +576,9 @@
     <None Include="Resources\store_32.jpg" />
     <None Include="Resources\store1_32.png" />
     <None Include="Resources\store3_32.png" />
+    <None Include="Resources\UploadFile32.png" />
+    <None Include="Resources\UploadFile2_32.png" />
+    <None Include="Resources\user_add32.png" />
     <Content Include="Settings.xml">
       <SubType>Designer</SubType>
     </Content>

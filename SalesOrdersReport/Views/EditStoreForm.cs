@@ -55,6 +55,9 @@ namespace SalesOrdersReport
                 txtEditStoreExecutiveName.Clear();
                 txtEditStoreExcutivePhone.Clear();
                 cmbxAllStoreNames.Focus();
+                lblEditStoreCommonValidMsg.Visible = false;
+                //lblEditStoreValidMsg.Visible = false;
+               
             }
 
             catch (Exception ex)
@@ -70,8 +73,8 @@ namespace SalesOrdersReport
                 if (cmbxAllStoreNames.SelectedIndex == 0)
                 {
                     //MessageBox.Show("User Name Or Password Cannot be empty ");
-                    lblEditStoreValidMsg.Visible = true;
-                    lblEditStoreValidMsg.Text = "Choose a Store to Edit!";
+                    lblEditStoreCommonValidMsg.Visible = true;
+                    lblEditStoreCommonValidMsg.Text = "Choose a Store to Edit!";
                     return;
                 }
 
@@ -202,14 +205,14 @@ namespace SalesOrdersReport
                 bool IsValid = IsValid = CommonFunctions.ValidatePhoneNo(txtEditStoreExcutivePhone.Text);
                 if (!IsValid)
                 {
-                    lblEditExecutivePhoneValidMsg.Visible = true;
-                    lblEditExecutivePhoneValidMsg.Text = "Enter Valid Phone No!"; ;
+                    lblEditStoreCommonValidMsg.Visible = true;
+                    lblEditStoreCommonValidMsg.Text = "Enter Valid Phone No!"; ;
                     txtEditStoreExcutivePhone.Focus();
                     // btnCreateUser.Enabled = false;
                 }
                 else
                 {
-                    lblEditExecutivePhoneValidMsg.Visible = false;
+                    lblEditStoreCommonValidMsg.Visible = false;
                     //btnCreateUser.Enabled = true;
                     //return;
                 }

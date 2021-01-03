@@ -15,17 +15,19 @@ using MySql.Data.MySqlClient;
 
 namespace SalesOrdersReport
 {
- class CommonFunctions
+    class CommonFunctions
     {
         public static List<ProductLine> ListProductLines;
         public static Int32 SelectedProductLineIndex;
-        public static List<String> ListSellerLines, ListVendorLines, ListSelectedSellers, ListSelectedVendors;
+        public static List<String> ListCustomerLines, ListVendorLines, ListSelectedCustomer, ListSelectedVendors;//&&&&& listCustomerlines
         public static String AppDataFolder;
         public static String MasterFilePath;
         public static ToolStripProgressBar ToolStripProgressBarMainForm;
         public static ToolStripLabel ToolStripProgressBarMainFormStatus;
         public static Form CurrentForm = null;
         public static UserMasterModel ObjUserMasterModel;
+        public static CustomerMasterModel ObjCustomerMasterModel;
+
         public static string CurrentUserName = "";
 
         public static void Initialize()
@@ -42,6 +44,8 @@ namespace SalesOrdersReport
                 LoadSettingsFile();
                 ObjUserMasterModel = new UserMasterModel();
                 ObjUserMasterModel.Initialize();
+                ObjCustomerMasterModel = new CustomerMasterModel();
+                ObjCustomerMasterModel.Initialize();
 
                 if (!File.Exists(CommonFunctions.AppDataFolder + "\\" + CommonFunctions.ObjApplicationSettings.LogoFileName))
                 {
@@ -49,7 +53,7 @@ namespace SalesOrdersReport
                      CommonFunctions.AppDataFolder + @"\" + CommonFunctions.ObjApplicationSettings.LogoFileName, false);
                 }
 
-                ListSelectedSellers = new List<String>();
+                ListSelectedCustomer = new List<String>();
                 ListSelectedVendors = new List<String>();
 
             }
@@ -74,7 +78,28 @@ namespace SalesOrdersReport
             }
         }
 
+        public static char GetColSeparator(String Header)
+        {
+            try
+            {
+                char SEP = '\t';
 
+                int TabCount = Header.Split('\t').ToArray().Length;
+                int CommaCount = Header.Split(',').ToArray().Length;
+
+                if (CommaCount > TabCount)
+                {
+                    SEP = ',';
+                }
+
+                return SEP;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.GetColSeparator", ex);
+            }
+            return '\t';
+        }
         public static List<Control> GetAllControlsOfAForm(Control root)
         {
             try
@@ -131,7 +156,6 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 ShowErrorDialog("CommonFunctions.ApplyPrivilegeControl", ex);
-                throw ex;
             }
         }
 
@@ -203,6 +227,54 @@ namespace SalesOrdersReport
             }
         }
 
+        public static bool ValidateDoubleORIntVal(string DoubleORIntValToBeChecked)
+        {
+            try
+            {
+                int num;
+                float numFloat;
+                bool isValid = false;
+                if (Int32.TryParse(DoubleORIntValToBeChecked, out num)) isValid = true;
+                else if (float.TryParse(DoubleORIntValToBeChecked, out numFloat)) isValid = true;
+
+
+                //if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
+                //    (e.KeyChar != '.'))
+                //{
+                //    e.Handled = true;
+                //}
+
+                //// only allow one decimal point
+                //if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+                //{
+                //    e.Handled = true;
+                //}
+
+
+
+                //// allows 0-9, backspace, and decimal
+                //if (((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8 && e.KeyChar != 46))
+                //{
+                //    e.Handled = true;
+                //    return;
+                //}
+
+                //// checks to make sure only 1 decimal is allowed
+                //if (e.KeyChar == 46)
+                //{
+                //    if ((sender as TextBox).Text.IndexOf(e.KeyChar) != -1)
+                //        e.Handled = true;
+                //}
+
+                return isValid;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.ValidateDoubleORIntVal", ex);
+                throw ex;
+            }
+
+        }
         public static MySqlDbType GetMySqlDbType(string DataTypeStr)
         {
             try
@@ -665,7 +737,7 @@ namespace SalesOrdersReport
             }
         }
 
-          public static string GetHashedPassword(string Password, Guid UserGuid)
+        public static string GetHashedPassword(string Password, Guid UserGuid)
         {
             try
             {

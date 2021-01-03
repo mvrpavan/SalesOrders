@@ -20,6 +20,16 @@ namespace SalesOrdersReport
                 CreateRoleTable();
                 CreateStoreTable();
                 CreateUserTable();
+                //State
+                CreateStateTable();
+                //line
+                CreateLineTable();
+                //discount
+                CreateDiscountGrpTable();
+                //price
+                CreatePriceGrpTable();
+                //Customer
+                CreateCustomerTable();
             }
             catch (Exception ex)
             {
@@ -27,14 +37,112 @@ namespace SalesOrdersReport
                 throw;
             }
         }
+
+        private void CreateStateTable()
+        {
+            try
+            {
+                List<string> ListStateCol = new List<string>() { "STATEID,INT NOT NULL AUTO_INCREMENT", "STATE,VARCHAR(50)", "STATECODE,VARCHAR(4)", "PRIMARY KEY,STATEID" };
+                tmpMySQLHelper.CreateTable("STATEMASTER", ListStateCol);
+                CommonFunctions.ObjCustomerMasterModel.AddAllStatesToMasterTable();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("RunDBScript.CreateStateTable()", ex);
+                throw;
+            }
+        }
+
+        private void CreateLineTable()
+        {
+            try
+            {
+
+                List<string> ListLineCol = new List<string>() { "LINEID,INT NOT NULL AUTO_INCREMENT", "LINENAME,VARCHAR(50)", "DESCRIPTION,VARCHAR(50)", "PRIMARY KEY,LINEID" };
+                tmpMySQLHelper.CreateTable("LINEMASTER", ListLineCol);
+                CommonFunctions.ObjCustomerMasterModel.CreateNewLine("Line0", "Super Line");
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("RunDBScript.CreateLineTable()", ex);
+                throw;
+            }
+        }
+
+        private void CreateDiscountGrpTable()
+        {
+            try
+            {
+                List<string> ListDisGrpCol = new List<string>() { "DISCOUNTGROUPID,INT NOT NULL AUTO_INCREMENT", "DISCOUNTGROUPNAME,VARCHAR(100) NOT NULL", "DESCRIPTION,VARCHAR(50)", "DISCOUNT,DECIMAL(4,2) DEFAULT 0", "ISDEFAULT,BIT DEFAULT NULL", "DISCOUNTTYPE,VARCHAR(10) DEFAULT 'ABSOLUTE'", "PRIMARY KEY,DISCOUNTGROUPID" };
+                tmpMySQLHelper.CreateTable("DISCOUNTGROUPMASTER", ListDisGrpCol);
+                //List<string> ListColumnNamesWthDataType = new List<string> { "DISCOUNT,DECIMAL(4,2)", "DEFAULT,TINYTEXT", "DISCOUNTTYPE,VARCHAR", }, ListColumnValues = new List<string>() { "0", "YES", "ABSOLUTE" };
+                //CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp", ListColumnNamesWthDataType, ListColumnValues);
+                CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp");
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("RunDBScript.CreateDiscountGrpTable()", ex);
+                throw;
+            }
+        }
+        private void CreatePriceGrpTable()
+        {
+            try
+            {
+                List<string> ListPriceGrpCol = new List<string>() { "PRICEGROUPID,INT NOT NULL AUTO_INCREMENT", "PRICEGROUPNAME,VARCHAR(100) NOT NULL", "DESCRIPTION,VARCHAR(50)", "PRICEGROUPCOLUMNNAME, VARCHAR(30) DEFAULT  'Purchase Price'", "DISCOUNT,DECIMAL(4,2) DEFAULT 0", "ISDEFAULT,BIT DEFAULT NULL", "DISCOUNTTYPE,VARCHAR(10) DEFAULT 'ABSOLUTE'", "PRIMARY KEY,PRICEGROUPID" };
+               
+                tmpMySQLHelper.CreateTable("PRICEGROUPMASTER", ListPriceGrpCol);
+                //List<string> ListColumnNamesWthDataType = new List<string> { "DISCOUNT,DECIMAL(4,2)", "DEFAULT,TINYTEXT", "DISCOUNTTYPE,VARCHAR", }, ListColumnValues = new List<string>() { "0", "YES", "ABSOLUTE" };
+                //CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp", ListColumnNamesWthDataType, ListColumnValues);
+                CommonFunctions.ObjCustomerMasterModel.CreateNewPriceGrp("PriceGrp1", "Super Price Grp");
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("RunDBScript.CreatePriceGrpTable()", ex);
+                throw;
+            }
+        }
+
+
+
+//        ID AddedDate
+//SellerName LastUpdateDate
+//Address
+//Phone
+//GSTIN string
+
+//PriceGroupID
+//DiscountGroupID
+//StateID
+//LineID
+//Active
+//OrderDays CSV
+
+
+        private void CreateCustomerTable()
+        {
+            try
+            {
+                List<string> ListCustomerCol = new List<string>() { "CUSTOMERID,INT NOT NULL AUTO_INCREMENT", "CUSTOMERNAME,VARCHAR(100) NOT NULL", "ADDRESS,VARCHAR(100) NULL", "PHONENO, BIGINT(20) NULL DEFAULT NULL", "LINEID,INT NULL DEFAULT NULL", "PRICEGROUPID,INT NULL DEFAULT NULL", "DISCOUNTGROUPID,INT NULL DEFAULT NULL", "GSTIN,VARCHAR(20) NULL", "STATEID, VARCHAR(5) NULL DEFAULT NULL", "ADDEDDATE,DATETIME NULL", "LASTUPDATEDATE,DATETIME NULL", "ACTIVE,BIT NULL", "ORDERDAYS, VARCHAR(20) NOT NULL DEFAULT '1'", "PRIMARY KEY,CUSTOMERID" };
+                tmpMySQLHelper.CreateTable("CUSTOMERMASTER", ListCustomerCol);
+                List<string> ListColumnNamesWthDataType = new List<string> { "LASTUPDATEDATE,DATETIME", "ADDEDDATE,DATETIME" }, ListColumnValues = new List<string>() { DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"), DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") };
+                CommonFunctions.ObjCustomerMasterModel.CreateNewCustomer("customer0", "Line0", "DisGrp1", "PriceGrp1", true, ListColumnNamesWthDataType, ListColumnValues);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("RunDBScript.CreateCustomerTable()", ex);
+                throw;
+            }
+        }
+
         private void CreateUserTable()
         {
             try
             {
                 List<string> ListUserCol = new List<string>() { "USERID,INT NOT NULL AUTO_INCREMENT", "USERNAME,VARCHAR(100) NOT NULL", "PASSWORD,VARCHAR(100) NOT NULL", "FULLNAME,VARCHAR(100) NOT NULL", "ROLEID,INT NOT NULL", "EMAILID,VARCHAR(50) NULL", "PHONENO, BIGINT NULL", "STOREID, INT NULL DEFAULT NULL", "LASTLOGIN,DATETIME NULL", "LASTPASSWORDCHANGED,DATETIME NULL", "LASTUPDATEDATE,DATETIME NULL", "CREATEDBY, INT NULL DEFAULT 0", "ACTIVE,BIT NULL", "USERGUID,CHAR(38) NULL", "PRIMARY KEY,USERID" };
                 tmpMySQLHelper.CreateTable("USERMASTER", ListUserCol);
-                List<string> ListColumnNamesWthDataType = new List<string> { "LASTLOGIN,DATETIME", "CREATEDBY,INT" }, ListColumnValues = new List<string>() { DateTime.Now.ToString(), "0" };
-                CommonFunctions.ObjUserMasterModel.CreateNewUser("admin", "admin", "Administrator", true, "admin");
+                List<string> ListColumnNamesWthDataType = new List<string> { "LASTLOGIN,DATETIME", "CREATEDBY,INT" }, ListColumnValues = new List<string>() { DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"), "0" };
+                CommonFunctions.ObjUserMasterModel.CreateNewUser("admin", "admin", "Administrator", true, "admin", ListColumnNamesWthDataType, ListColumnValues);
             }
             catch (Exception ex)
             {
@@ -48,7 +156,7 @@ namespace SalesOrdersReport
             try
             {           
 
-                List<string> ListRoleCol = new List<string>() { "ROLEID,INT(11) NOT NULL AUTO_INCREMENT", "ROLENAME,VARCHAR(50)", "DESCRIPTION,VARCHAR(50)", "PRIMARY KEY,ROLEID" };
+                List<string> ListRoleCol = new List<string>() { "ROLEID,INT NOT NULL AUTO_INCREMENT", "ROLENAME,VARCHAR(50)", "DESCRIPTION,VARCHAR(50)", "PRIMARY KEY,ROLEID" };
                 tmpMySQLHelper.CreateTable("ROLEMASTER", ListRoleCol);
                 CommonFunctions.ObjUserMasterModel.AlterTblColBasedOnMultipleRowsFrmAnotherTbl("PRIVILEGEMASTER", "ROLEMASTER", "PRIVILEGEID");
                 List<string> ListColumnValues = new List<string>();
@@ -117,7 +225,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                List<string> ListPrivilegeControlCol = new List<string>() { "CONTROLID,INT(11) NOT NULL AUTO_INCREMENT", "FORMNAME,VARCHAR(100)", "CONTROLNAME,VARCHAR(100)", "ENABLED,BIT DEFAULT 1", "PRIVILEGEID,TINYTEXT", "PRIMARY KEY,CONTROLID" };
+                List<string> ListPrivilegeControlCol = new List<string>() { "CONTROLID,INT NOT NULL AUTO_INCREMENT", "FORMNAME,VARCHAR(100)", "CONTROLNAME,VARCHAR(100)", "ENABLED,BIT DEFAULT 1", "PRIVILEGEID,TINYTEXT", "PRIMARY KEY,CONTROLID" };
                 tmpMySQLHelper.CreateTable("PRIVILEGECONTROLMASTER", ListPrivilegeControlCol);
 
 

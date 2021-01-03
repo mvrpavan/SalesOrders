@@ -51,7 +51,7 @@ namespace SalesOrdersReport
                 foreach (DataGridViewRow item in dtGridViewSellers.Rows)
                 {
                     DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)item.Cells[0];
-                    if (CommonFunctions.ListSelectedSellers.Contains(item.Cells[1].Value))
+                    if (CommonFunctions.ListSelectedCustomer.Contains(item.Cells[1].Value))
                         cell.Value = cell.TrueValue;
                 }
             }
@@ -66,9 +66,9 @@ namespace SalesOrdersReport
             try
             {
                 cmbBoxLineFilter.Items.Clear();
-                for (int i = 0; i < CommonFunctions.ListSellerLines.Count; i++)
+                for (int i = 0; i < CommonFunctions.ListCustomerLines.Count; i++)
                 {
-                    cmbBoxLineFilter.Items.Add(CommonFunctions.ListSellerLines[i]);
+                    cmbBoxLineFilter.Items.Add(CommonFunctions.ListCustomerLines[i]);
                 }
                 cmbBoxLineFilter.SelectedIndex = 0;
             }
@@ -115,13 +115,13 @@ namespace SalesOrdersReport
 
                 if (cell.Value == cell.TrueValue)
                 {
-                    if (!CommonFunctions.ListSelectedSellers.Contains(SellerName))
-                        CommonFunctions.ListSelectedSellers.Add(SellerName.ToString());
+                    if (!CommonFunctions.ListSelectedCustomer.Contains(SellerName))
+                        CommonFunctions.ListSelectedCustomer.Add(SellerName.ToString());
                 }
                 else if (cell.Value == cell.FalseValue)
                 {
-                    if (CommonFunctions.ListSelectedSellers.Contains(SellerName))
-                        CommonFunctions.ListSelectedSellers.Remove(SellerName.ToString());
+                    if (CommonFunctions.ListSelectedCustomer.Contains(SellerName))
+                        CommonFunctions.ListSelectedCustomer.Remove(SellerName.ToString());
                 }
             }
             catch (Exception ex)

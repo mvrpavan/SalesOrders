@@ -96,7 +96,7 @@ namespace SalesOrdersReport
                 txtEmailID.Clear();
                 cmbxSelectRoleID.SelectedIndex = 0;
                 cmbxSelectStore.SelectedIndex = 0;
-                
+                lblCommonErrorMsg.Visible = false;               
                 //txtAddress.Clear();
             }
 
@@ -118,7 +118,7 @@ namespace SalesOrdersReport
                     lblCommonErrorMsg.Text = "Select a Role for the User!! ";
                     return;
                 }
-                //if (cmbxSelectStore.Text == "Select Store")    //&&&&& CheckOnce
+                //if (cmbxSelectStore.Text == "Select Store")    
                 //{
                 //    //MessageBox.Show("Select a Role for the User!! ");
                 //    lblCommonErrorMsg.Visible = true;
@@ -238,15 +238,15 @@ namespace SalesOrdersReport
                 else IsValid = CommonFunctions.ValidateEmail(txtEmailID.Text);
                 if (!IsValid)
                 {
-                    lblEditEmailIdValidMsg.Visible = true;
-                    lblEditEmailIdValidMsg.Text = "Invalid EmailID!";
+                    lblCommonErrorMsg.Visible = true;
+                    lblCommonErrorMsg.Text = "Invalid EmailID!";
                     txtEmailID.Focus();
                     //return;
                     // btnEditUser.Enabled = false;
                 }
                 else
                 {
-                    lblEditEmailIdValidMsg.Visible = false;
+                    lblCommonErrorMsg.Visible = false;
                     //btnEditUser.Enabled = true;
                     //return;
                 }
@@ -287,14 +287,14 @@ namespace SalesOrdersReport
                 else IsValid = CommonFunctions.ValidatePhoneNo(txtPhone.Text);
                 if (!IsValid)
                 {
-                    lblEditPhoneValidMsg.Visible = true;
-                    lblEditPhoneValidMsg.Text = "Enter Valid Phone No!"; ;
+                    lblCommonErrorMsg.Visible = true;
+                    lblCommonErrorMsg.Text = "Enter Valid Phone No!"; ;
                     txtPhone.Focus();
                     // btnEditUser.Enabled = false;
                 }
                 else
                 {
-                    lblEditPhoneValidMsg.Visible = false;
+                    lblCommonErrorMsg.Visible = false;
                     //btnEditUser.Enabled = true;
                     //return;
                 }
@@ -345,6 +345,16 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("EditUserForm.EditUserForm_FormClosed()", ex);
                 throw;
             }
+        }
+
+        private void cmbxSelectStore_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblEditStoreName_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

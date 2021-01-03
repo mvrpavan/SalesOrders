@@ -168,6 +168,7 @@ namespace SalesOrdersReport
             try
             {
                 cmbSelectRole.SelectedIndex = 0;
+                lblSelectRoleValidMsg.Visible = false;
                 ResetPrivilegeChkBox();
             }
             catch (Exception ex)
@@ -258,7 +259,7 @@ namespace SalesOrdersReport
         //            UpdateOnClose(1);
         //            DynamicAddCheckBox();
         //            btnReset.PerformClick();
-        //            //if (ObjManageUsers != null) ObjManageUsers.BindGrid();//&&&&&
+        //            //if (ObjManageUsers != null) ObjManageUsers.BindGrid();
         //        }
 
         //    }

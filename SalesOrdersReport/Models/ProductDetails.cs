@@ -15,14 +15,16 @@ namespace SalesOrdersReport
 
     class PriceGroupDetails : IComparer<PriceGroupDetails>
     {
-        public String Name, Description;
+        public int PriceGroupID = -1;
+        public String PriceGrpName, Description;
         public Double Discount;
         public DiscountTypes DiscountType;
         public Boolean IsDefault;
-
+        public List<string> ListPriceGroupColumn = new List<string>();
+        public string PriceGrpCol = "";
         public int Compare(PriceGroupDetails x, PriceGroupDetails y)
         {
-            return x.Name.ToUpper().CompareTo(y.Name.ToUpper());
+            return x.PriceGrpName.ToUpper().CompareTo(y.PriceGrpName.ToUpper());
         }
 
         public static DiscountTypes GetDiscountType(String DiscountTypeName)

@@ -36,9 +36,7 @@ namespace SalesOrdersReport
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblUserName = new System.Windows.Forms.Label();
             this.txtUserName = new System.Windows.Forms.TextBox();
-            this.lblEditUserValidMsg = new System.Windows.Forms.Label();
-            this.lblEditPhoneValidMsg = new System.Windows.Forms.Label();
-            this.lblEditEmailIdValidMsg = new System.Windows.Forms.Label();
+            //this.lblEditEmailIdValidMsg = new System.Windows.Forms.Label();
             this.lblCommonErrorMsg = new System.Windows.Forms.Label();
             this.lblRoleAsterik = new System.Windows.Forms.Label();
             this.lblActiveAsterik = new System.Windows.Forms.Label();
@@ -61,7 +59,7 @@ namespace SalesOrdersReport
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(214, 318);
+            this.btnReset.Location = new System.Drawing.Point(216, 230);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(97, 39);
             this.btnReset.TabIndex = 9;
@@ -71,7 +69,7 @@ namespace SalesOrdersReport
             // 
             // btnEditUser
             // 
-            this.btnEditUser.Location = new System.Drawing.Point(111, 318);
+            this.btnEditUser.Location = new System.Drawing.Point(113, 230);
             this.btnEditUser.Name = "btnEditUser";
             this.btnEditUser.Size = new System.Drawing.Size(97, 39);
             this.btnEditUser.TabIndex = 8;
@@ -83,9 +81,7 @@ namespace SalesOrdersReport
             // 
             this.groupBox1.Controls.Add(this.lblUserName);
             this.groupBox1.Controls.Add(this.txtUserName);
-            this.groupBox1.Controls.Add(this.lblEditUserValidMsg);
-            this.groupBox1.Controls.Add(this.lblEditPhoneValidMsg);
-            this.groupBox1.Controls.Add(this.lblEditEmailIdValidMsg);
+            //this.groupBox1.Controls.Add(this.lblEditEmailIdValidMsg);
             this.groupBox1.Controls.Add(this.lblCommonErrorMsg);
             this.groupBox1.Controls.Add(this.lblRoleAsterik);
             this.groupBox1.Controls.Add(this.lblActiveAsterik);
@@ -108,7 +104,7 @@ namespace SalesOrdersReport
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(332, 414);
+            this.groupBox1.Size = new System.Drawing.Size(332, 282);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Edit User";
@@ -131,38 +127,20 @@ namespace SalesOrdersReport
             this.txtUserName.Size = new System.Drawing.Size(208, 20);
             this.txtUserName.TabIndex = 0;
             // 
-            // lblEditUserValidMsg
-            // 
-            this.lblEditUserValidMsg.AutoSize = true;
-            this.lblEditUserValidMsg.ForeColor = System.Drawing.Color.Red;
-            this.lblEditUserValidMsg.Location = new System.Drawing.Point(110, 101);
-            this.lblEditUserValidMsg.Name = "lblEditUserValidMsg";
-            this.lblEditUserValidMsg.Size = new System.Drawing.Size(0, 13);
-            this.lblEditUserValidMsg.TabIndex = 32;
-            // 
-            // lblEditPhoneValidMsg
-            // 
-            this.lblEditPhoneValidMsg.AutoSize = true;
-            this.lblEditPhoneValidMsg.ForeColor = System.Drawing.Color.Red;
-            this.lblEditPhoneValidMsg.Location = new System.Drawing.Point(110, 182);
-            this.lblEditPhoneValidMsg.Name = "lblEditPhoneValidMsg";
-            this.lblEditPhoneValidMsg.Size = new System.Drawing.Size(109, 13);
-            this.lblEditPhoneValidMsg.TabIndex = 31;
-            // 
             // lblEditEmailIdValidMsg
             // 
-            this.lblEditEmailIdValidMsg.AutoSize = true;
-            this.lblEditEmailIdValidMsg.ForeColor = System.Drawing.Color.Red;
-            this.lblEditEmailIdValidMsg.Location = new System.Drawing.Point(108, 185);
-            this.lblEditEmailIdValidMsg.Name = "lblEditEmailIdValidMsg";
-            this.lblEditEmailIdValidMsg.Size = new System.Drawing.Size(0, 13);
-            this.lblEditEmailIdValidMsg.TabIndex = 30;
+            //this.lblEditEmailIdValidMsg.AutoSize = true;
+            //this.lblEditEmailIdValidMsg.ForeColor = System.Drawing.Color.Red;
+            //this.lblEditEmailIdValidMsg.Location = new System.Drawing.Point(110, 124);
+            //this.lblEditEmailIdValidMsg.Name = "lblEditEmailIdValidMsg";
+            //this.lblEditEmailIdValidMsg.Size = new System.Drawing.Size(0, 13);
+            //this.lblEditEmailIdValidMsg.TabIndex = 30;
             // 
             // lblCommonErrorMsg
             // 
             this.lblCommonErrorMsg.AutoSize = true;
             this.lblCommonErrorMsg.ForeColor = System.Drawing.Color.Red;
-            this.lblCommonErrorMsg.Location = new System.Drawing.Point(108, 334);
+            this.lblCommonErrorMsg.Location = new System.Drawing.Point(110, 214);
             this.lblCommonErrorMsg.Name = "lblCommonErrorMsg";
             this.lblCommonErrorMsg.Size = new System.Drawing.Size(0, 13);
             this.lblCommonErrorMsg.TabIndex = 29;
@@ -171,7 +149,7 @@ namespace SalesOrdersReport
             // 
             this.lblRoleAsterik.AutoSize = true;
             this.lblRoleAsterik.ForeColor = System.Drawing.Color.Red;
-            this.lblRoleAsterik.Location = new System.Drawing.Point(41, 270);
+            this.lblRoleAsterik.Location = new System.Drawing.Point(43, 193);
             this.lblRoleAsterik.Name = "lblRoleAsterik";
             this.lblRoleAsterik.Size = new System.Drawing.Size(11, 13);
             this.lblRoleAsterik.TabIndex = 28;
@@ -181,7 +159,7 @@ namespace SalesOrdersReport
             // 
             this.lblActiveAsterik.AutoSize = true;
             this.lblActiveAsterik.ForeColor = System.Drawing.Color.Red;
-            this.lblActiveAsterik.Location = new System.Drawing.Point(38, 236);
+            this.lblActiveAsterik.Location = new System.Drawing.Point(38, 166);
             this.lblActiveAsterik.Name = "lblActiveAsterik";
             this.lblActiveAsterik.Size = new System.Drawing.Size(11, 13);
             this.lblActiveAsterik.TabIndex = 27;
@@ -191,7 +169,7 @@ namespace SalesOrdersReport
             // 
             this.lblFullNameAsterik.AutoSize = true;
             this.lblFullNameAsterik.ForeColor = System.Drawing.Color.Red;
-            this.lblFullNameAsterik.Location = new System.Drawing.Point(55, 76);
+            this.lblFullNameAsterik.Location = new System.Drawing.Point(55, 61);
             this.lblFullNameAsterik.Name = "lblFullNameAsterik";
             this.lblFullNameAsterik.Size = new System.Drawing.Size(11, 13);
             this.lblFullNameAsterik.TabIndex = 26;
@@ -201,7 +179,7 @@ namespace SalesOrdersReport
             // 
             this.lblIsActive.AutoSize = true;
             this.lblIsActive.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblIsActive.Location = new System.Drawing.Point(6, 236);
+            this.lblIsActive.Location = new System.Drawing.Point(6, 166);
             this.lblIsActive.Name = "lblIsActive";
             this.lblIsActive.Size = new System.Drawing.Size(37, 13);
             this.lblIsActive.TabIndex = 22;
@@ -210,7 +188,7 @@ namespace SalesOrdersReport
             // rdbtnActiveNo
             // 
             this.rdbtnActiveNo.AutoSize = true;
-            this.rdbtnActiveNo.Location = new System.Drawing.Point(192, 237);
+            this.rdbtnActiveNo.Location = new System.Drawing.Point(192, 167);
             this.rdbtnActiveNo.Name = "rdbtnActiveNo";
             this.rdbtnActiveNo.Size = new System.Drawing.Size(39, 17);
             this.rdbtnActiveNo.TabIndex = 6;
@@ -220,7 +198,7 @@ namespace SalesOrdersReport
             // rdbtnActiveYes
             // 
             this.rdbtnActiveYes.AutoSize = true;
-            this.rdbtnActiveYes.Location = new System.Drawing.Point(113, 237);
+            this.rdbtnActiveYes.Location = new System.Drawing.Point(113, 167);
             this.rdbtnActiveYes.Name = "rdbtnActiveYes";
             this.rdbtnActiveYes.Size = new System.Drawing.Size(43, 17);
             this.rdbtnActiveYes.TabIndex = 5;
@@ -231,25 +209,27 @@ namespace SalesOrdersReport
             // 
             this.cmbxSelectStore.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbxSelectStore.FormattingEnabled = true;
-            this.cmbxSelectStore.Location = new System.Drawing.Point(111, 200);
+            this.cmbxSelectStore.Location = new System.Drawing.Point(113, 140);
             this.cmbxSelectStore.Name = "cmbxSelectStore";
             this.cmbxSelectStore.Size = new System.Drawing.Size(121, 21);
             this.cmbxSelectStore.TabIndex = 4;
+            this.cmbxSelectStore.SelectedIndexChanged += new System.EventHandler(this.cmbxSelectStore_SelectedIndexChanged);
             this.cmbxSelectStore.Click += new System.EventHandler(this.cmbxSelectStore_Click);
             // 
             // lblEditStoreName
             // 
             this.lblEditStoreName.AutoSize = true;
             this.lblEditStoreName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEditStoreName.Location = new System.Drawing.Point(6, 200);
+            this.lblEditStoreName.Location = new System.Drawing.Point(8, 140);
             this.lblEditStoreName.Name = "lblEditStoreName";
             this.lblEditStoreName.Size = new System.Drawing.Size(32, 13);
             this.lblEditStoreName.TabIndex = 18;
             this.lblEditStoreName.Text = "Store";
+            this.lblEditStoreName.Click += new System.EventHandler(this.lblEditStoreName_Click);
             // 
             // txtEmailID
             // 
-            this.txtEmailID.Location = new System.Drawing.Point(113, 119);
+            this.txtEmailID.Location = new System.Drawing.Point(113, 88);
             this.txtEmailID.Name = "txtEmailID";
             this.txtEmailID.Size = new System.Drawing.Size(208, 20);
             this.txtEmailID.TabIndex = 2;
@@ -258,7 +238,7 @@ namespace SalesOrdersReport
             // 
             this.lblEditEmailID.AutoSize = true;
             this.lblEditEmailID.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEditEmailID.Location = new System.Drawing.Point(6, 118);
+            this.lblEditEmailID.Location = new System.Drawing.Point(6, 87);
             this.lblEditEmailID.Name = "lblEditEmailID";
             this.lblEditEmailID.Size = new System.Drawing.Size(46, 13);
             this.lblEditEmailID.TabIndex = 14;
@@ -268,7 +248,7 @@ namespace SalesOrdersReport
             // 
             this.cmbxSelectRoleID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbxSelectRoleID.FormattingEnabled = true;
-            this.cmbxSelectRoleID.Location = new System.Drawing.Point(111, 267);
+            this.cmbxSelectRoleID.Location = new System.Drawing.Point(113, 190);
             this.cmbxSelectRoleID.Name = "cmbxSelectRoleID";
             this.cmbxSelectRoleID.Size = new System.Drawing.Size(121, 21);
             this.cmbxSelectRoleID.TabIndex = 7;
@@ -278,7 +258,7 @@ namespace SalesOrdersReport
             // 
             this.lblEditRoleID.AutoSize = true;
             this.lblEditRoleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEditRoleID.Location = new System.Drawing.Point(6, 270);
+            this.lblEditRoleID.Location = new System.Drawing.Point(8, 193);
             this.lblEditRoleID.Name = "lblEditRoleID";
             this.lblEditRoleID.Size = new System.Drawing.Size(40, 13);
             this.lblEditRoleID.TabIndex = 12;
@@ -286,7 +266,7 @@ namespace SalesOrdersReport
             // 
             // txtPhone
             // 
-            this.txtPhone.Location = new System.Drawing.Point(113, 159);
+            this.txtPhone.Location = new System.Drawing.Point(113, 114);
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.Size = new System.Drawing.Size(208, 20);
             this.txtPhone.TabIndex = 3;
@@ -295,7 +275,7 @@ namespace SalesOrdersReport
             // 
             this.lblEditPhoneNo.AutoSize = true;
             this.lblEditPhoneNo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEditPhoneNo.Location = new System.Drawing.Point(6, 162);
+            this.lblEditPhoneNo.Location = new System.Drawing.Point(6, 117);
             this.lblEditPhoneNo.Name = "lblEditPhoneNo";
             this.lblEditPhoneNo.Size = new System.Drawing.Size(38, 13);
             this.lblEditPhoneNo.TabIndex = 8;
@@ -303,7 +283,7 @@ namespace SalesOrdersReport
             // 
             // txtFullName
             // 
-            this.txtFullName.Location = new System.Drawing.Point(113, 77);
+            this.txtFullName.Location = new System.Drawing.Point(113, 62);
             this.txtFullName.Name = "txtFullName";
             this.txtFullName.Size = new System.Drawing.Size(208, 20);
             this.txtFullName.TabIndex = 1;
@@ -312,7 +292,7 @@ namespace SalesOrdersReport
             // 
             this.lblEditFullName.AutoSize = true;
             this.lblEditFullName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEditFullName.Location = new System.Drawing.Point(6, 76);
+            this.lblEditFullName.Location = new System.Drawing.Point(6, 61);
             this.lblEditFullName.Name = "lblEditFullName";
             this.lblEditFullName.Size = new System.Drawing.Size(54, 13);
             this.lblEditFullName.TabIndex = 6;
@@ -323,7 +303,7 @@ namespace SalesOrdersReport
             this.AcceptButton = this.btnEditUser;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(368, 445);
+            this.ClientSize = new System.Drawing.Size(352, 300);
             this.Controls.Add(this.groupBox1);
             this.Name = "EditUserForm";
             this.ShowIcon = false;
@@ -360,11 +340,11 @@ namespace SalesOrdersReport
         private System.Windows.Forms.Label lblRoleAsterik;
         private System.Windows.Forms.Label lblActiveAsterik;
         private System.Windows.Forms.Label lblFullNameAsterik;
-        private System.Windows.Forms.Label lblEditPhoneValidMsg;
-        private System.Windows.Forms.Label lblEditEmailIdValidMsg;
+        //private System.Windows.Forms.Label lblEditPhoneValidMsg;
+        //private System.Windows.Forms.Label lblEditEmailIdValidMsg;
         private System.Windows.Forms.Label lblCommonErrorMsg;
         private System.Windows.Forms.Label lblUserName;
         public System.Windows.Forms.TextBox txtUserName;
-        private System.Windows.Forms.Label lblEditUserValidMsg;
+        //private System.Windows.Forms.Label lblEditUserValidMsg;
     }
 }

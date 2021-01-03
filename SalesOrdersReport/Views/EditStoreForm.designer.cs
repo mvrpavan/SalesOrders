@@ -35,8 +35,7 @@ namespace SalesOrdersReport
             this.btnEditStore = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cmbxAllStoreNames = new System.Windows.Forms.ComboBox();
-            this.lblEditStoreValidMsg = new System.Windows.Forms.Label();
-            this.lblEditExecutivePhoneValidMsg = new System.Windows.Forms.Label();
+            this.lblEditStoreCommonValidMsg = new System.Windows.Forms.Label();
             this.lblEditStoreAsterik = new System.Windows.Forms.Label();
             this.txtEditStoreExcutivePhone = new System.Windows.Forms.TextBox();
             this.lblStorePhoneNo = new System.Windows.Forms.Label();
@@ -50,7 +49,7 @@ namespace SalesOrdersReport
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(214, 289);
+            this.btnReset.Location = new System.Drawing.Point(216, 226);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(97, 39);
             this.btnReset.TabIndex = 10;
@@ -60,7 +59,7 @@ namespace SalesOrdersReport
             // 
             // btnEditStore
             // 
-            this.btnEditStore.Location = new System.Drawing.Point(111, 289);
+            this.btnEditStore.Location = new System.Drawing.Point(113, 226);
             this.btnEditStore.Name = "btnEditStore";
             this.btnEditStore.Size = new System.Drawing.Size(97, 39);
             this.btnEditStore.TabIndex = 9;
@@ -71,8 +70,7 @@ namespace SalesOrdersReport
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.cmbxAllStoreNames);
-            this.groupBox1.Controls.Add(this.lblEditStoreValidMsg);
-            this.groupBox1.Controls.Add(this.lblEditExecutivePhoneValidMsg);
+            this.groupBox1.Controls.Add(this.lblEditStoreCommonValidMsg);
             this.groupBox1.Controls.Add(this.lblEditStoreAsterik);
             this.groupBox1.Controls.Add(this.txtEditStoreExcutivePhone);
             this.groupBox1.Controls.Add(this.lblStorePhoneNo);
@@ -86,7 +84,7 @@ namespace SalesOrdersReport
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(344, 356);
+            this.groupBox1.Size = new System.Drawing.Size(344, 286);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Edit Store";
@@ -101,23 +99,15 @@ namespace SalesOrdersReport
             this.cmbxAllStoreNames.TabIndex = 33;
             this.cmbxAllStoreNames.SelectedIndexChanged += new System.EventHandler(this.cmbxAllStoreNames_SelectedIndexChanged);
             // 
-            // lblEditStoreValidMsg
+            // lblEditStoreCommonValidMsg
             // 
-            this.lblEditStoreValidMsg.AutoSize = true;
-            this.lblEditStoreValidMsg.ForeColor = System.Drawing.Color.Red;
-            this.lblEditStoreValidMsg.Location = new System.Drawing.Point(110, 51);
-            this.lblEditStoreValidMsg.Name = "lblEditStoreValidMsg";
-            this.lblEditStoreValidMsg.Size = new System.Drawing.Size(0, 13);
-            this.lblEditStoreValidMsg.TabIndex = 32;
-            // 
-            // lblEditExecutivePhoneValidMsg
-            // 
-            this.lblEditExecutivePhoneValidMsg.AutoSize = true;
-            this.lblEditExecutivePhoneValidMsg.ForeColor = System.Drawing.Color.Red;
-            this.lblEditExecutivePhoneValidMsg.Location = new System.Drawing.Point(110, 258);
-            this.lblEditExecutivePhoneValidMsg.Name = "lblEditExecutivePhoneValidMsg";
-            this.lblEditExecutivePhoneValidMsg.Size = new System.Drawing.Size(0, 13);
-            this.lblEditExecutivePhoneValidMsg.TabIndex = 31;
+            this.lblEditStoreCommonValidMsg.AutoSize = true;
+            this.lblEditStoreCommonValidMsg.ForeColor = System.Drawing.Color.Red;
+            this.lblEditStoreCommonValidMsg.Location = new System.Drawing.Point(110, 210);
+            this.lblEditStoreCommonValidMsg.Name = "lblEditStoreCommonValidMsg";
+            this.lblEditStoreCommonValidMsg.Size = new System.Drawing.Size(31, 13);
+            this.lblEditStoreCommonValidMsg.TabIndex = 31;
+            this.lblEditStoreCommonValidMsg.Text = "dcdc";
             // 
             // lblEditStoreAsterik
             // 
@@ -131,7 +121,7 @@ namespace SalesOrdersReport
             // 
             // txtEditStoreExcutivePhone
             // 
-            this.txtEditStoreExcutivePhone.Location = new System.Drawing.Point(113, 225);
+            this.txtEditStoreExcutivePhone.Location = new System.Drawing.Point(113, 187);
             this.txtEditStoreExcutivePhone.Name = "txtEditStoreExcutivePhone";
             this.txtEditStoreExcutivePhone.Size = new System.Drawing.Size(208, 20);
             this.txtEditStoreExcutivePhone.TabIndex = 4;
@@ -140,7 +130,7 @@ namespace SalesOrdersReport
             // 
             this.lblStorePhoneNo.AutoSize = true;
             this.lblStorePhoneNo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStorePhoneNo.Location = new System.Drawing.Point(6, 228);
+            this.lblStorePhoneNo.Location = new System.Drawing.Point(6, 190);
             this.lblStorePhoneNo.Name = "lblStorePhoneNo";
             this.lblStorePhoneNo.Size = new System.Drawing.Size(38, 13);
             this.lblStorePhoneNo.TabIndex = 8;
@@ -148,7 +138,7 @@ namespace SalesOrdersReport
             // 
             // txtEditStoreExecutiveName
             // 
-            this.txtEditStoreExecutiveName.Location = new System.Drawing.Point(113, 185);
+            this.txtEditStoreExecutiveName.Location = new System.Drawing.Point(113, 161);
             this.txtEditStoreExecutiveName.Name = "txtEditStoreExecutiveName";
             this.txtEditStoreExecutiveName.Size = new System.Drawing.Size(206, 20);
             this.txtEditStoreExecutiveName.TabIndex = 2;
@@ -157,7 +147,7 @@ namespace SalesOrdersReport
             // 
             this.lblStoreExecutiveName.AutoSize = true;
             this.lblStoreExecutiveName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStoreExecutiveName.Location = new System.Drawing.Point(4, 184);
+            this.lblStoreExecutiveName.Location = new System.Drawing.Point(4, 160);
             this.lblStoreExecutiveName.Name = "lblStoreExecutiveName";
             this.lblStoreExecutiveName.Size = new System.Drawing.Size(85, 13);
             this.lblStoreExecutiveName.TabIndex = 6;
@@ -167,7 +157,7 @@ namespace SalesOrdersReport
             // 
             this.lblStoreAddress.AutoSize = true;
             this.lblStoreAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStoreAddress.Location = new System.Drawing.Point(6, 66);
+            this.lblStoreAddress.Location = new System.Drawing.Point(6, 55);
             this.lblStoreAddress.Name = "lblStoreAddress";
             this.lblStoreAddress.Size = new System.Drawing.Size(45, 13);
             this.lblStoreAddress.TabIndex = 12;
@@ -185,7 +175,7 @@ namespace SalesOrdersReport
             // 
             // txtEditStoreAddress
             // 
-            this.txtEditStoreAddress.Location = new System.Drawing.Point(113, 66);
+            this.txtEditStoreAddress.Location = new System.Drawing.Point(113, 55);
             this.txtEditStoreAddress.Multiline = true;
             this.txtEditStoreAddress.Name = "txtEditStoreAddress";
             this.txtEditStoreAddress.Size = new System.Drawing.Size(208, 100);
@@ -196,7 +186,7 @@ namespace SalesOrdersReport
             this.AcceptButton = this.btnEditStore;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(368, 381);
+            this.ClientSize = new System.Drawing.Size(368, 314);
             this.Controls.Add(this.groupBox1);
             this.Name = "EditStoreForm";
             this.ShowIcon = false;
@@ -225,8 +215,7 @@ namespace SalesOrdersReport
         private System.Windows.Forms.TextBox txtEditStoreExcutivePhone;
         private System.Windows.Forms.Label lblStorePhoneNo;
         private System.Windows.Forms.Label lblEditStoreAsterik;
-        private System.Windows.Forms.Label lblEditExecutivePhoneValidMsg;
-        private System.Windows.Forms.Label lblEditStoreValidMsg;
+        private System.Windows.Forms.Label lblEditStoreCommonValidMsg;
         private System.Windows.Forms.ComboBox cmbxAllStoreNames;
     }
 }

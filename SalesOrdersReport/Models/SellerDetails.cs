@@ -7,6 +7,7 @@ namespace SalesOrdersReport
 {
     class DiscountGroupDetails : IComparer<DiscountGroupDetails>
     {
+        public int ID = -1;
         public String Name, Description;
         public Double Discount;
         public DiscountTypes DiscountType;
@@ -113,8 +114,8 @@ namespace SalesOrdersReport
                 {
                     ListSellerDetails.Insert(~SellerIndex, ObjSellerDetails);
 
-                    ObjSellerDetails.LineIndex = CommonFunctions.ListSellerLines.FindIndex(e => e.Equals(ObjSellerDetails.Line, StringComparison.InvariantCultureIgnoreCase));
-                    ObjSellerDetails.PriceGroupIndex = ListPriceGroups.FindIndex(e => e.Name.Equals(ObjSellerDetails.PriceGroup, StringComparison.InvariantCultureIgnoreCase));
+                    ObjSellerDetails.LineIndex = CommonFunctions.ListCustomerLines.FindIndex(e => e.Equals(ObjSellerDetails.Line, StringComparison.InvariantCultureIgnoreCase));
+                    ObjSellerDetails.PriceGroupIndex = ListPriceGroups.FindIndex(e => e.PriceGrpName.Equals(ObjSellerDetails.PriceGroup, StringComparison.InvariantCultureIgnoreCase));
                     ObjSellerDetails.DiscountGroupIndex = ListDiscountGroups.FindIndex(e => e.Name.Equals(ObjSellerDetails.DiscountGroup, StringComparison.InvariantCultureIgnoreCase));
                 }
             }

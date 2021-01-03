@@ -748,12 +748,9 @@ namespace SalesOrdersReport
             //btnUserProfile.Region = new System.Drawing.Region(buttonPath);
         }
 
-
-
         public void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             IsLoggedOut = true ;
-            
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -761,7 +758,7 @@ namespace SalesOrdersReport
             this.UserProfileToolStripMenuItem.Text = tmpMySQLHelper.CurrentUser;
             //this.UserProfileToolStripMenuItem.Text = tmpMySQLHelper.CurrentUser = "Nisha";
 
-        List<string> ListAssignesPrivilegeNames = CommonFunctions.ObjUserMasterModel.GetOnlyAssignedPrivilegeNamesForAnUser(tmpMySQLHelper.CurrentUser);
+             List<string> ListAssignesPrivilegeNames = CommonFunctions.ObjUserMasterModel.GetOnlyAssignedPrivilegeNamesForAnUser(tmpMySQLHelper.CurrentUser);
             //&&&&&& checkonce
             //string strControlVal = "manageUsersToolStripMenuItem"; //"SalesToolStripMenuItem" or "invoiceToolStripMenuItem" 
 
@@ -772,6 +769,12 @@ namespace SalesOrdersReport
                 //    item.Visible = false;
                 //}
             }
+        }
+
+        private void manageCustomertoolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ManageCustomerForm ObjManageCustomerForm = new ManageCustomerForm();
+            ShowChildForm(ObjManageCustomerForm);
         }
 
 

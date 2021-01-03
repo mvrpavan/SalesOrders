@@ -77,6 +77,10 @@ namespace SalesOrdersReport
                 cmbxSelectRoleID.SelectedIndex = 0;
                 cmbxSelectStore.SelectedIndex = 0;
                 txtCreateUserName.Focus();
+                //lblCreateEmailIdValidMsg.Visible = false;
+                //lblCreatePhoneValidMsg.Visible = false;
+                lblCommonErrorMsg.Visible = false;
+                //lblCreatePwdValidMsg.Visible = false;
             }
             catch (Exception ex)
             {
@@ -175,13 +179,13 @@ namespace SalesOrdersReport
                 bool IsValid = CommonFunctions.CheckForPasswordLength(txtCreatePassword.Text);
                 if (!IsValid)
                 {
-                    lblCreatePwdValidMsg.Visible = true;
-                    lblCreatePwdValidMsg.Text = "Password length should be of 5 to 20 characters";
+                    lblCommonErrorMsg.Visible = true;
+                    lblCommonErrorMsg.Text = "Password length should be of 5 to 20 characters";
                     txtCreatePassword.Focus();
                 }
                 else
                 {
-                    lblCreatePwdValidMsg.Visible = false;
+                    lblCommonErrorMsg.Visible = false;
                 }
                 return IsValid;
             }
@@ -199,13 +203,13 @@ namespace SalesOrdersReport
                 bool IsValid = CommonFunctions.ValidateEmail(txtEmailID.Text);
                 if (!IsValid)
                 {
-                    lblCreateEmailIdValidMsg.Visible = true;
-                    lblCreateEmailIdValidMsg.Text = "Invalid EmailID!";
+                    lblCommonErrorMsg.Visible = true;
+                    lblCommonErrorMsg.Text = "Invalid EmailID!";
                     txtEmailID.Focus();
                 }
                 else
                 {
-                    lblCreateEmailIdValidMsg.Visible = false;
+                    lblCommonErrorMsg.Visible = false;
                     btnCreateUser.Enabled = true;
                 }
                 return IsValid;
@@ -224,13 +228,13 @@ namespace SalesOrdersReport
                 bool IsValid = IsValid = CommonFunctions.ValidatePhoneNo(txtPhone.Text);
                 if (!IsValid)
                 {
-                    lblCreatePhoneValidMsg.Visible = true;
-                    lblCreatePhoneValidMsg.Text = "Enter Valid Phone No!"; ;
+                    lblCommonErrorMsg.Visible = true;
+                    lblCommonErrorMsg.Text = "Enter Valid Phone No!"; ;
                     txtPhone.Focus();
                 }
                 else
                 {
-                    lblCreatePhoneValidMsg.Visible = false;
+                    lblCommonErrorMsg.Visible = false;
                 }
                 return IsValid;
             }
@@ -276,5 +280,6 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("CreateUserForm.CreateUserForm_FormClosed()", ex);
             }
         }
+
     }
 }
