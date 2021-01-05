@@ -29,7 +29,7 @@ namespace SalesOrdersReport
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnRedirectCreateUser = new System.Windows.Forms.Button();
+            this.btnRedirectCreateCustomer = new System.Windows.Forms.Button();
             this.panelAllCustomerBtnTab = new System.Windows.Forms.Panel();
             this.btnImportFromExcel = new System.Windows.Forms.Button();
             this.btnEditDiscountGrp = new System.Windows.Forms.Button();
@@ -48,17 +48,17 @@ namespace SalesOrdersReport
             // 
             // btnRedirectCreateUser
             // 
-            this.btnRedirectCreateUser.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.btnRedirectCreateUser.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRedirectCreateUser.Image = global::SalesOrdersReport.Properties.Resources.CreateUser_321;
-            this.btnRedirectCreateUser.Location = new System.Drawing.Point(11, 3);
-            this.btnRedirectCreateUser.Name = "btnRedirectCreateUser";
-            this.btnRedirectCreateUser.Size = new System.Drawing.Size(80, 80);
-            this.btnRedirectCreateUser.TabIndex = 0;
-            this.btnRedirectCreateUser.Text = "Create Customer";
-            this.btnRedirectCreateUser.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnRedirectCreateUser.UseVisualStyleBackColor = false;
-            this.btnRedirectCreateUser.Click += new System.EventHandler(this.btnRedirectCreateCustomer_Click);
+            this.btnRedirectCreateCustomer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnRedirectCreateCustomer.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRedirectCreateCustomer.Image = global::SalesOrdersReport.Properties.Resources.CreateUser_321;
+            this.btnRedirectCreateCustomer.Location = new System.Drawing.Point(11, 3);
+            this.btnRedirectCreateCustomer.Name = "btnRedirectCreateUser";
+            this.btnRedirectCreateCustomer.Size = new System.Drawing.Size(80, 80);
+            this.btnRedirectCreateCustomer.TabIndex = 0;
+            this.btnRedirectCreateCustomer.Text = "Create Customer";
+            this.btnRedirectCreateCustomer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnRedirectCreateCustomer.UseVisualStyleBackColor = false;
+            this.btnRedirectCreateCustomer.Click += new System.EventHandler(this.btnRedirectCreateCustomer_Click);
             // 
             // panelAllCustomerBtnTab
             // 
@@ -72,7 +72,7 @@ namespace SalesOrdersReport
             this.panelAllCustomerBtnTab.Controls.Add(this.btnRedirectCreateLine);
             this.panelAllCustomerBtnTab.Controls.Add(this.btnRedirectDeleteCustomer);
             this.panelAllCustomerBtnTab.Controls.Add(this.btnRedirectEditCustomer);
-            this.panelAllCustomerBtnTab.Controls.Add(this.btnRedirectCreateUser);
+            this.panelAllCustomerBtnTab.Controls.Add(this.btnRedirectCreateCustomer);
             this.panelAllCustomerBtnTab.Location = new System.Drawing.Point(12, 12);
             this.panelAllCustomerBtnTab.Name = "panelAllCustomerBtnTab";
             this.panelAllCustomerBtnTab.Size = new System.Drawing.Size(897, 93);
@@ -254,7 +254,7 @@ namespace SalesOrdersReport
 
         #endregion
 
-        private System.Windows.Forms.Button btnRedirectCreateUser;
+        private System.Windows.Forms.Button btnRedirectCreateCustomer;
         private System.Windows.Forms.Panel panelAllCustomerBtnTab;
         private System.Windows.Forms.Button btnRedirectEditCustomer;
         //private System.Windows.Forms.DataGridView dataGridView1;

@@ -133,18 +133,18 @@ namespace SalesOrdersReport
         {
             try
             {
-                //if (txtEditPriceGrpName.Text.Trim() == string.Empty)
-                //{
-                //    lblValidatingErrMsg.Visible = true;
-                //    lblValidatingErrMsg.Text = "Price Group Name cant be empty! ";
-                //    return;
-                //}
-                if (txtEditPriceGrpDesc.Text.Trim() == string.Empty)
+                if (cmbxSelectPriceGrpName.SelectedIndex == 0)
                 {
                     lblValidatingErrMsg.Visible = true;
-                    lblValidatingErrMsg.Text = "Description Name cant be empty! ";
+                    lblValidatingErrMsg.Text = "Choose a Price Group Name to Edit!";
                     return;
                 }
+                //if (txtEditPriceGrpDesc.Text.Trim() == string.Empty)
+                //{
+                //    lblValidatingErrMsg.Visible = true;
+                //    lblValidatingErrMsg.Text = "Description Name cant be empty! ";
+                //    return;
+                //}
                 if (radioBtnEditDefaultFalse.Checked == false && radioBtnEditDefaultTrue.Checked == false)
                 {
                     lblValidatingErrMsg.Visible = true;

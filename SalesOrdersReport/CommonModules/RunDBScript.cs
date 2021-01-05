@@ -57,10 +57,9 @@ namespace SalesOrdersReport
         {
             try
             {
-
                 List<string> ListLineCol = new List<string>() { "LINEID,INT NOT NULL AUTO_INCREMENT", "LINENAME,VARCHAR(50)", "DESCRIPTION,VARCHAR(50)", "PRIMARY KEY,LINEID" };
                 tmpMySQLHelper.CreateTable("LINEMASTER", ListLineCol);
-                CommonFunctions.ObjCustomerMasterModel.CreateNewLine("Line0", "Super Line");
+                //CommonFunctions.ObjCustomerMasterModel.CreateNewLine("Line0", "Super Line");
             }
             catch (Exception ex)
             {
@@ -75,9 +74,9 @@ namespace SalesOrdersReport
             {
                 List<string> ListDisGrpCol = new List<string>() { "DISCOUNTGROUPID,INT NOT NULL AUTO_INCREMENT", "DISCOUNTGROUPNAME,VARCHAR(100) NOT NULL", "DESCRIPTION,VARCHAR(50)", "DISCOUNT,DECIMAL(4,2) DEFAULT 0", "ISDEFAULT,BIT DEFAULT NULL", "DISCOUNTTYPE,VARCHAR(10) DEFAULT 'ABSOLUTE'", "PRIMARY KEY,DISCOUNTGROUPID" };
                 tmpMySQLHelper.CreateTable("DISCOUNTGROUPMASTER", ListDisGrpCol);
-                //List<string> ListColumnNamesWthDataType = new List<string> { "DISCOUNT,DECIMAL(4,2)", "DEFAULT,TINYTEXT", "DISCOUNTTYPE,VARCHAR", }, ListColumnValues = new List<string>() { "0", "YES", "ABSOLUTE" };
-                //CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp", ListColumnNamesWthDataType, ListColumnValues);
-                CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp");
+                ////List<string> ListColumnNamesWthDataType = new List<string> { "DISCOUNT,DECIMAL(4,2)", "DEFAULT,TINYTEXT", "DISCOUNTTYPE,VARCHAR", }, ListColumnValues = new List<string>() { "0", "YES", "ABSOLUTE" };
+                ////CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp", ListColumnNamesWthDataType, ListColumnValues);
+                //CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp");
             }
             catch (Exception ex)
             {
@@ -92,9 +91,9 @@ namespace SalesOrdersReport
                 List<string> ListPriceGrpCol = new List<string>() { "PRICEGROUPID,INT NOT NULL AUTO_INCREMENT", "PRICEGROUPNAME,VARCHAR(100) NOT NULL", "DESCRIPTION,VARCHAR(50)", "PRICEGROUPCOLUMNNAME, VARCHAR(30) DEFAULT  'Purchase Price'", "DISCOUNT,DECIMAL(4,2) DEFAULT 0", "ISDEFAULT,BIT DEFAULT NULL", "DISCOUNTTYPE,VARCHAR(10) DEFAULT 'ABSOLUTE'", "PRIMARY KEY,PRICEGROUPID" };
                
                 tmpMySQLHelper.CreateTable("PRICEGROUPMASTER", ListPriceGrpCol);
-                //List<string> ListColumnNamesWthDataType = new List<string> { "DISCOUNT,DECIMAL(4,2)", "DEFAULT,TINYTEXT", "DISCOUNTTYPE,VARCHAR", }, ListColumnValues = new List<string>() { "0", "YES", "ABSOLUTE" };
-                //CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp", ListColumnNamesWthDataType, ListColumnValues);
-                CommonFunctions.ObjCustomerMasterModel.CreateNewPriceGrp("PriceGrp1", "Super Price Grp");
+                ////List<string> ListColumnNamesWthDataType = new List<string> { "DISCOUNT,DECIMAL(4,2)", "DEFAULT,TINYTEXT", "DISCOUNTTYPE,VARCHAR", }, ListColumnValues = new List<string>() { "0", "YES", "ABSOLUTE" };
+                ////CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp", ListColumnNamesWthDataType, ListColumnValues);
+                //CommonFunctions.ObjCustomerMasterModel.CreateNewPriceGrp("PriceGrp1", "Super Price Grp");
             }
             catch (Exception ex)
             {
@@ -126,7 +125,7 @@ namespace SalesOrdersReport
                 List<string> ListCustomerCol = new List<string>() { "CUSTOMERID,INT NOT NULL AUTO_INCREMENT", "CUSTOMERNAME,VARCHAR(100) NOT NULL", "ADDRESS,VARCHAR(100) NULL", "PHONENO, BIGINT(20) NULL DEFAULT NULL", "LINEID,INT NULL DEFAULT NULL", "PRICEGROUPID,INT NULL DEFAULT NULL", "DISCOUNTGROUPID,INT NULL DEFAULT NULL", "GSTIN,VARCHAR(20) NULL", "STATEID, VARCHAR(5) NULL DEFAULT NULL", "ADDEDDATE,DATETIME NULL", "LASTUPDATEDATE,DATETIME NULL", "ACTIVE,BIT NULL", "ORDERDAYS, VARCHAR(20) NOT NULL DEFAULT '1'", "PRIMARY KEY,CUSTOMERID" };
                 tmpMySQLHelper.CreateTable("CUSTOMERMASTER", ListCustomerCol);
                 List<string> ListColumnNamesWthDataType = new List<string> { "LASTUPDATEDATE,DATETIME", "ADDEDDATE,DATETIME" }, ListColumnValues = new List<string>() { DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"), DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") };
-                CommonFunctions.ObjCustomerMasterModel.CreateNewCustomer("customer0", "Line0", "DisGrp1", "PriceGrp1", true, ListColumnNamesWthDataType, ListColumnValues);
+               //CommonFunctions.ObjCustomerMasterModel.CreateNewCustomer("customer0", "Line0", "DisGrp1", "PriceGrp1", true, ListColumnNamesWthDataType, ListColumnValues);
             }
             catch (Exception ex)
             {
@@ -183,7 +182,7 @@ namespace SalesOrdersReport
             {
                 List<string> ListStoreCol = new List<string>() { "STOREID,INT AUTO_INCREMENT NOT NULL", "STORENAME,VARCHAR(50) NOT NULL DEFAULT 1", "ADDRESS,VARCHAR(100) NULL", "PHONENO,BIGINT(20) NULL DEFAULT NULL", "STOREEXECUTIVE,VARCHAR(50) NULL", "PRIMARY KEY,STOREID" };
                 tmpMySQLHelper.CreateTable("STOREMASTER", ListStoreCol);
-                CommonFunctions.ObjUserMasterModel.CreateNewStore("Store1");
+               // CommonFunctions.ObjUserMasterModel.CreateNewStore("Store1");
             }
             catch (Exception ex)
             {

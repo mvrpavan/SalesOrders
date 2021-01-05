@@ -39,6 +39,7 @@ namespace SalesOrdersReport
             this.btnRedirectDeleteUser = new System.Windows.Forms.Button();
             this.btnRedirectEditUser = new System.Windows.Forms.Button();
             this.dgvUserCache = new System.Windows.Forms.DataGridView();
+            this.bgWorkerManageUser = new System.ComponentModel.BackgroundWorker();
             this.panelAllBtnTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUserCache)).BeginInit();
             this.SuspendLayout();
@@ -173,19 +174,22 @@ namespace SalesOrdersReport
             // dgvUserCache
             // 
             this.dgvUserCache.AllowUserToAddRows = false;
-            this.dgvUserCache.AllowUserToResizeColumns = false;
-            this.dgvUserCache.AllowUserToOrderColumns = false;
             this.dgvUserCache.AllowUserToDeleteRows = false;
+            this.dgvUserCache.AllowUserToResizeColumns = false;
             this.dgvUserCache.AllowUserToResizeRows = false;
-            this.dgvUserCache.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvUserCache.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dgvUserCache.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvUserCache.Location = new System.Drawing.Point(12, 111);
             this.dgvUserCache.MultiSelect = false;
             this.dgvUserCache.Name = "dgvUserCache";
+            this.dgvUserCache.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvUserCache.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvUserCache.Size = new System.Drawing.Size(719, 207);
             this.dgvUserCache.TabIndex = 3;
-            
+            // 
+            // bgWorkerManageUser
+            // 
+            this.bgWorkerManageUser.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkerManageUser_DoWork);
+            this.bgWorkerManageUser.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkerManageUser_RunWorkerCompleted);
             // 
             // ManageUsersForm
             // 
@@ -217,5 +221,6 @@ namespace SalesOrdersReport
         private System.Windows.Forms.Button btnDefineRole;
         private System.Windows.Forms.Button btnEditStore;
         private System.Windows.Forms.Button btnCreateStore;
+        private System.ComponentModel.BackgroundWorker bgWorkerManageUser;
     }
 }

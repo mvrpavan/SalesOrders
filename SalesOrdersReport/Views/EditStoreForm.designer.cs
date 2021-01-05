@@ -105,9 +105,9 @@ namespace SalesOrdersReport
             this.lblEditStoreCommonValidMsg.ForeColor = System.Drawing.Color.Red;
             this.lblEditStoreCommonValidMsg.Location = new System.Drawing.Point(110, 210);
             this.lblEditStoreCommonValidMsg.Name = "lblEditStoreCommonValidMsg";
-            this.lblEditStoreCommonValidMsg.Size = new System.Drawing.Size(31, 13);
+            this.lblEditStoreCommonValidMsg.Size = new System.Drawing.Size(0, 13);
             this.lblEditStoreCommonValidMsg.TabIndex = 31;
-            this.lblEditStoreCommonValidMsg.Text = "dcdc";
+            this.lblEditStoreCommonValidMsg.Visible = false;
             // 
             // lblEditStoreAsterik
             // 

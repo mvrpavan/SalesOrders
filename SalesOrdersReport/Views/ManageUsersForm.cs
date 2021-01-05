@@ -562,5 +562,31 @@ namespace SalesOrdersReport
                 throw ex;
             }
         }
+
+        private void bgWorkerManageUser_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                CommonFunctions.ToggleEnabledPropertyOfAllControls(this);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ManageUserForm.bgWorkerManageUser_DoWork()", ex);
+            }
+          
+        }
+
+        private void bgWorkerManageUser_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                CommonFunctions.ToggleEnabledPropertyOfAllControls(this);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ManageUserForm.bgWorkerManageUser_RunWorkerCompleted()", ex);
+            }
+         
+        }
     }
 }

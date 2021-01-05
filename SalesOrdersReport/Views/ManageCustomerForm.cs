@@ -229,6 +229,7 @@ namespace SalesOrdersReport
                     // {
                     AddCheckBoxToDGV();
                     //}
+                    EnableDisableControls(true);
                 }
                 else
                 {
@@ -238,6 +239,40 @@ namespace SalesOrdersReport
 
                     dgvCustomerCache.DataSource = new BindingSource { DataSource = dataTable };
                     dgvCustomerCache.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    EnableDisableControls(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ManagerCustomerForm.BindCustomerGrid()", ex);
+                throw;
+            }
+        }
+        public void EnableDisableControls(bool Enable=true)
+        {
+            try
+            {
+                if (Enable)
+                {
+                    //btnCreateDiscountGrp.Enabled = true;
+                    //btnEditDiscountGrp.Enabled = true;
+                    //btnCreatePriceGrp.Enabled = true;
+                    //btnEditPriceGrp.Enabled = true;
+                    //btnRedirectCreateLine.Enabled = true;
+                    //btnEditLine.Enabled = true;
+                    btnRedirectEditCustomer.Enabled = true;
+                    btnRedirectDeleteCustomer.Enabled = true;
+                }
+                else
+                {
+                    //btnCreateDiscountGrp.Enabled = false;
+                    //btnEditDiscountGrp.Enabled = false;
+                    //btnCreatePriceGrp.Enabled = false;
+                    //btnEditPriceGrp.Enabled = false;
+                    //btnRedirectCreateLine.Enabled = false;
+                    //btnEditLine.Enabled = false;
+                    btnRedirectEditCustomer.Enabled = false;
+                    btnRedirectDeleteCustomer.Enabled = false;
                 }
             }
             catch (Exception ex)

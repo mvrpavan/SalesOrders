@@ -81,13 +81,19 @@ namespace SalesOrdersReport
                 //    txtEditLineName.Focus();
                 //    return;
                 //}
-                if (txtEditLineDesc.Text.Trim() == string.Empty)
+                if (cmbxSelectLine.SelectedIndex == 0)
                 {
                     lblValidErrMsg.Visible = true;
-                    lblValidErrMsg.Text = "Description Cant be empty!";
-                    txtEditLineDesc.Focus();
+                    lblValidErrMsg.Text = "Choose a Line Name to Edit!";
                     return;
                 }
+                //if (txtEditLineDesc.Text.Trim() == string.Empty)
+                //{
+                //    lblValidErrMsg.Visible = true;
+                //    lblValidErrMsg.Text = "Description Cant be empty!";
+                //    txtEditLineDesc.Focus();
+                //    return;
+                //}
                 List<string> ListColumnValues = new List<string>();
                 List<string> ListColumnNames = new List<string>();
 

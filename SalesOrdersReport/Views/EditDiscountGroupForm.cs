@@ -67,18 +67,20 @@ namespace SalesOrdersReport
         {
             try
             {
-                //if (txtEditDisGrpName.Text.Trim() == string.Empty)
-                //{
-                //    lblValidErrMsg.Visible = true;
-                //    lblValidErrMsg.Text = "Discount Group Name cant be empty! ";
-                //    return;
-                //}
-                if (txtEditDisGrpDesc.Text.Trim() == string.Empty)
+
+                if (cmbxSelectDisGroupName.SelectedIndex == 0)
                 {
+                    //MessageBox.Show("User Name Or Password Cannot be empty ");
                     lblValidErrMsg.Visible = true;
-                    lblValidErrMsg.Text = "Description Name cant be empty! ";
+                    lblValidErrMsg.Text = "Choose a Discount Group Name to Edit!";
                     return;
                 }
+                //if (txtEditDisGrpDesc.Text.Trim() == string.Empty)
+                //{
+                //    lblValidErrMsg.Visible = true;
+                //    lblValidErrMsg.Text = "Description Name cant be empty! ";
+                //    return;
+                //}
                 if (radioBtnEditDGDefaultNo.Checked == false && radioBtnEditDGDefaultYes.Checked == false)
                 {
                     lblValidErrMsg.Visible = true;
