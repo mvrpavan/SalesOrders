@@ -137,11 +137,16 @@ namespace SalesOrdersReport
 
                 int CountOfDisctinctCustomers = 0;
                 List<string> ListOfCustAlreadyInDB = new List<string>();
+               
                 int LineID = LastLineIDFromDB + 1, PGID = LastPGIDFromDB + 1, DGID = LastDGIDFromDB + 1, CustID = LastCustIDFromDB + 1;
+                if (LineID == 0) LineID += 1;
+                if (PGID == 0) PGID += 1;
+                if (DGID == 0) DGID += 1;
+                if (CustID == 0) CustID += 1;
                 while (srReadSelectedFile.Peek() != -1)
                 {
                     string[] arr = srReadSelectedFile.ReadLine().Split(ColSeparator);
-                    CustomerDetails ObjCD = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(arr[CustomerNameIndex]);
+                    CustomerDetails ObjCD = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(arr[CustomerNameIndex].Trim());
                     if (ObjCD != null)
                     {
                         ListOfCustAlreadyInDB.Add(arr[CustomerNameIndex]);
@@ -150,18 +155,19 @@ namespace SalesOrdersReport
                     CountOfDisctinctCustomers++;
                     CustomerDetails ObjCustomerDetails = new CustomerDetails();
                     // ObjCustomerDetails.CustomerID = int.Parse(dtRow["CUSTOMERID"].ToString().Trim());
-                    ObjCustomerDetails.CustomerName = arr[CustomerNameIndex];
-                    ObjCustomerDetails.Address = arr[AddressIndex].ToString();
-                    ObjCustomerDetails.GSTIN = arr[GSTINIndex].ToString();
-                    ObjCustomerDetails.PhoneNo = ((arr[PhoneIndex] == null) || arr[PhoneIndex].ToString().Trim() == "") ? 0 : Int64.Parse(arr[PhoneIndex].ToString().Trim());
-                    ObjCustomerDetails.Active = bool.Parse(arr[ActiveIndex].ToString().Trim() == "1" ? "true" : "false");
-                    ObjCustomerDetails.State = ((arr[StateIndex] == null) || arr[StateIndex].ToString().Trim() == "") ? "": arr[StateIndex].ToString().Trim();
-                    ObjCustomerDetails.OrderDaysAssigned = arr[OrderDaysIndex];
+                    ObjCustomerDetails.CustomerName = arr[CustomerNameIndex].Trim();
+                    ObjCustomerDetails.Address = arr[AddressIndex].Trim();
+                    ObjCustomerDetails.GSTIN = arr[GSTINIndex].Trim();
+                    ObjCustomerDetails.PhoneNo = ((arr[PhoneIndex] == null) || arr[PhoneIndex].Trim() == "") ? 0 : Int64.Parse(arr[PhoneIndex].Trim());
+                    //ObjCustomerDetails.Active = bool.Parse(arr[ActiveIndex].ToString().Trim() == "1" ? "true" : "false");
+                    if (arr[ActiveIndex].Trim() != "") ObjCustomerDetails.Active = bool.Parse(arr[ActiveIndex].Trim());
+                    ObjCustomerDetails.State = ((arr[StateIndex] == null) || arr[StateIndex].Trim() == "") ? "": arr[StateIndex].Trim();
+                    ObjCustomerDetails.OrderDaysAssigned = arr[OrderDaysIndex].Trim();
                     //ObjCustomerDetails.LastUpdateDate = ((arr[LastUpdateDateIndex] == null) || arr[LastUpdateDateIndex].ToString().Trim() == "") ? DateTime.MinValue : DateTime.Parse(arr[LastUpdateDateIndex].ToString());
                     //ObjCustomerDetails.AddedDate = ((arr[AddedDateIndex] == null) || arr[AddedDateIndex].ToString().Trim() == "") ? DateTime.MinValue : DateTime.Parse(arr[AddedDateIndex].ToString());
-                    ObjCustomerDetails.LineName = ((arr[LineNameIndex] == null) || arr[LineNameIndex].ToString().Trim() == "") ? "" : arr[LineNameIndex].ToString().Trim();
-                    ObjCustomerDetails.DiscountGroupName = ((arr[DiscountGroupNameIndex] == null) || arr[DiscountGroupNameIndex].ToString().Trim() == "") ? "" : arr[DiscountGroupNameIndex].ToString().Trim();
-                    ObjCustomerDetails.PriceGroupName = ((arr[PriceGroupNameIndex] == null) || arr[PriceGroupNameIndex].ToString().Trim() == "") ? "" : arr[PriceGroupNameIndex].ToString().Trim();
+                    ObjCustomerDetails.LineName = ((arr[LineNameIndex] == null) || arr[LineNameIndex].Trim() == "") ? "" : arr[LineNameIndex].Trim();
+                    ObjCustomerDetails.DiscountGroupName = ((arr[DiscountGroupNameIndex] == null) || arr[DiscountGroupNameIndex].Trim() == "") ? "" : arr[DiscountGroupNameIndex].Trim();
+                    ObjCustomerDetails.PriceGroupName = ((arr[PriceGroupNameIndex] == null) || arr[PriceGroupNameIndex].Trim() == "") ? "" : arr[PriceGroupNameIndex].Trim();
                     int Index = -1, AlreadyExistsIndex = -1; int ResultVal = -1;
                     
                     
@@ -182,7 +188,7 @@ namespace SalesOrdersReport
                             //{
                             ObjLineDetails.LineID = ObjCustomerDetails.LineID = LineID;
                             ListTempLineDtls.Insert(~Index, ObjLineDetails);
-                            CommonFunctions.ObjCustomerMasterModel.AddLineDetailsToCache(ObjLineDetails);
+                            //CommonFunctions.ObjCustomerMasterModel.AddLineDetailsToCache(ObjLineDetails);
                             LineID++;
                             // }
                         }
@@ -204,10 +210,10 @@ namespace SalesOrdersReport
                             //else
                             //{
                             ObjDiscountGroupDetails.DiscountGrpID = ObjCustomerDetails.DiscountGroupID = DGID;
-                            ObjDiscountGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(arr[DG_DiscountTypeIndex]);
-                            ObjDiscountGroupDetails.IsDefault = bool.Parse(arr[DGDefaultIndex]);
-                            ListTempDGDtls.Insert(~Index, ObjDiscountGroupDetails);
-                            CommonFunctions.ObjCustomerMasterModel.AddDiscountGroupToCache(ObjDiscountGroupDetails);
+                            ObjDiscountGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(arr[DG_DiscountTypeIndex].Trim());
+                            ObjDiscountGroupDetails.IsDefault = bool.Parse(arr[DGDefaultIndex].Trim());
+                            if (arr[DGDefaultIndex].Trim() != "") ListTempDGDtls.Insert(~Index, ObjDiscountGroupDetails);
+                            //CommonFunctions.ObjCustomerMasterModel.AddDiscountGroupToCache(ObjDiscountGroupDetails);
                             DGID++;
                             //}
                         }
@@ -228,11 +234,11 @@ namespace SalesOrdersReport
                             //else
                             //{
                             ObjPriceGroupDetails.PriceGroupID = ObjCustomerDetails.PriceGroupID = PGID;
-                            ObjPriceGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(arr[PG_DiscountTypeIndex]);
-                            ObjPriceGroupDetails.IsDefault = bool.Parse(arr[PGDefaultIndex]);
-                            ObjPriceGroupDetails.PriceGrpCol = arr[SelectedPriceGroupColNameIndex];
+                            ObjPriceGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(arr[PG_DiscountTypeIndex].Trim());
+                            ObjPriceGroupDetails.IsDefault = bool.Parse(arr[PGDefaultIndex].Trim());
+                            if (arr[PGDefaultIndex].Trim() != "") ObjPriceGroupDetails.PriceGrpCol = arr[SelectedPriceGroupColNameIndex].Trim();
                             ListTempPGDtls.Insert(~Index, ObjPriceGroupDetails);
-                            CommonFunctions.ObjCustomerMasterModel.AddPriceGroupToCache(ObjPriceGroupDetails);
+                            //CommonFunctions.ObjCustomerMasterModel.AddPriceGroupToCache(ObjPriceGroupDetails);
                             PGID++;
                             //}
                         }
@@ -260,7 +266,7 @@ namespace SalesOrdersReport
                             ObjCustomerDetails.CustomerID = CustID;
                             ObjCustomerDetails.StateID = CommonFunctions.ObjCustomerMasterModel.GetStateID(ObjCustomerDetails.State);
                             ListTempCustDtls.Insert(~Index, ObjCustomerDetails);
-                            CommonFunctions.ObjCustomerMasterModel.AddCustomerDataToCache(ObjCustomerDetails);
+                           // CommonFunctions.ObjCustomerMasterModel.AddCustomerDataToCache(ObjCustomerDetails);
                             CustID++;
                             //}
                         }
@@ -274,6 +280,7 @@ namespace SalesOrdersReport
                 if (ListTempPGDtls.Count > 0) CommonFunctions.ObjCustomerMasterModel.FillPriceGroupDBFromCache(ListTempPGDtls);
                 if (ListTempCustDtls.Count > 0) CommonFunctions.ObjCustomerMasterModel.FillCustomerDBFromCache(ListTempCustDtls);
 
+                if (ListTempLineDtls.Count > 0 || ListTempDGDtls.Count > 0 || ListTempPGDtls.Count > 0 || ListTempCustDtls.Count > 0) CommonFunctions.ObjCustomerMasterModel.LoadAllCustomerMasterTables();
             }
             catch (Exception ex)
             {
