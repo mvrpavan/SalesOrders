@@ -289,14 +289,14 @@ namespace SalesOrdersReport
             {
                 if (CheckTableExists(TableName))
                 {
-                    String CreateTableQuery = "SET SQL_SAFE_UPDATES=0;" + "UPDATE " + TableName + " SET ";
+                    String Query = "SET SQL_SAFE_UPDATES=0;" + "UPDATE " + TableName + " SET ";
                     for (int i = 0; i < ListColumnNames.Count; i++)
                     {
-                        CreateTableQuery += ListColumnNames[i] + " = '" + ListColumnValues[i] + "', ";
+                        Query += ListColumnNames[i] + " = '" + ListColumnValues[i] + "', ";
                     }
-                        CreateTableQuery = CreateTableQuery.Remove(CreateTableQuery.Length - 1, 1);
-                        CreateTableQuery += " WHERE "+WhereCondition + ";";
-                        ObjDbCommand.CommandText = CreateTableQuery;
+                        Query = Query.Remove(Query.Length - 1, 1);
+                        Query += " WHERE "+WhereCondition + ";";
+                        ObjDbCommand.CommandText = Query;
 
                        return ObjDbCommand.ExecuteNonQuery();                   
                 }
@@ -655,6 +655,9 @@ namespace SalesOrdersReport
         //    }
         //}
 
-
+        public static String GetDateStringForDB(DateTime dateTime)
+        {
+            return dateTime.ToString("yyyy-MM-dd");
+        }
     }
 }

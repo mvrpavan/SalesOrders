@@ -538,5 +538,18 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("MainForm.customersToolStripMenuItem_Click()", ex);
             }
         }
+
+        private void showAllOrdersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Views.OrdersMainForm ordersMainForm = new Views.OrdersMainForm();
+                ShowChildForm(ordersMainForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.showAllOrdersToolStripMenuItem_Click()", ex);
+            }
+        }
     }
 }

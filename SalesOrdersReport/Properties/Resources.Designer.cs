@@ -283,6 +283,16 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Iconshow_Hardware_Printer {
+            get {
+                object obj = ResourceManager.GetObject("Iconshow-Hardware-Printer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap import_icon {
             get {
                 object obj = ResourceManager.GetObject("import-icon", resourceCulture);

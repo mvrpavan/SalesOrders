@@ -52,6 +52,7 @@ namespace SalesOrdersReport
 
     class SellerDetails : IComparer<SellerDetails>
     {
+        public Int32 CustomerID;
         public String Name, Address, TINNumber, Phone, Line, PriceGroup, DiscountGroup, State, StateCode, GSTIN;
         public Int32 LineIndex, PriceGroupIndex, DiscountGroupIndex;
         public Double OldBalance;

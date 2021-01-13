@@ -8,10 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
+using SalesOrdersReport.Models;
 
 namespace SalesOrdersReport
 {
-    public partial class CustomerInvoiceSellerOrderForm : Form
+    partial class CreateOrderInvoiceForm : Form
     {
         String MasterFilePath, FormTitle = "", OrderInvoice = "";
         Boolean IsSellerOrder, IsCustomerBill;
@@ -34,12 +35,13 @@ namespace SalesOrdersReport
         List<Int32> ListSelectedRowIndexesToRemove = new List<Int32>();
         Int32 cmbBoxSellerCustomerIndex = -1;
         Boolean LoadCompleted = false;
-        Boolean IsSalesInvoiceFileValid = false;
         Dictionary<String, Tuple<String, DataTable>> DictCurrCustomerBillNumItemDetails = null;
         Int32 cmbBoxBillNumberIndex = -1;
         Double OriginalBalanceAmount = -1;
+        Int32 CurrentOrderID = -1;
+        OrdersModel ObjOrdersModel = null;
 
-        public CustomerInvoiceSellerOrderForm(Boolean IsSellerOrder, Boolean IsCustomerBill)
+        public CreateOrderInvoiceForm(Int32 OrderID, OrdersModel ObjOrdersModel, Boolean IsSellerOrder, Boolean IsCustomerBill)
         {
             try
             {
@@ -56,16 +58,12 @@ namespace SalesOrdersReport
                     btnCnclInvOrd.Text = "Void Order";
 
                     lblSelectName.Text = "Select Seller";
-                    lblInvOrdFile.Text = "Sales Order File";
                     lblInvoiceNumber.Text = "Order#";
                     lblInvoiceDate.Text = "Order Date";
 
                     lblInvoiceNumber.Visible = false;
                     txtBoxInvOrdNumber.Visible = false;
                     btnDiscount.Enabled = false;
-                    txtBoxSalesQuotFilePath.Visible = false;
-                    lblQuotFile.Visible = false;
-                    btnBrowseSalesQuotFile.Visible = false;
                     lblStatus.Text = "Please choose Sales Order date";
 
                     btnEditBalanceAmount.Enabled = false;
@@ -81,14 +79,9 @@ namespace SalesOrdersReport
                     btnCreateInvOrd.Text = "Create/Update Bill";
                     btnCnclInvOrd.Text = "Void Bill";
                     lblSelectName.Text = "Select Customer";
-                    lblInvOrdFile.Text = "Invoice File";
-                    lblQuotFile.Text = "Quotation File";
                     lblInvoiceNumber.Text = "Bill#";
                     lblInvoiceDate.Text = "Bill Date";
                     btnDiscount.Enabled = true;
-                    txtBoxSalesQuotFilePath.Enabled = true;
-                    txtBoxSalesQuotFilePath.ReadOnly = true;
-                    btnBrowseSalesQuotFile.Enabled = false;
                     btnCnclInvOrd.Enabled = false;
                     btnCnclInvOrd.BackColor = Color.LightGray;
                     btnCnclInvOrd.ForeColor = Color.White;
@@ -103,11 +96,12 @@ namespace SalesOrdersReport
                 this.IsSellerOrder = IsSellerOrder;
                 this.IsCustomerBill = IsCustomerBill;
                 this.Text = FormTitle;
-                txtSalesOrderFilePath.ReadOnly = true;
-                btnBrowseSalesOrderFile.Enabled = false;
                 picBoxLoading.Visible = false;
                 dtGridViewProdListForSelection.SelectionMode = DataGridViewSelectionMode.CellSelect;
                 dtGridViewInvOrdProdList.SelectionMode = DataGridViewSelectionMode.CellSelect;
+
+                CurrentOrderID = OrderID;
+                this.ObjOrdersModel = ObjOrdersModel;
             }
             catch (Exception ex)
             {
@@ -156,31 +150,10 @@ namespace SalesOrdersReport
         {
             try
             {
+                this.ControlBox = true;
                 this.MaximizeBox = true;
-                this.WindowState = FormWindowState.Maximized;
+                this.WindowState = FormWindowState.Normal;
                 this.StartPosition = FormStartPosition.CenterScreen;
-                if (IsSellerOrder)
-                {
-                    String FileName = "SalesOrder_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
-                    txtSalesOrderFilePath.Text = Path.GetDirectoryName(MasterFilePath) + @"\" + FileName;
-                }
-
-                if (IsCustomerBill)
-                {
-                    txtSalesOrderFilePath.Text = "";
-                    if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatInvoice)
-                    {
-                        String FileName = "Invoice_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
-                        txtSalesOrderFilePath.Text = Path.GetDirectoryName(MasterFilePath) + @"\" + FileName;
-                    }
-
-                    txtBoxSalesQuotFilePath.Text = "";
-                    if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatQuotation)
-                    {
-                        String FileName = "Quotation_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
-                        txtBoxSalesQuotFilePath.Text = Path.GetDirectoryName(MasterFilePath) + @"\" + FileName;
-                    }
-                }
 
                 ResetControls();
                 EnableItemsPanel(false);
@@ -311,26 +284,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (CurrSellerOrderDetails == null) return;
-
-                Excel.Workbook xlSalesOrderWorkbook = xlApp.Workbooks.Open(txtSalesOrderFilePath.Text);
-                Excel.Worksheet xlSalesOrderWorksheet = CommonFunctions.GetWorksheet(xlSalesOrderWorkbook, dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy"));
-                Int32 SellerRow = CurrSellerOrderDetails.SellerRowIndex, StartColumn = 1, DetailsCount = 5;
-
-                Int32 ColumnCount = DetailsCount + CurrSellerOrderDetails.ListItemQuantity.Count;
-                for (int i = StartColumn + DetailsCount; i <= ColumnCount; i++)
-                {
-                    Int32 ItemIndex = i - (StartColumn + DetailsCount);
-                    if (CurrSellerOrderDetails.ListItemQuantity[ItemIndex] != CurrSellerOrderDetails.ListItemOrigQuantity[ItemIndex])
-                    {
-                        if (CurrSellerOrderDetails.ListItemQuantity[ItemIndex] > 0)
-                            xlSalesOrderWorksheet.Cells[SellerRow, i].Value = CurrSellerOrderDetails.ListItemQuantity[ItemIndex];
-                        else
-                            xlSalesOrderWorksheet.Cells[SellerRow, i].Value = "";
-                    }
-                }
-
-                xlSalesOrderWorkbook.Close(SaveChanges: true);
+                ObjOrdersModel.UpdateOrderDetails(CurrSellerOrderDetails.CurrOrderDetails);
             }
             catch (Exception ex)
             {
@@ -342,104 +296,31 @@ namespace SalesOrdersReport
         {
             try
             {
-                if (CurrSellerOrderDetails == null) return;
-
-                Excel.Workbook xlSalesOrderWorkbook = xlApp.Workbooks.Open(txtSalesOrderFilePath.Text);
-                Excel.Worksheet xlSalesOrderWorksheet = CommonFunctions.GetWorksheet(xlSalesOrderWorkbook, dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy"));
-                Int32 SellerRow = CurrSellerOrderDetails.SellerRowIndex, StartColumn = 1, DetailsCount = 5;
-
-                CurrSellerOrderDetails.ListItemQuantity = new List<Double>();
-                Int32 ColumnCount = DetailsCount + DictItemToColIndexes.Count;
-
-                for (int i = StartColumn + DetailsCount; i <= ColumnCount; i++)
+                OrderDetails CurrentOrderDetails = null;
+                if (CurrentOrderID > 0)
                 {
-                    String Value = null;
-                    if (xlSalesOrderWorksheet.Cells[SellerRow, i].Value != null)
-                        Value = xlSalesOrderWorksheet.Cells[SellerRow, i].Value.ToString();
-
-                    if (String.IsNullOrEmpty(Value))
-                    {
-                        CurrSellerOrderDetails.ListItemQuantity.Add(0);
-                    }
-                    else
-                    {
-                        Double result;
-                        if (Double.TryParse(Value, out result))
-                            CurrSellerOrderDetails.ListItemQuantity.Add(result);
-                        else
-                        {
-                            KeyValuePair<String, Int32> item = DictItemToColIndexes.ElementAt(i - (StartColumn + DetailsCount));
-                            MessageBox.Show(this, "Invalid Quantity in Sales Order sheet\nSeller:" + CurrSellerOrderDetails.SellerName + ", Item:" + item.Key + ", Quantity:" + Value + "\nIgnoring quantity for this item",
-                                            "Quantity Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            CurrSellerOrderDetails.ListItemQuantity.Add(0);
-                        }
-                    }
+                    //Load Order details for selected OrderID
+                    CurrentOrderDetails = ObjOrdersModel.GetOrderDetailsForOrderID(CurrentOrderID);
                 }
-                CurrSellerOrderDetails.ListItemOrigQuantity = CurrSellerOrderDetails.ListItemQuantity.ToList();
-                xlSalesOrderWorkbook.Close();
+                else
+                {
+                    //Create new Order for selected Customer, if already exists then edit the order to ensure that there is only order for a customer on a given date
+                    SellerDetails ObjSellerDetails = CommonFunctions.ObjSellerMaster.GetSellerDetails(cmbBoxSellerCustomer.Items[cmbBoxSellerCustomer.SelectedIndex].ToString());
+                    CurrentOrderDetails = ObjOrdersModel.GetOrderDetailsForCustomer(dtTmPckrInvOrdDate.Value, ObjSellerDetails.CustomerID);
+                    if (CurrentOrderDetails == null)
+                    {
+                        CurrentOrderDetails = new OrderDetails();
+                        CurrentOrderDetails.ListOrderItems = new List<OrderItemDetails>();
+                    }
+                    CurrentOrderID = CurrentOrderDetails.OrderID;
+                }
+
+                CurrSellerOrderDetails.CurrOrderDetails = CurrentOrderDetails;
+                CurrSellerOrderDetails.CurrOrderDetailsOrig = CurrentOrderDetails.Clone();
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.LoadSalesOrderForCurrSeller()", ex);
-            }
-        }
-
-        void LoadInvQuotDataForCurrSeller()
-        {
-            try
-            {
-                String BillFilePath = "";
-                Int32 CustomerNameRow = -1, CustomerNameCol = -1;
-                Int32 BillNumRow = -1, BillNumCol = -1;
-                Invoice objInvoice = null;
-
-                if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatQuotation)
-                {
-                    BillFilePath = txtBoxSalesQuotFilePath.Text;
-                    CustomerNameRow = 1; CustomerNameCol = 2;
-                    BillNumRow = 2; BillNumCol = 6;
-                    objInvoice = CommonFunctions.GetInvoiceTemplate(ReportType.QUOTATION);
-                }
-                else if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatInvoice)
-                {
-                    BillFilePath = txtSalesOrderFilePath.Text;
-                    CustomerNameRow = 2; CustomerNameCol = 3;
-                    BillNumRow = 2; BillNumCol = 10;
-                    objInvoice = CommonFunctions.GetInvoiceTemplate(ReportType.INVOICE);
-                }
-
-                DictCurrCustomerBillNumItemDetails = new Dictionary<String, Tuple<String, DataTable>>();
-                Excel.Workbook xlInvQuotWorkbook = xlApp.Workbooks.Open(BillFilePath);
-                List<String> ListBills = new List<String>();
-                List<String> ListSheets = new List<String>();
-                foreach (Excel.Worksheet sheet in xlInvQuotWorkbook.Worksheets)
-                {
-                    if (sheet.Name.Equals("Item Summary") || sheet.Name.Equals("Seller Summary")) continue;
-
-                    String CustomerName = sheet.Cells[CustomerNameRow, CustomerNameCol].Value;
-                    String BillNumber = sheet.Cells[BillNumRow, BillNumCol].Value.ToString();
-                    if (CustomerName.Equals(CurrSellerDetails.Name, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        ListBills.Add(BillNumber); ListSheets.Add(sheet.Name);
-                    }
-                }
-                xlInvQuotWorkbook.Close();
-
-                //Load item details from Invoice/Quotation
-                for (int i = 0; i < ListBills.Count; i++)
-                {
-                    DataTable dtBillItems = objInvoice.LoadInvoice(ListSheets[i], BillFilePath);
-                    DictCurrCustomerBillNumItemDetails.Add(ListBills[i], new Tuple<String, DataTable>(ListSheets[i], dtBillItems));
-                }
-
-                cmbBoxBillNumber.Items.Clear();
-                if (ListBills.Count > 0) cmbBoxBillNumber.Items.AddRange(ListBills.ToArray());
-                cmbBoxBillNumber.Items.Add("<New>");
-                cmbBoxBillNumber.SelectedIndex = 0;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.LoadInvQuotDataForCurrSeller()", ex);
             }
         }
 
@@ -570,7 +451,7 @@ namespace SalesOrdersReport
                 switch (BackgroundTask)
                 {
                     case 1:     //Load Sales Order Sheet
-                        if (IsSellerOrder) LoadSalesOrderSheet();
+                        //if (IsSellerOrder) LoadSalesOrderSheet();
                         break;
                     case 2:     //Load Seller Order details
                         LoadSalesOrderForCurrSeller();
@@ -581,30 +462,11 @@ namespace SalesOrdersReport
                             UpdateSalesOrderSheetForCurrSeller();
                             CreateSalesInvoiceForCurrOrder(ReportType.QUOTATION, false, true);
                         }
-                        if (IsCustomerBill)
-                        {
-                            if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatInvoice)
-                                CreateSalesInvoiceForCurrOrder(ReportType.INVOICE);
-                            if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatQuotation)
-                                CreateSalesInvoiceForCurrOrder(ReportType.QUOTATION);
-                        }
                         break;
                     case 5:     //Create default or load Invoice and Quotation file
-                        //Create default Invoice or Quotation file
-                        for (int i = 0; i < DefaultSaleReportTypesToCreate.Count; i++)
-                        {
-                            CreateDefaultSalesInvoiceSheet(DefaultSaleReportTypesToCreate[i]);
-                        }
-
                         //Load Invoice or Quotation file
-                        IsSalesInvoiceFileValid = true;
-                        for (int i = 0; i < DefaultSaleReportTypesToLoad.Count; i++)
-                        {
-                            LoadSalesInvoiceSheet(DefaultSaleReportTypesToLoad[i]);
-                        }
                         break;
                     case 6:     //Load Seller Invoice/Quotation details
-                        LoadInvQuotDataForCurrSeller();
                         break;
                     case 7:
                         if (IsSellerOrder)
@@ -638,17 +500,6 @@ namespace SalesOrdersReport
                 switch (BackgroundTask)
                 {
                     case 1:     //Load all Sellers
-                        EnableItemsPanel(false);
-                        picBoxLoading.Visible = false;
-                        if (IsSellerOrder)
-                        {
-                            dtTmPckrInvOrdDate.Enabled = false;
-                            btnBrowseSalesOrderFile.Enabled = false;
-                            MessageBox.Show(this, "Completed loading of Sales Order data", "Sales Order", MessageBoxButtons.OK);
-                            lblStatus.Text = "Choose a Seller to create/update Sales Order";
-                            cmbBoxSellerCustomer.Enabled = true;
-                            cmbBoxSellerCustomer.Focus();
-                        }
                         break;
                     case 2:     //Load Seller Order for Current Seller
                         if (CurrSellerOrderDetails.OrderItemCount == 0)
@@ -741,85 +592,8 @@ namespace SalesOrdersReport
                         break;
                     case 5:
                         picBoxLoading.Visible = false;
-                        if (IsCustomerBill)
-                        {
-                            if (DefaultSaleReportTypesToLoad.Count > 0)
-                            {
-                                if (IsSalesInvoiceFileValid)
-                                {
-                                    dtTmPckrInvOrdDate.Enabled = false;
-                                    btnBrowseSalesOrderFile.Enabled = false;
-                                    EnableItemsPanel(false);
-                                    cmbBoxSellerCustomer.Enabled = true;
-                                    if (DefaultSaleReportTypesToCreate.Count == 0)
-                                    {
-                                        MessageBox.Show(this, "Completed loading of Sales Invoice/Quotation data", "Sales Invoice/Quotation", MessageBoxButtons.OK);
-                                        lblStatus.Text = "Choose a Customer to create Sales Invoice/Quotation";
-                                        cmbBoxSellerCustomer.Focus();
-                                    }
-                                }
-                                else
-                                {
-                                    EnableItemsPanel(false);
-                                    lblStatus.Text = "Please choose a valid Sales Invoice/Quotation file";
-                                }
-                            }
-
-                            if (DefaultSaleReportTypesToCreate.Count > 0)
-                            {
-                                dtTmPckrInvOrdDate.Enabled = false;
-                                btnBrowseSalesOrderFile.Enabled = false;
-                                EnableItemsPanel(false);
-                                cmbBoxSellerCustomer.Enabled = true;
-                                if (DefaultSaleReportTypesToLoad.Count == 0)
-                                {
-                                    MessageBox.Show(this, "Created default Sales Invoice/Quotation file successfully", "Sales Invoice/Quotation", MessageBoxButtons.OK);
-                                    lblStatus.Text = "Choose a Customer to create Sales Invoice/Quotation";
-                                    cmbBoxSellerCustomer.Focus();
-                                }
-                            }
-
-                            if (DefaultSaleReportTypesToCreate.Count > 0 && DefaultSaleReportTypesToLoad.Count > 0)
-                            {
-                                dtTmPckrInvOrdDate.Enabled = true;
-                                btnBrowseSalesOrderFile.Enabled = true;
-                                EnableItemsPanel(false);
-                                if (IsSalesInvoiceFileValid)
-                                {
-                                    dtTmPckrInvOrdDate.Enabled = false;
-                                    btnBrowseSalesOrderFile.Enabled = false;
-                                    cmbBoxSellerCustomer.Enabled = true;
-                                    cmbBoxSellerCustomer.Focus();
-
-                                    if (DefaultSaleReportTypesToLoad[0] == ReportType.INVOICE)
-                                        MessageBox.Show(this, "Completed loading of Sales Invoice data", "Sales Invoice", MessageBoxButtons.OK);
-                                    if (DefaultSaleReportTypesToLoad[0] == ReportType.QUOTATION)
-                                        MessageBox.Show(this, "Completed loading of Sales Quotation data", "Sales Quotation", MessageBoxButtons.OK);
-                                }
-                                else
-                                {
-                                    if (DefaultSaleReportTypesToLoad[0] == ReportType.INVOICE)
-                                        lblStatus.Text = "Please choose a valid Sales Invoice file";
-                                    if (DefaultSaleReportTypesToLoad[0] == ReportType.QUOTATION)
-                                        lblStatus.Text = "Please choose a valid Sales Quotation file";
-                                }
-
-                                if (DefaultSaleReportTypesToCreate[0] == ReportType.INVOICE)
-                                    MessageBox.Show(this, "Created default Sales Invoice file successfully", "Sales Invoice", MessageBoxButtons.OK);
-                                if (DefaultSaleReportTypesToCreate[0] == ReportType.QUOTATION)
-                                    MessageBox.Show(this, "Created default Sales Quotation file successfully", "Sales Quotation", MessageBoxButtons.OK);
-
-                                lblStatus.Text = "Choose a Customer to create Sales Invoice & Quotation";
-                            }
-                        }
                         break;
                     case 6:
-                        lblStatus.Text = "Add/Modify Items to Customer Bill";
-
-                        UpdateSummaryDetails();
-                        EnableItemsPanel(true);
-                        picBoxLoading.Visible = false;
-                        MessageBox.Show(this, "Loaded Bill data for selected Customer", "Customer Bill", MessageBoxButtons.OK);
                         break;
                     default:
                         break;
@@ -1197,48 +971,6 @@ namespace SalesOrdersReport
                         backgroundWorker1_RunWorkerCompleted(null, null);
                     }
                 }
-
-                if (IsCustomerBill)
-                {
-                    //Check if the Order is changed before changing Customer
-                    if (cmbBoxSellerCustomer.SelectedIndex == cmbBoxSellerCustomerIndex) return;
-
-                    EnableItemsPanel(false);
-                    if (dtGridViewInvOrdProdList.Rows.Count > 0)
-                    {
-                        DialogResult diagResult = MessageBox.Show(this, "All Changes made to this Customer Invoice will be lost.\nAre you sure to change the Customer?", "Change Customer", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-                        if (diagResult == DialogResult.No)
-                        {
-                            cmbBoxSellerCustomer.SelectedIndex = cmbBoxSellerCustomerIndex;
-                            EnableItemsPanel(true);
-                            return;
-                        }
-                    }
-
-                    cmbBoxSellerCustomerIndex = cmbBoxSellerCustomer.SelectedIndex;
-                    String SellerName = cmbBoxSellerCustomer.SelectedValue.ToString();
-                    CurrSellerDetails = CommonFunctions.ObjSellerMaster.GetSellerDetails(SellerName);
-                    CurrSellerDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(CurrSellerDetails.Name);
-                    if (CurrSellerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
-                        DiscountPerc = CurrSellerDiscountGroup.Discount;
-                    else if (CurrSellerDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
-                        DiscountValue = CurrSellerDiscountGroup.Discount;
-                    cmbBoxBillNumberIndex = -1;
-
-                    ResetControls();
-
-                    picBoxLoading.Visible = true;
-                    lblStatus.Text = "Loading Seller order data from Invoice/Quotation file. Please wait...";
-                    BackgroundTask = 6;
-#if DEBUG
-                    backgroundWorker1_DoWork(null, null);
-                    backgroundWorker1_RunWorkerCompleted(null, null);
-#else
-                    ReportProgress = backgroundWorker1.ReportProgress;
-                    backgroundWorker1.RunWorkerAsync();
-                    backgroundWorker1.WorkerReportsProgress = true;
-#endif
-                }
             }
             catch (Exception ex)
             {
@@ -1561,7 +1293,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                EditOldBalanceForm editOldBalanceForm = new EditOldBalanceForm(this, Double.Parse(lblBalanceAmountValue.Text));
+                EditOldBalanceForm editOldBalanceForm = new EditOldBalanceForm(new CustomerInvoiceSellerOrderForm(IsSellerOrder, IsCustomerBill), Double.Parse(lblBalanceAmountValue.Text));
                 editOldBalanceForm.ShowDialog(this);
             }
             catch (Exception ex)
@@ -1640,105 +1372,11 @@ namespace SalesOrdersReport
             }
         }
 
-        private void btnSalesOrderFilePath_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                opnFileDialog.InitialDirectory = Path.GetDirectoryName(MasterFilePath);
-                opnFileDialog.Multiselect = false;
-                DialogResult result = opnFileDialog.ShowDialog(this);
-                if (result == System.Windows.Forms.DialogResult.Cancel) return;
-                txtSalesOrderFilePath.Text = opnFileDialog.FileName;
-
-                if (!File.Exists(txtSalesOrderFilePath.Text))
-                {
-                    String FileName = Path.GetFileName(txtSalesOrderFilePath.Text);
-                    if (IsSellerOrder)
-                    {
-                        MessageBox.Show(this, "Sales Order file (" + FileName + ") does not exist."
-                                            + "\nPlease create Sales Order File for this Date, before creating any Orders.",
-                                            "Sales Order File", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    }
-
-                    if (IsCustomerBill)
-                    {
-                        MessageBox.Show(this, "Sales Invoice file (" + FileName + ") does not exist."
-                                            + "\nPlease create Sales Invoice File for this Date, before creating any Invoice.",
-                                            "Sales Invoice File", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    }
-                    return;
-                }
-
-                picBoxLoading.Visible = true;
-                lblStatus.Text = "Loading data from Sales Order file. Please wait...";
-                BackgroundTask = 1;
-#if DEBUG
-                backgroundWorker1_DoWork(null, null);
-                backgroundWorker1_RunWorkerCompleted(null, null);
-#else
-                ReportProgress = backgroundWorker1.ReportProgress;
-                backgroundWorker1.RunWorkerAsync();
-                backgroundWorker1.WorkerReportsProgress = true;
-#endif
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.btnSalesOrderFilePath_Click()", ex);
-            }
-        }
-
         List<String> ListCustomerInvoiceSheetNames = new List<String>(), ListCustomerQuotationSheetNames = new List<String>();
         private void dtTmPckrInvOrdDate_ValueChanged(object sender, EventArgs e)
         {
             try
             {
-                EnableItemsPanel(false);
-
-                if (IsSellerOrder)
-                {
-                    String FileName = "SalesOrder_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
-                    txtSalesOrderFilePath.Text = Path.GetDirectoryName(MasterFilePath) + @"\" + FileName;
-
-                    if (!File.Exists(txtSalesOrderFilePath.Text))
-                    {
-                        MessageBox.Show(this, "Sales Order file (" + FileName + ") does not exist."
-                                            + "\nPlease create Sales Order File for this Date, before creating any Orders.",
-                                            "Sales Order File", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return;
-                    }
-
-                    picBoxLoading.Visible = true;
-                    lblStatus.Text = "Loading data from Sales Order file, please wait.....";
-                    BackgroundTask = 1;
-#if DEBUG
-                    backgroundWorker1_DoWork(null, null);
-                    backgroundWorker1_RunWorkerCompleted(null, null);
-#else
-                    ReportProgress = backgroundWorker1.ReportProgress;
-                    backgroundWorker1.RunWorkerAsync();
-                    backgroundWorker1.WorkerReportsProgress = true;
-#endif
-                }
-
-                if (IsCustomerBill)
-                {
-                    if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatInvoice)
-                        CheckSalesInvoiceQuotationFile(ReportType.INVOICE);
-                    if (CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatQuotation)
-                        CheckSalesInvoiceQuotationFile(ReportType.QUOTATION);
-
-                    //Create an Invoice File with default ItemSummary and Seller Summary
-                    picBoxLoading.Visible = true;
-                    BackgroundTask = 5;
-#if DEBUG
-                    backgroundWorker1_DoWork(null, null);
-                    backgroundWorker1_RunWorkerCompleted(null, null);
-#else
-                    ReportProgress = backgroundWorker1.ReportProgress;
-                    backgroundWorker1.RunWorkerAsync();
-                    backgroundWorker1.WorkerReportsProgress = true;
-#endif
-                }
             }
             catch (Exception ex)
             {
@@ -1748,271 +1386,6 @@ namespace SalesOrdersReport
 
         List<ReportType> DefaultSaleReportTypesToCreate = new List<ReportType>();
         List<ReportType> DefaultSaleReportTypesToLoad = new List<ReportType>();
-        private Boolean CheckSalesInvoiceQuotationFile(ReportType enumReportType)
-        {
-            try
-            {
-                String InvoiceQuotation = "";
-                String FileName = "";
-                if (enumReportType == ReportType.INVOICE)
-                {
-                    ListCustomerInvoiceSheetNames = new List<String>();
-                    InvoiceQuotation = "Invoice";
-                    FileName = Path.GetDirectoryName(MasterFilePath) + @"\" + InvoiceQuotation + "_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
-                    txtSalesOrderFilePath.Text = FileName;
-                }
-                if (enumReportType == ReportType.QUOTATION)
-                {
-                    ListCustomerQuotationSheetNames = new List<String>();
-                    InvoiceQuotation = "Quotation";
-                    FileName = Path.GetDirectoryName(MasterFilePath) + @"\" + InvoiceQuotation + "_" + dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy") + ".xlsx";
-                    txtBoxSalesQuotFilePath.Text = FileName;
-                }
-
-                if (!File.Exists(FileName))
-                {
-                    DialogResult result = MessageBox.Show(this, "Sales " + InvoiceQuotation + " file (" + FileName + ") does not exist."
-                                        + "\nDo you want to create default Sales " + InvoiceQuotation + " File for this Date?",
-                                        "Sales " + InvoiceQuotation + " File", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                    if (result == DialogResult.No)
-                    {
-                        MessageBox.Show(this, "Please select a date with Sales " + InvoiceQuotation + " file, before you create Customer Bills.",
-                                            "Sales " + InvoiceQuotation + " File", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                        return false;
-                    }
-
-                    DefaultSaleReportTypesToCreate.Add(enumReportType);
-                }
-                else
-                {
-                    DefaultSaleReportTypesToLoad.Add(enumReportType);
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.CheckSalesInvoiceQuotationFile()", ex);
-            }
-            return false;
-        }
-
-        private void LoadSalesOrderSheet()
-        {
-            try
-            {
-                Excel.Workbook xlSalesOrderWorkbook = xlApp.Workbooks.Open(txtSalesOrderFilePath.Text);
-                Excel.Worksheet xlSalesOrderWorksheet = CommonFunctions.GetWorksheet(xlSalesOrderWorkbook, dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy"));
-                Int32 StartRow = 5, StartColumn = 1, DetailsCount = 5;
-
-                #region Identify Items in SalesOrderSheet
-                DictItemToColIndexes = new Dictionary<String, Int32>();
-                Int32 ColumnCount = xlSalesOrderWorksheet.UsedRange.Columns.Count;
-                Int32 RowCount = xlSalesOrderWorksheet.UsedRange.Rows.Count + 1;
-                Int32 ProgressBarCount = ((ColumnCount - (StartColumn + DetailsCount)) + (RowCount - (StartRow + 1)));
-                for (int i = StartColumn + DetailsCount; i <= ColumnCount; i++)
-                {
-                    String ItemName = xlSalesOrderWorksheet.Cells[StartRow, i].Value;
-                    ItemName = ItemName.Trim();
-                    Int32 ItemIndex = ListAllProducts.FindIndex(e => e.ItemName.Equals(ItemName, StringComparison.InvariantCultureIgnoreCase));
-                    if (ItemIndex < 0)
-                    {
-                        DictItemToColIndexes.Add(ItemName.ToUpper(), -1);
-                        MessageBox.Show(this, "Item:" + ItemName + " not found in ItemMaster, Skipping this Item", "Item error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    else DictItemToColIndexes.Add(ListAllProducts[ItemIndex].ItemName.ToUpper(), i - (StartColumn + DetailsCount));
-                    ReportProgressFunc((i - (StartColumn + DetailsCount)) * 100 / ProgressBarCount);
-                }
-                #endregion
-
-                #region Identify Sellers in SalesOrderSheet
-                ListSellerOrderDetails = new List<SellerOrderDetails>();
-                DictSellerToRowIndexes = new Dictionary<String, Int32>();
-                for (int i = StartRow + 1; i <= RowCount; i++)
-                {
-                    if (xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value == null) continue;
-                    if (xlSalesOrderWorksheet.Cells[i, StartColumn + 2].Value == null) continue;
-                    String SellerName = xlSalesOrderWorksheet.Cells[i, StartColumn + 2].Value;
-                    SellerName = SellerName.Trim();
-                    Int32 SellerIndex = ListSellerNames.FindIndex(e => e.Equals(SellerName, StringComparison.InvariantCultureIgnoreCase));
-                    ReportProgressFunc((i - (StartColumn + 1) + (ColumnCount - (StartColumn + DetailsCount))) * 100 / ProgressBarCount);
-                    if (SellerIndex < 0)
-                    {
-                        MessageBox.Show(this, "Seller:" + SellerName + " not found in SellerMaster, Skipping this seller", "Seller error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        continue;
-                    }
-
-                    DictSellerToRowIndexes.Add(ListSellerNames[SellerIndex].ToUpper(), i);
-                    SellerOrderDetails tmpSellerOrderDetails = new SellerOrderDetails();
-                    tmpSellerOrderDetails.SellerName = ListSellerNames[SellerIndex];
-                    tmpSellerOrderDetails.SellerRowIndex = i;
-                    if (xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value != null)
-                        tmpSellerOrderDetails.OrderItemCount = Int32.Parse(xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value.ToString());
-                    else tmpSellerOrderDetails.OrderItemCount = 0;
-
-                    ListSellerOrderDetails.Add(tmpSellerOrderDetails);
-                }
-                #endregion
-
-                xlSalesOrderWorkbook.Close();
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.LoadSalesOrderSheet()", ex);
-            }
-        }
-
-        void LoadSalesInvoiceSheet(ReportType enumReportType)
-        {
-            try
-            {
-                String FilePath = "";
-                if (enumReportType == ReportType.INVOICE)
-                {
-                    FilePath = txtSalesOrderFilePath.Text;
-                    ListCustomerInvoiceSheetNames.Clear();
-                }
-                if (enumReportType == ReportType.QUOTATION)
-                {
-                    FilePath = txtBoxSalesQuotFilePath.Text;
-                    ListCustomerQuotationSheetNames.Clear();
-                }
-                Excel.Workbook ObjWorkbook = xlApp.Workbooks.Open(FilePath);
-                Int32 Count = 0;
-                Int32 ProgressbarCount = ObjWorkbook.Sheets.Count;
-                for (int i = 1; i <= ObjWorkbook.Sheets.Count; i++)
-                {
-                    String SheetName = ObjWorkbook.Worksheets[i].Name;
-                    if (SheetName.Equals("Item Summary", StringComparison.InvariantCultureIgnoreCase)
-                        || SheetName.Equals("Seller Summary", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        Count++;
-                        continue;
-                    }
-                    if (enumReportType == ReportType.INVOICE) ListCustomerInvoiceSheetNames.Add(SheetName);
-                    if (enumReportType == ReportType.QUOTATION) ListCustomerQuotationSheetNames.Add(SheetName);
-                    ReportProgressFunc(i * 100 / ProgressbarCount);
-                }
-
-                ObjWorkbook.Close(SaveChanges: false);
-
-                if (Count < 2
-                    && ((CommonFunctions.ObjGeneralSettings.SummaryLocation == 0 && enumReportType == ReportType.INVOICE)
-                    || (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1 && enumReportType == ReportType.QUOTATION)))
-                {
-                    if (enumReportType == ReportType.INVOICE)
-                        MessageBox.Show(this, "Invalid Sales Invoice file.\nPlease select Invoice file with Summary Sheets", "Sales Invoice File", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    if (enumReportType == ReportType.QUOTATION)
-                        MessageBox.Show(this, "Invalid Sales Quotation file.\nPlease select Quotation file with Summary Sheets", "Sales Quotation File", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    IsSalesInvoiceFileValid &= false;
-                }
-                else
-                {
-                    IsSalesInvoiceFileValid &= true;
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.LoadSalesInvoiceSheet()", ex);
-            }
-        }
-
-        void CreateDefaultSalesInvoiceSheet(ReportType enumReportType)
-        {
-            try
-            {
-                String FileName = "";
-                if (enumReportType == ReportType.INVOICE) FileName = txtSalesOrderFilePath.Text;
-                if (enumReportType == ReportType.QUOTATION) FileName = txtBoxSalesQuotFilePath.Text;
-                ReportProgressFunc(0);
-                Excel.Workbook xlWorkbook = xlApp.Workbooks.Add();
-
-                #region Print Seller Summary Sheet
-                Int32 SummaryStartRow = 0, CurrRow = 0, CurrCol = 0;
-                Excel.Worksheet xlSellerSummaryWorkSheet = xlWorkbook.Worksheets.Add(xlWorkbook.Sheets[1]);
-                xlSellerSummaryWorkSheet.Name = "Seller Summary";
-
-                SummaryStartRow++;
-                Excel.Range xlRange1 = xlSellerSummaryWorkSheet.Cells[SummaryStartRow, 1];
-                xlRange1.Value = "Date";
-                xlRange1.Font.Bold = true;
-                xlRange1 = xlSellerSummaryWorkSheet.Cells[SummaryStartRow, 2];
-                xlRange1.Value = dtTmPckrInvOrdDate.Value.ToString("dd-MMM-yyyy");
-                xlRange1 = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[SummaryStartRow, 2], xlSellerSummaryWorkSheet.Cells[SummaryStartRow, 3]];
-                xlRange1.Merge();
-                xlRange1.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-
-                CurrRow = SummaryStartRow + 1;
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Sl#";
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Line";
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Bill#";
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Seller Name";
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Sale";
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Cancel";
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Return";
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Discount";
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Total Tax";
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Net Sale";
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "OB";
-                CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = "Cash";
-                Int32 LastCol = CurrCol;
-                xlRange1 = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[CurrRow, 1], xlSellerSummaryWorkSheet.Cells[CurrRow, LastCol]];
-                xlRange1.Font.Bold = true;
-                ReportProgressFunc(50);
-                #endregion
-
-                #region Print Item Summary Sheet
-                SummaryStartRow = 0;
-                Double Total = 0;
-                Excel.Worksheet xlSummaryWorkSheet = xlWorkbook.Worksheets.Add(xlWorkbook.Sheets[1]);
-                xlSummaryWorkSheet.Name = "Item Summary";
-                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 1].Value = "Sl.No.";
-                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 2].Value = "Item Name";
-                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 3].Value = "Vendor Name";
-                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 4].Value = "Quantity";
-                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 5].Value = "Price";
-                xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 6].Value = "Total";
-                xlRange1 = xlSummaryWorkSheet.Range[xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 1], xlSummaryWorkSheet.Cells[SummaryStartRow + 1, 6]];
-                xlRange1.Font.Bold = true;
-
-                for (int i = 0; i < ListAllProducts.Count; i++)
-                {
-                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 1].Value = (i + 1).ToString();
-                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 2].Value = ListAllProducts[i].ItemName;
-                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 3].Value = ListAllProducts[i].VendorName;
-                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 4].Value = "0";
-                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].Value = ListAllProducts[i].PurchasePrice;
-                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 5].NumberFormat = "#,##0.00";
-                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].Value = "0";
-                    xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].NumberFormat = "#,##0.00";
-                    Total += Double.Parse(xlSummaryWorkSheet.Cells[i + SummaryStartRow + 2, 6].Value.ToString());
-                    ReportProgressFunc(50 + (i * 50 / ListAllProducts.Count));
-                }
-
-                Excel.Range tmpxlRange = xlSummaryWorkSheet.Cells[ListAllProducts.Count + SummaryStartRow + 2, 5];
-                tmpxlRange.Value = "Total";
-                tmpxlRange.Font.Bold = true;
-
-                tmpxlRange = xlSummaryWorkSheet.Cells[ListAllProducts.Count + SummaryStartRow + 2, 6];
-                tmpxlRange.Value = Total;
-                tmpxlRange.Font.Bold = true;
-                tmpxlRange.NumberFormat = "#,##0.00";
-                xlSummaryWorkSheet.UsedRange.Columns.AutoFit();
-                xlApp.DisplayAlerts = false;
-                xlApp.DisplayAlerts = true;
-                #endregion
-
-                if (xlWorkbook.Sheets["Sheet1"] != null) xlWorkbook.Sheets["Sheet1"].Delete();
-                if (xlWorkbook.Sheets["Sheet2"] != null) xlWorkbook.Sheets["Sheet2"].Delete();
-                if (xlWorkbook.Sheets["Sheet3"] != null) xlWorkbook.Sheets["Sheet3"].Delete();
-
-                xlWorkbook.Close(SaveChanges: true, Filename: FileName);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.CreateDefaultSalesInvoiceSheet()", ex);
-            }
-        }
 
         void CreateSalesInvoiceForCurrOrder(ReportType EnumReportType, Boolean CreateSummarySheet = true, Boolean IsDummyBill = false)
         {
@@ -2314,13 +1687,5 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.CreateSalesInvoiceForCurrOrder()", ex);
             }
         }
-    }
-
-    class SellerOrderDetails
-    {
-        public String SellerName;
-        public List<Double> ListItemQuantity, ListItemOrigQuantity;
-        public Int32 SellerRowIndex = -1, OrderItemCount = 0;
-        public Models.OrderDetails CurrOrderDetails, CurrOrderDetailsOrig;
     }
 }
