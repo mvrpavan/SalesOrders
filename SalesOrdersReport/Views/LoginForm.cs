@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.Text;
+using System.Data;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Views
 {
     public partial class LoginForm : Form
     {
@@ -12,52 +14,88 @@ namespace SalesOrdersReport
             //CommonFunctions.Initialize();
             CommonFunctions.CurrentForm = this;
             InitializeComponent();
+            txtUserName.Focus();
             tmpIntegDBHelper = MySQLHelper.GetMySqlHelperObj();
         }
 
-        //private void GetDBConnectionConfigForm_Closed(object sender, FormClosedEventArgs e)
-        //{
-        //    this.Show();
-        //}
+        private MySqlConnection CreateDBConnection()
+        {
+            try
+            {
+                tmpIntegDBHelper = MySQLHelper.GetMySqlHelperObj();
+
+                if (CommonFunctions.ObjApplicationSettings.Server == null || CommonFunctions.ObjApplicationSettings.Server == string.Empty)
+                {
+                    MessageBox.Show("DB is not Configured! Please Configure", "Error");
+                    return null;
+                }
+                if (tmpIntegDBHelper.GetDbConnection() == null || tmpIntegDBHelper.GetDbConnection().State == ConnectionState.Closed)
+                {
+                    tmpIntegDBHelper.OpenConnection(CommonFunctions.ObjApplicationSettings.Server, CommonFunctions.ObjApplicationSettings.DatabaseName, CommonFunctions.ObjApplicationSettings.UserName, CommonFunctions.ObjApplicationSettings.Password);
+                }
+                return tmpIntegDBHelper.GetDbConnection();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("LoginForm.CreateDBConnection()", ex);
+                throw ex;
+            }
+        }
+
+        private void GetDBConnectionConfigForm_Closed(object sender, FormClosedEventArgs e)
+        {
+            try
+            {
+                this.Show();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("LoginForm.GetDBConnectionConfigForm_Closed()", ex);
+                throw ex;
+            }
+        }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            txtUserName.Text = "a"; txtPassword.Text = "a";
-            if (txtUserName.Text == "")
-            {
-                MessageBox.Show("Please enter user name", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtUserName.Focus();
-                return;
-            }
-            if (txtPassword.Text == "")
-            {
-                MessageBox.Show("Please enter password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtPassword.Focus();
-                return;
-            }
-
+            //if (txtUserName.Text == "")
+            //{
+            //    MessageBox.Show("Please enter user name", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    txtUserName.Focus();
+            //    return;
+            //}
+            //if (txtPassword.Text == "")
+            //{
+            //    MessageBox.Show("Please enter password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    txtPassword.Focus();
+            //    return;
+            //}
             try
-            {               
-                if (!tmpIntegDBHelper.CheckTableExists("Users"))
-                {
-                    RunDBScript objRunDBScript = new RunDBScript();
-                    objRunDBScript.CreateNecessaryTables();
-                }
-                bool ReturnVal = true; //tmpIntegDBHelper.LoginCheck(txtUserName.Text, txtUserName.Text, myConnection);
+            {
+                MySqlConnection myConnection = MySQLHelper.GetMySqlHelperObj().GetDbConnection(); //CreateDBConnection();
+                if (myConnection == null) return;
+                //if (!tmpIntegDBHelper.CheckTableExists("USERMASTER"))
+                //{
+                //    RunDBScript ObjRunDBScript = new RunDBScript();
+                //    ObjRunDBScript.CreateNecessaryTables();
+                //}
 
-                if (ReturnVal)
+                //int ReturnVal = CommonFunctions.ObjUserMasterModel.LoginCheck(txtUserName.Text, txtPassword.Text, myConnection);
+                int ReturnVal = 0;
+                tmpIntegDBHelper.CurrentUser = "admin";
+                if (ReturnVal == 0)
                 {
-                    MessageBox.Show("You have logged in successfully " + txtUserName.Text);
-                    //Hide the login form
-                    MainForm objMainForm = new MainForm();
-                    objMainForm.lblCurrentUser.Text = tmpIntegDBHelper.CurrentUser;
-                    objMainForm.FormClosed += ObjMainForm_FormClosed;
-                    objMainForm.Show();
-                    this.Hide();
+                    CommonFunctions.CurrentUserName = tmpIntegDBHelper.CurrentUser;
+                    //CommonFunctions.CurrentUserName = tmpIntegDBHelper.CurrentUser = "admin";
+
+                    //CommonFunctions.ObjUserMasterModel.LoadAllUserMasterTables();
+                    //CommonFunctions.ObjCustomerMasterModel.LoadAllCustomerMasterTables();
+                    this.Close();
+                    DialogResult = DialogResult.OK;
                 }
                 else
                 {
-                    MessageBox.Show("Login Failed...Try again !", "Login Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (ReturnVal == -2) MessageBox.Show("User InActive! Pls Contact Admin", "InActive User",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    else MessageBox.Show("Login Failed...Try again !", "Login Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtUserName.Clear();
                     txtPassword.Clear();
                     txtUserName.Focus();
@@ -69,14 +107,36 @@ namespace SalesOrdersReport
             }
         }
 
+
         private void ObjMainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            this.Close();
+            try
+            {
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("LoginForm.ObjMainForm_FormClosed()", ex);
+                throw ex;
+            }
         }
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            try
+            {
+                Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("LoginForm.btnExit_Click()", ex);
+                throw ex;
+            }
+        }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+            txtUserName.Focus();
         }
     }
 }

@@ -4,15 +4,17 @@ using MySql.Data.MySqlClient;
 using System.Data.Common;
 using System.Data;
 using System.Windows.Forms;
+using SalesOrdersReport.CommonModules;
 
 namespace SalesOrdersReport
 {
     class MySQLHelper
     {
-        public MySqlConnection ObjDbConnection;
-        public MySqlConnectionStringBuilder ObjDbConnectionStringBuilder;
+        MySqlConnection ObjDbConnection;
+        MySqlConnectionStringBuilder ObjDbConnectionStringBuilder;
         public MySqlCommand ObjDbCommand;
         public string CurrentUser;
+        public DateTime LoginTime;
         static MySQLHelper ObjMySqlHelper = new MySQLHelper();
         private MySQLHelper()
         {
@@ -49,6 +51,7 @@ namespace SalesOrdersReport
                 ObjDbConnectionStringBuilder.Add("Password", DBPassword);
                 ObjDbConnectionStringBuilder.Add("persistsecurityinfo", "True");
                 ObjDbConnectionStringBuilder.Add("Allow Zero Datetime", "True");
+                ObjDbConnectionStringBuilder.Add("Allow User Variables", "True");
 
                 ObjDbConnection = new MySqlConnection();
                 ObjDbConnection.ConnectionString = ObjDbConnectionStringBuilder.ConnectionString;
@@ -314,10 +317,10 @@ namespace SalesOrdersReport
             {
                 if (CheckTableExists(TableName))
                 {
-                    String CreateTableQuery = "DELETE FROM " + TableName + " WHERE " + ColumnName + " = '" + ColumnValue + "'";
-                    CreateTableQuery += ";";
+                    String DeleteQuery = "DELETE FROM " + TableName + " WHERE " + ColumnName + " = '" + ColumnValue + "'";
+                    DeleteQuery += ";";
 
-                    ObjDbCommand.CommandText = CreateTableQuery;
+                    ObjDbCommand.CommandText = DeleteQuery;
                     return ObjDbCommand.ExecuteNonQuery();
                 }
 
@@ -387,7 +390,7 @@ namespace SalesOrdersReport
         }
 
         public Int32 CreateTable(String TableName, List<String> Columns,
-        Boolean InMemory = false, Boolean DropIfExists = false, Boolean TruncateIfExists = false)
+        Boolean InMemory = false, Boolean DropIfExists = true, Boolean TruncateIfExists = false)
         {
             try
             {
@@ -409,7 +412,7 @@ namespace SalesOrdersReport
                     if (Columns[i].ToUpper().Contains("Primary".ToUpper()))
                     {
                         CreateTableQuery += " " + Tokens[0];
-                        CreateTableQuery += "(`" + Tokens[1] + "`)";
+                        CreateTableQuery += "(`" + Tokens[1].Trim() + "`)";
                     }
                     else
                     {
@@ -496,6 +499,20 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("MySQLHelper.ExecuteNonQuery()", ex);
+                throw ex;
+            }
+        }
+
+		public object ExecuteScalar(String Query)
+        {
+            try
+            {
+                ObjDbCommand.CommandText = Query;
+                return ObjDbCommand.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.ExecuteScalar()", ex);
                 throw ex;
             }
         }

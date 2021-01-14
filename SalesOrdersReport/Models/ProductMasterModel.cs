@@ -78,10 +78,10 @@ namespace SalesOrdersReport
                 for (int j = 0; j < ObjProductDetails.ListPrices.Length; j++)
                 {
                     ObjProductDetails.ListPrices[j] = Double.NaN;
-                    if (!dtRow.Table.Columns.Contains(ListPriceGroups[j].Name)) continue;
-                    if (dtRow[ListPriceGroups[j].Name] == DBNull.Value) continue;
-                    if (String.IsNullOrEmpty(dtRow[ListPriceGroups[j].Name].ToString().Trim())) continue;
-                    ObjProductDetails.ListPrices[j] = Double.Parse(dtRow[ListPriceGroups[j].Name].ToString().Trim());
+                    if (!dtRow.Table.Columns.Contains(ListPriceGroups[j].PriceGrpName)) continue;
+                    if (dtRow[ListPriceGroups[j].PriceGrpName] == DBNull.Value) continue;
+                    if (String.IsNullOrEmpty(dtRow[ListPriceGroups[j].PriceGrpName].ToString().Trim())) continue;
+                    ObjProductDetails.ListPrices[j] = Double.Parse(dtRow[ListPriceGroups[j].PriceGrpName].ToString().Trim());
                 }
 
                 ObjProductDetails.CategoryName = GetCategoryDetails(ObjProductDetails.CategoryID).CategoryName;
@@ -278,7 +278,7 @@ namespace SalesOrdersReport
 
                     PriceGroupDetails ObjPriceGroupDetails = new PriceGroupDetails();
                     ObjPriceGroupDetails.PriceGroupID = Int32.Parse(dtRow["PriceGroupID"].ToString().Trim());
-                    ObjPriceGroupDetails.Name = dtRow["PriceGroupName"].ToString().Trim();
+                    ObjPriceGroupDetails.PriceGrpName = dtRow["PriceGroupName"].ToString().Trim();
                     ObjPriceGroupDetails.Description = dtRow["Description"].ToString();
                     ObjPriceGroupDetails.PriceColumn = dtRow["PriceColumn"].ToString().Trim();
                     ObjPriceGroupDetails.Discount = Double.Parse(dtRow["Discount"].ToString().Trim());

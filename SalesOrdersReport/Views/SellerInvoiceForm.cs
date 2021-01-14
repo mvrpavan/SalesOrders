@@ -33,7 +33,7 @@ namespace SalesOrdersReport
                 CommonFunctions.ResetProgressBar();
 
                 lblStatus.Text = "";
-                CommonFunctions.ListSelectedSellers.Clear();
+                CommonFunctions.ListSelectedCustomer.Clear();
 
                 dateTimeInvoice.Value = DateTime.Now;
                 txtBoxOtherFile.Text = txtBoxOutputFolder.Text + @"\SalesOrder_" + dateTimeInvoice.Value.ToString("dd-MM-yyyy") + ".xlsx";
@@ -74,9 +74,9 @@ namespace SalesOrdersReport
             try
             {
                 chkListBoxLine.Items.Clear();
-                for (int i = 0; i < CommonFunctions.ListSellerLines.Count; i++)
+                for (int i = 0; i < CommonFunctions.ListCustomerLines.Count; i++)
                 {
-                    chkListBoxLine.Items.Add(CommonFunctions.ListSellerLines[i], true);
+                    chkListBoxLine.Items.Add(CommonFunctions.ListCustomerLines[i], true);
                 }
 
                 PrevAllLinesCheckState = CheckState.Checked;
@@ -92,9 +92,9 @@ namespace SalesOrdersReport
             try
             {
                 listBoxSellers.Items.Clear();
-                for (int i = 0; i < CommonFunctions.ListSelectedSellers.Count; i++)
+                for (int i = 0; i < CommonFunctions.ListSelectedCustomer.Count; i++)
                 {
-                    listBoxSellers.Items.Add(CommonFunctions.ListSelectedSellers[i]);
+                    listBoxSellers.Items.Add(CommonFunctions.ListSelectedCustomer[i]);
                 }
             }
             catch (Exception ex)
@@ -156,7 +156,7 @@ namespace SalesOrdersReport
                 String[] SelectedLine = new String[chkListBoxLine.CheckedItems.Count];
                 chkListBoxLine.CheckedItems.CopyTo(SelectedLine, 0);
 
-                if (SelectedLine.Length == 0 && CommonFunctions.ListSelectedSellers.Count == 0)
+                if (SelectedLine.Length == 0 && CommonFunctions.ListSelectedCustomer.Count == 0)
                 {
                     btnCancel.Enabled = true;
                     btnCreateInvoice.Enabled = true;
@@ -239,7 +239,7 @@ namespace SalesOrdersReport
                     Double CountItems = Double.Parse(CountCell.Value.ToString());
                     if (CountItems <= 1E-6)
                     {
-                        if (SelectedLine.Contains(Line) || CommonFunctions.ListSelectedSellers.Contains(SellerName))
+                        if (SelectedLine.Contains(Line) || CommonFunctions.ListSelectedCustomer.Contains(SellerName))
                         {
                             drSellers[SellerIndex]["InvoiceNumber"] = Int32.MinValue;
                         }

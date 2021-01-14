@@ -103,19 +103,19 @@ namespace SalesOrdersReport
                 ObjSellerMaster.Initialize();
 
                 #region Load Line from Seller Master
-                CommonFunctions.ListSellerLines = new List<String>();
+                CommonFunctions.ListCustomerLines = new List<String>();
                 Boolean ContainsBlanks = false;
                 for (int i = 0; i < dtSellerMaster.Rows.Count; i++)
                 {
                     DataRow dtRow = dtSellerMaster.Rows[i];
                     String Line = dtRow["Line"].ToString().Replace("<", "").Replace(">", "").ToUpper();
                     if (Line.Trim().Length == 0) ContainsBlanks = true;
-                    else if (!CommonFunctions.ListSellerLines.Contains(Line)) CommonFunctions.ListSellerLines.Add(Line);
+                    else if (!CommonFunctions.ListCustomerLines.Contains(Line)) CommonFunctions.ListCustomerLines.Add(Line);
                 }
 
-                CommonFunctions.ListSellerLines.Sort();
-                CommonFunctions.ListSellerLines.Insert(0, "<All>");
-                if (ContainsBlanks) CommonFunctions.ListSellerLines.Add("<Blanks>");
+                CommonFunctions.ListCustomerLines.Sort();
+                CommonFunctions.ListCustomerLines.Insert(0, "<All>");
+                if (ContainsBlanks) CommonFunctions.ListCustomerLines.Add("<Blanks>");
                 #endregion
 
                 #region Load Discount Groups

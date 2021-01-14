@@ -305,7 +305,7 @@ namespace SalesOrdersReport
                 else
                 {
                     //Create new Order for selected Customer, if already exists then edit the order to ensure that there is only order for a customer on a given date
-                    SellerDetails ObjSellerDetails = CommonFunctions.ObjSellerMaster.GetSellerDetails(cmbBoxSellerCustomer.Items[cmbBoxSellerCustomer.SelectedIndex].ToString());
+                    CustomerDetails ObjSellerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxSellerCustomer.Items[cmbBoxSellerCustomer.SelectedIndex].ToString());
                     CurrentOrderDetails = ObjOrdersModel.GetOrderDetailsForCustomer(dtTmPckrInvOrdDate.Value, ObjSellerDetails.CustomerID);
                     if (CurrentOrderDetails == null)
                     {

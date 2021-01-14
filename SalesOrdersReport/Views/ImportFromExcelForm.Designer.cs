@@ -28,100 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.btnBrowse = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.chkListBoxDataToImport = new System.Windows.Forms.CheckedListBox();
-            this.btnImport = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnImportFrmExcelBrowse = new System.Windows.Forms.Button();
+            this.txtImportFrmExclFilePath = new System.Windows.Forms.TextBox();
+            this.btnImportFrmExclUploadFile = new System.Windows.Forms.Button();
+            this.OFDImportExcelFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.bgWorkerImportExcelCreatePO = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
-            // label1
+            // btnImportFrmExcelBrowse
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(43, 27);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Excel File Path";
+            this.btnImportFrmExcelBrowse.Location = new System.Drawing.Point(242, 27);
+            this.btnImportFrmExcelBrowse.Name = "btnImportFrmExcelBrowse";
+            this.btnImportFrmExcelBrowse.Size = new System.Drawing.Size(75, 23);
+            this.btnImportFrmExcelBrowse.TabIndex = 0;
+            this.btnImportFrmExcelBrowse.Text = "Browse";
+            this.btnImportFrmExcelBrowse.UseVisualStyleBackColor = true;
+            this.btnImportFrmExcelBrowse.Click += new System.EventHandler(this.btnImportFrmExcelBrowse_Click);
             // 
-            // textBox1
+            // txtImportFrmExclFilePath
             // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.textBox1.Location = new System.Drawing.Point(126, 22);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(335, 23);
-            this.textBox1.TabIndex = 1;
+            this.txtImportFrmExclFilePath.Location = new System.Drawing.Point(12, 27);
+            this.txtImportFrmExclFilePath.Name = "txtImportFrmExclFilePath";
+            this.txtImportFrmExclFilePath.Size = new System.Drawing.Size(224, 20);
+            this.txtImportFrmExclFilePath.TabIndex = 1;
             // 
-            // btnBrowse
+            // btnImportFrmExclUploadFile
             // 
-            this.btnBrowse.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnBrowse.Location = new System.Drawing.Point(467, 18);
-            this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(66, 31);
-            this.btnBrowse.TabIndex = 2;
-            this.btnBrowse.Text = "Browse";
-            this.btnBrowse.UseVisualStyleBackColor = true;
+            this.btnImportFrmExclUploadFile.Location = new System.Drawing.Point(67, 74);
+            this.btnImportFrmExclUploadFile.Name = "btnImportFrmExclUploadFile";
+            this.btnImportFrmExclUploadFile.Size = new System.Drawing.Size(153, 23);
+            this.btnImportFrmExclUploadFile.TabIndex = 2;
+            this.btnImportFrmExclUploadFile.Text = "Fill Customer DB";
+            this.btnImportFrmExclUploadFile.UseVisualStyleBackColor = true;
+            this.btnImportFrmExclUploadFile.Click += new System.EventHandler(this.btnImportFrmExclUploadFile_Click);
             // 
-            // label2
+            // bgWorkerImportExcelCreatePO
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 64);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(105, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Select data to Import";
-            // 
-            // chkListBoxDataToImport
-            // 
-            this.chkListBoxDataToImport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkListBoxDataToImport.FormattingEnabled = true;
-            this.chkListBoxDataToImport.Location = new System.Drawing.Point(127, 64);
-            this.chkListBoxDataToImport.Name = "chkListBoxDataToImport";
-            this.chkListBoxDataToImport.Size = new System.Drawing.Size(334, 123);
-            this.chkListBoxDataToImport.TabIndex = 3;
-            // 
-            // btnImport
-            // 
-            this.btnImport.Image = global::SalesOrdersReport.Properties.Resources.database_5_16;
-            this.btnImport.Location = new System.Drawing.Point(162, 203);
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(94, 42);
-            this.btnImport.TabIndex = 2;
-            this.btnImport.Text = "Import to Database";
-            this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnImport.UseVisualStyleBackColor = true;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Image = global::SalesOrdersReport.Properties.Resources.delete_icon_16;
-            this.btnCancel.Location = new System.Drawing.Point(340, 203);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(77, 42);
-            this.btnCancel.TabIndex = 2;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnCancel.UseVisualStyleBackColor = true;
+            this.bgWorkerImportExcelCreatePO.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkerImportExcelCreatePO_DoWork);
+            this.bgWorkerImportExcelCreatePO.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkerImportExcelCreatePO_RunWorkerCompleted);
             // 
             // ImportFromExcelForm
             // 
-            this.AcceptButton = this.btnImport;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(552, 263);
-            this.Controls.Add(this.chkListBoxDataToImport);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnImport);
-            this.Controls.Add(this.btnBrowse);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(326, 144);
+            this.Controls.Add(this.btnImportFrmExclUploadFile);
+            this.Controls.Add(this.txtImportFrmExclFilePath);
+            this.Controls.Add(this.btnImportFrmExcelBrowse);
             this.Name = "ImportFromExcelForm";
-            this.Text = "Import Title";
+            this.ShowIcon = false;
+            this.Text = "Import From Excel Form";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,13 +85,12 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button btnBrowse;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckedListBox chkListBoxDataToImport;
-        private System.Windows.Forms.Button btnImport;
-        private System.Windows.Forms.Button btnCancel;
+ 
+        private System.Windows.Forms.Label lblImportFrmExcelValidateErrMsg;
+        private System.Windows.Forms.Button btnImportFrmExcelBrowse;
+        private System.Windows.Forms.TextBox txtImportFrmExclFilePath;
+        private System.Windows.Forms.Button btnImportFrmExclUploadFile;
+        private System.Windows.Forms.OpenFileDialog OFDImportExcelFileDialog;
+        private System.ComponentModel.BackgroundWorker bgWorkerImportExcelCreatePO;
     }
 }

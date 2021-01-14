@@ -54,12 +54,26 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.CreateDBConnection();
                 lblLoadingStatus.Text = "Establishing Database connection...completed";
 
+                if (!MySQLHelper.GetMySqlHelperObj().CheckTableExists("USERMASTER"))
+                {
+                    RunDBScript ObjRunDBScript = new RunDBScript();
+                    ObjRunDBScript.CreateNecessaryTables();
+                }
+
                 //TODO: Load all tables to memory here
-                lblLoadingStatus.Text = "Loading Product Master tables...";
+                lblLoadingStatus.Text = "Loading User tables...";
+                CommonFunctions.ObjUserMasterModel.LoadAllUserMasterTables();
+                ReportProgressFunc(25);
+
+                lblLoadingStatus.Text = "Loading Customer tables...";
+                CommonFunctions.ObjCustomerMasterModel.LoadAllCustomerMasterTables();
+                ReportProgressFunc(50);
+
+                lblLoadingStatus.Text = "Loading Product tables...";
                 ProductLine CurrProductLine = CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex];
                 CurrProductLine.LoadAllProductMasterTables();
-                lblLoadingStatus.Text = "Loading Product Master tables...completed";
-                ReportProgressFunc(25);
+                lblLoadingStatus.Text = "Loading Product tables...completed";
+                ReportProgressFunc(75);
 
                 /*DataTable dtDiscountGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("DiscountGroupMaster", CommonFunctions.MasterFilePath, "*");
                 DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", CommonFunctions.MasterFilePath, "*");
@@ -108,10 +122,11 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                LoginForm loginForm = new LoginForm();
-                loginForm.FormClosed += LoginForm_FormClosed;
-                loginForm.Show();
-                this.Hide();
+                //LoginForm loginForm = new LoginForm();
+                //loginForm.FormClosed += LoginForm_FormClosed;
+                //loginForm.Show();
+                //Login();
+                this.Close();
             }
             catch (Exception ex)
             {

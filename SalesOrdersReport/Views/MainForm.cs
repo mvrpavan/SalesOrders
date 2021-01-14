@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Views
 {
     public partial class MainForm : Form
     {
         public Boolean MasterSheetSelected;
+        MySQLHelper tmpMySQLHelper;
+        public bool IsLoggedOut = false;
 
         public MainForm()
         {
-           // CommonFunctions.Initialize();
-
+            // CommonFunctions.Initialize();
+            tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
             InitializeComponent();
 
 #if RELEASE
@@ -36,13 +39,19 @@ namespace SalesOrdersReport
 
             MasterSheetSelected = false;
 
-            LoadProductLines();
+            //LoadProductLines();
 
             fileMenu.Visible = true;
             sellerMenu.Visible = true;
             vendorMenu.Visible = true;
             productMenu.Visible = true;
             reportsMenu.Visible = true;
+
+            addModifySellerToolStripMenuItem.Visible = false;
+            discountGroupToolStripMenuItem.Visible = false;
+
+            priceGroupsToolStripMenuItem.Visible = false;
+            addModifyItemToolStripMenuItem.Visible = false;
 
             addModifyVendorToolStripMenuItem.Visible = false;
 
@@ -55,7 +64,7 @@ namespace SalesOrdersReport
             CommonFunctions.WriteToSettingsFile();
         }
 
-        void LoadProductLines()
+        /*void LoadProductLines()
         {
             try
             {
@@ -73,7 +82,7 @@ namespace SalesOrdersReport
             {
                 CommonFunctions.ShowErrorDialog("MainForm.LoadProductLines()", ex);
             }
-        }
+        }*/
 
         public void ShowChildForm(Form ObjForm)
         {
@@ -83,7 +92,7 @@ namespace SalesOrdersReport
 
                 CommonFunctions.ResetProgressBar();
 
-                CommonFunctions.CurrentForm = ObjForm;
+                //CommonFunctions.CurrentForm = ObjForm;
                 ObjForm.MdiParent = this;
                 ObjForm.ShowIcon = false;
                 ObjForm.ShowInTaskbar = false;
@@ -92,6 +101,7 @@ namespace SalesOrdersReport
                 ObjForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
                 ObjForm.StartPosition = FormStartPosition.CenterScreen;
                 ObjForm.FormClosed += new FormClosedEventHandler(ChildFormClosed);
+                CommonFunctions.ApplyPrivilegeControl(ObjForm);
                 ObjForm.Show();
             }
             catch (Exception ex)
@@ -258,6 +268,30 @@ namespace SalesOrdersReport
             }
         }
 
+        private void discountGroupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.discountGroupToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void addModifySellerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!IsValidToOpenChildForm()) return;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.addModifySellerToolStripMenuItem_Click()", ex);
+            }
+        }
+
         private void updateSalesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -274,6 +308,28 @@ namespace SalesOrdersReport
         }
 
 
+        #endregion
+
+        #region Products Menu Item
+        private void priceGroupsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void addModifyItemToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //if (!IsValidToOpenChildForm()) return;
+
+                ProductsMainForm productsMainForm = new ProductsMainForm();
+                ShowChildForm(productsMainForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.addModifyItemToolStripMenuItem_Click()", ex);
+            }
+        }
         #endregion
 
         #region Vendor Menu Item
@@ -361,7 +417,7 @@ namespace SalesOrdersReport
         #endregion
 
         #region ProductLine Toolstrip
-        private void toolStripComboBoxProductLine_SelectedIndexChanged(object sender, EventArgs e)
+        /*private void toolStripComboBoxProductLine_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
@@ -394,13 +450,13 @@ namespace SalesOrdersReport
             {
                 CommonFunctions.ShowErrorDialog("MainForm.toolStripComboBoxProductLine_SelectedIndexChanged()", ex);
             }
-        }
+        }*/
 
         void ObjManageProductLineForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             try
             {
-                LoadProductLines();
+                //LoadProductLines();
             }
             catch (Exception ex)
             {
@@ -450,9 +506,9 @@ namespace SalesOrdersReport
             {
                 if (!IsValidToOpenChildForm()) return;
 
-                CreateUserForm ObjCreateUserForm = new CreateUserForm();
-                ShowChildForm(ObjCreateUserForm);
-                
+                //CreateUserForm ObjCreateUserForm = new CreateUserForm();
+                //ShowChildForm(ObjCreateUserForm);
+
             }
             catch (Exception ex)
             {
@@ -477,19 +533,66 @@ namespace SalesOrdersReport
             }
         }
 
+        private void ProfileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                EditProfileForm ObjEditProfileForm = new EditProfileForm();
+                ShowChildForm(ObjEditProfileForm);
+
+                //EditProfileForm ObjEditProfileForm = new EditProfileForm();
+                //ShowChildForm(ObjEditProfileForm);
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.ProfileToolStripMenuItem_Click()", ex);
+            }
+        }
+
         private void editUserToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
                 if (!IsValidToOpenChildForm()) return;
 
-                EditUserForm ObjEditUserForm = new EditUserForm();
-                ShowChildForm(ObjEditUserForm);
+                //EditUserForm ObjEditUserForm = new EditUserForm();
+                //ShowChildForm(ObjEditUserForm);
 
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("MainForm.editUserToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void LogOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                this.IsLoggedOut = true;
+                this.Close();
+                DialogResult = DialogResult.OK;
+                //this.Close();
+                // if (!IsValidToOpenChildForm()) return;
+                //Application.Run(new LoginForm());
+                //UpdateTableOnLogout();
+                //this.Hide();
+                //CommonFunctions.CurrentForm.Dispose();
+                //CommonFunctions.CurrentForm.Close();
+                //LoginForm ObjLog = new LoginForm();
+                //ObjLog.Show();
+                //ObjLog.Dispose(); //because user has logged out so the data must be flushed, by "Disposing" it will not be in the RAM anymore, so your hanging problem will be solved
+                //ObjLog.Show();
+
+
+                //Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.LogOutToolStripMenuItem_Click()", ex);
             }
         }
 
@@ -499,14 +602,35 @@ namespace SalesOrdersReport
             {
                 if (!IsValidToOpenChildForm()) return;
 
-                CreateRoleForm ObjCreateRoleForm = new CreateRoleForm();
-                ShowChildForm(ObjCreateRoleForm);
+                //CreateRoleForm ObjCreateRoleForm = new CreateRoleForm();
+                //ShowChildForm(ObjCreateRoleForm);
+
 
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("MainForm.createRoleToolStripMenuItem_Click()", ex);
             }
+        }
+
+        private void btnUserProfile_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //cntxtMenuStripUserProfile.Items.Clear();
+                ////cntxtMenuStripUserProfile.Items.Add("Change Password");
+                //cntxtMenuStripUserProfile.Items.Add("Profile");
+               // cntxtMenuStripUserProfile.Items.Add("Log Out");
+
+                //cntxtMenuStripUserProfile.Show(btnUserProfile, new Point(0, btnUserProfile.Height));
+                //cntxtMenuStripUserProfile.ItemClicked += new ToolStripItemClickedEventHandler(cntxtMenuStripUserProfile_ItemClicked);// cntxtMenuStripUserProfile_ItemClicked(null, cntxtMenuStripUserProfile;//new System.EventHandler(this.cntxtMenuStripUserProfile_ItemClicked);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.btnUserProfile_Click()", ex);
+                throw;
+            }
+
         }
 
         private void productMenu_Click(object sender, EventArgs e)
@@ -550,6 +674,143 @@ namespace SalesOrdersReport
             {
                 CommonFunctions.ShowErrorDialog($"{this}.showAllOrdersToolStripMenuItem_Click()", ex);
             }
+        }
+        private void cntxtMenuStripUserProfile_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            try
+            {
+                //if (e.ClickedItem.Text == "Change Password")
+
+                if (e.ClickedItem.Text == "Profile")
+                {
+                    //if (!IsValidToOpenChildForm()) return;
+
+                    EditProfileForm ObjEditProfileForm = new EditProfileForm();
+                    ShowChildForm(ObjEditProfileForm);
+                    //ObjEditProfileForm.FormClosed += ObjEditProfileForm_FormClosed;
+                    //ObjEditProfileForm.Show();
+                }
+
+                else if (e.ClickedItem.Text == "Log Out")
+                {
+                    //this.Close();
+                    // if (!IsValidToOpenChildForm()) return;
+                    //Application.Run(new LoginForm());
+                    UpdateTableOnLogout();
+                    this.Hide();
+                    CommonFunctions.CurrentForm.Dispose();
+                    CommonFunctions.CurrentForm.Close();
+                    LoginForm ObjLog = new LoginForm();
+                    ObjLog.Show();
+                    //ObjLog.Dispose(); //because user has logged out so the data must be flushed, by "Disposing" it will not be in the RAM anymore, so your hanging problem will be solved
+                    //ObjLog.Show();
+
+
+                    //Application.Exit();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.cntxtMenuStripUserProfile_ItemClicked()", ex);
+                throw;
+            }
+        }
+        //private void ObjEditProfileForm_FormClosed(object sender, FormClosedEventArgs e)
+        //{
+        //    this.Close();
+        //}
+        public void UpdateTableOnLogout()
+        {
+            try
+            {
+                List<string> ListColumnValues = new List<string>(), ListColumnNames = new List<string>();
+                ListColumnValues.Add(tmpMySQLHelper.LoginTime.ToString("yyyy-MM-dd H:mm:ss"));
+                ListColumnNames.Add("LASTLOGIN");
+
+                string WhereCondition = "USERNAME = '" + tmpMySQLHelper.CurrentUser + "'";
+
+                int ResultVal = CommonFunctions.ObjUserMasterModel.UpdateAnyTableDetails("USERMASTER", ListColumnNames, ListColumnValues, WhereCondition);
+                if (ResultVal < 0) MessageBox.Show("Wasnt able to Update Date Column", "Error", MessageBoxButtons.OK);
+            }
+
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.UpdateTableOnLogout()", ex);
+                throw;
+            }
+        }
+        private void manageUsersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //if (!IsValidToOpenChildForm()) return;
+
+                ManageUsersForm ObjManageUsersForm = new ManageUsersForm();
+                ShowChildForm(ObjManageUsersForm);
+                //ObjManageUsersForm.FormClosed += ObjManageUsersForm_FormClosed;
+                //ObjManageUsersForm.Show();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MainForm.manageUsersToolStripMenuItem_Click()", ex);
+                throw;
+            }
+        }
+
+        private void btnUserProfile_Paint(object sender, PaintEventArgs e)
+        {
+            System.Drawing.Drawing2D.GraphicsPath buttonPath =
+           new System.Drawing.Drawing2D.GraphicsPath();
+
+            //// Set a new rectangle to the same size as the button's 
+            //// ClientRectangle property.
+            //System.Drawing.Rectangle newRectangle = btnUserProfile.ClientRectangle;
+
+            //// Decrease the size of the rectangle.
+            //newRectangle.Inflate(-10, -10);
+
+            //// Draw the button's border.
+            //e.Graphics.DrawEllipse(System.Drawing.Pens.Black, newRectangle);
+
+            //// Increase the size of the rectangle to include the border.
+            //newRectangle.Inflate(1, 1);
+
+            //// Create a circle within the new rectangle.
+            //buttonPath.AddEllipse(newRectangle);
+
+            //// Set the button's Region property to the newly created 
+            //// circle region.
+            //btnUserProfile.Region = new System.Drawing.Region(buttonPath);
+        }
+
+        public void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            IsLoggedOut = true ;
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            this.UserProfileToolStripMenuItem.Text = tmpMySQLHelper.CurrentUser;
+            //this.UserProfileToolStripMenuItem.Text = tmpMySQLHelper.CurrentUser = "Nisha";
+
+             List<string> ListAssignesPrivilegeNames = CommonFunctions.ObjUserMasterModel.GetOnlyAssignedPrivilegeNamesForAnUser(tmpMySQLHelper.CurrentUser);
+            //&&&&&& checkonce
+            //string strControlVal = "manageUsersToolStripMenuItem"; //"SalesToolStripMenuItem" or "invoiceToolStripMenuItem" 
+
+            foreach (ToolStripMenuItem item in administrationToolStripMenuItem.DropDownItems)
+            {
+                //if (strControlVal == item.Name)
+                //{
+                //    item.Visible = false;
+                //}
+            }
+        }
+
+        private void manageCustomertoolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ManageCustomerForm ObjManageCustomerForm = new ManageCustomerForm();
+            ShowChildForm(ObjManageCustomerForm);
         }
     }
 }
