@@ -471,7 +471,7 @@ namespace SalesOrdersReport
 
                 for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
                 {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), CommonFunctions.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
+                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
                 }
 
 
@@ -903,7 +903,7 @@ namespace SalesOrdersReport
                 ObjMySQLHelper.ObjDbCommand.Parameters.Add("@userguid", MySqlDbType.VarChar).Value = UserGuid.ToString();
                 for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
                 {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), CommonFunctions.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
+                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
                 }
 
                 return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
@@ -965,7 +965,7 @@ namespace SalesOrdersReport
 
                 for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
                 {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), CommonFunctions.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
+                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
                 }
 
 

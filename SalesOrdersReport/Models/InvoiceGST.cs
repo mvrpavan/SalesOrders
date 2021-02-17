@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Data;
+using SalesOrdersReport.CommonModules;
+using SalesOrdersReport.Views;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Models
 {
     class InvoiceGST : Invoice
     {
@@ -16,7 +18,7 @@ namespace SalesOrdersReport
                 String SheetName = this.SheetName;
                 if (String.IsNullOrEmpty(SheetName))
                 {
-                    SheetName = ObjSellerDetails.Name.Replace(":", "").Replace("\\", "").Replace("/", "").
+                    SheetName = ObjSellerDetails.CustomerName.Replace(":", "").Replace("\\", "").Replace("/", "").
                                             Replace("?", "").Replace("*", "").Replace("[", "").Replace("]", "");
                 }
                 xlWorkSheet.Name = ((SheetName.Length > 30) ? SheetName.Substring(0, 30) : SheetName);
@@ -35,7 +37,7 @@ namespace SalesOrdersReport
 
                 xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 1, CustDetailsStartCol];
                 xlRange.Value = "Name";
-                xlWorkSheet.Cells[CustDetailsStartRow + 1, CustDetailsStartCol + 2].Value = ObjSellerDetails.Name;
+                xlWorkSheet.Cells[CustDetailsStartRow + 1, CustDetailsStartCol + 2].Value = ObjSellerDetails.CustomerName;
 
                 xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 2, CustDetailsStartCol];
                 xlRange.Value = "Address";
@@ -297,7 +299,7 @@ namespace SalesOrdersReport
                     xlRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
 
                     xlRange = xlWorkSheet.Cells[TotalInvoiceValueRow + 2, TotalInvoiceValueCol];
-                    xlRange.Value = ObjSellerDetails.OldBalance;
+                    xlRange.Value = OldBalance;
                     xlRange.NumberFormat = "#,##0.00";
                     xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[TotalInvoiceValueRow + 2, TotalInvoiceValueCol], xlWorkSheet.Cells[TotalInvoiceValueRow + 2, LastInvoiceCol]];
                     xlRange.Merge();

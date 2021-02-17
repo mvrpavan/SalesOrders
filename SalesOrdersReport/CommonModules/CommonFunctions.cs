@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using System.Data.OleDb;
@@ -10,10 +9,10 @@ using System.Xml;
 using System.Drawing;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
-using SalesOrdersReport.CommonModules;
-using MySql.Data.MySqlClient;
+using SalesOrdersReport.Models;
+using SalesOrdersReport.Views;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.CommonModules
 {
     class CommonFunctions
     {
@@ -27,6 +26,7 @@ namespace SalesOrdersReport
         public static Form CurrentForm = null;
         public static UserMasterModel ObjUserMasterModel;
         public static CustomerMasterModel ObjCustomerMasterModel;
+        public static Char PaddingChar = ' ', CurrencyChar = '\u20B9';
 
         public static string CurrentUserName = "";
 
@@ -99,6 +99,7 @@ namespace SalesOrdersReport
             }
             return '\t';
         }
+
         public static List<Control> GetAllControlsOfAForm(Control root)
         {
             try
@@ -121,6 +122,7 @@ namespace SalesOrdersReport
             }
 
         }
+
         public static void ApplyPrivilegeControl(Form ObjForm)
         {
             try
@@ -272,67 +274,8 @@ namespace SalesOrdersReport
                 ShowErrorDialog("CommonFunctions.ValidateDoubleORIntVal", ex);
                 throw ex;
             }
-
         }
-        public static MySqlDbType GetMySqlDbType(string DataTypeStr)
-        {
-            try
-            {
-                MySqlDbType ObjMySqlDbType = MySqlDbType.VarChar;
-
-                switch (DataTypeStr.ToUpper())
-                {
-                    case "DECIMAL": ObjMySqlDbType = MySqlDbType.Decimal; break;
-                    case "BYTE": ObjMySqlDbType = MySqlDbType.Byte; break;
-                    case "INT16": ObjMySqlDbType = MySqlDbType.Int16; break;
-                    case "INT24": ObjMySqlDbType = MySqlDbType.Int24; break;
-                    case "INT32": ObjMySqlDbType = MySqlDbType.Int32; break;
-                    case "INT64": ObjMySqlDbType = MySqlDbType.Int64; break;
-                    case "FLOAT": ObjMySqlDbType = MySqlDbType.Float; break;
-                    case "DOUBLE": ObjMySqlDbType = MySqlDbType.Double; break;
-                    case "TIMESTAMP": ObjMySqlDbType = MySqlDbType.Timestamp; break;
-                    case "DATE": ObjMySqlDbType = MySqlDbType.Date; break;
-                    case "TIME": ObjMySqlDbType = MySqlDbType.Time; break;
-                    case "DATETIME": ObjMySqlDbType = MySqlDbType.DateTime; break;
-                    case "YEAR": ObjMySqlDbType = MySqlDbType.Year; break;
-                    case "NEWDATE": ObjMySqlDbType = MySqlDbType.Newdate; break;
-                    case "VARSTRING": ObjMySqlDbType = MySqlDbType.VarString; break;
-                    case "BIT": ObjMySqlDbType = MySqlDbType.Bit; break;
-                    case "JSON": ObjMySqlDbType = MySqlDbType.JSON; break;
-                    case "NEWDECIMAL": ObjMySqlDbType = MySqlDbType.NewDecimal; break;
-                    case "ENUM": ObjMySqlDbType = MySqlDbType.Enum; break;
-                    case "SET": ObjMySqlDbType = MySqlDbType.Set; break;
-                    case "TINYBLOB": ObjMySqlDbType = MySqlDbType.TinyBlob; break;
-                    case "MEDIUMBLOB": ObjMySqlDbType = MySqlDbType.MediumBlob; break;
-                    case "LONGBLOB": ObjMySqlDbType = MySqlDbType.LongBlob; break;
-                    case "BLOB": ObjMySqlDbType = MySqlDbType.Blob; break;
-                    case "VARCHAR": ObjMySqlDbType = MySqlDbType.VarChar; break;
-                    case "STRING": ObjMySqlDbType = MySqlDbType.String; break;
-                    case "GEOMETRY": ObjMySqlDbType = MySqlDbType.Geometry; break;
-                    case "UBYTE": ObjMySqlDbType = MySqlDbType.UByte; break;
-                    case "UINT16": ObjMySqlDbType = MySqlDbType.UInt16; break;
-                    case "UINT24": ObjMySqlDbType = MySqlDbType.UInt24; break;
-                    case "UINT32": ObjMySqlDbType = MySqlDbType.UInt32; break;
-                    case "UINT64": ObjMySqlDbType = MySqlDbType.UInt64; break;
-                    case "BINARY": ObjMySqlDbType = MySqlDbType.Binary; break;
-                    case "VARBINARY": ObjMySqlDbType = MySqlDbType.VarBinary; break;
-                    case "TINYTEXT": ObjMySqlDbType = MySqlDbType.TinyText; break;
-                    case "MEDIUMTEXT": ObjMySqlDbType = MySqlDbType.MediumText; break;
-                    case "LONGTEXT": ObjMySqlDbType = MySqlDbType.LongText; break;
-                    case "TEXT": ObjMySqlDbType = MySqlDbType.Text; break;
-                    case "GUID": ObjMySqlDbType = MySqlDbType.Guid; break;
-
-                }
-
-                return ObjMySqlDbType;
-            }
-            catch (Exception ex)
-            {
-                ShowErrorDialog("CommonFunctions.GetMySqlDbType", ex);
-                //Console.WriteLine("Error Occured in CommonFunctions.ReturnDataTableFromExcelWorksheet()");
-                return MySqlDbType.VarChar;
-            }
-        }
+        
         public static Excel.Worksheet GetWorksheet(Excel.Workbook ObjWorkbook, String Sheetname)
         {
             try
@@ -359,7 +302,7 @@ namespace SalesOrdersReport
         public static GeneralSettings ObjGeneralSettings;
         public static ReportSettings ObjInvoiceSettings, ObjQuotationSettings, ObjPurchaseOrderSettings;
         public static ProductMasterModel ObjProductMaster;
-        public static SellerMaster ObjSellerMaster;
+        //public static SellerMaster ObjSellerMaster;
         public static VendorMaster ObjVendorMaster;
         static Boolean SettingsFileUpdated = false;
 
@@ -445,7 +388,7 @@ namespace SalesOrdersReport
                 ObjQuotationSettings = CurrProductLine.ObjSettings.QuotationSettings;
                 ObjPurchaseOrderSettings = CurrProductLine.ObjSettings.PurchaseOrderSettings;
                 ObjProductMaster = CurrProductLine.ObjProductMaster;
-                ObjSellerMaster = CurrProductLine.ObjSellerMaster;
+                //ObjSellerMaster = CurrProductLine.ObjSellerMaster;
                 ObjVendorMaster = CurrProductLine.ObjVendorMaster;
             }
             catch (Exception ex)
@@ -722,7 +665,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                MySQLHelper tmpIntegDBHelper = MySQLHelper.GetMySqlHelperObj();
+                MySQLHelper ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
 
                 if (ObjApplicationSettings.Server == null || ObjApplicationSettings.Server == string.Empty)
                 {
@@ -731,7 +674,7 @@ namespace SalesOrdersReport
                 }
                 else
                 {
-                    tmpIntegDBHelper.OpenConnection(ObjApplicationSettings.Server, ObjApplicationSettings.DatabaseName, ObjApplicationSettings.UserName, ObjApplicationSettings.Password);
+                    ObjMySQLHelper.OpenConnection(ObjApplicationSettings.Server, ObjApplicationSettings.DatabaseName, ObjApplicationSettings.UserName, ObjApplicationSettings.Password);
                     return true;
                 }
             }
@@ -873,6 +816,67 @@ namespace SalesOrdersReport
             {
                 ShowErrorDialog("CommonFunctions.ValidatePhoneNo()", ex);
                 throw;
+            }
+        }
+
+        public static String GenerateNextID(String Prefix, String MaxIDString, String Suffix = "", Int32 Padding = 5, Char PaddingChar = '0')
+        {
+            try
+            {
+                if (Prefix.Length > 0) MaxIDString = MaxIDString.Trim().ToUpper().Replace(Prefix.ToUpper(), "");
+                if (Suffix.Length > 0) MaxIDString = MaxIDString.Trim().ToUpper().Replace(Suffix.ToUpper(), "");
+
+                Int32 MaxID = Int32.Parse(MaxIDString) + 1;
+
+                String NewMaxIDString = Prefix + MaxID.ToString().PadLeft(Padding, PaddingChar) + Suffix;
+
+                return NewMaxIDString;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.GenerateNextID()", ex);
+                throw;
+            }
+        }
+
+        public static void ResetTextBoxesRecursive(Control ObjControl)
+        {
+            try
+            {
+                foreach (Control item in ObjControl.Controls)
+                {
+                    if (item is TextBox)
+                    {
+                        item.Text = "";
+                    }
+                    else if (item is GroupBox || item is Panel)
+                    {
+                        ResetTextBoxesRecursive(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CommonFunctions.ResetTextBoxesRecursive()", ex);
+            }
+        }
+
+        public static void SetDataGridViewProperties(DataGridView ObjDataGridView)
+        {
+            try
+            {
+                ObjDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                ObjDataGridView.MultiSelect = false;
+                ObjDataGridView.AllowUserToAddRows = false;
+                ObjDataGridView.AllowUserToDeleteRows = false;
+                ObjDataGridView.AllowUserToOrderColumns = false;
+                ObjDataGridView.AllowUserToResizeColumns = true;
+                ObjDataGridView.AllowUserToResizeRows = false;
+                ObjDataGridView.ReadOnly = true;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"CommonFunctions.SetDataGridViewProperties()", ex);
             }
         }
     }

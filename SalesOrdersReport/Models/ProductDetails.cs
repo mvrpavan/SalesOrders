@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SalesOrdersReport.CommonModules;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SalesOrdersReport
 {
@@ -62,24 +64,10 @@ namespace SalesOrdersReport
     class TaxGroupDetails : IComparer<TaxGroupDetails>
     {
         public String Name, Description;
-        public Double TaxRate;
 
         public int Compare(TaxGroupDetails x, TaxGroupDetails y)
         {
             return x.Name.ToUpper().CompareTo(y.Name.ToUpper());
-        }
-
-        public Double GetTaxAmount(Double SellingPrice)
-        {
-            try
-            {
-                return SellingPrice * TaxRate / 100;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("TaxGroupDetails.GetTaxAmount()", ex);
-            }
-            return -1;
         }
     }
 
@@ -95,13 +83,12 @@ namespace SalesOrdersReport
         }
     }
 
-    class ProductDetails : IComparer<ProductDetails>
+    class ProductDetails : IComparer<ProductDetails>, IEquatable<ProductDetails>
     {
         public Int32 ProductID, CategoryID, TaxID, ProductInvID;
         public String ProductSKU, ItemName, ProductDesc, SortName, StockName, VendorName, HSNCode, UnitsOfMeasurement, CategoryName;
-        public Double PurchasePrice, SellingPrice, Units;
+        public Double PurchasePrice, WholesalePrice, RetailPrice, MaxRetailPrice, Units;
         public Int32 StockProductIndex, HSNCodeIndex;
-        public Double[] ListPrices;
         public DateTime AddedDate, LastUpdateDate;
         public Boolean Active;
 
@@ -110,26 +97,94 @@ namespace SalesOrdersReport
             return x.ItemName.ToUpper().CompareTo(y.ItemName.ToUpper());
         }
 
-        public void FillMissingPricesForPriceGroups(List<PriceGroupDetails> ListPriceGroups)
+        //public void FillMissingPricesForPriceGroups(List<PriceGroupDetails> ListPriceGroups)
+        //{
+        //    try
+        //    {
+        //        for (int i = 0; i < ListPriceGroups.Count; i++)
+        //        {
+        //            if (Double.IsNaN(ListPrices[i]) || ListPrices[i] < 0)
+        //            {
+        //                ListPrices[i] = ListPriceGroups[i].GetPrice(RetailPrice);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CommonFunctions.ShowErrorDialog("PriceGroupDetails.FillMissingPricesForPriceGroups()", ex);
+        //    }
+        //}
+
+        public ProductDetails Clone()
         {
             try
             {
-                for (int i = 0; i < ListPriceGroups.Count; i++)
-                {
-                    if (Double.IsNaN(ListPrices[i]) || ListPrices[i] < 0)
-                    {
-                        ListPrices[i] = ListPriceGroups[i].GetPrice(SellingPrice);
-                    }
-                }
+                ProductDetails tmpProductDetails = (ProductDetails)this.MemberwiseClone();
+                //tmpProductDetails.ListPrices = this.ListPrices.ToArray();
+
+                return tmpProductDetails;
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("PriceGroupDetails.FillMissingPricesForPriceGroups()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.Clone()", ex);
+                return null;
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ProductDetails);
+        }
+
+        public bool Equals(ProductDetails other)
+        {
+            return other != null &&
+                   CategoryID == other.CategoryID &&
+                   TaxID == other.TaxID &&
+                   ProductInvID == other.ProductInvID &&
+                   ProductSKU == other.ProductSKU &&
+                   ItemName == other.ItemName &&
+                   ProductDesc == other.ProductDesc &&
+                   SortName == other.SortName &&
+                   StockName == other.StockName &&
+                   VendorName == other.VendorName &&
+                   HSNCode == other.HSNCode &&
+                   UnitsOfMeasurement == other.UnitsOfMeasurement &&
+                   CategoryName == other.CategoryName &&
+                   PurchasePrice == other.PurchasePrice &&
+                   WholesalePrice == other.WholesalePrice &&
+                   RetailPrice == other.RetailPrice &&
+                   MaxRetailPrice == other.MaxRetailPrice &&
+                   Units == other.Units &&
+                   Active == other.Active;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 213535748;
+            hashCode = hashCode * -1521134295 + CategoryID.GetHashCode();
+            hashCode = hashCode * -1521134295 + TaxID.GetHashCode();
+            hashCode = hashCode * -1521134295 + ProductInvID.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ProductSKU);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ItemName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ProductDesc);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(SortName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(StockName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(VendorName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(HSNCode);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UnitsOfMeasurement);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(CategoryName);
+            hashCode = hashCode * -1521134295 + PurchasePrice.GetHashCode();
+            hashCode = hashCode * -1521134295 + WholesalePrice.GetHashCode();
+            hashCode = hashCode * -1521134295 + RetailPrice.GetHashCode();
+            hashCode = hashCode * -1521134295 + MaxRetailPrice.GetHashCode();
+            hashCode = hashCode * -1521134295 + Units.GetHashCode();
+            hashCode = hashCode * -1521134295 + Active.GetHashCode();
+            return hashCode;
         }
     }
 
-    class ProductInventoryDetails : IComparer<ProductInventoryDetails>
+    class ProductInventoryDetails : IComparer<ProductInventoryDetails>, IEquatable<ProductInventoryDetails>
     {
         public Int32 ProductInvID;
         public String StockName, UnitsOfMeasurement;
@@ -143,6 +198,79 @@ namespace SalesOrdersReport
         {
             return x.StockName.ToUpper().CompareTo(y.StockName.ToUpper());
         }
+
+        public ProductInventoryDetails Clone()
+        {
+            ProductInventoryDetails tmpProductInventoryDetails = (ProductInventoryDetails)this.MemberwiseClone();
+            tmpProductInventoryDetails.ListProductIndexes = this.ListProductIndexes.ToList();
+
+            return tmpProductInventoryDetails;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ProductInventoryDetails);
+        }
+
+        public bool Equals(ProductInventoryDetails other)
+        {
+            return other != null &&
+                   StockName == other.StockName &&
+                   UnitsOfMeasurement == other.UnitsOfMeasurement &&
+                   Units == other.Units &&
+                   Inventory == other.Inventory &&
+                   ReOrderStockLevel == other.ReOrderStockLevel &&
+                   ReOrderStockQty == other.ReOrderStockQty;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 1550938422;
+            hashCode = hashCode * -1521134295 + ProductInvID.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(StockName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UnitsOfMeasurement);
+            hashCode = hashCode * -1521134295 + EqualityComparer<List<int>>.Default.GetHashCode(ListProductIndexes);
+            hashCode = hashCode * -1521134295 + Units.GetHashCode();
+            hashCode = hashCode * -1521134295 + Inventory.GetHashCode();
+            hashCode = hashCode * -1521134295 + OrderQty.GetHashCode();
+            hashCode = hashCode * -1521134295 + RecvdQty.GetHashCode();
+            hashCode = hashCode * -1521134295 + NetQty.GetHashCode();
+            hashCode = hashCode * -1521134295 + SaleQty.GetHashCode();
+            hashCode = hashCode * -1521134295 + TotalCost.GetHashCode();
+            hashCode = hashCode * -1521134295 + TotalDiscount.GetHashCode();
+            hashCode = hashCode * -1521134295 + TotalTax.GetHashCode();
+            hashCode = hashCode * -1521134295 + NetCost.GetHashCode();
+            hashCode = hashCode * -1521134295 + ReOrderStockLevel.GetHashCode();
+            hashCode = hashCode * -1521134295 + ReOrderStockQty.GetHashCode();
+            hashCode = hashCode * -1521134295 + IsUpdated.GetHashCode();
+            hashCode = hashCode * -1521134295 + IsStockOverride.GetHashCode();
+            hashCode = hashCode * -1521134295 + LastPODate.GetHashCode();
+            hashCode = hashCode * -1521134295 + LastUpdateDate.GetHashCode();
+            return hashCode;
+        }
+
+        /*public Double ComputeInventory(Double ProductUnits, String ProductUOM)
+        {
+            try
+            {
+                ProductUOM = ProductUOM.ToUpper();
+                if (UnitsOfMeasurement.ToUpper().Equals(ProductUOM)) return Inventory * Units;
+
+                switch (UnitsOfMeasurement.ToUpper())
+                {
+                    case "KG":
+                        if (ProductUOM.Equals("GM"))
+                            return Inventory * 1000;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ComputeInventory()", ex);
+            }
+        }*/
     }
 
     class ProductCategoryDetails : IComparer<ProductCategoryDetails>

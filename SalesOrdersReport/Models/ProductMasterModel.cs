@@ -4,9 +4,10 @@ using System.Data;
 using System.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
+using SalesOrdersReport.CommonModules;
+using SalesOrdersReport.Views;
 
-
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Models
 {
     class ProductMasterModel
     {
@@ -20,6 +21,7 @@ namespace SalesOrdersReport
         MySQLHelper ObjMySQLHelper = null;
         DataTable dtProcessedProductsFromExcel = null;
         List<String> ListPriceGroupColumns;
+        const String SKUPrefix = "SKU";
 
         public void Initialize()
         {
@@ -47,10 +49,7 @@ namespace SalesOrdersReport
             try
             {
                 Int32 Index = ListPriceGroups.BinarySearch(ObjPriceGroupDetails, ObjPriceGroupDetails);
-                if (Index < 0)
-                {
-                    ListPriceGroups.Insert(~Index, ObjPriceGroupDetails);
-                }
+                if (Index < 0) ListPriceGroups.Insert(~Index, ObjPriceGroupDetails);
 
                 Index = ListPriceGroupColumns.FindIndex(e => e.Equals(ObjPriceGroupDetails.PriceColumn, StringComparison.InvariantCultureIgnoreCase));
                 if (Index < 0) ListPriceGroupColumns.Insert(~Index, ObjPriceGroupDetails.PriceColumn);
@@ -61,29 +60,24 @@ namespace SalesOrdersReport
             }
         }
 
-        void AddProductToCache(ProductDetails ObjProductDetails, DataRow dtRow)
+        public List<HSNCodeDetails> GetAllHSNCodeDetails()
+        {
+            try
+            {
+                return ListHSNCodeDetails;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetAllHSNCodeDetails()", ex);
+                return null;
+            }
+        }
+
+        void AddProductToCache(ProductDetails ObjProductDetails)
         {
             try
             {
                 ObjProductDetails.ItemName = ObjProductDetails.ItemName.Trim();
-                //if (String.IsNullOrEmpty(ObjProductDetails.StockName))
-                //    ObjProductDetails.StockName = ObjProductDetails.ItemName;
-                //ObjProductDetails.StockName = ObjProductDetails.StockName.Trim();
-
-                //StockProductDetails ObjStockProductDetails = new StockProductDetails();
-                //ObjStockProductDetails.StockName = ObjProductDetails.StockName;
-                //AddStockProduct(ObjStockProductDetails);
-
-                ObjProductDetails.ListPrices = new Double[ListPriceGroups.Count];
-                for (int j = 0; j < ObjProductDetails.ListPrices.Length; j++)
-                {
-                    ObjProductDetails.ListPrices[j] = Double.NaN;
-                    if (!dtRow.Table.Columns.Contains(ListPriceGroups[j].PriceGrpName)) continue;
-                    if (dtRow[ListPriceGroups[j].PriceGrpName] == DBNull.Value) continue;
-                    if (String.IsNullOrEmpty(dtRow[ListPriceGroups[j].PriceGrpName].ToString().Trim())) continue;
-                    ObjProductDetails.ListPrices[j] = Double.Parse(dtRow[ListPriceGroups[j].PriceGrpName].ToString().Trim());
-                }
-
                 ObjProductDetails.CategoryName = GetCategoryDetails(ObjProductDetails.CategoryID).CategoryName;
                 ObjProductDetails.StockName = GetProductInventoryDetails(ObjProductDetails.ProductInvID).StockName;
                 ObjProductDetails.HSNCode = GetTaxDetails(ObjProductDetails.TaxID).HSNCode;
@@ -92,7 +86,7 @@ namespace SalesOrdersReport
                 if (ProductIndex < 0)
                 {
                     ListProducts.Insert(~ProductIndex, ObjProductDetails);
-                    ObjProductDetails.FillMissingPricesForPriceGroups(ListPriceGroups);
+                    //ObjProductDetails.FillMissingPricesForPriceGroups(ListPriceGroups);
                 }
             }
             catch (Exception ex)
@@ -119,20 +113,25 @@ namespace SalesOrdersReport
             }
         }
 
-        public void CreateNewProductCategory(String CategoryName, String Description, Boolean Active)
+        public ProductCategoryDetails CreateNewProductCategory(String CategoryName, String Description, Boolean Active)
         {
             try
             {
+                if (GetCategoryDetails(CategoryName) != null) return null;
+
                 //Insert new Category to CategoryMaster
                 String Query = String.Format("Insert into ProductCategoryMaster (CategoryName, Description, Active) "
                                             + "VALUES ('{0}', '{1}', {2});", CategoryName, Description, Active);
                 ObjMySQLHelper.ExecuteNonQuery(Query);
 
                 LoadProductCategoryMaster(ObjMySQLHelper.GetQueryResultInDataTable("Select * from ProductCategoryMaster Order by CategoryID"));
+
+                return GetCategoryDetails(CategoryName);
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("ProductMasterModel.CreateNewProductCategory()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.CreateNewProductCategory()", ex);
+                return null;
             }
         }
 
@@ -207,6 +206,8 @@ namespace SalesOrdersReport
         {
             try
             {
+                ListProducts.Clear();
+
                 for (int i = 0; i < dtProductMaster.Rows.Count; i++)
                 {
                     DataRow dtRow = dtProductMaster.Rows[i];
@@ -221,13 +222,15 @@ namespace SalesOrdersReport
                     ObjProductDetails.TaxID = Int32.Parse(dtRow["TaxID"].ToString());
                     ObjProductDetails.Units = Double.Parse(dtRow["Units"].ToString());
                     ObjProductDetails.PurchasePrice = Double.Parse(dtRow["PurchasePrice"].ToString());
-                    ObjProductDetails.SellingPrice = Double.Parse(dtRow["SellingPrice"].ToString());
-                    ObjProductDetails.UnitsOfMeasurement = dtRow["UnitOfMeasurement"].ToString();
+                    ObjProductDetails.WholesalePrice = Double.Parse(dtRow["WholesalePrice"].ToString());
+                    ObjProductDetails.RetailPrice = Double.Parse(dtRow["RetailPrice"].ToString());
+                    ObjProductDetails.MaxRetailPrice = Double.Parse(dtRow["MaxRetailPrice"].ToString());
+                    ObjProductDetails.UnitsOfMeasurement = dtRow["UnitsOfMeasurement"].ToString();
                     ObjProductDetails.SortName = dtRow["SortName"].ToString();
-                    ObjProductDetails.Active = Boolean.Parse(dtRow["Active"].ToString());
+                    ObjProductDetails.Active = (Int32.Parse(dtRow["Active"].ToString()) == 1);
                     ObjProductDetails.AddedDate = DateTime.Parse(dtRow["AddedDate"].ToString());
                     ObjProductDetails.LastUpdateDate = DateTime.Parse(dtRow["LastUpdateDate"].ToString());
-                    AddProductToCache(ObjProductDetails, dtRow);
+                    AddProductToCache(ObjProductDetails);
                 }
 
                 UpdateStockProductIndexes();
@@ -254,7 +257,7 @@ namespace SalesOrdersReport
                     ObjProductCategoryDetails.CategoryID = Int32.Parse(dtRow["CategoryID"].ToString());
                     ObjProductCategoryDetails.CategoryName = dtRow["CategoryName"].ToString();
                     ObjProductCategoryDetails.Description = dtRow["Description"].ToString();
-                    ObjProductCategoryDetails.Active = Boolean.Parse(dtRow["Active"].ToString());
+                    ObjProductCategoryDetails.Active = (Int32.Parse(dtRow["Active"].ToString()) == 1);
 
                     AddProductCategoryToCache(ObjProductCategoryDetails);
                 }
@@ -283,14 +286,14 @@ namespace SalesOrdersReport
                     ObjPriceGroupDetails.PriceColumn = dtRow["PriceColumn"].ToString().Trim();
                     ObjPriceGroupDetails.Discount = Double.Parse(dtRow["Discount"].ToString().Trim());
                     ObjPriceGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(dtRow["DiscountType"].ToString().Trim());
-                    ObjPriceGroupDetails.IsDefault = (Int32.Parse(dtRow["Default"].ToString().Trim()) == 1);
+                    ObjPriceGroupDetails.IsDefault = (Int32.Parse(dtRow["IsDefault"].ToString().Trim()) == 1);
 
                     AddPriceGroupToCache(ObjPriceGroupDetails);
                 }
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("ProductMasterModel.LoadProductMaster()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.LoadPriceGroupMaster()", ex);
             }
         }
 
@@ -305,7 +308,6 @@ namespace SalesOrdersReport
                 {
                     TaxGroupDetails ObjTaxGroupDetails = new TaxGroupDetails();
                     ObjTaxGroupDetails.Name = ArrTaxName[i]; ObjTaxGroupDetails.Description = ArrTaxDesc[i];
-                    ObjTaxGroupDetails.TaxRate = 0;
                     ListTaxGroupDetails.Add(ObjTaxGroupDetails);
                 }
 
@@ -322,6 +324,7 @@ namespace SalesOrdersReport
                     }
                 }
 
+                ListHSNCodeDetails.Clear();
                 for (int i = 0; i < dtTaxMaster.Rows.Count; i++)
                 {
                     DataRow dr = dtTaxMaster.Rows[i];
@@ -350,6 +353,8 @@ namespace SalesOrdersReport
         {
             try
             {
+                ListProductInventoryDetails.Clear();
+
                 for (int i = 0; i < dtProductInventory.Rows.Count; i++)
                 {
                     DataRow dr = dtProductInventory.Rows[i];
@@ -362,8 +367,8 @@ namespace SalesOrdersReport
                     ObjProductInventoryDetails.UnitsOfMeasurement = dr["UnitsOfMeasurement"].ToString();
                     ObjProductInventoryDetails.ReOrderStockLevel = Double.Parse(dr["ReOrderStockLevel"].ToString());
                     ObjProductInventoryDetails.ReOrderStockQty = Double.Parse(dr["ReOrderStockQty"].ToString());
-                    ObjProductInventoryDetails.LastPODate = DateTime.Parse(dr["LastPODate"].ToString());
-                    ObjProductInventoryDetails.LastUpdateDate = DateTime.Parse(dr["LastUpdateDate"].ToString());
+                    //ObjProductInventoryDetails.LastPODate = DateTime.Parse(dr["LastPODate"].ToString());
+                    //ObjProductInventoryDetails.LastUpdateDate = DateTime.Parse(dr["LastUpdateDate"].ToString());
 
                     AddProductInventoryDetails(ObjProductInventoryDetails);
                 }
@@ -372,10 +377,9 @@ namespace SalesOrdersReport
             {
                 CommonFunctions.ShowErrorDialog("ProductMasterModel.LoadProductInventory()", ex);
             }
-
         }
 
-        HSNCodeDetails GetHSNCodeDetails(String HSNCode)
+        public HSNCodeDetails GetHSNCodeDetails(String HSNCode)
         {
             try
             {
@@ -504,7 +508,7 @@ namespace SalesOrdersReport
             try
             {
                 List<ProductDetails> ListProductsForCategory = new List<ProductDetails>();
-                if (CategoryName.Equals("<ALL>", StringComparison.InvariantCultureIgnoreCase))
+                if (CategoryName.Equals(Views.ProductsMainForm.AllKeyword, StringComparison.InvariantCultureIgnoreCase))
                     ListProductsForCategory.AddRange(ListProducts);
                 else
                     ListProductsForCategory.AddRange(ListProducts.Where(e => e.CategoryName.Equals(CategoryName, StringComparison.InvariantCultureIgnoreCase)));
@@ -596,7 +600,16 @@ namespace SalesOrdersReport
 
                 if (PriceGroupIndex < 0) PriceGroupIndex = DefaultPriceGroupIndex;
 
-                return ObjProduct.ListPrices[PriceGroupIndex];
+                //return ObjProduct.ListPrices[PriceGroupIndex];
+
+                switch (PriceGroupIndex)
+                {
+                    case 0: return ObjProduct.PurchasePrice;
+                    case 1: return ObjProduct.WholesalePrice;
+                    case 2: return ObjProduct.RetailPrice;
+                    case 3: return ObjProduct.MaxRetailPrice;
+                    default: return -1;
+                }
             }
             catch (Exception ex)
             {
@@ -1107,7 +1120,7 @@ namespace SalesOrdersReport
 
                         DataRow dtRow = dtPrices.NewRow();
                         dtRow[0] = ListPriceGroupColumns[i];
-                        dtRow[1] = tmpProductDetails.ListPrices[Index];
+                        //dtRow[1] = tmpProductDetails.ListPrices[Index];
 
                         dtPrices.Rows.Add(dtRow);
                     }
@@ -1130,6 +1143,662 @@ namespace SalesOrdersReport
             {
                 CommonFunctions.ShowErrorDialog("ProductMasterModel.GetPriceColumnPricesForProduct()", ex);
                 throw;
+            }
+        }
+
+        public String GenerateNewSKUID()
+        {
+            try
+            {
+                String MaxProductSKU = ObjMySQLHelper.GetIDValue("ProductMaster");
+                if (String.IsNullOrEmpty(MaxProductSKU)) MaxProductSKU = "0";
+                //Object RetVal = ObjMySQLHelper.ExecuteScalar("Select ProductSKU from ProductMaster Where ProductID = (Select Max(ProductID) MaxProductID from ProductMaster);");
+                //String MaxProductSKU = (RetVal == null) ? "0" : RetVal.ToString();
+                return CommonFunctions.GenerateNextID(SKUPrefix, MaxProductSKU);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GenerateNewSKUID()", ex);
+                throw;
+            }
+        }
+
+        public List<String> GetStockProductsList()
+        {
+            try
+            {
+                List<String> ListStockProductNames = new List<String>();
+                IEnumerable<String[]> StockProducts = ObjMySQLHelper.ExecuteQuery("Select Distinct StockName from ProductInventory Order by StockName;");
+                foreach (var item in StockProducts)
+                {
+                    ListStockProductNames.Add(item[0]);
+                }
+                return ListStockProductNames;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetStockProductsList()", ex);
+                return null;
+            }
+        }
+
+        public HSNCodeDetails AddUpdateHSNCodeDetails(HSNCodeDetails ObjHSNCodeDetails)
+        {
+            try
+            {
+                if (ObjHSNCodeDetails.TaxID < 0)
+                    return AddNewHSNCodeDetails(ObjHSNCodeDetails);
+                else
+                    return UpdateHSNCodeDetails(ObjHSNCodeDetails);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.AddUpdateHSNCodeDetails()", ex);
+                return null;
+            }
+        }
+
+        HSNCodeDetails AddNewHSNCodeDetails(HSNCodeDetails ObjHSNCodeDetails)
+        {
+            try
+            {
+                String Query = "";
+                Query = "Insert into TaxMaster(HSNCode, CGST, SGST, IGST)";
+                Query += $" Values ('{ObjHSNCodeDetails.HSNCode}', '{ObjHSNCodeDetails.ListTaxRates[0]}', '{ObjHSNCodeDetails.ListTaxRates[1]}', " +
+                         $"{ObjHSNCodeDetails.ListTaxRates[2]})";
+                ObjMySQLHelper.ExecuteNonQuery(Query);
+
+                ObjHSNCodeDetails.TaxID = ((ListHSNCodeDetails.Count > 0) ? ListHSNCodeDetails.Max(e => e.TaxID) : 0) + 1;
+                AddHSNCode(ObjHSNCodeDetails);
+                //Int32 Index = ListHSNCodeDetails.BinarySearch(ObjHSNCodeDetails, ObjHSNCodeDetails);
+                //ListHSNCodeDetails.Insert(~Index, ObjHSNCodeDetails);
+
+                return ObjHSNCodeDetails;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.AddNewHSNCodeDetails()", ex);
+                return null;
+            }
+        }
+
+        HSNCodeDetails UpdateHSNCodeDetails(HSNCodeDetails ObjHSNCodeDetails)
+        {
+            try
+            {
+                HSNCodeDetails tmpObjHSNCodeDetails = GetTaxDetails(ObjHSNCodeDetails.TaxID);
+
+                String Query = "";
+                for (int i = 0; i < ListTaxGroupDetails.Count; i++)
+                {
+                    if (Math.Abs(tmpObjHSNCodeDetails.ListTaxRates[i] - ObjHSNCodeDetails.ListTaxRates[i]) > 0)
+                    {
+                        if (!String.IsNullOrEmpty(Query)) Query += ",";
+                        Query += $" {ListTaxGroupDetails[i].Name} = {ObjHSNCodeDetails.ListTaxRates[i]}";
+                        tmpObjHSNCodeDetails.ListTaxRates[i] = ObjHSNCodeDetails.ListTaxRates[i];
+                    }
+                }
+                Query = $"Update TaxMaster Set {Query} Where TaxID = {ObjHSNCodeDetails.TaxID}";
+                ObjMySQLHelper.ExecuteNonQuery(Query);
+
+                return tmpObjHSNCodeDetails;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdateHSNCodeDetails()", ex);
+                return null;
+            }
+        }
+
+        public ProductDetails AddUpdateProductDetails(ProductDetails tmpProductDetails, ProductInventoryDetails tmpProductInventoryDetails)
+        {
+            try
+            {
+                if (tmpProductDetails.ProductID < 0)
+                {
+                    return AddNewProductDetails(tmpProductDetails, tmpProductInventoryDetails);
+                }
+                else
+                {
+                    return UpdateProductDetails(tmpProductDetails, tmpProductInventoryDetails);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.AddUpdateProductDetails()", ex);
+            }
+            return null;
+        }
+
+        ProductDetails AddNewProductDetails(ProductDetails tmpProductDetails, ProductInventoryDetails tmpProductInventoryDetails)
+        {
+            try
+            {
+                ProductDetails productDetails = GetProductDetails(tmpProductDetails.ItemName);
+                if (productDetails != null) return null;
+
+                String Query = "";
+                Int32 InventoryIndex = ListProductInventoryDetails.FindIndex(e => e.StockName.Equals(tmpProductInventoryDetails.StockName, StringComparison.InvariantCultureIgnoreCase));
+                if (InventoryIndex < 0)
+                {
+                    tmpProductInventoryDetails = AddNewProductInventoryDetails(tmpProductInventoryDetails);
+                }
+                else
+                {
+                    tmpProductInventoryDetails = ListProductInventoryDetails[InventoryIndex];
+                }
+
+                tmpProductDetails.ProductInvID = tmpProductInventoryDetails.ProductInvID;
+                tmpProductDetails.CategoryID = ListProductCategories[ListProductCategories.FindIndex(e => e.CategoryName.Equals(tmpProductDetails.CategoryName, StringComparison.InvariantCultureIgnoreCase))].CategoryID;
+                tmpProductDetails.AddedDate = DateTime.Now;
+                tmpProductDetails.HSNCodeIndex = ListHSNCodeDetails.FindIndex(e => e.HSNCode.Equals(tmpProductDetails.HSNCode));
+                tmpProductDetails.TaxID = ListHSNCodeDetails[tmpProductDetails.HSNCodeIndex].TaxID;
+                tmpProductDetails.StockProductIndex = ListProductInventoryDetails.FindIndex(e => e.StockName.Equals(tmpProductInventoryDetails.StockName));
+
+                Query = "Insert into ProductMaster(ProductSKU, ProductName, Description, CategoryID, Units, UnitsOfMeasurement, " +
+                        "SortName, TaxID, ProductInvID, Active, AddedDate, PurchasePrice, WholesalePrice, RetailPrice, MaxRetailPrice)";
+                Query += $" Values ('{tmpProductDetails.ProductSKU}', '{tmpProductDetails.ItemName}', '{tmpProductDetails.ProductDesc}', " +
+                         $"{tmpProductDetails.CategoryID}, {tmpProductDetails.Units}, '{tmpProductDetails.UnitsOfMeasurement}', " +
+                         $"'{tmpProductDetails.SortName}', {tmpProductDetails.TaxID}, {tmpProductDetails.ProductInvID}, " +
+                         $"{(tmpProductDetails.Active ? 1 : 0)}, '{MySQLHelper.GetDateStringForDB(tmpProductDetails.AddedDate)}', " +
+                         $"{tmpProductDetails.PurchasePrice}, {tmpProductDetails.WholesalePrice}, {tmpProductDetails.RetailPrice}, {tmpProductDetails.MaxRetailPrice})";
+                ObjMySQLHelper.ExecuteNonQuery(Query);
+                ObjMySQLHelper.UpdateIDValue("ProductMaster", tmpProductDetails.ProductSKU);
+                tmpProductDetails.ProductID = ((ListProducts.Count > 0) ? ListProducts.Max(e => e.ProductID) : 0) + 1;
+                AddProductToCache(tmpProductDetails);
+
+                return tmpProductDetails;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.AddNewProductDetails()", ex);
+                return null;
+            }
+        }
+
+        ProductInventoryDetails AddNewProductInventoryDetails(ProductInventoryDetails tmpProductInventoryDetails)
+        {
+            try
+            {
+                //Check for existing StockName
+                String Query = $"Select ProductInvID from ProductInventory Where StockName = '{tmpProductInventoryDetails.StockName}'";
+                DataTable dtInvDetails = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                if (dtInvDetails.Rows.Count == 0)
+                {
+                    //Insert new record
+                    Query = "Insert into ProductInventory(StockName, Inventory, Units, UnitsOfMeasurement, ReOrderStockLevel, ReOrderStockQty)";
+                    Query += $" Values ('{tmpProductInventoryDetails.StockName}', {tmpProductInventoryDetails.Inventory}," +
+                             $"{tmpProductInventoryDetails.Units}, '{tmpProductInventoryDetails.UnitsOfMeasurement}'," +
+                             $"{tmpProductInventoryDetails.ReOrderStockLevel}, {tmpProductInventoryDetails.ReOrderStockQty})";
+                    ObjMySQLHelper.ExecuteNonQuery(Query);
+                    Query = "Select * from ProductInventory Order by StockName";
+                    LoadProductInventory(ObjMySQLHelper.GetQueryResultInDataTable(Query));
+                }
+
+                //Reload Product Inventory cache
+                ListProductInventoryDetails.Clear();
+                Query = $"Select * from ProductInventory Order by StockName";
+                LoadProductInventory(ObjMySQLHelper.GetQueryResultInDataTable(Query));
+
+                Int32 InventoryIndex = ListProductInventoryDetails.FindIndex(e => e.StockName.Equals(tmpProductInventoryDetails.StockName, StringComparison.InvariantCultureIgnoreCase));
+                tmpProductInventoryDetails = ListProductInventoryDetails[InventoryIndex];
+
+                return tmpProductInventoryDetails;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.AddNewProductInventoryDetails()", ex);
+                return null;
+            }
+        }
+
+        Boolean UpdateValue<T>(ref T CurrValue, T NewValue)
+        {
+            try
+            {
+                if (CurrValue.Equals(NewValue)) return false;
+                CurrValue = NewValue;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdateValue()", ex);
+            }
+            return false;
+        }
+
+        ProductDetails UpdateProductDetails(ProductDetails tmpProductDetails, ProductInventoryDetails tmpProductInventoryDetails)
+        {
+            try
+            {
+                ProductDetails CurProductDetails = GetProductDetails(tmpProductDetails.ProductID);
+
+                tmpProductInventoryDetails = UpdateProductInventoryDetails(tmpProductInventoryDetails);
+                tmpProductDetails.CategoryID = GetCategoryDetails(tmpProductDetails.CategoryName).CategoryID;
+                tmpProductDetails.ProductInvID = tmpProductInventoryDetails.ProductInvID;
+                tmpProductDetails.TaxID = GetHSNCodeDetails(tmpProductDetails.HSNCode).TaxID;
+
+                if (CurProductDetails.Equals(tmpProductDetails)) return CurProductDetails;
+
+                CurProductDetails.StockName = tmpProductInventoryDetails.StockName;
+                CurProductDetails.ProductInvID = tmpProductInventoryDetails.ProductInvID;
+                CurProductDetails.StockProductIndex = ListProductInventoryDetails.FindIndex(e => e.StockName.Equals(tmpProductDetails.StockName));
+
+                CurProductDetails.ItemName = tmpProductDetails.ItemName;
+                CurProductDetails.ProductDesc = tmpProductDetails.ProductDesc;
+                if (!CurProductDetails.CategoryName.Equals(tmpProductDetails.CategoryName))
+                {
+                    CurProductDetails.CategoryName = tmpProductDetails.CategoryName;
+                    CurProductDetails.CategoryID = tmpProductDetails.CategoryID;
+                }
+
+                CurProductDetails.Units = tmpProductDetails.Units;
+                CurProductDetails.UnitsOfMeasurement = tmpProductDetails.UnitsOfMeasurement;
+                CurProductDetails.SortName = tmpProductDetails.SortName;
+
+                if (!CurProductDetails.HSNCode.Equals(tmpProductDetails.HSNCode))
+                {
+                    CurProductDetails.HSNCode = tmpProductDetails.HSNCode;
+                    CurProductDetails.TaxID = tmpProductDetails.TaxID;
+                    CurProductDetails.HSNCodeIndex = ListHSNCodeDetails.FindIndex(e => e.TaxID == CurProductDetails.TaxID);
+                }
+
+                CurProductDetails.Active = tmpProductDetails.Active;
+                CurProductDetails.PurchasePrice = tmpProductDetails.PurchasePrice;
+                CurProductDetails.WholesalePrice = tmpProductDetails.WholesalePrice;
+                CurProductDetails.RetailPrice = tmpProductDetails.RetailPrice;
+                CurProductDetails.MaxRetailPrice = tmpProductDetails.MaxRetailPrice;
+
+                String Query = "Update ProductMaster Set ";
+                Query += $" ProductName = '{CurProductDetails.ItemName}', Description = '{CurProductDetails.ProductDesc}', CategoryID = {CurProductDetails.CategoryID}," +
+                         $" Units = '{CurProductDetails.Units}', UnitsOfMeasurement = '{CurProductDetails.UnitsOfMeasurement}', SortName = '{CurProductDetails.SortName}'," +
+                         $" TaxID = {CurProductDetails.TaxID}, ProductInvID = {CurProductDetails.ProductInvID}, Active = {(CurProductDetails.Active ? 1 : 0)}," +
+                         $" PurchasePrice = {CurProductDetails.PurchasePrice}, WholesalePrice = {CurProductDetails.WholesalePrice}," +
+                         $" RetailPrice = {CurProductDetails.RetailPrice}, MaxRetailPrice = {CurProductDetails.MaxRetailPrice}";
+                Query += $" Where ProductID = {CurProductDetails.ProductID}";
+                ObjMySQLHelper.ExecuteNonQuery(Query);
+
+                return CurProductDetails;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdateProductDetails()", ex);
+            }
+            return tmpProductDetails;
+        }
+
+        ProductInventoryDetails UpdateProductInventoryDetails(ProductInventoryDetails tmpProductInventoryDetails)
+        {
+            try
+            {
+                Int32 Index = ListProductInventoryDetails.FindIndex(e => e.StockName.Equals(tmpProductInventoryDetails.StockName, StringComparison.InvariantCultureIgnoreCase));
+
+                ProductInventoryDetails CurrProductInventoryDetails = null;
+                if (Index < 0)
+                {
+                    CurrProductInventoryDetails = AddNewProductInventoryDetails(tmpProductInventoryDetails);
+                }
+                else
+                {
+                    CurrProductInventoryDetails = ListProductInventoryDetails[Index];
+                    if (CurrProductInventoryDetails.Equals(tmpProductInventoryDetails)) return CurrProductInventoryDetails;
+
+                    CurrProductInventoryDetails.Inventory = tmpProductInventoryDetails.Inventory;
+                    CurrProductInventoryDetails.ReOrderStockLevel = tmpProductInventoryDetails.ReOrderStockLevel;
+                    CurrProductInventoryDetails.ReOrderStockQty = tmpProductInventoryDetails.ReOrderStockQty;
+                    CurrProductInventoryDetails.Units = tmpProductInventoryDetails.Units;
+                    CurrProductInventoryDetails.UnitsOfMeasurement = tmpProductInventoryDetails.UnitsOfMeasurement;
+
+                    String Query = "Update ProductInventory Set ";
+                    Query += $" StockName = '{CurrProductInventoryDetails.StockName}', Inventory = {CurrProductInventoryDetails.Inventory}," +
+                             $" Units = '{CurrProductInventoryDetails.Units}', UnitsOfMeasurement = '{CurrProductInventoryDetails.UnitsOfMeasurement}'," +
+                             $" ReOrderStockLevel = {CurrProductInventoryDetails.ReOrderStockLevel}, ReOrderStockQty = {CurrProductInventoryDetails.ReOrderStockQty}";
+                    Query += $" Where ProductInvID = {CurrProductInventoryDetails.ProductInvID}";
+                    ObjMySQLHelper.ExecuteNonQuery(Query);
+                }
+
+                return CurrProductInventoryDetails;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdateProductInventoryDetails()", ex);
+                return null;
+            }
+        }
+
+        public void DeleteProduct(Int32 ProductID)
+        {
+            try
+            {
+                //String Query = String.Format("Update ProductMaster Set Active = 0 Where ProductID = {0};", ProductID);
+                //ObjMySQLHelper.ExecuteNonQuery(Query);
+
+                ObjMySQLHelper.UpdateTableDetails("ProductMaster", new List<string>() { "Active" }, new List<string>() { "0" }, 
+                    new List<Types>() { Types.Number }, $"ProductID = {ProductID}");
+
+                GetProductDetails(ProductID).Active = false;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.DeleteProduct()", ex);
+            }
+        }
+
+        public Int32 DeleteHSNCodeDetails(String HSNCode)
+        {
+            try
+            {
+                HSNCodeDetails tmpHSNCodeDetails = GetHSNCodeDetails(HSNCode);
+                if (ListProducts.Count(e => e.TaxID == tmpHSNCodeDetails.TaxID) > 0) return -1;
+
+                Int32 Result = ObjMySQLHelper.DeleteRow("TaxMaster", "TaxID", tmpHSNCodeDetails.TaxID.ToString(), Types.Number);
+
+                if (Result > 0) ListHSNCodeDetails.Remove(tmpHSNCodeDetails);
+
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.DeleteHSNCodeDetails()", ex);
+                return -2;
+            }
+        }
+
+        String[] ArrSheetNamesToImport = new String[] { "Products", "Categories", "Inventory", "HSNCodes" };
+        String[][] ArrSheetColumns = new String[4][]
+        {
+                    new String[] { "ProductName", "Description", "Category", "PurchasePrice", "WholesalePrice", "RetailPrice", "MaxRetailPrice", "Units", "UnitsOfMeasurement", "SortName", "HSNCode", "StockName", "Active" },
+                    new String[] { "CategoryName", "Description" },
+                    new String[] { "StockName", "Inventory", "Units", "UnitsOfMeasurement", "ReOrderStockLevel", "ReOrderStockQty" },
+                    new String[] { "HSNCode", "CGST", "SGST", "IGST" },
+        };
+        DataTable dtProductsToImport, dtProductCategoriesToImport, dtProductInventoryToImport, dtHSNCodesToImport;
+        Boolean[] ArrDataToImport = null;
+
+        public String ValidateExcelFileToImport(String ExcelFilePathToImport, Boolean[] ArrDataToImport)
+        {
+            try
+            {
+                this.ArrDataToImport = ArrDataToImport;
+                Excel.Application xlApp = new Excel.Application();
+                String MissingData = "";
+                try
+                {
+                    Excel.Workbook ExcelFileToImport = xlApp.Workbooks.Open(ExcelFilePathToImport);
+
+                    #region Check for required worksheets
+                    for (int i = 0; i < ArrSheetNamesToImport.Length; i++)
+                    {
+                        if (ArrDataToImport[i] == false) continue;
+
+                        if (CommonFunctions.GetWorksheet(ExcelFileToImport, ArrSheetNamesToImport[i]) == null)
+                        {
+                            if (!String.IsNullOrEmpty(MissingData)) MissingData += ",";
+                            MissingData += ArrSheetNamesToImport[i];
+                        }
+                    }
+
+                    if (!String.IsNullOrEmpty(MissingData))
+                    {
+                        return $"Unable to find following WorkSheets in Excel file:\n{MissingData}";
+                    }
+                    ExcelFileToImport.Close(SaveChanges: false);
+                    #endregion
+                }
+                catch (Exception ex)
+                {
+                    CommonFunctions.ShowErrorDialog($"{this}.ValidateExcelFileToImport()", ex);
+                    return $"Error:{ex.Message}";
+                }
+                finally
+                {
+                    xlApp.Quit();
+                    CommonFunctions.ReleaseCOMObject(xlApp);
+                }
+
+                #region Check for columns in each required sheet
+                MissingData = "";
+                for (int i = 0; i < ArrSheetNamesToImport.Length; i++)
+                {
+                    String MissingCols = "";
+                    DataTable dtTable = CommonFunctions.ReturnDataTableFromExcelWorksheet(ArrSheetNamesToImport[i], ExcelFilePathToImport, "*");
+                    String[] ArrDtColumns = new String[dtTable.Columns.Count];
+                    for (int j = 0; j < dtTable.Columns.Count; j++)
+                    {
+                        ArrDtColumns[j] = dtTable.Columns[j].ColumnName.ToUpper().Trim();
+                    }
+
+                    for (int j = 0; j < ArrSheetColumns[i].Length; j++)
+                    {
+                        if (!ArrDtColumns.Contains(ArrSheetColumns[i][j].ToUpper()))
+                        {
+                            if (String.IsNullOrEmpty(MissingCols))
+                            {
+                                MissingCols = $"\nMissing Columns in {ArrSheetNamesToImport[i]}: {ArrSheetColumns[i][j]}";
+                            }
+                            else
+                            {
+                                MissingCols += $", {ArrSheetColumns[i][j]}";
+                            }
+                        }
+                    }
+
+                    if (!String.IsNullOrEmpty(MissingCols)) MissingData += "\n" + MissingCols;
+                    else
+                    {
+                        if (i == 0) dtProductsToImport = dtTable;
+                        else if (i == 1) dtProductCategoriesToImport = dtTable;
+                        else if (i == 2) dtProductInventoryToImport = dtTable;
+                        else if (i == 3) dtHSNCodesToImport = dtTable;
+                    }
+                }
+
+                if (!String.IsNullOrEmpty(MissingData))
+                {
+                    return $"Unable to find following columns in WorkSheets:{MissingData}";
+                }
+                #endregion
+
+                return "";
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ValidateExcelFileToImport()", ex);
+                return $"Error:{ex.Message}";
+            }
+        }
+
+        public Int32 ProcessProductsDataFromExcelFile(out String ProcessStatus)
+        {
+            ProcessStatus = "";
+            try
+            {
+                Int32 ExistingProductCount = 0, ExistingProductCategoryCount = 0, ExistingProductInventoryCount = 0, ExistingHSNCount = 0;
+                Int32 TotalRecordCount = 0;
+                
+                //Check Products
+                if (ArrDataToImport[0])
+                {
+                    foreach (DataRow item in dtProductsToImport.Rows)
+                    {
+                        ProductDetails tmpProductDetails = GetProductDetails(item["ProductName"].ToString());
+                        if (tmpProductDetails != null)
+                        {
+                            ExistingProductCount++;
+                            item.Delete();
+                        }
+                    }
+                    dtProductsToImport.AcceptChanges();
+                    ProcessStatus += $"{(!String.IsNullOrEmpty(ProcessStatus) ? "\n" : "")}Products:: New:{dtProductsToImport.Rows.Count} Existing:{ExistingProductCount}";
+                    TotalRecordCount += dtProductsToImport.Rows.Count;
+                }
+
+                //Check Product Categories
+                if (ArrDataToImport[1])
+                {
+                    foreach (DataRow item in dtProductCategoriesToImport.Rows)
+                    {
+                        ProductCategoryDetails tmpProductCategoryDetails = GetCategoryDetails(item["CategoryName"].ToString());
+                        if (tmpProductCategoryDetails != null)
+                        {
+                            ExistingProductCategoryCount++;
+                            item.Delete();
+                        }
+                    }
+                    dtProductCategoriesToImport.AcceptChanges();
+                    ProcessStatus += $"{(!String.IsNullOrEmpty(ProcessStatus) ? "\n" : "")}Categories:: New:{dtProductCategoriesToImport.Rows.Count} Existing:{ExistingProductCategoryCount}";
+                    TotalRecordCount += dtProductCategoriesToImport.Rows.Count;
+                }
+
+                //Check Product Inventory
+                if (ArrDataToImport[2])
+                {
+                    foreach (DataRow item in dtProductInventoryToImport.Rows)
+                    {
+                        ProductInventoryDetails tmpProductInventoryDetails = GetStockProductDetails(item["StockName"].ToString());
+                        if (tmpProductInventoryDetails != null)
+                        {
+                            ExistingProductInventoryCount++;
+                            item.Delete();
+                        }
+                    }
+                    dtProductInventoryToImport.AcceptChanges();
+                    ProcessStatus += $"{(!String.IsNullOrEmpty(ProcessStatus) ? "\n" : "")}Inventory:: New:{dtProductInventoryToImport.Rows.Count} Existing:{ExistingProductInventoryCount}";
+                    TotalRecordCount += dtProductInventoryToImport.Rows.Count;
+                }
+
+                //Check HSN Codes
+                if (ArrDataToImport[3])
+                {
+                    foreach (DataRow item in dtHSNCodesToImport.Rows)
+                    {
+                        HSNCodeDetails tmpHSNCodeDetails = GetHSNCodeDetails(item["HSNCode"].ToString());
+                        if (tmpHSNCodeDetails != null)
+                        {
+                            ExistingHSNCount++;
+                            item.Delete();
+                        }
+                    }
+                    dtHSNCodesToImport.AcceptChanges();
+                    ProcessStatus += $"{(!String.IsNullOrEmpty(ProcessStatus) ? "\n" : "")}HSNCodes:: New:{dtHSNCodesToImport.Rows.Count} Existing:{ExistingHSNCount}";
+                    TotalRecordCount += dtHSNCodesToImport.Rows.Count;
+                }
+
+                if (TotalRecordCount > 0) return 0;
+                else return 1;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ProcessProductsDataFromExcelFile()", ex);
+                ProcessStatus = $"Error:{ex.Message}";
+                return -1;
+            }
+        }
+
+        public Int32 ImportProductsDataToDatabase(out String ImportStatus)
+        {
+            ImportStatus = "";
+            try
+            {
+                if (dtProductsToImport == null && dtProductCategoriesToImport == null && dtProductInventoryToImport == null && dtHSNCodesToImport == null) return -1;
+
+                Int32 ErrorHSNCodesCount = 0, ErrorInventoryCount = 0, ErrorCategoriesCount = 0, ErrorProductsCount = 0;
+
+                //Import HSN Codes
+                if (ArrDataToImport[3])
+                {
+                    foreach (DataRow item in dtHSNCodesToImport.Rows)
+                    {
+                        HSNCodeDetails tmpHSNCodeDetails = new HSNCodeDetails();
+                        tmpHSNCodeDetails.HSNCode = item["HSNCode"].ToString();
+                        tmpHSNCodeDetails.ListTaxRates = new Double[ListTaxGroupDetails.Count];
+                        for (int i = 0; i < ListTaxGroupDetails.Count; i++)
+                        {
+                            tmpHSNCodeDetails.ListTaxRates[i] = Double.Parse(item[ListTaxGroupDetails[i].Name].ToString());
+                        }
+
+                        if (AddNewHSNCodeDetails(tmpHSNCodeDetails) == null) ErrorHSNCodesCount++;
+                    }
+
+                    ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}HSNCodes:: Imported:{dtHSNCodesToImport.Rows.Count - ErrorHSNCodesCount} Error:{ErrorHSNCodesCount}";
+                }
+
+                //Import Inventory
+                if (ArrDataToImport[2])
+                {
+                    foreach (DataRow item in dtProductInventoryToImport.Rows)
+                    {
+                        ProductInventoryDetails tmpProductInventoryDetails = new ProductInventoryDetails()
+                        {
+                            StockName = item["StockName"].ToString(),
+                            Inventory = Double.Parse(item["Inventory"].ToString()),
+                            Units = Double.Parse(item["Units"].ToString()),
+                            UnitsOfMeasurement = item["UnitsOfMeasurement"].ToString(),
+                            ReOrderStockLevel = Double.Parse(item["ReOrderStockLevel"].ToString()),
+                            ReOrderStockQty = Double.Parse(item["ReOrderStockQty"].ToString())
+                        };
+
+                        if (AddNewProductInventoryDetails(tmpProductInventoryDetails) == null) ErrorInventoryCount++;
+                    }
+
+                    ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}Inventory:: Imported:{dtProductInventoryToImport.Rows.Count - ErrorInventoryCount} Error:{ErrorInventoryCount}";
+                }
+
+                //Import Categories
+                if (ArrDataToImport[1])
+                {
+                    foreach (DataRow item in dtProductCategoriesToImport.Rows)
+                    {
+                        if (CreateNewProductCategory(item["CategoryName"].ToString(), item["Description"].ToString(), true) == null)
+                        {
+                            ErrorCategoriesCount++;
+                        }
+                    }
+
+                    ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}Inventory:: Imported:{dtProductCategoriesToImport.Rows.Count - ErrorCategoriesCount} Error:{ErrorCategoriesCount}";
+                }
+
+                //Import Products
+                if (ArrDataToImport[0])
+                {
+                    foreach (DataRow item in dtProductsToImport.Rows)
+                    {
+                        ProductDetails tmpProductDetails = new ProductDetails()
+                        {
+                            ProductSKU = GenerateNewSKUID(),
+                            ItemName = item["ProductName"].ToString(),
+                            ProductDesc = item["Description"].ToString(),
+                            CategoryName = item["Category"].ToString(),
+                            PurchasePrice = Double.Parse(item["PurchasePrice"].ToString()),
+                            WholesalePrice = Double.Parse(item["WholesalePrice"].ToString()),
+                            RetailPrice = Double.Parse(item["RetailPrice"].ToString()),
+                            MaxRetailPrice = Double.Parse(item["MaxRetailPrice"].ToString()),
+                            Units = Double.Parse(item["Units"].ToString()),
+                            UnitsOfMeasurement = item["UnitsOfMeasurement"].ToString(),
+                            SortName = item["SortName"].ToString(),
+                            HSNCode = item["HSNCode"].ToString(),
+                            StockName = item["StockName"].ToString(),
+                            Active = Boolean.Parse(item["Active"].ToString())
+                        };
+                        ProductInventoryDetails tmpProductInventoryDetails = GetStockProductDetails(tmpProductDetails.StockName);
+
+                        if (AddNewProductDetails(tmpProductDetails, tmpProductInventoryDetails) == null) ErrorProductsCount++;
+                    }
+
+                    ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}Inventory:: Imported:{dtProductsToImport.Rows.Count - ErrorProductsCount} Error:{ErrorProductsCount}";
+                }
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ImportProductsDataToDatabase()", ex);
+                return -1;
+            }
+            finally
+            {
+                ArrDataToImport = null;
+                dtProductsToImport = dtProductCategoriesToImport = dtProductInventoryToImport = dtHSNCodesToImport = null;
             }
         }
     }

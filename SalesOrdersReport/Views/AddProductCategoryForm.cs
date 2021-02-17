@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SalesOrdersReport.CommonModules;
+using SalesOrdersReport.Models;
 
 namespace SalesOrdersReport.Views
 {
@@ -14,10 +16,10 @@ namespace SalesOrdersReport.Views
     {
         Boolean IsAddProductCategory = true;
         ProductMasterModel ObjProductMaster = null;
-        UpdateOnCloseDel UpdateOnClose;
+        UpdateProductOnCloseDel UpdateOnClose;
         ProductCategoryDetails ObjCategoryDetailsForEdit = null;
 
-        public AddProductCategoryForm(Boolean IsAddProductCategory, String CategoryName, UpdateOnCloseDel UpdateOnClose)
+        public AddProductCategoryForm(Boolean IsAddProductCategory, String CategoryName, UpdateProductOnCloseDel UpdateOnClose)
         {
             try
             {

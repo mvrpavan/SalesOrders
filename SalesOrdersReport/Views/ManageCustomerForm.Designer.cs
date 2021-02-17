@@ -29,6 +29,9 @@ namespace SalesOrdersReport.Views
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnRedirectCreateCustomer = new System.Windows.Forms.Button();
             this.panelAllCustomerBtnTab = new System.Windows.Forms.Panel();
             this.btnImportFromExcel = new System.Windows.Forms.Button();
@@ -42,17 +45,18 @@ namespace SalesOrdersReport.Views
             this.btnRedirectDeleteCustomer = new System.Windows.Forms.Button();
             this.btnRedirectEditCustomer = new System.Windows.Forms.Button();
             this.dgvCustomerCache = new System.Windows.Forms.DataGridView();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelAllCustomerBtnTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCustomerCache)).BeginInit();
             this.SuspendLayout();
             // 
-            // btnRedirectCreateUser
+            // btnRedirectCreateCustomer
             // 
             this.btnRedirectCreateCustomer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnRedirectCreateCustomer.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRedirectCreateCustomer.Image = global::SalesOrdersReport.Properties.Resources.CreateUser_321;
             this.btnRedirectCreateCustomer.Location = new System.Drawing.Point(11, 3);
-            this.btnRedirectCreateCustomer.Name = "btnRedirectCreateUser";
+            this.btnRedirectCreateCustomer.Name = "btnRedirectCreateCustomer";
             this.btnRedirectCreateCustomer.Size = new System.Drawing.Size(80, 80);
             this.btnRedirectCreateCustomer.TabIndex = 0;
             this.btnRedirectCreateCustomer.Text = "Create Customer";
@@ -62,6 +66,8 @@ namespace SalesOrdersReport.Views
             // 
             // panelAllCustomerBtnTab
             // 
+            this.panelAllCustomerBtnTab.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelAllCustomerBtnTab.Controls.Add(this.btnImportFromExcel);
             this.panelAllCustomerBtnTab.Controls.Add(this.btnEditDiscountGrp);
             this.panelAllCustomerBtnTab.Controls.Add(this.btnReloadCustomerCache);
@@ -75,7 +81,7 @@ namespace SalesOrdersReport.Views
             this.panelAllCustomerBtnTab.Controls.Add(this.btnRedirectCreateCustomer);
             this.panelAllCustomerBtnTab.Location = new System.Drawing.Point(12, 12);
             this.panelAllCustomerBtnTab.Name = "panelAllCustomerBtnTab";
-            this.panelAllCustomerBtnTab.Size = new System.Drawing.Size(897, 93);
+            this.panelAllCustomerBtnTab.Size = new System.Drawing.Size(1164, 93);
             this.panelAllCustomerBtnTab.TabIndex = 1;
             // 
             // btnImportFromExcel
@@ -226,29 +232,72 @@ namespace SalesOrdersReport.Views
             this.dgvCustomerCache.AllowUserToDeleteRows = false;
             this.dgvCustomerCache.AllowUserToResizeColumns = false;
             this.dgvCustomerCache.AllowUserToResizeRows = false;
+            this.dgvCustomerCache.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(5);
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCustomerCache.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dgvCustomerCache.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvCustomerCache.Location = new System.Drawing.Point(12, 111);
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCustomerCache.DefaultCellStyle = dataGridViewCellStyle5;
+            this.dgvCustomerCache.Location = new System.Drawing.Point(12, 154);
             this.dgvCustomerCache.MultiSelect = false;
             this.dgvCustomerCache.Name = "dgvCustomerCache";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCustomerCache.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dgvCustomerCache.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvCustomerCache.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvCustomerCache.Size = new System.Drawing.Size(897, 207);
+            this.dgvCustomerCache.Size = new System.Drawing.Size(1164, 435);
             this.dgvCustomerCache.TabIndex = 3;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F);
+            this.label1.Location = new System.Drawing.Point(12, 120);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(132, 25);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Customer List";
             // 
             // ManageCustomerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(934, 510);
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ClientSize = new System.Drawing.Size(1188, 747);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.dgvCustomerCache);
             this.Controls.Add(this.panelAllCustomerBtnTab);
             this.Name = "ManageCustomerForm";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Manage Customers";
             this.Load += new System.EventHandler(this.ManageCustomer_Load);
+            this.Shown += new System.EventHandler(this.ManageCustomerForm_Shown);
             this.panelAllCustomerBtnTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvCustomerCache)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -268,5 +317,6 @@ namespace SalesOrdersReport.Views
         private System.Windows.Forms.Button btnEditDiscountGrp;
         private System.Windows.Forms.Button btnCreateDiscountGrp;
         private Button btnImportFromExcel;
+        private Label label1;
     }
 }

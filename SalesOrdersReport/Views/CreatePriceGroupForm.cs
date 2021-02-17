@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalesOrdersReport.CommonModules;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -87,7 +88,7 @@ namespace SalesOrdersReport
                 }
 
                 ListColumnValues.Add(cmbxPriceGrpCol.SelectedItem.ToString());
-                ListColumnNamesWithDataType.Add("PRICEGROUPCOLUMNNAME,VARCHAR");
+                ListColumnNamesWithDataType.Add("PRICECOLUMN,VARCHAR");
 
                 if (radioBtnDefaultYes.Checked == true) ListColumnValues.Add("1");
                 else ListColumnValues.Add("0");

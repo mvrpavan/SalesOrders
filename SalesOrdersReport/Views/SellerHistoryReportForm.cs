@@ -8,8 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using Excel = Microsoft.Office.Interop.Excel;
+using SalesOrdersReport.CommonModules;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Views
 {
     public partial class SellerHistoryReportForm : Form
     {
@@ -153,7 +154,7 @@ namespace SalesOrdersReport
         {
             try
             {
-                ListSellerNames = CommonFunctions.ObjSellerMaster.GetSellerList();
+                ListSellerNames = CommonFunctions.ObjCustomerMasterModel.GetCustomerList();
 
                 cmbBoxSellerList.Items.Clear();
                 cmbBoxSellerList.DataSource = ListSellerNames;

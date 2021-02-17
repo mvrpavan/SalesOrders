@@ -8,8 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using SalesOrdersReport.CommonModules;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Views
 {
     public partial class MergeSalesOrdersForm : Form
     {
@@ -30,7 +31,7 @@ namespace SalesOrdersReport
                 panel1.Enabled = false;
 
                 //Populate Seller Names
-                ListSellerNames = CommonFunctions.ObjSellerMaster.GetSellerList();
+                ListSellerNames = CommonFunctions.ObjCustomerMasterModel.GetCustomerList();
 
                 //Populate Item Names
                 ListAllProducts = CommonFunctions.ObjProductMaster.GetProductListForCategory("<ALL>");

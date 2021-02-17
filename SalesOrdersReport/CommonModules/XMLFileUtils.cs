@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.CommonModules
 {
     public class XMLFileUtils
     {

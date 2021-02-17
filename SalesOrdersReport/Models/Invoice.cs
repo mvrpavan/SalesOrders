@@ -5,7 +5,7 @@ using System.Text;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Data;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Models
 {
     class ProductDetailsForInvoice
     {
@@ -15,7 +15,7 @@ namespace SalesOrdersReport
         public Double SaleQuantity, Rate;
         public String UnitsOfMeasurement;
         public TaxDetails CGSTDetails, SGSTDetails, IGSTDetails;
-        public DiscountGroupDetails DiscountGroup;
+        public DiscountGroupDetails1 DiscountGroup;
     }
 
     class TaxDetails
@@ -27,7 +27,7 @@ namespace SalesOrdersReport
     {
         public String SerialNumber, InvoiceNumberText;
         public DateTime DateOfInvoice;
-        public SellerDetails ObjSellerDetails;
+        public CustomerDetails ObjSellerDetails;
         public List<ProductDetailsForInvoice> ListProducts;
         public String TotalSalesValue, TotalDiscount, TotalTax;
         public String TotalInvoiceValue;
@@ -36,6 +36,7 @@ namespace SalesOrdersReport
         public Boolean PrintOldBalance;
         public String SheetName;
         public Boolean UseNumberToWordsFormula = true;
+        public Double OldBalance;
 
         public abstract void CreateInvoice(Excel.Worksheet OutputWorksheet);
 

@@ -8,8 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
+using SalesOrdersReport.Models;
+using SalesOrdersReport.CommonModules;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Views
 {
     public partial class CustomerInvoiceSellerOrderForm : Form
     {
@@ -17,8 +19,8 @@ namespace SalesOrdersReport
         Boolean IsSellerOrder, IsCustomerBill;
         List<ProductDetails> ListAllProducts, ListProducts;
         List<String> ListSellerNames;
-        SellerDetails CurrSellerDetails;
-        DiscountGroupDetails CurrSellerDiscountGroup;
+        CustomerDetails CurrSellerDetails;
+        DiscountGroupDetails1 CurrSellerDiscountGroup;
         SellerOrderDetails CurrSellerOrderDetails;
         Dictionary<String, Int32> DictItemToColIndexes, DictSellerToRowIndexes;
         List<SellerOrderDetails> ListSellerOrderDetails;
@@ -121,7 +123,7 @@ namespace SalesOrdersReport
             try
             {
                 //Populate cmbBoxSellerCustomer with Seller Names
-                ListSellerNames = CommonFunctions.ObjSellerMaster.GetSellerList();
+                ListSellerNames = CommonFunctions.ObjCustomerMasterModel.GetCustomerList();
                 cmbBoxSellerCustomer.DataSource = ListSellerNames;
                 cmbBoxSellerCustomer.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 cmbBoxSellerCustomer.AutoCompleteSource = AutoCompleteSource.ListItems;
@@ -418,7 +420,7 @@ namespace SalesOrdersReport
 
                     String CustomerName = sheet.Cells[CustomerNameRow, CustomerNameCol].Value;
                     String BillNumber = sheet.Cells[BillNumRow, BillNumCol].Value.ToString();
-                    if (CustomerName.Equals(CurrSellerDetails.Name, StringComparison.InvariantCultureIgnoreCase))
+                    if (CustomerName.Equals(CurrSellerDetails.CustomerName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         ListBills.Add(BillNumber); ListSheets.Add(sheet.Name);
                     }
@@ -1033,12 +1035,13 @@ namespace SalesOrdersReport
         {
             try
             {
-                SellerDetails sellerDetails = CommonFunctions.ObjSellerMaster.GetSellerDetails(cmbBoxSellerCustomer.SelectedValue.ToString());
-                String CustomerDetails = sellerDetails.Name + "\n" + sellerDetails.Address + "\n" + sellerDetails.Phone;
+                CustomerDetails sellerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxSellerCustomer.SelectedValue.ToString());
+                String CustomerDetails = sellerDetails.CustomerName + "\n" + sellerDetails.Address + "\n" + sellerDetails.PhoneNo;
                 //CustomerDetails += "\nBalance: " + sellerDetails.OldBalance.ToString("F");
                 lblCustomerDetails.Text = CustomerDetails;
                 if (IsSellerOrder || cmbBoxBillNumber.SelectedItem.ToString().Equals("<New>") || OriginalBalanceAmount < 0)
-                    lblBalanceAmountValue.Text = sellerDetails.OldBalance.ToString("F");
+                    lblBalanceAmountValue.Text = 0.ToString("F"); //sellerDetails.OldBalance.ToString("F");     
+                    //TODO: OldBalance
                 else
                     lblBalanceAmountValue.Text = OriginalBalanceAmount.ToString("F");
             }
@@ -1169,8 +1172,8 @@ namespace SalesOrdersReport
 
                     UpdateCustomerDetails();
                     CurrSellerOrderDetails = ListSellerOrderDetails[SellerIndex];
-                    CurrSellerDetails = CommonFunctions.ObjSellerMaster.GetSellerDetails(CurrSellerOrderDetails.SellerName);
-                    CurrSellerDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(CurrSellerDetails.Name);
+                    CurrSellerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CurrSellerOrderDetails.SellerName);
+                    CurrSellerDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(CurrSellerDetails.CustomerName);
                     if (CurrSellerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
                         DiscountPerc = CurrSellerDiscountGroup.Discount;
                     else if (CurrSellerDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
@@ -1217,8 +1220,8 @@ namespace SalesOrdersReport
 
                     cmbBoxSellerCustomerIndex = cmbBoxSellerCustomer.SelectedIndex;
                     String SellerName = cmbBoxSellerCustomer.SelectedValue.ToString();
-                    CurrSellerDetails = CommonFunctions.ObjSellerMaster.GetSellerDetails(SellerName);
-                    CurrSellerDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(CurrSellerDetails.Name);
+                    CurrSellerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(SellerName);
+                    CurrSellerDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(CurrSellerDetails.CustomerName);
                     if (CurrSellerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
                         DiscountPerc = CurrSellerDiscountGroup.Discount;
                     else if (CurrSellerDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
@@ -1534,7 +1537,8 @@ namespace SalesOrdersReport
                 if (BalanceAmountColIndex >= 0)
                     OriginalBalanceAmount = Double.Parse(dtBillItems.Rows[dtBillItems.Rows.Count - 2][BalanceAmountColIndex].ToString());
                 else
-                    OriginalBalanceAmount = CommonFunctions.ObjSellerMaster.GetSellerDetails(cmbBoxSellerCustomer.SelectedValue.ToString()).OldBalance;
+                    OriginalBalanceAmount = 0; //CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxSellerCustomer.SelectedValue.ToString()).OldBalance;       
+                    //TODO: OldBalance
 
                 InvoiceNumber = ""; BillNumber = cmbBoxBillNumber.SelectedItem.ToString();
                 if (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0)
@@ -2067,14 +2071,14 @@ namespace SalesOrdersReport
                 String OrderQuantity = "";
 
                 SLNo = 0;
-                SellerDetails ObjCurrentSeller = CommonFunctions.ObjSellerMaster.GetSellerDetails(cmbBoxSellerCustomer.SelectedValue.ToString());
-                DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(ObjCurrentSeller.Name);
+                CustomerDetails ObjCurrentSeller = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxSellerCustomer.SelectedValue.ToString());
+                DiscountGroupDetails1 ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
 
                 Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
                 ObjInvoice.SerialNumber = (IsDummyBill ? "Dummy" : InvoiceNumber.ToString());
                 ObjInvoice.InvoiceNumberText = BillNumberText;
                 ObjInvoice.ObjSellerDetails = ObjCurrentSeller.Clone();
-                ObjInvoice.ObjSellerDetails.OldBalance = Double.Parse(lblBalanceAmountValue.Text);
+                ObjInvoice.OldBalance = Double.Parse(lblBalanceAmountValue.Text);
                 ObjInvoice.CurrReportSettings = CurrReportSettings;
                 ObjInvoice.DateOfInvoice = dtTmPckrInvOrdDate.Value;
                 ObjInvoice.PrintOldBalance = PrintOldBalance;
@@ -2098,7 +2102,7 @@ namespace SalesOrdersReport
                 {
                     xlWorkSheet = xlWorkbook.Worksheets.Add(Type.Missing, xlWorkbook.Sheets[xlWorkbook.Sheets.Count]);
 
-                    SheetName = ObjCurrentSeller.Name.Replace(":", "").Replace("\\", "").Replace("/", "").
+                    SheetName = ObjCurrentSeller.CustomerName.Replace(":", "").Replace("\\", "").Replace("/", "").
                             Replace("?", "").Replace("*", "").Replace("[", "").Replace("]", "");
                     SheetName = ((SheetName.Length > 30) ? SheetName.Substring(0, 30) : SheetName);
                     Int32 SheetSuffix = 0;
@@ -2192,7 +2196,7 @@ namespace SalesOrdersReport
                 else if (EnumReportType == ReportType.QUOTATION)
                 {
                     //Override Discount and rollback after creating Quotation
-                    DiscountGroupDetails OrigDiscountGroup = ObjDiscountGroup.Clone();
+                    DiscountGroupDetails1 OrigDiscountGroup = ObjDiscountGroup.Clone();
                     if (DiscountPerc > 0)
                     {
                         ObjDiscountGroup.DiscountType = DiscountTypes.PERCENT;
@@ -2254,9 +2258,9 @@ namespace SalesOrdersReport
 
                     Int32 CurrCol = 0;
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = SerialNumber; // CurrRow - 2;// ListSheetNames.Count;
-                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ObjCurrentSeller.Line;
+                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ObjCurrentSeller.LineName;
                     CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = InvoiceNumber;
-                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ObjCurrentSeller.Name;
+                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ObjCurrentSeller.CustomerName;
                     CurrCol++; Excel.Range xlRangeSale = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     CurrCol++; Excel.Range xlRangeCancel = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
                     CurrCol++; Excel.Range xlRangeReturn = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
@@ -2273,7 +2277,7 @@ namespace SalesOrdersReport
                                                 + "-" + xlRangeReturn.Address[false, false]
                                                 + "-" + xlRangeDiscount.Address[false, false]
                                                 + "+" + xlRangeTotalTax.Address[false, false] + ", 0)";
-                    xlRangeOldBalance.Value = ObjInvoice.ObjSellerDetails.OldBalance;
+                    xlRangeOldBalance.Value = ObjInvoice.OldBalance;
                     xlRangeSale.NumberFormat = "#,##0.00"; xlRangeCancel.NumberFormat = "#,##0.00";
                     xlRangeReturn.NumberFormat = "#,##0.00"; xlRangeDiscount.NumberFormat = "#,##0.00";
                     xlRangeTotalTax.NumberFormat = "#,##0.00"; xlRangeNetSale.NumberFormat = "#,##0.00";

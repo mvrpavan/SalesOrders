@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -40,14 +41,13 @@
             this.txtBoxSGST = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.HSNCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.IGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dtGridViewHSNList = new System.Windows.Forms.DataGridView();
+            this.errorProviderAddHSNCodes = new System.Windows.Forms.ErrorProvider(this.components);
+            this.btnDelete = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtGridViewHSNList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProviderAddHSNCodes)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOK
@@ -55,7 +55,7 @@
             this.btnOK.Location = new System.Drawing.Point(119, 132);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(53, 23);
-            this.btnOK.TabIndex = 0;
+            this.btnOK.TabIndex = 5;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -63,10 +63,10 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(203, 132);
+            this.btnCancel.Location = new System.Drawing.Point(222, 132);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(55, 23);
-            this.btnCancel.TabIndex = 1;
+            this.btnCancel.TabIndex = 6;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -85,7 +85,7 @@
             this.txtBoxHSNCode.Location = new System.Drawing.Point(158, 12);
             this.txtBoxHSNCode.Name = "txtBoxHSNCode";
             this.txtBoxHSNCode.Size = new System.Drawing.Size(100, 20);
-            this.txtBoxHSNCode.TabIndex = 3;
+            this.txtBoxHSNCode.TabIndex = 1;
             // 
             // label2
             // 
@@ -101,7 +101,7 @@
             this.txtBoxCGST.Location = new System.Drawing.Point(158, 38);
             this.txtBoxCGST.Name = "txtBoxCGST";
             this.txtBoxCGST.Size = new System.Drawing.Size(100, 20);
-            this.txtBoxCGST.TabIndex = 3;
+            this.txtBoxCGST.TabIndex = 2;
             // 
             // label3
             // 
@@ -117,7 +117,7 @@
             this.txtBoxIGST.Location = new System.Drawing.Point(158, 90);
             this.txtBoxIGST.Name = "txtBoxIGST";
             this.txtBoxIGST.Size = new System.Drawing.Size(100, 20);
-            this.txtBoxIGST.TabIndex = 3;
+            this.txtBoxIGST.TabIndex = 4;
             // 
             // label4
             // 
@@ -139,6 +139,7 @@
             // 
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txtBoxSGST);
+            this.groupBox1.Controls.Add(this.btnDelete);
             this.groupBox1.Controls.Add(this.btnOK);
             this.groupBox1.Controls.Add(this.txtBoxIGST);
             this.groupBox1.Controls.Add(this.btnCancel);
@@ -147,6 +148,7 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.txtBoxHSNCode);
+            this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(498, 168);
@@ -156,7 +158,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.dataGridView1);
+            this.groupBox2.Controls.Add(this.dtGridViewHSNList);
             this.groupBox2.Location = new System.Drawing.Point(13, 187);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(497, 172);
@@ -164,46 +166,35 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "HSN List";
             // 
-            // dataGridView1
+            // dtGridViewHSNList
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.HSNCode,
-            this.CGST,
-            this.SGST,
-            this.IGST});
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 16);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(491, 153);
-            this.dataGridView1.TabIndex = 0;
+            this.dtGridViewHSNList.AllowUserToAddRows = false;
+            this.dtGridViewHSNList.AllowUserToDeleteRows = false;
+            this.dtGridViewHSNList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtGridViewHSNList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dtGridViewHSNList.Location = new System.Drawing.Point(3, 16);
+            this.dtGridViewHSNList.Name = "dtGridViewHSNList";
+            this.dtGridViewHSNList.ReadOnly = true;
+            this.dtGridViewHSNList.Size = new System.Drawing.Size(491, 153);
+            this.dtGridViewHSNList.TabIndex = 0;
+            this.dtGridViewHSNList.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtGridViewHSNList_CellMouseDoubleClick);
             // 
-            // HSNCode
+            // errorProviderAddHSNCodes
             // 
-            this.HSNCode.HeaderText = "HSN Code";
-            this.HSNCode.Name = "HSNCode";
-            this.HSNCode.ReadOnly = true;
+            this.errorProviderAddHSNCodes.ContainerControl = this;
             // 
-            // CGST
+            // btnDelete
             // 
-            this.CGST.HeaderText = "CGST";
-            this.CGST.Name = "CGST";
-            this.CGST.ReadOnly = true;
-            // 
-            // SGST
-            // 
-            this.SGST.HeaderText = "SGST";
-            this.SGST.Name = "SGST";
-            this.SGST.ReadOnly = true;
-            // 
-            // IGST
-            // 
-            this.IGST.HeaderText = "IGST";
-            this.IGST.Name = "IGST";
-            this.IGST.ReadOnly = true;
+            this.btnDelete.BackColor = System.Drawing.SystemColors.Control;
+            this.btnDelete.BackgroundImage = global::SalesOrdersReport.Properties.Resources.delete_icon_16;
+            this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Location = new System.Drawing.Point(277, 10);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(32, 23);
+            this.btnDelete.TabIndex = 7;
+            this.btnDelete.UseVisualStyleBackColor = false;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // AddTaxForm
             // 
@@ -220,7 +211,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtGridViewHSNList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProviderAddHSNCodes)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -239,10 +231,8 @@
         private System.Windows.Forms.TextBox txtBoxSGST;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn HSNCode;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CGST;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SGST;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IGST;
+        private System.Windows.Forms.DataGridView dtGridViewHSNList;
+        private System.Windows.Forms.ErrorProvider errorProviderAddHSNCodes;
+        private System.Windows.Forms.Button btnDelete;
     }
 }

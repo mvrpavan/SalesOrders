@@ -7,6 +7,9 @@
     <ReportRowsFromTop>7</ReportRowsFromTop>
     <ReportAppendRowsAtBottom>7</ReportAppendRowsAtBottom>
     <Database Server="localhost" DatabaseName="SALES_ORDERS" UserName="pavan" Password="Pavan1024"/>
+    <SQLScripts>
+      <SQLScript FilePath="E:\PavanData\Projects\GitHub\SalesOrders_V8\SalesOrdersReport\SQLScripts\ProductMasterTables.sql"></SQLScript>
+    </SQLScripts>
   </Application>
   <ProductLines>
     <ProductLine Name="&lt;Default&gt;">

@@ -99,16 +99,6 @@ namespace SalesOrdersReport.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap add1 {
-            get {
-                object obj = ResourceManager.GetObject("add1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
         
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -143,29 +133,9 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap addbutton {
-            get {
-                object obj = ResourceManager.GetObject("addbutton", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap adddelive5_32 {
             get {
                 object obj = ResourceManager.GetObject("adddelive5_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap adddeliver4_32 {
-            get {
-                object obj = ResourceManager.GetObject("adddeliver4_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -203,16 +173,6 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap addDiscount_321 {
-            get {
-                object obj = ResourceManager.GetObject("addDiscount_321", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap addPrice_32 {
             get {
                 object obj = ResourceManager.GetObject("addPrice_32", resourceCulture);
@@ -226,26 +186,6 @@ namespace SalesOrdersReport.Properties {
         internal static System.Drawing.Bitmap adduser {
             get {
                 object obj = ResourceManager.GetObject("adduser", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap adduser_32 {
-            get {
-                object obj = ResourceManager.GetObject("adduser_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap arro1 {
-            get {
-                object obj = ResourceManager.GetObject("arro1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -283,29 +223,9 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap arrow32_ {
-            get {
-                object obj = ResourceManager.GetObject("arrow32_", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap btn32 {
             get {
                 object obj = ResourceManager.GetObject("btn32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap butn {
-            get {
-                object obj = ResourceManager.GetObject("butn", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -326,6 +246,76 @@ namespace SalesOrdersReport.Properties {
         internal static System.Drawing.Bitmap Close_Black_VerySmall {
             get {
                 object obj = ResourceManager.GetObject("Close_Black_VerySmall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap create_user_32 {
+            get {
+                object obj = ResourceManager.GetObject("create-user_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CreateLine_32 {
+            get {
+                object obj = ResourceManager.GetObject("CreateLine_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CreateLine_323 {
+            get {
+                object obj = ResourceManager.GetObject("CreateLine_323", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CreateLine_324 {
+            get {
+                object obj = ResourceManager.GetObject("CreateLine_324", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CreateUser_32 {
+            get {
+                object obj = ResourceManager.GetObject("CreateUser_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CreateUser_321 {
+            get {
+                object obj = ResourceManager.GetObject("CreateUser_321", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap createUser2_32 {
+            get {
+                object obj = ResourceManager.GetObject("createUser2_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -376,106 +366,6 @@ namespace SalesOrdersReport.Properties {
         internal static System.Drawing.Bitmap delete_icon_24 {
             get {
                 object obj = ResourceManager.GetObject("delete-icon_24", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap create_user_32 {
-            get {
-                object obj = ResourceManager.GetObject("create-user_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap CreateLine_32 {
-            get {
-                object obj = ResourceManager.GetObject("CreateLine_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap CreateLine_321 {
-            get {
-                object obj = ResourceManager.GetObject("CreateLine_321", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap CreateLine_322 {
-            get {
-                object obj = ResourceManager.GetObject("CreateLine_322", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap CreateLine_323 {
-            get {
-                object obj = ResourceManager.GetObject("CreateLine_323", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap CreateLine_324 {
-            get {
-                object obj = ResourceManager.GetObject("CreateLine_324", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap CreateLine_325 {
-            get {
-                object obj = ResourceManager.GetObject("CreateLine_325", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap CreateUser_32 {
-            get {
-                object obj = ResourceManager.GetObject("CreateUser_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap CreateUser_321 {
-            get {
-                object obj = ResourceManager.GetObject("CreateUser_321", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap createUser2_32 {
-            get {
-                object obj = ResourceManager.GetObject("createUser2_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -589,7 +479,6 @@ namespace SalesOrdersReport.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-
         
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -610,7 +499,7 @@ namespace SalesOrdersReport.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
@@ -684,26 +573,6 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap editrole2345_32 {
-            get {
-                object obj = ResourceManager.GetObject("editrole2345_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap editrole2345_321 {
-            get {
-                object obj = ResourceManager.GetObject("editrole2345_321", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap editstore_32 {
             get {
                 object obj = ResourceManager.GetObject("editstore_32", resourceCulture);
@@ -724,23 +593,12 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap EditUser_32 {
-            get {
-                object obj = ResourceManager.GetObject("EditUser_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap edituser3_32 {
             get {
                 object obj = ResourceManager.GetObject("edituser3_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
         
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -975,6 +833,56 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap role32new {
+            get {
+                object obj = ResourceManager.GetObject("role32new", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap role332 {
+            get {
+                object obj = ResourceManager.GetObject("role332", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap role3321 {
+            get {
+                object obj = ResourceManager.GetObject("role3321", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap rolenew1232 {
+            get {
+                object obj = ResourceManager.GetObject("rolenew1232", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap rolenew32 {
+            get {
+                object obj = ResourceManager.GetObject("rolenew32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Search_icon {
             get {
                 object obj = ResourceManager.GetObject("Search-icon", resourceCulture);
@@ -995,9 +903,49 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap store_32 {
+            get {
+                object obj = ResourceManager.GetObject("store_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap store1_32 {
+            get {
+                object obj = ResourceManager.GetObject("store1_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Subtle_Lines_Abstract_Gradient_Background_Blue {
             get {
                 object obj = ResourceManager.GetObject("Subtle-Lines-Abstract-Gradient-Background-Blue", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tax {
+            get {
+                object obj = ResourceManager.GetObject("tax", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tax_menu {
+            get {
+                object obj = ResourceManager.GetObject("tax_menu", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1015,30 +963,19 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap x_button {
-            get {
-                object obj = ResourceManager.GetObject("x-button", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap UploadFile2_32 {
             get {
                 object obj = ResourceManager.GetObject("UploadFile2_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-
         
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap store_32 {
+        internal static System.Drawing.Bitmap UploadFile32 {
             get {
-                object obj = ResourceManager.GetObject("store_32", resourceCulture);
+                object obj = ResourceManager.GetObject("UploadFile32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1046,9 +983,19 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap rolenew1232 {
+        internal static System.Drawing.Bitmap user_add32 {
             get {
-                object obj = ResourceManager.GetObject("rolenew1232", resourceCulture);
+                object obj = ResourceManager.GetObject("user_add32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap x_button {
+            get {
+                object obj = ResourceManager.GetObject("x-button", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

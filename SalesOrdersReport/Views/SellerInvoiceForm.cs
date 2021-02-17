@@ -7,8 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using SalesOrdersReport.CommonModules;
+using SalesOrdersReport.Models;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Views
 {
     enum ReportType
     {
@@ -334,8 +336,8 @@ namespace SalesOrdersReport
 
                     SLNo = 0;
                     InvoiceNumber++;
-                    SellerDetails ObjCurrentSeller = CommonFunctions.ObjSellerMaster.GetSellerDetails(drSellers[ListSellerIndexes[i]]["SellerName"].ToString());
-                    DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(ObjCurrentSeller.Name);
+                    CustomerDetails ObjCurrentSeller = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(drSellers[ListSellerIndexes[i]]["SellerName"].ToString());
+                    DiscountGroupDetails1 ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
 
                     Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
                     ObjInvoice.SerialNumber = InvoiceNumber.ToString();

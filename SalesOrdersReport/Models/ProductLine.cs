@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Data;
+using SalesOrdersReport.CommonModules;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Models
 {
     class ProductLine
     {
@@ -13,7 +14,7 @@ namespace SalesOrdersReport
         public Settings ObjSettings;
         public XmlNode ProductLineNode;
         public ProductMasterModel ObjProductMaster;
-        public SellerMaster ObjSellerMaster;
+        //public SellerMaster ObjSellerMaster;
         public VendorMaster ObjVendorMaster;
         MySQLHelper ObjMySQLHelper;
 
@@ -95,87 +96,87 @@ namespace SalesOrdersReport
             }
         }
 
-        public void LoadSellerMaster(DataTable dtSellerMaster, DataTable dtDiscountGroupMaster)
-        {
-            try
-            {
-                ObjSellerMaster = new SellerMaster();
-                ObjSellerMaster.Initialize();
+        //public void LoadSellerMaster(DataTable dtSellerMaster, DataTable dtDiscountGroupMaster)
+        //{
+        //    try
+        //    {
+        //        ObjSellerMaster = new SellerMaster();
+        //        ObjSellerMaster.Initialize();
 
-                #region Load Line from Seller Master
-                CommonFunctions.ListCustomerLines = new List<String>();
-                Boolean ContainsBlanks = false;
-                for (int i = 0; i < dtSellerMaster.Rows.Count; i++)
-                {
-                    DataRow dtRow = dtSellerMaster.Rows[i];
-                    String Line = dtRow["Line"].ToString().Replace("<", "").Replace(">", "").ToUpper();
-                    if (Line.Trim().Length == 0) ContainsBlanks = true;
-                    else if (!CommonFunctions.ListCustomerLines.Contains(Line)) CommonFunctions.ListCustomerLines.Add(Line);
-                }
+        //        #region Load Line from Seller Master
+        //        CommonFunctions.ListCustomerLines = new List<String>();
+        //        Boolean ContainsBlanks = false;
+        //        for (int i = 0; i < dtSellerMaster.Rows.Count; i++)
+        //        {
+        //            DataRow dtRow = dtSellerMaster.Rows[i];
+        //            String Line = dtRow["Line"].ToString().Replace("<", "").Replace(">", "").ToUpper();
+        //            if (Line.Trim().Length == 0) ContainsBlanks = true;
+        //            else if (!CommonFunctions.ListCustomerLines.Contains(Line)) CommonFunctions.ListCustomerLines.Add(Line);
+        //        }
 
-                CommonFunctions.ListCustomerLines.Sort();
-                CommonFunctions.ListCustomerLines.Insert(0, "<All>");
-                if (ContainsBlanks) CommonFunctions.ListCustomerLines.Add("<Blanks>");
-                #endregion
+        //        CommonFunctions.ListCustomerLines.Sort();
+        //        CommonFunctions.ListCustomerLines.Insert(0, "<All>");
+        //        if (ContainsBlanks) CommonFunctions.ListCustomerLines.Add("<Blanks>");
+        //        #endregion
 
-                #region Load Discount Groups
-                for (int i = 0; i < dtDiscountGroupMaster.Rows.Count; i++)
-                {
-                    DataRow dtRow = dtDiscountGroupMaster.Rows[i];
-                    //DiscountGroup	Discount	DiscountType	Default	Description
+        //        #region Load Discount Groups
+        //        for (int i = 0; i < dtDiscountGroupMaster.Rows.Count; i++)
+        //        {
+        //            DataRow dtRow = dtDiscountGroupMaster.Rows[i];
+        //            //DiscountGroup	Discount	DiscountType	Default	Description
 
-                    DiscountGroupDetails ObjDiscountGroupDetails = new DiscountGroupDetails();
-                    ObjDiscountGroupDetails.Name = dtRow["DiscountGroup"].ToString().Trim();
-                    ObjDiscountGroupDetails.Discount = Double.Parse(dtRow["Discount"].ToString().Trim());
-                    ObjDiscountGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(dtRow["DiscountType"].ToString().Trim());
-                    ObjDiscountGroupDetails.IsDefault = (Int32.Parse(dtRow["Default"].ToString().Trim()) == 1);
-                    ObjDiscountGroupDetails.Description = dtRow["Description"].ToString().Trim();
+        //            DiscountGroupDetails ObjDiscountGroupDetails = new DiscountGroupDetails();
+        //            ObjDiscountGroupDetails.Name = dtRow["DiscountGroup"].ToString().Trim();
+        //            ObjDiscountGroupDetails.Discount = Double.Parse(dtRow["Discount"].ToString().Trim());
+        //            ObjDiscountGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(dtRow["DiscountType"].ToString().Trim());
+        //            ObjDiscountGroupDetails.IsDefault = (Int32.Parse(dtRow["Default"].ToString().Trim()) == 1);
+        //            ObjDiscountGroupDetails.Description = dtRow["Description"].ToString().Trim();
 
-                    ObjSellerMaster.AddDiscountGroupToCache(ObjDiscountGroupDetails);
-                }
-                #endregion
+        //            ObjSellerMaster.AddDiscountGroupToCache(ObjDiscountGroupDetails);
+        //        }
+        //        #endregion
 
-                #region Load Sellers Details
-                for (int i = 0; i < dtSellerMaster.Rows.Count; i++)
-                {
-                    DataRow dtRow = dtSellerMaster.Rows[i];
-                    //SlNo	SellerName	Address	TINNumber	Phone	Line	OldBalance	PriceGroup	DiscountGroup
+        //        #region Load Sellers Details
+        //        for (int i = 0; i < dtSellerMaster.Rows.Count; i++)
+        //        {
+        //            DataRow dtRow = dtSellerMaster.Rows[i];
+        //            //SlNo	SellerName	Address	TINNumber	Phone	Line	OldBalance	PriceGroup	DiscountGroup
 
-                    SellerDetails ObjSellerDetails = new SellerDetails();
-                    ObjSellerDetails.Name = dtRow["SellerName"].ToString().Trim();
-                    ObjSellerDetails.Address = dtRow["Address"].ToString().Trim();
-                    ObjSellerDetails.TINNumber = dtRow["TINNumber"].ToString().Trim();
-                    ObjSellerDetails.Phone = dtRow["Phone"].ToString().Trim();
-                    ObjSellerDetails.Line = dtRow["Line"].ToString().Trim();
-                    ObjSellerDetails.OldBalance = 0;
-                    ObjSellerDetails.PriceGroup = "";
-                    ObjSellerDetails.DiscountGroup = "";
-                    ObjSellerDetails.State = "";
-                    ObjSellerDetails.StateCode = "";
-                    ObjSellerDetails.GSTIN = "";
+        //            SellerDetails ObjSellerDetails = new SellerDetails();
+        //            ObjSellerDetails.Name = dtRow["SellerName"].ToString().Trim();
+        //            ObjSellerDetails.Address = dtRow["Address"].ToString().Trim();
+        //            ObjSellerDetails.TINNumber = dtRow["TINNumber"].ToString().Trim();
+        //            ObjSellerDetails.Phone = dtRow["Phone"].ToString().Trim();
+        //            ObjSellerDetails.Line = dtRow["Line"].ToString().Trim();
+        //            ObjSellerDetails.OldBalance = 0;
+        //            ObjSellerDetails.PriceGroup = "";
+        //            ObjSellerDetails.DiscountGroup = "";
+        //            ObjSellerDetails.State = "";
+        //            ObjSellerDetails.StateCode = "";
+        //            ObjSellerDetails.GSTIN = "";
 
-                    if (dtRow["OldBalance"] != DBNull.Value && dtRow["OldBalance"].ToString().Trim().Length > 0)
-                        ObjSellerDetails.OldBalance = Double.Parse(dtRow["OldBalance"].ToString().ToString());
-                    if (dtRow["PriceGroup"] != DBNull.Value && dtRow["PriceGroup"].ToString().Trim().Length > 0)
-                        ObjSellerDetails.PriceGroup = dtRow["PriceGroup"].ToString().Trim();
-                    if (dtRow["DiscountGroup"] != DBNull.Value && dtRow["DiscountGroup"].ToString().Trim().Length > 0)
-                        ObjSellerDetails.DiscountGroup = dtRow["DiscountGroup"].ToString().Trim();
-                    if (dtRow["State"] != DBNull.Value && dtRow["State"].ToString().Trim().Length > 0)
-                        ObjSellerDetails.State = dtRow["State"].ToString().Trim();
-                    if (dtRow["StateCode"] != DBNull.Value && dtRow["StateCode"].ToString().Trim().Length > 0)
-                        ObjSellerDetails.StateCode = dtRow["StateCode"].ToString().Trim();
-                    if (dtRow["GSTIN"] != DBNull.Value && dtRow["GSTIN"].ToString().Trim().Length > 0)
-                        ObjSellerDetails.GSTIN = dtRow["GSTIN"].ToString().Trim();
+        //            if (dtRow["OldBalance"] != DBNull.Value && dtRow["OldBalance"].ToString().Trim().Length > 0)
+        //                ObjSellerDetails.OldBalance = Double.Parse(dtRow["OldBalance"].ToString().ToString());
+        //            if (dtRow["PriceGroup"] != DBNull.Value && dtRow["PriceGroup"].ToString().Trim().Length > 0)
+        //                ObjSellerDetails.PriceGroup = dtRow["PriceGroup"].ToString().Trim();
+        //            if (dtRow["DiscountGroup"] != DBNull.Value && dtRow["DiscountGroup"].ToString().Trim().Length > 0)
+        //                ObjSellerDetails.DiscountGroup = dtRow["DiscountGroup"].ToString().Trim();
+        //            if (dtRow["State"] != DBNull.Value && dtRow["State"].ToString().Trim().Length > 0)
+        //                ObjSellerDetails.State = dtRow["State"].ToString().Trim();
+        //            if (dtRow["StateCode"] != DBNull.Value && dtRow["StateCode"].ToString().Trim().Length > 0)
+        //                ObjSellerDetails.StateCode = dtRow["StateCode"].ToString().Trim();
+        //            if (dtRow["GSTIN"] != DBNull.Value && dtRow["GSTIN"].ToString().Trim().Length > 0)
+        //                ObjSellerDetails.GSTIN = dtRow["GSTIN"].ToString().Trim();
 
-                    ObjSellerMaster.AddSellerToCache(ObjSellerDetails, ObjProductMaster.ListPriceGroups);
-                }
-                #endregion
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("ProductLine.LoadSellerMaster()", ex);
-            }
-        }
+        //            ObjSellerMaster.AddSellerToCache(ObjSellerDetails, ObjProductMaster.ListPriceGroups);
+        //        }
+        //        #endregion
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CommonFunctions.ShowErrorDialog("ProductLine.LoadSellerMaster()", ex);
+        //    }
+        //}
 
         public void LoadVendorMaster(DataTable dtVendorMaster, DataTable dtDiscountGroupMaster)
         {

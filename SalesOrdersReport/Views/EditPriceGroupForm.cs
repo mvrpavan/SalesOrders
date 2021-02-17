@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalesOrdersReport.CommonModules;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -170,7 +171,7 @@ namespace SalesOrdersReport
                 ListColumnNames.Add("DESCRIPTION");
 
                 ListColumnValues.Add(cmbxEditPriceGrpCol.SelectedItem.ToString());
-                ListColumnNames.Add("PRICEGROUPCOLUMNNAME");
+                ListColumnNames.Add("PRICECOLUMN");
 
                 ListColumnNames.Add("DISCOUNT");
                 ListColumnValues.Add(txtEditPriceGrpDiscVal.Text.Trim() == string.Empty ? "0" : txtEditPriceGrpDiscVal.Text.Trim());

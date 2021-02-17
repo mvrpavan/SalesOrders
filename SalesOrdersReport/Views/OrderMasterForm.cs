@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SalesOrdersReport.CommonModules;
+using SalesOrdersReport.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -126,10 +128,10 @@ namespace SalesOrdersReport
                 //ReportProgressFunc(25);
 
                 DataTable dtDiscountGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("DiscountGroupMaster", CommonFunctions.MasterFilePath, "*");
-                DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", CommonFunctions.MasterFilePath, "*");
-                CurrProductLine.LoadSellerMaster(dtSellerMaster, dtDiscountGroupMaster);
-                lblStatus.Text = "Completed loading Seller details";
-                ReportProgressFunc(50);
+                //DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", CommonFunctions.MasterFilePath, "*");
+                //CurrProductLine.LoadSellerMaster(dtSellerMaster, dtDiscountGroupMaster);
+                //lblStatus.Text = "Completed loading Seller details";
+                //ReportProgressFunc(50);
 
                 DataTable dtVendorMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("VendorMaster", CommonFunctions.MasterFilePath, "*");
                 CurrProductLine.LoadVendorMaster(dtVendorMaster, dtDiscountGroupMaster);

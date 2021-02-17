@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SalesOrdersReport.CommonModules;
+using SalesOrdersReport.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -57,7 +59,9 @@ namespace SalesOrdersReport.Views
                 if (!MySQLHelper.GetMySqlHelperObj().CheckTableExists("USERMASTER"))
                 {
                     RunDBScript ObjRunDBScript = new RunDBScript();
-                    ObjRunDBScript.CreateNecessaryTables();
+                    ObjRunDBScript.CreateMasterTables();
+                    ObjRunDBScript.CreateRunningTables();
+                    ObjRunDBScript.ExecuteOneTimeExecutionScript();
                 }
 
                 //TODO: Load all tables to memory here
@@ -122,21 +126,12 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                //LoginForm loginForm = new LoginForm();
-                //loginForm.FormClosed += LoginForm_FormClosed;
-                //loginForm.Show();
-                //Login();
                 this.Close();
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("WelcomeSplashForm.backgroundWorker1_RunWorkerCompleted()", ex);
             }
-        }
-
-        private void LoginForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            this.Close();
         }
 
         private void WelcomeSplashForm_Shown(object sender, EventArgs e)

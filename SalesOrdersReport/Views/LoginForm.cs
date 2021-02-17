@@ -3,56 +3,17 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Text;
 using System.Data;
+using SalesOrdersReport.CommonModules;
 
 namespace SalesOrdersReport.Views
 {
     public partial class LoginForm : Form
     {
-        MySQLHelper tmpIntegDBHelper;
         public LoginForm()
         {
-            //CommonFunctions.Initialize();
             CommonFunctions.CurrentForm = this;
             InitializeComponent();
             txtUserName.Focus();
-            tmpIntegDBHelper = MySQLHelper.GetMySqlHelperObj();
-        }
-
-        private MySqlConnection CreateDBConnection()
-        {
-            try
-            {
-                tmpIntegDBHelper = MySQLHelper.GetMySqlHelperObj();
-
-                if (CommonFunctions.ObjApplicationSettings.Server == null || CommonFunctions.ObjApplicationSettings.Server == string.Empty)
-                {
-                    MessageBox.Show("DB is not Configured! Please Configure", "Error");
-                    return null;
-                }
-                if (tmpIntegDBHelper.GetDbConnection() == null || tmpIntegDBHelper.GetDbConnection().State == ConnectionState.Closed)
-                {
-                    tmpIntegDBHelper.OpenConnection(CommonFunctions.ObjApplicationSettings.Server, CommonFunctions.ObjApplicationSettings.DatabaseName, CommonFunctions.ObjApplicationSettings.UserName, CommonFunctions.ObjApplicationSettings.Password);
-                }
-                return tmpIntegDBHelper.GetDbConnection();
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("LoginForm.CreateDBConnection()", ex);
-                throw ex;
-            }
-        }
-
-        private void GetDBConnectionConfigForm_Closed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                this.Show();
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("LoginForm.GetDBConnectionConfigForm_Closed()", ex);
-                throw ex;
-            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -73,18 +34,13 @@ namespace SalesOrdersReport.Views
             {
                 MySqlConnection myConnection = MySQLHelper.GetMySqlHelperObj().GetDbConnection(); //CreateDBConnection();
                 if (myConnection == null) return;
-                //if (!tmpIntegDBHelper.CheckTableExists("USERMASTER"))
-                //{
-                //    RunDBScript ObjRunDBScript = new RunDBScript();
-                //    ObjRunDBScript.CreateNecessaryTables();
-                //}
 
                 //int ReturnVal = CommonFunctions.ObjUserMasterModel.LoginCheck(txtUserName.Text, txtPassword.Text, myConnection);
                 int ReturnVal = 0;
-                tmpIntegDBHelper.CurrentUser = "admin";
+                MySQLHelper.GetMySqlHelperObj().CurrentUser = "admin";
                 if (ReturnVal == 0)
                 {
-                    CommonFunctions.CurrentUserName = tmpIntegDBHelper.CurrentUser;
+                    CommonFunctions.CurrentUserName = MySQLHelper.GetMySqlHelperObj().CurrentUser;
                     //CommonFunctions.CurrentUserName = tmpIntegDBHelper.CurrentUser = "admin";
 
                     //CommonFunctions.ObjUserMasterModel.LoadAllUserMasterTables();
@@ -104,20 +60,6 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("LoginForm.btnLogin_Click()", ex);
-            }
-        }
-
-
-        private void ObjMainForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("LoginForm.ObjMainForm_FormClosed()", ex);
-                throw ex;
             }
         }
 

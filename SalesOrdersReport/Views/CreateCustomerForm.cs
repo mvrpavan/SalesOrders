@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalesOrdersReport.CommonModules;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,8 +14,6 @@ namespace SalesOrdersReport
 {
     public partial class CreateCustomerForm : Form
     {
-
-        MySQLHelper tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
         UpdateOnCloseDel UpdateCustomerOnClose = null;
         public CreateCustomerForm(UpdateOnCloseDel UpdateCustomerOnClose)
         {
@@ -40,7 +39,6 @@ namespace SalesOrdersReport
         {
             try
             {
-                tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
                 List<string> ListStates = CommonFunctions.ObjCustomerMasterModel.GetAllStatesOfIndia();
                 cmbxCreateCustSelectState.Items.Add("Select State");
                 foreach (var item in ListStates)
@@ -59,7 +57,6 @@ namespace SalesOrdersReport
         {
             try
             {
-                tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
                 List<string> ListDiscGrp = CommonFunctions.ObjCustomerMasterModel.GetAllDiscGrp();
                 cmbxCreateCustSelectDiscGrp.Items.Add("Select Discount Group");
                 foreach (var item in ListDiscGrp)
@@ -77,7 +74,6 @@ namespace SalesOrdersReport
         {
             try
             {
-                tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
                 List<string> ListPriceGrp = CommonFunctions.ObjCustomerMasterModel.GetAllPriceGrp();
                 cmbxCreateCustSelectPriceGrp.Items.Add("Select Price Group");
                 foreach (var item in ListPriceGrp)
@@ -96,7 +92,6 @@ namespace SalesOrdersReport
         {
             try
             {
-                tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
                 List<string> ListLines = CommonFunctions.ObjCustomerMasterModel.GetAllLineNames();
                 cmbxCreateCustSelectLine.Items.Add("Select Line");
                 foreach (var item in ListLines)

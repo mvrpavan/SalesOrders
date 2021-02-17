@@ -47,6 +47,7 @@
             this.dtGridViewOrderedProducts = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblOrdersCount = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewOrders)).BeginInit();
@@ -73,6 +74,9 @@
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.AutoSize = true;
             this.panel1.Controls.Add(this.groupBox3);
             this.panel1.Controls.Add(this.comboBox2);
             this.panel1.Controls.Add(this.btnSearchOrder);
@@ -89,12 +93,13 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.checkBoxApplyFilter);
             this.groupBox3.Controls.Add(this.dTimePickerTo);
             this.groupBox3.Controls.Add(this.dTimePickerFrom);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(628, 3);
+            this.groupBox3.Location = new System.Drawing.Point(854, 3);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(306, 73);
             this.groupBox3.TabIndex = 10;
@@ -265,7 +270,7 @@
             this.dtGridViewOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtGridViewOrders.Location = new System.Drawing.Point(12, 127);
             this.dtGridViewOrders.Name = "dtGridViewOrders";
-            this.dtGridViewOrders.Size = new System.Drawing.Size(1164, 369);
+            this.dtGridViewOrders.Size = new System.Drawing.Size(1164, 291);
             this.dtGridViewOrders.TabIndex = 2;
             // 
             // dtGridViewOrderedProducts
@@ -276,9 +281,9 @@
             this.dtGridViewOrderedProducts.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dtGridViewOrderedProducts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
             this.dtGridViewOrderedProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtGridViewOrderedProducts.Location = new System.Drawing.Point(6, 22);
+            this.dtGridViewOrderedProducts.Location = new System.Drawing.Point(0, 22);
             this.dtGridViewOrderedProducts.Name = "dtGridViewOrderedProducts";
-            this.dtGridViewOrderedProducts.Size = new System.Drawing.Size(1158, 192);
+            this.dtGridViewOrderedProducts.Size = new System.Drawing.Size(1164, 279);
             this.dtGridViewOrderedProducts.TabIndex = 2;
             // 
             // label1
@@ -297,12 +302,22 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.dtGridViewOrderedProducts);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.groupBox1.Location = new System.Drawing.Point(12, 511);
+            this.groupBox1.Location = new System.Drawing.Point(12, 424);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1164, 220);
+            this.groupBox1.Size = new System.Drawing.Size(1164, 307);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ordered Products";
+            // 
+            // lblOrdersCount
+            // 
+            this.lblOrdersCount.AutoSize = true;
+            this.lblOrdersCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOrdersCount.Location = new System.Drawing.Point(91, 102);
+            this.lblOrdersCount.Name = "lblOrdersCount";
+            this.lblOrdersCount.Size = new System.Drawing.Size(160, 20);
+            this.lblOrdersCount.TabIndex = 4;
+            this.lblOrdersCount.Text = "[Displaying all Orders]";
             // 
             // OrdersMainForm
             // 
@@ -312,10 +327,13 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1184, 743);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.lblOrdersCount);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dtGridViewOrders);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "OrdersMainForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -353,5 +371,6 @@
         private System.Windows.Forms.DateTimePicker dTimePickerFrom;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblOrdersCount;
     }
 }

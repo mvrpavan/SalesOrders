@@ -8,7 +8,7 @@ using SalesOrdersReport.CommonModules;
 using System.Windows.Forms;
 using System.Data;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Models
 {
     class CustomerMasterModel
     {
@@ -497,7 +497,7 @@ namespace SalesOrdersReport
 
                 for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
                 {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), CommonFunctions.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
+                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
                 }
                 return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
             }
@@ -556,7 +556,7 @@ namespace SalesOrdersReport
 
                 for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
                 {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), CommonFunctions.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
+                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
                 }
 
                 return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
@@ -616,7 +616,7 @@ namespace SalesOrdersReport
 
                 for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
                 {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), CommonFunctions.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
+                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
                 }
 
                 return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
@@ -796,7 +796,7 @@ namespace SalesOrdersReport
                     ObjPriceGroupDetails.Discount = Double.Parse(dr["DISCOUNT"].ToString().Trim());
                     ObjPriceGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(dr["DISCOUNTTYPE"].ToString().Trim());
                     if (dr["ISDEFAULT"].ToString().Trim() != "") ObjPriceGroupDetails.IsDefault = dr["ISDEFAULT"].ToString().Trim() == "1" ? true : false;
-                    ObjPriceGroupDetails.PriceColumn = dr["PRICEGROUPCOLUMNNAME"].ToString().Trim();
+                    ObjPriceGroupDetails.PriceColumn = dr["PRICECOLUMN"].ToString().Trim();
                     ObjPriceGroupDetails.Description = dr["DESCRIPTION"].ToString();
 
                     AddPriceGroupToCache(ObjPriceGroupDetails);
@@ -925,7 +925,7 @@ namespace SalesOrdersReport
                 for (int i = 0; i < listtemp.Count; i++)
                 {
                     //Query = "";
-                    Query = "INSERT INTO PRICEGROUPMASTER (PRICEGROUPID,PRICEGROUPNAME,DESCRIPTION,DISCOUNT,DISCOUNTTYPE,ISDEFAULT,PRICEGROUPCOLUMNNAME) VALUES (" + listtemp[i].PriceGroupID + ",'" + listtemp[i].PriceGrpName + "','" + listtemp[i].Description + "'," + listtemp[i].Discount + ",'" + listtemp[i].DiscountType + "'," + (listtemp[i].IsDefault == true ? 1 : 0) + ",'" + listtemp[i].PriceColumn + "')";
+                    Query = "INSERT INTO PRICEGROUPMASTER (PRICEGROUPID,PRICEGROUPNAME,DESCRIPTION,DISCOUNT,DISCOUNTTYPE,ISDEFAULT,PRICECOLUMN) VALUES (" + listtemp[i].PriceGroupID + ",'" + listtemp[i].PriceGrpName + "','" + listtemp[i].Description + "'," + listtemp[i].Discount + ",'" + listtemp[i].DiscountType + "'," + (listtemp[i].IsDefault == true ? 1 : 0) + ",'" + listtemp[i].PriceColumn + "')";
                     Query += ";";
                     ObjMySQLHelper.ObjDbCommand.CommandText = Query;
                     ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();

@@ -1,4 +1,4 @@
-﻿namespace SalesOrdersReport
+﻿namespace SalesOrdersReport.Views
 {
     partial class VendorListForm
     {

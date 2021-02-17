@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.CommonModules
 {
     class RunDBScript
     {
@@ -23,35 +23,43 @@ namespace SalesOrdersReport
             }
         }
 
-        public void CreateNecessaryTables()
+        public void CreateMasterTables()
         {
             try
             {
-				CreatePrivilegeTable();
+                CreatePrivilegeTable();
                 CreatePrivilegeControlTable();
                 CreateRoleTable();
 				CreateStoreTable();
-                CreateUserTable();
                 CreateProductMasterTables();
-				//State
                 CreateStateTable();
-                //line
                 CreateLineTable();
-                //discount
                 CreateDiscountGrpTable();
-                //price
-                CreatePriceGrpTable();
-                //Customer
                 CreateCustomerTable();
+                CreateIDValueMasterTable();
+                CreateUserTable();
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("RunDBScript.CreateNecessaryTables()", ex);
+                CommonFunctions.ShowErrorDialog("RunDBScript.CreateMasterTables()", ex);
                 throw ex;
             }
         }
 
-		private void CreateStateTable()
+        public void CreateRunningTables()
+        {
+            try
+            {
+                CreateAllOrderRelatedTable();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("RunDBScript.CreateRunningTables()", ex);
+                throw ex;
+            }
+        }
+
+        private void CreateStateTable()
         {
             try
             {
@@ -267,8 +275,10 @@ namespace SalesOrdersReport
                 TableColumns.Add("ProductName, varchar(50) NOT NULL");
                 TableColumns.Add("Description, varchar(200) NOT NULL");
                 TableColumns.Add("CategoryID, smallint(5) unsigned NOT NULL");
-                TableColumns.Add("SellingPrice, float DEFAULT NULL");
                 TableColumns.Add("PurchasePrice, float DEFAULT NULL");
+                TableColumns.Add("WholesalePrice, float DEFAULT NULL");
+                TableColumns.Add("RetailPrice, float DEFAULT NULL");
+                TableColumns.Add("MaxRetailPrice, float DEFAULT NULL");
                 TableColumns.Add("Units, smallint(5) DEFAULT NULL");
                 TableColumns.Add("UnitsOfMeasurement, varchar(10) DEFAULT NULL");
                 TableColumns.Add("SortName, varchar(50) NOT NULL");
@@ -325,7 +335,7 @@ namespace SalesOrdersReport
                 TableColumns.Add("PriceColumn, varchar(50) NOT NULL");
                 TableColumns.Add("Discount, float DEFAULT NULL");
                 TableColumns.Add("DiscountType, varchar(50) DEFAULT NULL");
-                TableColumns.Add("Default, tinyint(4) NOT NULL DEFAULT '1'");
+                TableColumns.Add("IsDefault, tinyint(4) NOT NULL DEFAULT '1'");
                 TableColumns.Add("PRIMARY KEY, PriceGroupID");
                 ObjMySQLHelper.CreateTable("PriceGroupMaster", TableColumns);
                 #endregion
@@ -334,6 +344,76 @@ namespace SalesOrdersReport
             {
                 CommonFunctions.ShowErrorDialog("RunDBScript.CreateProductMasterTables()", ex);
                 throw ex;
+            }
+        }
+
+        public void CreateIDValueMasterTable()
+        {
+            try
+            {
+                List<String> TableColumns = new List<String>();
+                TableColumns.Add("TableName, varchar(50) NOT NULL");
+                TableColumns.Add("IDValue, varchar(200) NOT NULL");
+                ObjMySQLHelper.CreateTable("IDValueMaster", TableColumns);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("RunDBScript.CreateIDValueMasterTable()", ex);
+            }
+        }
+
+        public void CreateAllOrderRelatedTable()
+        {
+            try
+            {
+                List<String> TableColumns = new List<String>
+                {
+                    "OrderID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
+                    "OrderNumber, varchar(20) NOT NULL",
+                    "OrderDate, datetime NOT NULL",
+                    "CreationDate, datetime NOT NULL",
+                    "LastUpdatedDate, datetime NOT NULL",
+                    "CustomerID, smallint(5) NOT NULL",
+                    "EstimateOrderAmount, float DEFAULT NULL",
+                    "OrderStatus, varchar(20) DEFAULT NULL",      //Placed/Completed/Cancelled/Void
+                    "DateDelivered, datetime NOT NULL",
+                    "DateInvoiceCreated, datetime NOT NULL",
+                    "DateQuotationCreated, datetime NOT NULL",
+                    "PRIMARY KEY, OrderID"
+                };
+                ObjMySQLHelper.CreateTable("Orders", TableColumns);
+
+                TableColumns = new List<String>
+                {
+                    "OrderItemID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
+                    "OrderID, smallint(5) unsigned NOT NULL",
+                    "ProductID, smallint(5) NOT NULL",
+                    "OrderQty, float DEFAULT NULL",
+                    "Price, float DEFAULT NULL",
+                    "OrderItemStatus, varchar(20) DEFAULT NULL",
+                    "PRIMARY KEY, OrderItemID"
+                };
+                ObjMySQLHelper.CreateTable("OrderItems", TableColumns);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.CreateAllOrderRelatedTable()", ex);
+            }
+        }
+
+        public void ExecuteOneTimeExecutionScript()
+        {
+            try
+            {
+                //Execute script files
+                foreach (var file in CommonFunctions.ObjApplicationSettings.ListSQLScriptFiles)
+                {
+                    ObjMySQLHelper.ExecuteScriptFile(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.CreateProductMasterTables()", ex);
             }
         }
     }

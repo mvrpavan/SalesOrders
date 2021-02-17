@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Data;
+using SalesOrdersReport.CommonModules;
+using SalesOrdersReport.Views;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Models
 {
     class InvoiceVAT : Invoice
     {
@@ -16,7 +18,7 @@ namespace SalesOrdersReport
                 String SheetName = this.SheetName;
                 if (String.IsNullOrEmpty(SheetName))
                 {
-                    SheetName = ObjSellerDetails.Name.Replace(":", "").
+                    SheetName = ObjSellerDetails.CustomerName.Replace(":", "").
                                         Replace("\\", "").Replace("/", "").
                                         Replace("?", "").Replace("*", "").
                                         Replace("[", "").Replace("]", "");
@@ -41,7 +43,7 @@ namespace SalesOrdersReport
                 xlRange.Value = "Name";
                 xlRange.WrapText = true;
                 xlRange.Font.Bold = true;
-                xlWorkSheet.Cells[CustDetailsStartRow, SlNoColNum + 1].Value = ObjSellerDetails.Name;
+                xlWorkSheet.Cells[CustDetailsStartRow, SlNoColNum + 1].Value = ObjSellerDetails.CustomerName;
 
                 xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 1, SlNoColNum];
                 xlRange.Value = "Address";
@@ -55,22 +57,22 @@ namespace SalesOrdersReport
                 if (CurrReportSettings.Type == ReportType.INVOICE)
                 {
                     xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum];
-                    xlRange.Value = "TIN#";
+                    xlRange.Value = "GSTIN#";
                     xlRange.WrapText = true;
                     xlRange.Font.Bold = true;
-                    xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum + 1].Value = ObjSellerDetails.TINNumber;
+                    xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum + 1].Value = ObjSellerDetails.GSTIN;
 
                     xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 3, SlNoColNum];
                     xlRange.Value = "Phone";
                     xlRange.Font.Bold = true;
-                    xlWorkSheet.Cells[CustDetailsStartRow + 3, SlNoColNum + 1].Value = ObjSellerDetails.Phone;
+                    xlWorkSheet.Cells[CustDetailsStartRow + 3, SlNoColNum + 1].Value = ObjSellerDetails.PhoneNo;
                 }
                 else
                 {
                     xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum];
                     xlRange.Value = "Phone";
                     xlRange.Font.Bold = true;
-                    xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum + 1].Value = ObjSellerDetails.Phone;
+                    xlWorkSheet.Cells[CustDetailsStartRow + 2, SlNoColNum + 1].Value = ObjSellerDetails.PhoneNo;
                 }
 
                 xlRange = xlWorkSheet.Cells[CustDetailsStartRow, TotalColNum - 1];
@@ -148,7 +150,7 @@ namespace SalesOrdersReport
                 xlRange.Value = "Discount";
                 xlRange.Font.Bold = true;
 
-                DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjSellerMaster.GetSellerDiscount(ObjSellerDetails.Name);
+                DiscountGroupDetails1 ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjSellerDetails.CustomerName);
 
                 xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + DiscountRowOffset, TotalColNum];
                 Excel.Range xlSalesTotal1 = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum];
@@ -177,7 +179,7 @@ namespace SalesOrdersReport
                     xlRange.Font.Bold = true;
 
                     xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + OldBalanceRowOffset, TotalColNum];
-                    xlRange.Value = ObjSellerDetails.OldBalance;
+                    xlRange.Value = OldBalance;
                     xlRange.Font.Bold = true;
                     xlRange.NumberFormat = "#,##0.00";
 

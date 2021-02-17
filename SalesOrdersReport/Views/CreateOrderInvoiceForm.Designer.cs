@@ -1,4 +1,4 @@
-﻿namespace SalesOrdersReport
+﻿namespace SalesOrdersReport.Views
 {
     partial class CreateOrderInvoiceForm
     {
@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreateOrderInvoiceForm));
             this.lblSelectName = new System.Windows.Forms.Label();
             this.cmbBoxSellerCustomer = new System.Windows.Forms.ComboBox();
@@ -48,7 +48,6 @@
             this.lblInvoiceDate = new System.Windows.Forms.Label();
             this.lblInvoiceNumber = new System.Windows.Forms.Label();
             this.txtBoxInvOrdNumber = new System.Windows.Forms.TextBox();
-            this.btnCnclInvOrd = new System.Windows.Forms.Button();
             this.btnCreateInvOrd = new System.Windows.Forms.Button();
             this.dtGridViewInvOrdProdList = new System.Windows.Forms.DataGridView();
             this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -143,22 +142,22 @@
             this.PriceCol,
             this.QuantityCol,
             this.SelectCol});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dtGridViewProdListForSelection.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dtGridViewProdListForSelection.DefaultCellStyle = dataGridViewCellStyle3;
             this.dtGridViewProdListForSelection.Location = new System.Drawing.Point(3, 3);
             this.dtGridViewProdListForSelection.MultiSelect = false;
             this.dtGridViewProdListForSelection.Name = "dtGridViewProdListForSelection";
             this.dtGridViewProdListForSelection.RowTemplate.Height = 30;
             this.dtGridViewProdListForSelection.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.dtGridViewProdListForSelection.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dtGridViewProdListForSelection.Size = new System.Drawing.Size(650, 192);
+            this.dtGridViewProdListForSelection.Size = new System.Drawing.Size(650, 191);
             this.dtGridViewProdListForSelection.TabIndex = 0;
             this.dtGridViewProdListForSelection.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewProdListForSelection_CellContentClick);
             this.dtGridViewProdListForSelection.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewProdListForSelection_CellEndEdit);
@@ -275,22 +274,6 @@
             this.txtBoxInvOrdNumber.Size = new System.Drawing.Size(84, 20);
             this.txtBoxInvOrdNumber.TabIndex = 13;
             // 
-            // btnCnclInvOrd
-            // 
-            this.btnCnclInvOrd.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnCnclInvOrd.BackColor = System.Drawing.Color.Tomato;
-            this.btnCnclInvOrd.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCnclInvOrd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCnclInvOrd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCnclInvOrd.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnCnclInvOrd.Location = new System.Drawing.Point(812, 234);
-            this.btnCnclInvOrd.Name = "btnCnclInvOrd";
-            this.btnCnclInvOrd.Size = new System.Drawing.Size(65, 38);
-            this.btnCnclInvOrd.TabIndex = 2;
-            this.btnCnclInvOrd.Text = "Void Order";
-            this.btnCnclInvOrd.UseVisualStyleBackColor = false;
-            this.btnCnclInvOrd.Click += new System.EventHandler(this.btnVoidInvOrd_Click);
-            // 
             // btnCreateInvOrd
             // 
             this.btnCreateInvOrd.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -327,22 +310,22 @@
             this.OrdQtyCol,
             this.Column12,
             this.Column14});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dtGridViewInvOrdProdList.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dtGridViewInvOrdProdList.DefaultCellStyle = dataGridViewCellStyle4;
             this.dtGridViewInvOrdProdList.Location = new System.Drawing.Point(3, 6);
             this.dtGridViewInvOrdProdList.MultiSelect = false;
             this.dtGridViewInvOrdProdList.Name = "dtGridViewInvOrdProdList";
             this.dtGridViewInvOrdProdList.RowTemplate.Height = 30;
             this.dtGridViewInvOrdProdList.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.dtGridViewInvOrdProdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dtGridViewInvOrdProdList.Size = new System.Drawing.Size(650, 203);
+            this.dtGridViewInvOrdProdList.Size = new System.Drawing.Size(650, 204);
             this.dtGridViewInvOrdProdList.TabIndex = 0;
             this.dtGridViewInvOrdProdList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewInvOrdProdList_CellContentClick);
             this.dtGridViewInvOrdProdList.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewInvOrdProdList_CellEndEdit);
@@ -419,7 +402,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.btnRemItem);
             this.splitContainer1.Panel2.Controls.Add(this.dtGridViewInvOrdProdList);
             this.splitContainer1.Size = new System.Drawing.Size(722, 432);
-            this.splitContainer1.SplitterDistance = 208;
+            this.splitContainer1.SplitterDistance = 207;
             this.splitContainer1.TabIndex = 7;
             // 
             // btnSelectAll
@@ -428,7 +411,7 @@
             this.btnSelectAll.FlatAppearance.BorderSize = 0;
             this.btnSelectAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSelectAll.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectAll.Image")));
-            this.btnSelectAll.Location = new System.Drawing.Point(659, 28);
+            this.btnSelectAll.Location = new System.Drawing.Point(659, 27);
             this.btnSelectAll.Name = "btnSelectAll";
             this.btnSelectAll.Size = new System.Drawing.Size(30, 27);
             this.btnSelectAll.TabIndex = 4;
@@ -443,7 +426,7 @@
             this.btnAddItem.FlatAppearance.BorderSize = 0;
             this.btnAddItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddItem.Image = ((System.Drawing.Image)(resources.GetObject("btnAddItem.Image")));
-            this.btnAddItem.Location = new System.Drawing.Point(659, 61);
+            this.btnAddItem.Location = new System.Drawing.Point(659, 60);
             this.btnAddItem.Name = "btnAddItem";
             this.btnAddItem.Size = new System.Drawing.Size(30, 27);
             this.btnAddItem.TabIndex = 4;
@@ -666,9 +649,9 @@
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnClose.Location = new System.Drawing.Point(971, 234);
+            this.btnClose.Location = new System.Drawing.Point(937, 234);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(65, 38);
+            this.btnClose.Size = new System.Drawing.Size(99, 38);
             this.btnClose.TabIndex = 4;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
@@ -718,7 +701,7 @@
             this.btnDiscount.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.btnDiscount.Location = new System.Drawing.Point(728, 234);
             this.btnDiscount.Name = "btnDiscount";
-            this.btnDiscount.Size = new System.Drawing.Size(78, 38);
+            this.btnDiscount.Size = new System.Drawing.Size(108, 38);
             this.btnDiscount.TabIndex = 1;
             this.btnDiscount.Text = "Discount";
             this.btnDiscount.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
@@ -752,9 +735,9 @@
             this.btnCancelChanges.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancelChanges.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelChanges.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnCancelChanges.Location = new System.Drawing.Point(883, 234);
+            this.btnCancelChanges.Location = new System.Drawing.Point(842, 234);
             this.btnCancelChanges.Name = "btnCancelChanges";
-            this.btnCancelChanges.Size = new System.Drawing.Size(82, 38);
+            this.btnCancelChanges.Size = new System.Drawing.Size(89, 38);
             this.btnCancelChanges.TabIndex = 3;
             this.btnCancelChanges.Text = "Cancel";
             this.toolTip1.SetToolTip(this.btnCancelChanges, "Cancel Changes");
@@ -810,7 +793,6 @@
             this.panelOrderControls.Controls.Add(this.btnDiscount);
             this.panelOrderControls.Controls.Add(this.panel1);
             this.panelOrderControls.Controls.Add(this.btnCancelChanges);
-            this.panelOrderControls.Controls.Add(this.btnCnclInvOrd);
             this.panelOrderControls.Controls.Add(this.btnClose);
             this.panelOrderControls.Enabled = false;
             this.panelOrderControls.Location = new System.Drawing.Point(12, 123);
@@ -922,7 +904,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "\';;";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CustomerInvoiceSellerOrderForm_FormClosing);
-            this.Load += new System.EventHandler(this.CustomerInvoiceForm_Load);
+            this.Load += new System.EventHandler(this.CreateOrderInvoiceForm_Load);
             this.Shown += new System.EventHandler(this.CustomerInvoiceSellerOrderForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProdListForSelection)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvOrdProdList)).EndInit();
@@ -955,7 +937,6 @@
         private System.Windows.Forms.Label lblInvoiceDate;
         private System.Windows.Forms.Label lblInvoiceNumber;
         private System.Windows.Forms.TextBox txtBoxInvOrdNumber;
-        private System.Windows.Forms.Button btnCnclInvOrd;
         private System.Windows.Forms.Button btnCreateInvOrd;
         private System.Windows.Forms.DataGridView dtGridViewInvOrdProdList;
         private System.Windows.Forms.SplitContainer splitContainer1;

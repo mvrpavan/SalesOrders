@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalesOrdersReport.CommonModules;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -132,6 +133,7 @@ namespace SalesOrdersReport
                 throw ex;
             }
         }
+
         public void EnableOrDisableBtnBasedOnUserPrivilege()
         {
             try
@@ -139,11 +141,7 @@ namespace SalesOrdersReport
                 foreach (Control ControlItem in panelAllBtnTab.Controls)
                 {
                     Button btnControl = (Button)(ControlItem);
-                    if (true)
-                    {
-                        btnControl.Enabled = true;
-                    }
-                    else btnControl.Enabled = false;
+                    btnControl.Enabled = true;
                 }
             }
             catch (Exception ex)
@@ -152,6 +150,7 @@ namespace SalesOrdersReport
                 throw ex;
             }
         }
+
         private void ManageUsers_Load(object sender, EventArgs e)
         {
             try

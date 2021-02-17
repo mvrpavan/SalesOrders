@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalesOrdersReport.CommonModules;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -41,7 +42,6 @@ namespace SalesOrdersReport.Views
 
             //LoadProductLines();
 
-            fileMenu.Visible = true;
             sellerMenu.Visible = true;
             vendorMenu.Visible = true;
             productMenu.Visible = true;
@@ -50,13 +50,14 @@ namespace SalesOrdersReport.Views
             addModifySellerToolStripMenuItem.Visible = false;
             discountGroupToolStripMenuItem.Visible = false;
 
-            priceGroupsToolStripMenuItem.Visible = false;
-            addModifyItemToolStripMenuItem.Visible = false;
+            addModifyItemToolStripMenuItem.Visible = true;
 
             addModifyVendorToolStripMenuItem.Visible = false;
 
             vendorHistoryToolStripMenuItem.Visible = false;
             productStockToolStripMenuItem.Visible = false;
+
+            FillShortcuts();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -64,25 +65,28 @@ namespace SalesOrdersReport.Views
             CommonFunctions.WriteToSettingsFile();
         }
 
-        /*void LoadProductLines()
+        void FillShortcuts()
         {
             try
             {
-                //Load toolStripComboBoxProductLine from CommonFunctions.ListProductLines
-                toolStripComboBoxProductLine.Items.Clear();
-                for (int i = 1; i < CommonFunctions.ListProductLines.Count; i++)
-                {
-                    ProductLine ObjProductLine = CommonFunctions.ListProductLines[i];
-                    toolStripComboBoxProductLine.Items.Add(ObjProductLine.Name);
-                }
-                toolStripComboBoxProductLine.Items.Add("<Create New>");
-                toolStripComboBoxProductLine.SelectedIndex = CommonFunctions.SelectedProductLineIndex - 1;
+                lblShortcuts.Text = "F2:Orders    ";
+                lblShortcuts.Text += "F3:Invoices    ";
+                lblShortcuts.Text += "F4:Quotations    ";
+                lblShortcuts.Text += "F5:Products    ";
+                lblShortcuts.Text += "F6:Customers    ";
+
+                ordersToolStripMenuItem.ShortcutKeys = Keys.F2;
+                invoicesToolStripMenuItem.ShortcutKeys = Keys.F3;
+                quotationsToolStripMenuItem.ShortcutKeys = Keys.F4;
+                productMenu.ShortcutKeys = Keys.F5;
+                customerToolStripMenuItem.ShortcutKeys = Keys.F6;
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("MainForm.LoadProductLines()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.FillShortcuts()", ex);
+                throw;
             }
-        }*/
+        }
 
         public void ShowChildForm(Form ObjForm)
         {
@@ -92,7 +96,7 @@ namespace SalesOrdersReport.Views
 
                 CommonFunctions.ResetProgressBar();
 
-                //CommonFunctions.CurrentForm = ObjForm;
+                CommonFunctions.CurrentForm = ObjForm;
                 ObjForm.MdiParent = this;
                 ObjForm.ShowIcon = false;
                 ObjForm.ShowInTaskbar = false;
@@ -186,24 +190,6 @@ namespace SalesOrdersReport.Views
             {
                 CommonFunctions.ShowErrorDialog("MainForm.OrderMasterForm_FormClosed()", ex);
             }
-        }
-
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                SettingsForm ObjSettingsForm = new SettingsForm();
-                ShowChildForm(ObjSettingsForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.OrderMasterForm_FormClosed()", ex);
-            }
-        }
-
-        private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
         #endregion
 
@@ -306,28 +292,21 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog("MainForm.updateSalesToolStripMenuItem_Click()", ex);
             }
         }
-
-
         #endregion
 
         #region Products Menu Item
-        private void priceGroupsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void addModifyItemToolStripMenuItem_Click(object sender, EventArgs e)
+        private void productMenu_Click(object sender, EventArgs e)
         {
             try
             {
                 //if (!IsValidToOpenChildForm()) return;
 
-                ProductsMainForm productsMainForm = new ProductsMainForm();
+                Views.ProductsMainForm productsMainForm = new Views.ProductsMainForm();
                 ShowChildForm(productsMainForm);
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("MainForm.addModifyItemToolStripMenuItem_Click()", ex);
+                CommonFunctions.ShowErrorDialog("MainForm.productMenu_Click()", ex);
             }
         }
         #endregion
@@ -416,55 +395,6 @@ namespace SalesOrdersReport.Views
         }
         #endregion
 
-        #region ProductLine Toolstrip
-        /*private void toolStripComboBoxProductLine_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (toolStripComboBoxProductLine.SelectedIndex + 1 == CommonFunctions.SelectedProductLineIndex) return;
-
-                if (MdiChildren.Length > 0)
-                {
-                    toolStripComboBoxProductLine.SelectedIndex = CommonFunctions.SelectedProductLineIndex - 1;
-                    MessageBox.Show(this, "Cannot change Product Line, while working in Current Product Line.\nClose other windows to select another Product Line.", "Product Line", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                MasterSheetSelected = false;
-                toolStripOrderMasterPath.Text = "";
-
-                if (toolStripComboBoxProductLine.SelectedItem.ToString().Equals("<Create New>"))
-                {
-                    ManageProductLineForm ObjManageProductLineForm = new ManageProductLineForm();
-                    ShowChildForm(ObjManageProductLineForm);
-                    ObjManageProductLineForm.FormClosed += new FormClosedEventHandler(ObjManageProductLineForm_FormClosed);
-                }
-                else
-                {
-                    CommonFunctions.SelectProductLine(Int32.Parse((toolStripComboBoxProductLine.SelectedIndex + 1).ToString()));
-                    MessageBox.Show(this, "Product Line changed to " + toolStripComboBoxProductLine.SelectedItem, "Product Line", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    statusStrip.Focus();
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.toolStripComboBoxProductLine_SelectedIndexChanged()", ex);
-            }
-        }*/
-
-        void ObjManageProductLineForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                //LoadProductLines();
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.ObjManageProductLineForm_FormClosed()", ex);
-            }
-        }
-        #endregion
-
         #region Status Strip
         private void statusStrip_SizeChanged(object sender, EventArgs e)
         {
@@ -500,39 +430,6 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void createUserToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-
-                //CreateUserForm ObjCreateUserForm = new CreateUserForm();
-                //ShowChildForm(ObjCreateUserForm);
-
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.createUserToolStripMenuItem_Click()", ex);
-            }
-
-        }
-
-        private void editProfileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-
-                EditProfileForm ObjEditProfileForm = new EditProfileForm();
-                ShowChildForm(ObjEditProfileForm);
-
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.editProfileToolStripMenuItem_Click()", ex);
-            }
-        }
-
         private void ProfileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -548,22 +445,6 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("MainForm.ProfileToolStripMenuItem_Click()", ex);
-            }
-        }
-
-        private void editUserToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-
-                //EditUserForm ObjEditUserForm = new EditUserForm();
-                //ShowChildForm(ObjEditUserForm);
-
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.editUserToolStripMenuItem_Click()", ex);
             }
         }
 
@@ -596,23 +477,6 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void createRoleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-
-                //CreateRoleForm ObjCreateRoleForm = new CreateRoleForm();
-                //ShowChildForm(ObjCreateRoleForm);
-
-
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.createRoleToolStripMenuItem_Click()", ex);
-            }
-        }
-
         private void btnUserProfile_Click(object sender, EventArgs e)
         {
             try
@@ -633,36 +497,6 @@ namespace SalesOrdersReport.Views
 
         }
 
-        private void productMenu_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //if (!IsValidToOpenChildForm()) return;
-
-                Views.ProductsMainForm productsMainForm = new Views.ProductsMainForm();
-                ShowChildForm(productsMainForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.productMenu_Click()", ex);
-            }
-        }
-
-        private void customersToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //if (!IsValidToOpenChildForm()) return;
-
-                Views.CustomersMainForm customersMainForm = new Views.CustomersMainForm();
-                ShowChildForm(customersMainForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.customersToolStripMenuItem_Click()", ex);
-            }
-        }
-
         private void showAllOrdersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -675,71 +509,7 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog($"{this}.showAllOrdersToolStripMenuItem_Click()", ex);
             }
         }
-        private void cntxtMenuStripUserProfile_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            try
-            {
-                //if (e.ClickedItem.Text == "Change Password")
 
-                if (e.ClickedItem.Text == "Profile")
-                {
-                    //if (!IsValidToOpenChildForm()) return;
-
-                    EditProfileForm ObjEditProfileForm = new EditProfileForm();
-                    ShowChildForm(ObjEditProfileForm);
-                    //ObjEditProfileForm.FormClosed += ObjEditProfileForm_FormClosed;
-                    //ObjEditProfileForm.Show();
-                }
-
-                else if (e.ClickedItem.Text == "Log Out")
-                {
-                    //this.Close();
-                    // if (!IsValidToOpenChildForm()) return;
-                    //Application.Run(new LoginForm());
-                    UpdateTableOnLogout();
-                    this.Hide();
-                    CommonFunctions.CurrentForm.Dispose();
-                    CommonFunctions.CurrentForm.Close();
-                    LoginForm ObjLog = new LoginForm();
-                    ObjLog.Show();
-                    //ObjLog.Dispose(); //because user has logged out so the data must be flushed, by "Disposing" it will not be in the RAM anymore, so your hanging problem will be solved
-                    //ObjLog.Show();
-
-
-                    //Application.Exit();
-
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.cntxtMenuStripUserProfile_ItemClicked()", ex);
-                throw;
-            }
-        }
-        //private void ObjEditProfileForm_FormClosed(object sender, FormClosedEventArgs e)
-        //{
-        //    this.Close();
-        //}
-        public void UpdateTableOnLogout()
-        {
-            try
-            {
-                List<string> ListColumnValues = new List<string>(), ListColumnNames = new List<string>();
-                ListColumnValues.Add(tmpMySQLHelper.LoginTime.ToString("yyyy-MM-dd H:mm:ss"));
-                ListColumnNames.Add("LASTLOGIN");
-
-                string WhereCondition = "USERNAME = '" + tmpMySQLHelper.CurrentUser + "'";
-
-                int ResultVal = CommonFunctions.ObjUserMasterModel.UpdateAnyTableDetails("USERMASTER", ListColumnNames, ListColumnValues, WhereCondition);
-                if (ResultVal < 0) MessageBox.Show("Wasnt able to Update Date Column", "Error", MessageBoxButtons.OK);
-            }
-
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.UpdateTableOnLogout()", ex);
-                throw;
-            }
-        }
         private void manageUsersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -786,7 +556,7 @@ namespace SalesOrdersReport.Views
 
         public void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            IsLoggedOut = true ;
+            //IsLoggedOut = true ;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -811,6 +581,84 @@ namespace SalesOrdersReport.Views
         {
             ManageCustomerForm ObjManageCustomerForm = new ManageCustomerForm();
             ShowChildForm(ObjManageCustomerForm);
+        }
+
+        private void ordersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Views.OrdersMainForm ordersMainForm = new Views.OrdersMainForm();
+                ShowChildForm(ordersMainForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ordersToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void invoicesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Views.InvoicesMainForm invoicesMainForm = new Views.InvoicesMainForm();
+                ShowChildForm(invoicesMainForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.invoicesToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void appSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SettingsForm ObjSettingsForm = new SettingsForm();
+                ShowChildForm(ObjSettingsForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.appSettingsToolStripMenuItem_Click()", ex);
+                throw;
+            }
+        }
+
+        private void orgSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SettingsForm ObjSettingsForm = new SettingsForm();
+                ShowChildForm(ObjSettingsForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.orgSettingsToolStripMenuItem_Click()", ex);
+                throw;
+            }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DialogResult dialogResult = MessageBox.Show(this, "Are you sure to exit?", "Exit Sales Orders", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (dialogResult == DialogResult.Yes) this.Close();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.exitToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void quotationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.quotationsToolStripMenuItem_Click()", ex);
+            }
         }
     }
 }

@@ -28,20 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnAddProduct = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.btnExportToExcel = new System.Windows.Forms.Button();
+            this.btnImportFromExcel = new System.Windows.Forms.Button();
+            this.btnShowHSNList = new System.Windows.Forms.Button();
+            this.btnReloadProducts = new System.Windows.Forms.Button();
+            this.btnDeleteProduct = new System.Windows.Forms.Button();
+            this.btnEditProduct = new System.Windows.Forms.Button();
             this.cmbBoxCategoryFilterList = new System.Windows.Forms.ComboBox();
             this.txtBoxProductSearchString = new System.Windows.Forms.TextBox();
             this.btnClearSearchProduct = new System.Windows.Forms.Button();
-            this.btnExportToExcel = new System.Windows.Forms.Button();
-            this.btnImportFromExcel = new System.Windows.Forms.Button();
-            this.btnReloadProducts = new System.Windows.Forms.Button();
             this.btnSearchProduct = new System.Windows.Forms.Button();
-            this.btnDeleteProduct = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.btnEditProduct = new System.Windows.Forms.Button();
             this.dtGridViewProducts = new System.Windows.Forms.DataGridView();
             this.dtGridViewProductCategory = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
@@ -50,20 +52,18 @@
             this.btnEditroductCategory = new System.Windows.Forms.Button();
             this.btnAddProductCategory = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.cntxtMenuProducts = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editProductToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblProductCount = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProducts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProductCategory)).BeginInit();
             this.panel2.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.panel4.SuspendLayout();
+            this.cntxtMenuProducts.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnAddProduct
@@ -85,22 +85,19 @@
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.comboBox2);
-            this.panel1.Controls.Add(this.cmbBoxCategoryFilterList);
-            this.panel1.Controls.Add(this.txtBoxProductSearchString);
-            this.panel1.Controls.Add(this.btnClearSearchProduct);
             this.panel1.Controls.Add(this.btnExportToExcel);
             this.panel1.Controls.Add(this.btnImportFromExcel);
+            this.panel1.Controls.Add(this.btnShowHSNList);
             this.panel1.Controls.Add(this.btnReloadProducts);
-            this.panel1.Controls.Add(this.btnSearchProduct);
             this.panel1.Controls.Add(this.btnDeleteProduct);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.btnEditProduct);
             this.panel1.Controls.Add(this.btnAddProduct);
             this.panel1.Location = new System.Drawing.Point(12, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1164, 84);
+            this.panel1.Size = new System.Drawing.Size(646, 84);
             this.panel1.TabIndex = 1;
             // 
             // comboBox2
@@ -111,37 +108,6 @@
             this.comboBox2.Size = new System.Drawing.Size(234, 21);
             this.comboBox2.TabIndex = 9;
             // 
-            // cmbBoxCategoryFilterList
-            // 
-            this.cmbBoxCategoryFilterList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBoxCategoryFilterList.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.cmbBoxCategoryFilterList.FormattingEnabled = true;
-            this.cmbBoxCategoryFilterList.Location = new System.Drawing.Point(824, 17);
-            this.cmbBoxCategoryFilterList.Name = "cmbBoxCategoryFilterList";
-            this.cmbBoxCategoryFilterList.Size = new System.Drawing.Size(234, 24);
-            this.cmbBoxCategoryFilterList.TabIndex = 9;
-            // 
-            // txtBoxProductSearchString
-            // 
-            this.txtBoxProductSearchString.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.txtBoxProductSearchString.Location = new System.Drawing.Point(824, 53);
-            this.txtBoxProductSearchString.Name = "txtBoxProductSearchString";
-            this.txtBoxProductSearchString.Size = new System.Drawing.Size(234, 23);
-            this.txtBoxProductSearchString.TabIndex = 8;
-            // 
-            // btnClearSearchProduct
-            // 
-            this.btnClearSearchProduct.FlatAppearance.BorderSize = 0;
-            this.btnClearSearchProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClearSearchProduct.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearSearchProduct.Image = global::SalesOrdersReport.Properties.Resources.Trash_icon;
-            this.btnClearSearchProduct.Location = new System.Drawing.Point(1103, 49);
-            this.btnClearSearchProduct.Name = "btnClearSearchProduct";
-            this.btnClearSearchProduct.Size = new System.Drawing.Size(33, 29);
-            this.btnClearSearchProduct.TabIndex = 7;
-            this.btnClearSearchProduct.UseVisualStyleBackColor = true;
-            this.btnClearSearchProduct.Click += new System.EventHandler(this.btnClearSearchProduct_Click);
-            // 
             // btnExportToExcel
             // 
             this.btnExportToExcel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -150,7 +116,7 @@
             this.btnExportToExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExportToExcel.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnExportToExcel.Image = global::SalesOrdersReport.Properties.Resources.export_icon;
-            this.btnExportToExcel.Location = new System.Drawing.Point(450, 3);
+            this.btnExportToExcel.Location = new System.Drawing.Point(539, 3);
             this.btnExportToExcel.Name = "btnExportToExcel";
             this.btnExportToExcel.Size = new System.Drawing.Size(83, 73);
             this.btnExportToExcel.TabIndex = 0;
@@ -167,7 +133,7 @@
             this.btnImportFromExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnImportFromExcel.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnImportFromExcel.Image = global::SalesOrdersReport.Properties.Resources.import_icon;
-            this.btnImportFromExcel.Location = new System.Drawing.Point(361, 3);
+            this.btnImportFromExcel.Location = new System.Drawing.Point(450, 3);
             this.btnImportFromExcel.Name = "btnImportFromExcel";
             this.btnImportFromExcel.Size = new System.Drawing.Size(83, 73);
             this.btnImportFromExcel.TabIndex = 0;
@@ -175,6 +141,24 @@
             this.btnImportFromExcel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnImportFromExcel.UseVisualStyleBackColor = false;
             this.btnImportFromExcel.Click += new System.EventHandler(this.btnImportFromExcel_Click);
+            // 
+            // btnShowHSNList
+            // 
+            this.btnShowHSNList.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnShowHSNList.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnShowHSNList.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnShowHSNList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnShowHSNList.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnShowHSNList.Image = global::SalesOrdersReport.Properties.Resources.tax_menu;
+            this.btnShowHSNList.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnShowHSNList.Location = new System.Drawing.Point(272, 3);
+            this.btnShowHSNList.Name = "btnShowHSNList";
+            this.btnShowHSNList.Size = new System.Drawing.Size(83, 73);
+            this.btnShowHSNList.TabIndex = 0;
+            this.btnShowHSNList.Text = "HSN Codes";
+            this.btnShowHSNList.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnShowHSNList.UseVisualStyleBackColor = false;
+            this.btnShowHSNList.Click += new System.EventHandler(this.btnShowHSNList_Click);
             // 
             // btnReloadProducts
             // 
@@ -184,7 +168,7 @@
             this.btnReloadProducts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReloadProducts.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnReloadProducts.Image = global::SalesOrdersReport.Properties.Resources.Refresh_icon_32;
-            this.btnReloadProducts.Location = new System.Drawing.Point(272, 3);
+            this.btnReloadProducts.Location = new System.Drawing.Point(361, 3);
             this.btnReloadProducts.Name = "btnReloadProducts";
             this.btnReloadProducts.Size = new System.Drawing.Size(83, 73);
             this.btnReloadProducts.TabIndex = 0;
@@ -192,20 +176,6 @@
             this.btnReloadProducts.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnReloadProducts.UseVisualStyleBackColor = false;
             this.btnReloadProducts.Click += new System.EventHandler(this.btnReloadProducts_Click);
-            // 
-            // btnSearchProduct
-            // 
-            this.btnSearchProduct.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.btnSearchProduct.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnSearchProduct.FlatAppearance.BorderSize = 0;
-            this.btnSearchProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSearchProduct.Image = global::SalesOrdersReport.Properties.Resources.Search_icon;
-            this.btnSearchProduct.Location = new System.Drawing.Point(1064, 50);
-            this.btnSearchProduct.Name = "btnSearchProduct";
-            this.btnSearchProduct.Size = new System.Drawing.Size(33, 29);
-            this.btnSearchProduct.TabIndex = 6;
-            this.btnSearchProduct.UseVisualStyleBackColor = false;
-            this.btnSearchProduct.Click += new System.EventHandler(this.btnSearchProduct_Click);
             // 
             // btnDeleteProduct
             // 
@@ -224,26 +194,6 @@
             this.btnDeleteProduct.UseVisualStyleBackColor = false;
             this.btnDeleteProduct.Click += new System.EventHandler(this.btnDeleteProduct_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label3.Location = new System.Drawing.Point(718, 20);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(100, 17);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Filter Category";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label2.Location = new System.Drawing.Point(712, 56);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 17);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Search Product";
-            // 
             // btnEditProduct
             // 
             this.btnEditProduct.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -261,8 +211,77 @@
             this.btnEditProduct.UseVisualStyleBackColor = false;
             this.btnEditProduct.Click += new System.EventHandler(this.btnEditProduct_Click);
             // 
+            // cmbBoxCategoryFilterList
+            // 
+            this.cmbBoxCategoryFilterList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxCategoryFilterList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.cmbBoxCategoryFilterList.FormattingEnabled = true;
+            this.cmbBoxCategoryFilterList.Location = new System.Drawing.Point(115, 20);
+            this.cmbBoxCategoryFilterList.Name = "cmbBoxCategoryFilterList";
+            this.cmbBoxCategoryFilterList.Size = new System.Drawing.Size(234, 21);
+            this.cmbBoxCategoryFilterList.TabIndex = 9;
+            this.cmbBoxCategoryFilterList.SelectedIndexChanged += new System.EventHandler(this.cmbBoxCategoryFilterList_SelectedIndexChanged);
+            // 
+            // txtBoxProductSearchString
+            // 
+            this.txtBoxProductSearchString.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtBoxProductSearchString.Location = new System.Drawing.Point(115, 56);
+            this.txtBoxProductSearchString.Name = "txtBoxProductSearchString";
+            this.txtBoxProductSearchString.Size = new System.Drawing.Size(234, 20);
+            this.txtBoxProductSearchString.TabIndex = 8;
+            // 
+            // btnClearSearchProduct
+            // 
+            this.btnClearSearchProduct.FlatAppearance.BorderSize = 0;
+            this.btnClearSearchProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClearSearchProduct.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClearSearchProduct.Image = global::SalesOrdersReport.Properties.Resources.Trash_icon;
+            this.btnClearSearchProduct.Location = new System.Drawing.Point(394, 52);
+            this.btnClearSearchProduct.Name = "btnClearSearchProduct";
+            this.btnClearSearchProduct.Size = new System.Drawing.Size(33, 29);
+            this.btnClearSearchProduct.TabIndex = 7;
+            this.btnClearSearchProduct.UseVisualStyleBackColor = true;
+            this.btnClearSearchProduct.Click += new System.EventHandler(this.btnClearSearchProduct_Click);
+            // 
+            // btnSearchProduct
+            // 
+            this.btnSearchProduct.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnSearchProduct.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnSearchProduct.FlatAppearance.BorderSize = 0;
+            this.btnSearchProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearchProduct.Image = global::SalesOrdersReport.Properties.Resources.Search_icon;
+            this.btnSearchProduct.Location = new System.Drawing.Point(355, 53);
+            this.btnSearchProduct.Name = "btnSearchProduct";
+            this.btnSearchProduct.Size = new System.Drawing.Size(33, 29);
+            this.btnSearchProduct.TabIndex = 6;
+            this.btnSearchProduct.UseVisualStyleBackColor = false;
+            this.btnSearchProduct.Click += new System.EventHandler(this.btnSearchProduct_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label3.Location = new System.Drawing.Point(9, 23);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(74, 13);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "Filter Category";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label2.Location = new System.Drawing.Point(3, 59);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(81, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Search Product";
+            // 
             // dtGridViewProducts
             // 
+            this.dtGridViewProducts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dtGridViewProducts.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dtGridViewProducts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
             this.dtGridViewProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -270,15 +289,18 @@
             this.dtGridViewProducts.Name = "dtGridViewProducts";
             this.dtGridViewProducts.Size = new System.Drawing.Size(1164, 369);
             this.dtGridViewProducts.TabIndex = 2;
+            this.dtGridViewProducts.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtGridViewProducts_CellMouseDoubleClick);
             // 
             // dtGridViewProductCategory
             // 
+            this.dtGridViewProductCategory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dtGridViewProductCategory.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dtGridViewProductCategory.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
             this.dtGridViewProductCategory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtGridViewProductCategory.Location = new System.Drawing.Point(6, 75);
             this.dtGridViewProductCategory.Name = "dtGridViewProductCategory";
-            this.dtGridViewProductCategory.Size = new System.Drawing.Size(578, 139);
+            this.dtGridViewProductCategory.Size = new System.Drawing.Size(1152, 139);
             this.dtGridViewProductCategory.TabIndex = 2;
             // 
             // label1
@@ -298,7 +320,7 @@
             this.panel2.Controls.Add(this.btnAddProductCategory);
             this.panel2.Location = new System.Drawing.Point(6, 22);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(578, 50);
+            this.panel2.Size = new System.Drawing.Size(438, 50);
             this.panel2.TabIndex = 1;
             // 
             // btnDelProductCategory
@@ -345,86 +367,63 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.panel2);
             this.groupBox1.Controls.Add(this.dtGridViewProductCategory);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.groupBox1.Location = new System.Drawing.Point(12, 511);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(590, 220);
+            this.groupBox1.Size = new System.Drawing.Size(1164, 220);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Category List";
             // 
-            // groupBox2
+            // panel4
             // 
-            this.groupBox2.Controls.Add(this.panel3);
-            this.groupBox2.Controls.Add(this.dataGridView1);
-            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.groupBox2.Location = new System.Drawing.Point(608, 511);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(568, 220);
-            this.groupBox2.TabIndex = 5;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Price Group List";
+            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel4.Controls.Add(this.label3);
+            this.panel4.Controls.Add(this.btnSearchProduct);
+            this.panel4.Controls.Add(this.cmbBoxCategoryFilterList);
+            this.panel4.Controls.Add(this.label2);
+            this.panel4.Controls.Add(this.btnClearSearchProduct);
+            this.panel4.Controls.Add(this.txtBoxProductSearchString);
+            this.panel4.Location = new System.Drawing.Point(743, 12);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(433, 84);
+            this.panel4.TabIndex = 10;
             // 
-            // panel3
+            // cntxtMenuProducts
             // 
-            this.panel3.Controls.Add(this.button1);
-            this.panel3.Controls.Add(this.button2);
-            this.panel3.Controls.Add(this.button3);
-            this.panel3.Location = new System.Drawing.Point(6, 22);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(556, 50);
-            this.panel3.TabIndex = 1;
+            this.cntxtMenuProducts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editProductToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+            this.cntxtMenuProducts.Name = "cntxtMenuProducts";
+            this.cntxtMenuProducts.Size = new System.Drawing.Size(125, 48);
             // 
-            // button1
+            // editProductToolStripMenuItem
             // 
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Image = global::SalesOrdersReport.Properties.Resources.delete_icon_24;
-            this.button1.Location = new System.Drawing.Point(287, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(135, 44);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Delete Price Group";
-            this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.button1.UseVisualStyleBackColor = false;
+            this.editProductToolStripMenuItem.Name = "editProductToolStripMenuItem";
+            this.editProductToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.editProductToolStripMenuItem.Text = "Edit/View";
+            this.editProductToolStripMenuItem.Click += new System.EventHandler(this.editProductToolStripMenuItem_Click);
             // 
-            // button2
+            // deleteToolStripMenuItem
             // 
-            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Image = global::SalesOrdersReport.Properties.Resources.edit_icon_24;
-            this.button2.Location = new System.Drawing.Point(146, 3);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(135, 44);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "Edit Price Group";
-            this.button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.button2.UseVisualStyleBackColor = false;
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
-            // button3
+            // lblProductCount
             // 
-            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Image = global::SalesOrdersReport.Properties.Resources.math_add_icon_24;
-            this.button3.Location = new System.Drawing.Point(5, 3);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(135, 44);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "Add Price Group";
-            this.button3.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.button3.UseVisualStyleBackColor = false;
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(6, 75);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(556, 139);
-            this.dataGridView1.TabIndex = 2;
+            this.lblProductCount.AutoSize = true;
+            this.lblProductCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblProductCount.Location = new System.Drawing.Point(132, 101);
+            this.lblProductCount.Name = "lblProductCount";
+            this.lblProductCount.Size = new System.Drawing.Size(175, 20);
+            this.lblProductCount.TabIndex = 4;
+            this.lblProductCount.Text = "[Displaying all Products]";
             // 
             // ProductsMainForm
             // 
@@ -432,8 +431,9 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1184, 743);
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.panel4);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.lblProductCount);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dtGridViewProducts);
             this.Controls.Add(this.panel1);
@@ -444,14 +444,13 @@
             this.Text = "Products";
             this.Shown += new System.EventHandler(this.ProductsMainForm_Shown);
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProducts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProductCategory)).EndInit();
             this.panel2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            this.cntxtMenuProducts.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -481,11 +480,11 @@
         private System.Windows.Forms.ComboBox cmbBoxCategoryFilterList;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.ContextMenuStrip cntxtMenuProducts;
+        private System.Windows.Forms.ToolStripMenuItem editProductToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.Button btnShowHSNList;
+        private System.Windows.Forms.Label lblProductCount;
     }
 }

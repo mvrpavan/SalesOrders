@@ -156,12 +156,6 @@
     <Compile Include="Views\CustomerInvoiceSellerOrderForm.Designer.cs">
       <DependentUpon>CustomerInvoiceSellerOrderForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\CustomersMainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\CustomersMainForm.Designer.cs">
-      <DependentUpon>CustomersMainForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\DefineRoleForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -267,6 +261,18 @@
     </Compile>
     <Compile Include="Views\AddProductForm.Designer.cs">
       <DependentUpon>AddProductForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InvoicesMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\InvoicesMainForm.Designer.cs">
+      <DependentUpon>InvoicesMainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderInvQuotSearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\OrderInvQuotSearchForm.Designer.cs">
+      <DependentUpon>OrderInvQuotSearchForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\OrdersMainForm.cs">
       <SubType>Form</SubType>
@@ -413,9 +419,6 @@
     <EmbeddedResource Include="Views\CustomerInvoiceSellerOrderForm.resx">
       <DependentUpon>CustomerInvoiceSellerOrderForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\CustomersMainForm.resx">
-      <DependentUpon>CustomersMainForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\DefineRoleForm.resx">
       <DependentUpon>DefineRoleForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -466,6 +469,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\AddProductForm.resx">
       <DependentUpon>AddProductForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\InvoicesMainForm.resx">
+      <DependentUpon>InvoicesMainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\OrderInvQuotSearchForm.resx">
+      <DependentUpon>OrderInvQuotSearchForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\OrdersMainForm.resx">
       <DependentUpon>OrdersMainForm.cs</DependentUpon>
@@ -568,6 +577,11 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\tax.png" />
+    <None Include="Resources\tax_menu.png" />
+    <Content Include="SQLScripts\ProductMasterTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Images\Settings.png" />
     <None Include="Images\Close_Black.png" />
     <None Include="Images\Close_Black_VerySmall.png" />

@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SalesOrdersReport.CommonModules;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Models
 {
     enum OrderDays
     {
         MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, NONE
     }
+
     class ImportFromExcelCustomerCache
     {
         public string CustomerColName = "CustomerName", LineColName = "LineName", PriceGroupColName = "PriceGroupName", DiscountGroupColName = "DiscountGroupName", StateColName = "State";
         public string PGDefaultColName = "PG_Default", DGDefaultColName = "DG_Default", ActiveColName = "Active", AddressColName = "Address", GSTINColName = "GSTIN";
         public string AddedDateColName = "AddedDate", LastUpdateDateColName = "LastUpdateDate", PhoneNoColName = "Phone", OrderDaysColName = "OrderDays";
-        public string PGDiscCountTypeColName = "PG_DiscountType", DGDiscCountTypeColName = "DG_DiscountType", SelectedPriceGrpColName = "PriceGroupColumnName";
+        public string PGDiscCountTypeColName = "PG_DiscountType", DGDiscCountTypeColName = "DG_DiscountType", SelectedPriceGrpColName = "PriceColumn";
         //CustomerName,LineName,PriceGroupName,DiscountGroupName,State,PG_Default,DG_Default,Active,Address,GSTIN,AddedDate,LastUpdateDate,Phone,OrderDays,PG_DiscountType,DG_DiscountType,PriceGroupColumnName
     }
+
     class CustomerDetails : IComparer<CustomerDetails>
     {
         public string CustomerName = "";
@@ -30,30 +33,18 @@ namespace SalesOrdersReport
         public string GSTIN = "";
         public Int64 PhoneNo = 0;
         public string OrderDaysAssigned = "";
+
         public int Compare(CustomerDetails x, CustomerDetails y)
         {
             return x.CustomerName.ToUpper().CompareTo(y.CustomerName.ToUpper());
         }
+
         public CustomerDetails Clone()
         {
             return (CustomerDetails)this.MemberwiseClone();
         }
-      
-
-        //        ID AddedDate
-        //SellerName LastUpdateDate
-        //Address
-        //Phone
-        //GSTIN
-        //OldBalance
-        //PriceGroupID
-        //DiscountGroupID
-        //StateID
-        //LineID
-        //Active
-
-
     }
+
     class DiscountGroupDetails1 : IComparer<DiscountGroupDetails1>
     {
         public int DiscountGrpID = -1;

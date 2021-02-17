@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalesOrdersReport.CommonModules;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -71,6 +72,8 @@ namespace SalesOrdersReport.Models
     {
         List<OrderDetails> ListOrders;
         MySQLHelper ObjMySQLHelper;
+        const String OrderNumberPrefix = "ORD";
+        ProductMasterModel ObjProductMasterModel;
 
         public void Initialize()
         {
@@ -78,10 +81,26 @@ namespace SalesOrdersReport.Models
             {
                 ListOrders = new List<OrderDetails>();
                 ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+                ObjProductMasterModel = CommonFunctions.ObjProductMaster;
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.Initialize()", ex);
+                throw;
+            }
+        }
+
+        public String GenerateNewOrderNumber()
+        {
+            try
+            {
+                String MaxOrderNumber = ObjMySQLHelper.GetIDValue("Orders");
+                if (String.IsNullOrEmpty(MaxOrderNumber)) MaxOrderNumber = "0";
+                return CommonFunctions.GenerateNextID(OrderNumberPrefix, MaxOrderNumber);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GenerateNewOrderNumber()", ex);
                 throw;
             }
         }
@@ -94,7 +113,7 @@ namespace SalesOrdersReport.Models
                 String Query = "Select a.*, b.CustomerName from Orders a Inner Join CustomerMaster b on a.CustomerID = b.CustomerID", WhereClause = $" Where a.OrderStatus = '{OrderStatus}'";
                 if (FromDate > DateTime.MinValue && ToDate > DateTime.MinValue)
                 {
-                    WhereClause += $" and a.OrderDate between '{FromDate.ToString("yyyy-MM-dd")}' and '{FromDate.ToString("yyyy-MM-dd")}'";
+                    WhereClause += $" and a.OrderDate between '{MySQLHelper.GetDateStringForDB(FromDate)}' and '{MySQLHelper.GetDateStringForDB(ToDate)}'";
                 }
 
                 if (!String.IsNullOrEmpty(SearchField) && !String.IsNullOrEmpty(SearchFieldValue.Trim()))
@@ -141,7 +160,7 @@ namespace SalesOrdersReport.Models
                         DateInvoiceCreated = DateTime.Parse(dtRow["DateInvoiceCreated"].ToString()),
                         DateQuotationCreated = DateTime.Parse(dtRow["DateQuotationCreated"].ToString()),
                     };
-                    FillOrderItemDetails(tmpOrderDetails);
+
                     ListOrders.Add(tmpOrderDetails);
                 }
             }
@@ -168,7 +187,7 @@ namespace SalesOrdersReport.Models
                         Price = Double.Parse(item["Price"].ToString()),
                         OrderItemStatus = (ORDERITEMSTATUS)Enum.Parse(Type.GetType("ORDERITEMSTATUS"), item["OrderItemStatus"].ToString())
                     };
-                    tmpOrderItem.ProductName = CommonFunctions.ObjProductMaster.GetProductDetails(tmpOrderItem.ProductID).ItemName;
+                    tmpOrderItem.ProductName = ObjProductMasterModel.GetProductDetails(tmpOrderItem.ProductID).ItemName;
 
                     CurrOrderDetails.ListOrderItems.Add(tmpOrderItem);
                 }
@@ -185,7 +204,6 @@ namespace SalesOrdersReport.Models
             try
             {
                 if (ListOrders.Count == 0) LoadOrderDetails(OrderDate, OrderDate, ORDERSTATUS.Created, "CustomerID", CustomerID.ToString());
-
                 if (ListOrders.Count == 0) return null;
 
                 Int32 Index = ListOrders.FindIndex(e => e.CustomerID == CustomerID);
@@ -207,7 +225,6 @@ namespace SalesOrdersReport.Models
             try
             {
                 if (ListOrders.Count == 0) LoadOrderDetails(DateTime.MinValue, DateTime.MinValue, ORDERSTATUS.Created, "OrderID", OrderID.ToString());
-
                 if (ListOrders.Count == 0) return null;
 
                 Int32 Index = ListOrders.FindIndex(e => e.OrderID == OrderID);
@@ -220,19 +237,6 @@ namespace SalesOrdersReport.Models
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.GetOrderDetailsForOrderID()", ex);
-                throw;
-            }
-        }
-
-        String GenerateNewOrderNumber()
-        {
-            try
-            {
-                return null;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.GenerateNewOrderNumber()", ex);
                 throw;
             }
         }

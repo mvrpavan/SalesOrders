@@ -5,6 +5,8 @@ using System.Text;
 using System.Drawing;
 using System.Xml;
 using System.Data;
+using SalesOrdersReport.Views;
+using SalesOrdersReport.CommonModules;
 
 namespace SalesOrdersReport
 {
@@ -14,6 +16,8 @@ namespace SalesOrdersReport
         public String MainFormTitleText, LogoFileName;
         public Int32 ReportRowsFromTop, ReportAppendRowsAtBottom, LogoImageHeight;
         public string Server="", DatabaseName="", UserName="", Password="";
+        public List<String> ListSQLScriptFiles = new List<String>();
+
         public void ReadSettingsFromNode(XmlNode Node)
         {
             try
@@ -33,6 +37,15 @@ namespace SalesOrdersReport
                 XMLFileUtils.GetAttributeValue(DatabaseNode, "DatabaseName", out DatabaseName);
                 XMLFileUtils.GetAttributeValue(DatabaseNode, "UserName", out UserName);
                 XMLFileUtils.GetAttributeValue(DatabaseNode, "Password", out Password);
+
+                XmlNode SQLScriptsNode;
+                XMLFileUtils.GetChildNode(SettingsNode, "SQLScripts", out SQLScriptsNode);
+                foreach (XmlNode ScriptNode in SQLScriptsNode.ChildNodes)
+                {
+                    String FilePath;
+                    XMLFileUtils.GetAttributeValue(ScriptNode, "FilePath", out FilePath);
+                    ListSQLScriptFiles.Add(FilePath);
+                }
             }
             catch (Exception ex)
             {
