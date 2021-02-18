@@ -52,7 +52,7 @@ namespace SalesOrdersReport
         }
     }
 
-    class SellerDetails : IComparer<SellerDetails>
+    /*class SellerDetails : IComparer<SellerDetails>
     {
         public String Name, Address, TINNumber, Phone, Line, PriceGroup, DiscountGroup, State, StateCode, GSTIN;
         public Int32 LineIndex, PriceGroupIndex, DiscountGroupIndex;
@@ -207,5 +207,5 @@ namespace SalesOrdersReport
             }
             return null;
         }
-    }
+    }*/
 }

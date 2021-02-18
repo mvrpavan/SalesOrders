@@ -12,7 +12,7 @@ using SalesOrdersReport.Models;
 
 namespace SalesOrdersReport.Views
 {
-    public delegate void UpdateProductOnCloseDel(Int32 Mode, Object ObjAddUpdated = null);
+    public delegate void UpdateUsingObjectOnCloseDel(Int32 Mode, Object ObjAddUpdated = null);
 
     public partial class ProductsMainForm : Form
     {

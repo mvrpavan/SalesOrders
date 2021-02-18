@@ -232,7 +232,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(1, new Models.OrdersModel(), true, false), this.Parent.FindForm());
+                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(1, true, false, null), this.Parent.FindForm());
             }
             catch (Exception ex)
             {

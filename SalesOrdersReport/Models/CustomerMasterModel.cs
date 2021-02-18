@@ -848,7 +848,11 @@ namespace SalesOrdersReport.Models
                     ObjCustomerDetails.PriceGroupID = ((dtRow["PRICEGROUPID"] == null) || dtRow["PRICEGROUPID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["PRICEGROUPID"].ToString().Trim());
                     if (ObjCustomerDetails.LineID != -1) ObjCustomerDetails.LineName = ListLineDetails.Where(e => e.LineID.Equals(ObjCustomerDetails.LineID)).FirstOrDefault().LineName;
                     if (ObjCustomerDetails.DiscountGroupID != -1) ObjCustomerDetails.DiscountGroupName = ListDiscountGroupDetails.Where(e => e.DiscountGrpID.Equals(ObjCustomerDetails.DiscountGroupID)).FirstOrDefault().DiscountGrpName;
-                    if (ObjCustomerDetails.PriceGroupID != -1) ObjCustomerDetails.PriceGroupName = ListPriceGroupDetails.Where(e => e.PriceGroupID.Equals(ObjCustomerDetails.PriceGroupID)).FirstOrDefault().PriceGrpName;
+                    if (ObjCustomerDetails.PriceGroupID != -1)
+                    {
+                        ObjCustomerDetails.PriceGroupName = ListPriceGroupDetails.Where(e => e.PriceGroupID.Equals(ObjCustomerDetails.PriceGroupID)).FirstOrDefault().PriceGrpName;
+                        ObjCustomerDetails.PriceGroupIndex = ListPriceGroupDetails.FindIndex(e => e.PriceGroupID.Equals(ObjCustomerDetails.PriceGroupID));
+                    }
                     if (ObjCustomerDetails.StateID != -1) ObjCustomerDetails.State = ListStateDetails.Where(e => e.StateID.Equals(ObjCustomerDetails.StateID)).FirstOrDefault().State;
 
 

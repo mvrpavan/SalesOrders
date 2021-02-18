@@ -15,12 +15,12 @@ namespace SalesOrdersReport.Views
     partial class AddProductForm : Form
     {
         Boolean IsAddProduct = true;
-        UpdateProductOnCloseDel UpdateOnClose = null;
+        UpdateUsingObjectOnCloseDel UpdateOnClose = null;
         Int32 ProductIDToEdit = -1;
         ProductMasterModel ObjProductMaster = null;
         //Dictionary<String, TextBox> DictPriceGroupPrices = new Dictionary<String, TextBox>();
 
-        public AddProductForm(Boolean IsAddProduct, Int32 ProductID, UpdateProductOnCloseDel UpdateOnClose)
+        public AddProductForm(Boolean IsAddProduct, Int32 ProductID, UpdateUsingObjectOnCloseDel UpdateOnClose)
         {
             try
             {

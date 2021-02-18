@@ -604,10 +604,10 @@ namespace SalesOrdersReport.Models
 
                 switch (PriceGroupIndex)
                 {
-                    case 0: return ObjProduct.PurchasePrice;
+                    case 0: return ObjProduct.RetailPrice;
                     case 1: return ObjProduct.WholesalePrice;
-                    case 2: return ObjProduct.RetailPrice;
-                    case 3: return ObjProduct.MaxRetailPrice;
+                    case 2: return ObjProduct.MaxRetailPrice;
+                    case 3: return ObjProduct.PurchasePrice;
                     default: return -1;
                 }
             }

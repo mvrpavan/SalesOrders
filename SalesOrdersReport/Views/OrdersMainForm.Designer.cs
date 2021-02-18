@@ -48,6 +48,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblOrdersCount = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cmbBoxOrderStatus = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewOrders)).BeginInit();
@@ -94,14 +96,16 @@
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.cmbBoxOrderStatus);
+            this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.checkBoxApplyFilter);
             this.groupBox3.Controls.Add(this.dTimePickerTo);
             this.groupBox3.Controls.Add(this.dTimePickerFrom);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(854, 3);
+            this.groupBox3.Location = new System.Drawing.Point(655, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(306, 73);
+            this.groupBox3.Size = new System.Drawing.Size(505, 73);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             // 
@@ -109,7 +113,7 @@
             // 
             this.checkBoxApplyFilter.AutoSize = true;
             this.checkBoxApplyFilter.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.checkBoxApplyFilter.Location = new System.Drawing.Point(229, 28);
+            this.checkBoxApplyFilter.Location = new System.Drawing.Point(424, 28);
             this.checkBoxApplyFilter.Name = "checkBoxApplyFilter";
             this.checkBoxApplyFilter.Size = new System.Drawing.Size(75, 17);
             this.checkBoxApplyFilter.TabIndex = 2;
@@ -119,14 +123,14 @@
             // 
             // dTimePickerTo
             // 
-            this.dTimePickerTo.Location = new System.Drawing.Point(89, 42);
+            this.dTimePickerTo.Location = new System.Drawing.Point(281, 38);
             this.dTimePickerTo.Name = "dTimePickerTo";
             this.dTimePickerTo.Size = new System.Drawing.Size(134, 20);
             this.dTimePickerTo.TabIndex = 1;
             // 
             // dTimePickerFrom
             // 
-            this.dTimePickerFrom.Location = new System.Drawing.Point(89, 14);
+            this.dTimePickerFrom.Location = new System.Drawing.Point(281, 10);
             this.dTimePickerFrom.Name = "dTimePickerFrom";
             this.dTimePickerFrom.Size = new System.Drawing.Size(134, 20);
             this.dTimePickerFrom.TabIndex = 1;
@@ -134,7 +138,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 48);
+            this.label3.Location = new System.Drawing.Point(201, 44);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(74, 13);
             this.label3.TabIndex = 0;
@@ -143,7 +147,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1, 20);
+            this.label2.Location = new System.Drawing.Point(193, 16);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(85, 13);
             this.label2.TabIndex = 0;
@@ -264,20 +268,18 @@
             this.dtGridViewOrders.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dtGridViewOrders.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dtGridViewOrders.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dtGridViewOrders.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
-            this.dtGridViewOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtGridViewOrders.Location = new System.Drawing.Point(12, 127);
             this.dtGridViewOrders.Name = "dtGridViewOrders";
             this.dtGridViewOrders.Size = new System.Drawing.Size(1164, 291);
             this.dtGridViewOrders.TabIndex = 2;
+            this.dtGridViewOrders.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtGridViewOrders_CellMouseClick);
             // 
             // dtGridViewOrderedProducts
             // 
             this.dtGridViewOrderedProducts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dtGridViewOrderedProducts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dtGridViewOrderedProducts.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dtGridViewOrderedProducts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
             this.dtGridViewOrderedProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -318,6 +320,24 @@
             this.lblOrdersCount.Size = new System.Drawing.Size(160, 20);
             this.lblOrdersCount.TabIndex = 4;
             this.lblOrdersCount.Text = "[Displaying all Orders]";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 16);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(66, 13);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Order Status";
+            // 
+            // cmbBoxOrderStatus
+            // 
+            this.cmbBoxOrderStatus.FormattingEnabled = true;
+            this.cmbBoxOrderStatus.Location = new System.Drawing.Point(79, 13);
+            this.cmbBoxOrderStatus.Name = "cmbBoxOrderStatus";
+            this.cmbBoxOrderStatus.Size = new System.Drawing.Size(101, 21);
+            this.cmbBoxOrderStatus.TabIndex = 4;
+            this.cmbBoxOrderStatus.SelectedIndexChanged += new System.EventHandler(this.cmbBoxOrderStatus_SelectedIndexChanged);
             // 
             // OrdersMainForm
             // 
@@ -372,5 +392,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblOrdersCount;
+        private System.Windows.Forms.ComboBox cmbBoxOrderStatus;
+        private System.Windows.Forms.Label label4;
     }
 }

@@ -64,6 +64,11 @@ namespace SalesOrdersReport.Views
                     ObjRunDBScript.ExecuteOneTimeExecutionScript();
                 }
 
+                //{
+                //    RunDBScript ObjRunDBScript = new RunDBScript();
+                //    ObjRunDBScript.CreateRunningTables();
+                //}
+
                 //TODO: Load all tables to memory here
                 lblLoadingStatus.Text = "Loading User tables...";
                 CommonFunctions.ObjUserMasterModel.LoadAllUserMasterTables();

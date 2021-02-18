@@ -12,12 +12,12 @@ namespace SalesOrdersReport.Views
     public partial class AddTaxForm : Form
     {
         Boolean IsAddTax = false;
-        UpdateProductOnCloseDel UpdateOnClose = null;
+        UpdateUsingObjectOnCloseDel UpdateOnClose = null;
         DataTable dtAllHSNCodes = new DataTable();
         ProductMasterModel ObjProductMasterModel = CommonFunctions.ObjProductMaster;
         Int32 TaxIDToEdit = -1;
 
-        public AddTaxForm(Boolean IsAddTax, Int32 TaxID, UpdateProductOnCloseDel UpdateOnClose)
+        public AddTaxForm(Boolean IsAddTax, Int32 TaxID, UpdateUsingObjectOnCloseDel UpdateOnClose)
         {
             try
             {

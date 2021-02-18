@@ -374,11 +374,12 @@ namespace SalesOrdersReport.CommonModules
                     "CreationDate, datetime NOT NULL",
                     "LastUpdatedDate, datetime NOT NULL",
                     "CustomerID, smallint(5) NOT NULL",
-                    "EstimateOrderAmount, float DEFAULT NULL",
+                    "OrderItemCount, smallint(5) DEFAULT 0",
+                    "EstimateOrderAmount, float DEFAULT 0",
                     "OrderStatus, varchar(20) DEFAULT NULL",      //Placed/Completed/Cancelled/Void
-                    "DateDelivered, datetime NOT NULL",
-                    "DateInvoiceCreated, datetime NOT NULL",
-                    "DateQuotationCreated, datetime NOT NULL",
+                    "DateDelivered, datetime NULL",
+                    "DateInvoiceCreated, datetime NULL",
+                    "DateQuotationCreated, datetime NULL",
                     "PRIMARY KEY, OrderID"
                 };
                 ObjMySQLHelper.CreateTable("Orders", TableColumns);

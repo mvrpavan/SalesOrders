@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
-using System.IO;
 using SalesOrdersReport.Models;
 using SalesOrdersReport.CommonModules;
 
@@ -22,13 +18,10 @@ namespace SalesOrdersReport.Views
         CustomerDetails CurrSellerDetails;
         DiscountGroupDetails1 CurrSellerDiscountGroup;
         SellerOrderDetails CurrSellerOrderDetails;
-        Dictionary<String, Int32> DictItemToColIndexes, DictSellerToRowIndexes;
-        List<SellerOrderDetails> ListSellerOrderDetails;
         Int32 CategoryColIndex = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4, OrdQtyColIndex = 3, SaleQtyColIndex = 4, ItemSelectionSelectColIndex = 5;
         Int32 PaddingSpace = 6;
         Char PaddingChar = CommonFunctions.PaddingChar, CurrencyChar = CommonFunctions.CurrencyChar;
         Int32 BackgroundTask = -1;
-        Excel.Application xlApp;
         List<Int32> ListSelectedRowIndexesToAdd = new List<Int32>();
         Dictionary<String, DataGridViewRow> DictItemsSelected = new Dictionary<String, DataGridViewRow>();
         Boolean ValueChanged = false;
@@ -40,23 +33,29 @@ namespace SalesOrdersReport.Views
         Int32 cmbBoxBillNumberIndex = -1;
         Double OriginalBalanceAmount = -1;
         Int32 CurrentOrderID = -1;
-        OrdersModel ObjOrdersModel = null;
-        Boolean IsNewOrder = false;
 
-        public CreateOrderInvoiceForm(Int32 OrderID, OrdersModel ObjOrdersModel, Boolean IsSellerOrder, Boolean IsCustomerBill)
+        ProductMasterModel ObjProductMasterModel = CommonFunctions.ObjProductMaster;
+        CustomerMasterModel ObjCustomerMasterModel = CommonFunctions.ObjCustomerMasterModel;
+        OrdersModel ObjOrdersModel = new OrdersModel();
+        Boolean IsNewOrder = false;
+        UpdateUsingObjectOnCloseDel UpdateObjectOnClose;
+
+        public CreateOrderInvoiceForm(Int32 OrderID, Boolean IsSellerOrder, Boolean IsCustomerBill, UpdateUsingObjectOnCloseDel UpdateObjectOnClose)
         {
             try
             {
                 InitializeComponent();
                 CommonFunctions.ResetProgressBar();
+                this.ObjOrdersModel.Initialize();
 
                 if (IsSellerOrder)
                 {
                     IsNewOrder = (OrderID < 0);
                     if (IsNewOrder)
                     {
-                        FormTitle = "Create Order";
-                        btnCreateInvOrd.Text = "Create Order";
+                        FormTitle = "Create New Order";
+                        btnCreateInvOrd.Text = "Create New Order";
+                        txtBoxInvOrdNumber.Text = this.ObjOrdersModel.GenerateNewOrderNumber();
                     }
                     else
                     {
@@ -64,14 +63,15 @@ namespace SalesOrdersReport.Views
                         btnCreateInvOrd.Text = "Update Order";
                     }
                     OrderInvoice = "Order";
-                    txtBoxInvOrdNumber.Enabled = false;
 
                     lblSelectName.Text = "Choose Customer";
                     lblInvoiceNumber.Text = "Order#";
                     lblInvoiceDate.Text = "Order Date";
 
-                    lblInvoiceNumber.Visible = false;
-                    txtBoxInvOrdNumber.Visible = false;
+                    lblInvoiceNumber.Visible = true;
+                    txtBoxInvOrdNumber.Enabled = true;
+                    txtBoxInvOrdNumber.Visible = true;
+                    txtBoxInvOrdNumber.ReadOnly = true;
                     btnDiscount.Enabled = false;
                     lblStatus.Text = "";
 
@@ -104,9 +104,10 @@ namespace SalesOrdersReport.Views
                 picBoxLoading.Visible = false;
                 dtGridViewProdListForSelection.SelectionMode = DataGridViewSelectionMode.CellSelect;
                 dtGridViewInvOrdProdList.SelectionMode = DataGridViewSelectionMode.CellSelect;
+                this.UpdateObjectOnClose = UpdateObjectOnClose;
 
                 CurrentOrderID = OrderID;
-                this.ObjOrdersModel = ObjOrdersModel;
+                //this.ObjOrdersModel = ObjOrdersModel;
             }
             catch (Exception ex)
             {
@@ -115,12 +116,63 @@ namespace SalesOrdersReport.Views
             }
         }
 
+        private void EditCustomerOrder()
+        {
+            try
+            {
+                if (IsSellerOrder)
+                {
+                    CurrSellerOrderDetails = new SellerOrderDetails();
+                    CurrSellerOrderDetails.SellerName = CurrSellerDetails.CustomerName;
+                    CurrSellerOrderDetails.CurrOrderDetailsOrig = ObjOrdersModel.GetOrderDetailsForCustomer(dtTmPckrInvOrdDate.Value, CurrSellerDetails.CustomerID);
+                    if (CurrSellerOrderDetails.CurrOrderDetailsOrig != null)
+                    {
+                        CurrSellerOrderDetails.CurrOrderDetailsOrig = CurrSellerOrderDetails.CurrOrderDetailsOrig.Clone();
+                        CurrSellerOrderDetails.CurrOrderDetails = CurrSellerOrderDetails.CurrOrderDetailsOrig.Clone();
+                    }
+                    else
+                    {
+                        CurrentOrderID = -1;
+                    }
+
+                    CurrSellerDiscountGroup = ObjCustomerMasterModel.GetCustomerDiscount(CurrSellerDetails.CustomerName);
+                    if (CurrSellerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
+                        DiscountPerc = CurrSellerDiscountGroup.Discount;
+                    else if (CurrSellerDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
+                        DiscountValue = CurrSellerDiscountGroup.Discount;
+
+                    picBoxLoading.Visible = true;
+                    lblStatus.Text = "Loading Seller order data. Please wait...";
+                    BackgroundTask = 2;
+                    //if (CurrSellerOrderDetails.OrderItemCount > 0)
+                    {
+#if DEBUG
+                        backgroundWorker1_DoWork(null, null);
+                        backgroundWorker1_RunWorkerCompleted(null, null);
+#else
+                        ReportProgress = backgroundWorker1.ReportProgress;
+                        backgroundWorker1.RunWorkerAsync();
+                        backgroundWorker1.WorkerReportsProgress = true;
+#endif
+                    }
+                    //else
+                    //{
+                    //    backgroundWorker1_RunWorkerCompleted(null, null);
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.EditCustomerOrder()", ex);
+            }
+        }
+
         private void CreateOrderInvoiceForm_Load(object sender, EventArgs e)
         {
             try
             {
                 //Populate cmbBoxSellerCustomer with Seller Names
-                ListSellerNames = CommonFunctions.ObjCustomerMasterModel.GetCustomerList();
+                ListSellerNames = ObjCustomerMasterModel.GetCustomerList();
                 cmbBoxSellerCustomer.DataSource = ListSellerNames;
                 cmbBoxSellerCustomer.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 cmbBoxSellerCustomer.AutoCompleteSource = AutoCompleteSource.ListItems;
@@ -144,6 +196,24 @@ namespace SalesOrdersReport.Views
                 cmbBoxProduct.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 cmbBoxProduct.AutoCompleteSource = AutoCompleteSource.ListItems;
                 cmbBoxProduct.SelectedIndex = -1;
+
+                if (CurrentOrderID > 0)
+                {
+                    OrderDetails ObjOrderDetails = ObjOrdersModel.GetOrderDetailsForOrderID(CurrentOrderID);
+                    cmbBoxSellerCustomer.SelectedIndex = cmbBoxSellerCustomer.Items.IndexOf(ObjOrderDetails.CustomerName);
+                    cmbBoxSellerCustomerIndex = cmbBoxSellerCustomer.SelectedIndex;
+                    CurrSellerOrderDetails = null;
+                    CurrSellerDetails = null;
+                    CurrSellerDiscountGroup = null;
+                    ResetControls();
+
+                    //Load Selected Seller Order Details
+                    String SellerName = cmbBoxSellerCustomer.SelectedValue.ToString().Trim();
+                    CurrSellerDetails = ObjCustomerMasterModel.GetCustomerDetails(SellerName);
+                    UpdateCustomerDetails();
+
+                    EditCustomerOrder();
+                }
             }
             catch (Exception ex)
             {
@@ -160,8 +230,11 @@ namespace SalesOrdersReport.Views
                 this.WindowState = FormWindowState.Normal;
                 this.StartPosition = FormStartPosition.CenterScreen;
 
-                ResetControls();
-                EnableItemsPanel(false);
+                if (CurrentOrderID < 0)
+                {
+                    ResetControls();
+                    EnableItemsPanel(false);
+                }
 
                 LoadCompleted = true;
             }
@@ -195,26 +268,51 @@ namespace SalesOrdersReport.Views
                     //Update Order Details to CurrSellerOrderDetails
                     if (CurrSellerOrderDetails == null) return;
 
-                    DialogResult diagResult = MessageBox.Show(this, "Confirm to Create/Update Seller Order", "Create Seller Order", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    DialogResult diagResult = MessageBox.Show(this, "Confirm to Create/Update Customer Order", "Create Customer Order", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                     if (diagResult == DialogResult.No) return;
 
-                    for (int i = 0; i < CurrSellerOrderDetails.ListItemQuantity.Count; i++)
-                    {
-                        CurrSellerOrderDetails.ListItemQuantity[i] = 0;
-                    }
+                    CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems.Clear();
+                    CurrSellerOrderDetails.CurrOrderDetails.OrderItemCount = 0;
 
+                    Boolean OrderModified = false;
                     foreach (DataGridViewRow item in dtGridViewInvOrdProdList.Rows)
                     {
                         String ItemName = item.Cells[ItemColIndex].Value.ToString();
-                        CurrSellerOrderDetails.ListItemQuantity[DictItemToColIndexes[ItemName.ToUpper()]] = Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString());
+                        ProductDetails tmpProductDetails = ObjProductMasterModel.GetProductDetails(ItemName);
+                        CurrSellerOrderDetails.CurrOrderDetails.OrderItemCount += 1;
+                        OrderItemDetails tmpOrderItemDetails = new OrderItemDetails()
+                        {
+                            ProductID = tmpProductDetails.ProductID,
+                            ProductName = ItemName,
+                            OrderQty = Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString()),
+                            Price = Double.Parse(item.Cells[PriceColIndex].Value.ToString()),
+                            OrderItemStatus = ORDERITEMSTATUS.Ordered
+                        };
+                        CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems.Add(tmpOrderItemDetails);
+
+                        if (!OrderModified && CurrSellerOrderDetails.CurrOrderDetailsOrig != null)
+                        {
+                            if (CurrSellerOrderDetails.CurrOrderDetailsOrig.ListOrderItems != null)
+                            {
+                                List<OrderItemDetails> ListOrderItems = CurrSellerOrderDetails.CurrOrderDetailsOrig.ListOrderItems;
+                                Int32 Index = ListOrderItems.FindIndex(s => s.ProductID == tmpProductDetails.ProductID);
+                                if (Index >= 0 && Math.Abs(ListOrderItems[Index].OrderQty - tmpOrderItemDetails.OrderQty) > 0)
+                                {
+                                    OrderModified = true;
+                                }
+                            }
+                        }
                     }
-                    CurrSellerOrderDetails.OrderItemCount = CurrSellerOrderDetails.ListItemQuantity.Count(s => s > 0);
+                    CurrSellerOrderDetails.CurrOrderDetails.OrderItemCount = CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems.Count;
+                    CurrSellerOrderDetails.OrderItemCount = CurrSellerOrderDetails.CurrOrderDetails.OrderItemCount;
 
                     picBoxLoading.Visible = true;
-                    lblStatus.Text = "Creating/Updating Seller order in Sales order file. Please wait...";
                     BackgroundTask = 3;
-                    if (CurrSellerOrderDetails.ListItemQuantity.Zip(CurrSellerOrderDetails.ListItemOrigQuantity, (x, y) => Math.Abs(x - y)).Sum() > 0)
+                    //if (OrderModified || CurrSellerOrderDetails.CurrOrderDetails.OrderID < 0)
+                    if (BackgroundTask == 3)
                     {
+                        if (OrderModified) lblStatus.Text = "Updating Customer order, please wait...";
+                        else lblStatus.Text = "Creating Customer order, please wait...";
 #if DEBUG
                         backgroundWorker1_DoWork(null, null);
                         backgroundWorker1_RunWorkerCompleted(null, null);
@@ -227,6 +325,7 @@ namespace SalesOrdersReport.Views
                     else
                     {
                         BackgroundTask = 7;
+                        lblStatus.Text = "Creating Customer order, please wait...";
 #if DEBUG
                         backgroundWorker1_DoWork(null, null);
                         backgroundWorker1_RunWorkerCompleted(null, null);
@@ -285,15 +384,18 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        void UpdateSalesOrderSheetForCurrSeller()
+        void UpdateSalesOrder()
         {
             try
             {
-                ObjOrdersModel.UpdateOrderDetails(CurrSellerOrderDetails.CurrOrderDetails);
+                if (CurrSellerOrderDetails.CurrOrderDetails.OrderID < 0)
+                    ObjOrdersModel.CreateNewOrderForCustomer(CurrSellerDetails.CustomerID, dtTmPckrInvOrdDate.Value, CurrSellerOrderDetails.CurrOrderDetails.OrderNumber, CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems);
+                else
+                    ObjOrdersModel.UpdateOrderDetails(CurrSellerOrderDetails.CurrOrderDetails);
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.UpdateSalesOrderSheetForCurrSeller()", ex);
+                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.UpdateSalesOrder()", ex);
             }
         }
 
@@ -320,7 +422,7 @@ namespace SalesOrdersReport.Views
                     CurrentOrderID = CurrentOrderDetails.OrderID;
                 }
 
-                CurrSellerOrderDetails.CurrOrderDetails = CurrentOrderDetails;
+                CurrSellerOrderDetails.CurrOrderDetails = CurrentOrderDetails.Clone();
                 CurrSellerOrderDetails.CurrOrderDetailsOrig = CurrentOrderDetails.Clone();
             }
             catch (Exception ex)
@@ -450,13 +552,12 @@ namespace SalesOrdersReport.Views
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            xlApp = new Excel.Application();
             try
             {
                 switch (BackgroundTask)
                 {
                     case 1:     //Load Sales Order Sheet
-                        //if (IsSellerOrder) LoadSalesOrderSheet();
+                        //if (IsSellerOrder) LoadOrders();
                         break;
                     case 2:     //Load Seller Order details
                         LoadSalesOrderForCurrSeller();
@@ -464,8 +565,8 @@ namespace SalesOrdersReport.Views
                     case 3:     //Update Seller Order details
                         if (IsSellerOrder)
                         {
-                            UpdateSalesOrderSheetForCurrSeller();
-                            CreateSalesInvoiceForCurrOrder(ReportType.QUOTATION, false, true);
+                            UpdateSalesOrder();
+                            //CreateSalesInvoiceForCurrOrder(ReportType.QUOTATION, false, true);
                         }
                         break;
                     case 5:     //Create default or load Invoice and Quotation file
@@ -474,8 +575,7 @@ namespace SalesOrdersReport.Views
                     case 6:     //Load Seller Invoice/Quotation details
                         break;
                     case 7:
-                        if (IsSellerOrder)
-                            CreateSalesInvoiceForCurrOrder(ReportType.QUOTATION, false, true);
+                        //if (IsSellerOrder) CreateSalesInvoiceForCurrOrder(ReportType.QUOTATION, false, true);
                         break;
                     default:
                         break;
@@ -485,11 +585,6 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.backgroundWorker1_DoWork()", ex);
-            }
-            finally
-            {
-                xlApp.Quit();
-                CommonFunctions.ReleaseCOMObject(xlApp);
             }
         }
 
@@ -505,35 +600,44 @@ namespace SalesOrdersReport.Views
                 switch (BackgroundTask)
                 {
                     case 1:     //Load all Sellers
-                        break;
-                    case 2:     //Load Seller Order for Current Seller
-                        if (CurrSellerOrderDetails.OrderItemCount == 0)
+                        EnableItemsPanel(false);
+                        picBoxLoading.Visible = false;
+                        if (IsSellerOrder)
                         {
-                            CurrSellerOrderDetails.ListItemQuantity = new List<Double>();
-                            CurrSellerOrderDetails.ListItemOrigQuantity = new List<Double>();
-                            for (int i = 0; i < DictItemToColIndexes.Count; i++)
-                            {
-                                CurrSellerOrderDetails.ListItemQuantity.Add(0);
-                                CurrSellerOrderDetails.ListItemOrigQuantity.Add(0);
-                            }
+                            dtTmPckrInvOrdDate.Enabled = false;
+                            lblStatus.Text = "Choose a Customer to create/update Order";
+                            cmbBoxSellerCustomer.Enabled = true;
+                            cmbBoxSellerCustomer.Focus();
+                        }
+                        break;
+                    case 2:     //Load Order for Current Customer
+                        if (CurrSellerOrderDetails.CurrOrderDetails == null)
+                        {
+                            CurrSellerOrderDetails.CurrOrderDetails = new OrderDetails();
+                            CurrSellerOrderDetails.CurrOrderDetails.OrderID = -1;
+                            CurrSellerOrderDetails.CurrOrderDetails.CustomerID = CurrSellerDetails.CustomerID;
+                            CurrSellerOrderDetails.CurrOrderDetails.OrderNumber = txtBoxInvOrdNumber.Text;
+                            CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems = new List<OrderItemDetails>();
                         }
                         else
                         {
-                            foreach (ProductDetails item in ListAllProducts)
+                            if (CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems == null || CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems.Count == 0)
+                                ObjOrdersModel.FillOrderItemDetails(CurrSellerOrderDetails.CurrOrderDetails);
+                            foreach (var item in CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems)
                             {
-                                if (!DictItemToColIndexes.ContainsKey(item.ItemName.ToUpper())) continue;
-                                Double Qty = CurrSellerOrderDetails.ListItemQuantity[DictItemToColIndexes[item.ItemName.ToUpper()]];
-                                if (Qty <= 0) continue;
+                                if (item.OrderQty <= 0) continue;
 
                                 Object[] row = new Object[6];
-                                row[CategoryColIndex] = item.CategoryName; row[ItemColIndex] = item.ItemName;
-                                Double Price = CommonFunctions.ObjProductMaster.GetPriceForProduct(item.ItemName, CurrSellerDetails.PriceGroupIndex);
-                                row[PriceColIndex] = Price.ToString("F");
-                                row[OrdQtyColIndex] = Qty; row[SaleQtyColIndex] = Qty; row[ItemSelectionSelectColIndex] = false;
+                                row[CategoryColIndex] = ObjProductMasterModel.GetProductDetails(item.ProductID).CategoryName;
+                                row[ItemColIndex] = item.ProductName;
+                                row[PriceColIndex] = item.Price.ToString("F");
+                                row[OrdQtyColIndex] = item.OrderQty; row[SaleQtyColIndex] = item.OrderQty; row[ItemSelectionSelectColIndex] = false;
 
                                 Int32 Index = dtGridViewInvOrdProdList.Rows.Add(row);
-                                DictItemsSelected.Add(item.ItemName, dtGridViewInvOrdProdList.Rows[Index]);
+                                DictItemsSelected.Add(item.ProductName, dtGridViewInvOrdProdList.Rows[Index]);
                             }
+                            btnCreateInvOrd.Text = "Update Order";
+                            txtBoxInvOrdNumber.Text = CurrSellerOrderDetails.CurrOrderDetails.OrderNumber;
                         }
                         lblStatus.Text = "Add/Modify Items to Seller Sales order";
 
@@ -885,19 +989,13 @@ namespace SalesOrdersReport.Views
 
                 if (IsSellerOrder)
                 {
-                    if (DictSellerToRowIndexes == null)
-                    {
-                        cmbBoxSellerCustomerIndex = cmbBoxSellerCustomer.SelectedIndex;
-                        return;
-                    }
-
                     //Check if the Order is changed before changing Seller
                     Boolean WarnUser = false;
                     if (CurrSellerOrderDetails != null)
                     {
                         if (cmbBoxSellerCustomer.SelectedIndex == cmbBoxSellerCustomerIndex) return;
 
-                        if (dtGridViewInvOrdProdList.Rows.Count != CurrSellerOrderDetails.ListItemQuantity.Count(s => s > 0))
+                        if (dtGridViewInvOrdProdList.Rows.Count != CurrSellerOrderDetails.OrderItemCount)
                         {
                             WarnUser = true;
                         }
@@ -906,7 +1004,7 @@ namespace SalesOrdersReport.Views
                             foreach (DataGridViewRow item in dtGridViewInvOrdProdList.Rows)
                             {
                                 String ItemName = item.Cells[ItemColIndex].Value.ToString();
-                                Double Qty = CurrSellerOrderDetails.ListItemQuantity[DictItemToColIndexes[ItemName.ToUpper()]];
+                                Double Qty = CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems.Find(s => s.ProductName.Equals(ItemName.ToUpper(), StringComparison.InvariantCulture)).OrderQty;
 
                                 if (Qty != Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString()))
                                 {
@@ -934,48 +1032,10 @@ namespace SalesOrdersReport.Views
 
                     //Load Selected Seller Order Details
                     String SellerName = cmbBoxSellerCustomer.SelectedValue.ToString().Trim();
-                    if (!DictSellerToRowIndexes.ContainsKey(SellerName.ToUpper()))
-                    {
-                        MessageBox.Show(this, "Selected Seller does not exist in Sales Order Sheet\nChoose another Seller or Recreate Sales Order with all Sellers", "Seller Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    Int32 SellerIndex = ListSellerOrderDetails.FindIndex(s => s.SellerName.Equals(SellerName, StringComparison.InvariantCultureIgnoreCase));
-                    if (SellerIndex < 0)
-                    {
-                        MessageBox.Show(this, "Selected Seller does not exist in Seller Master\nChoose another Seller or Recreate Sales Order with all Sellers", "Seller Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
+                    CurrSellerDetails = ObjCustomerMasterModel.GetCustomerDetails(SellerName);
                     UpdateCustomerDetails();
-                    CurrSellerOrderDetails = ListSellerOrderDetails[SellerIndex];
-                    CurrSellerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CurrSellerOrderDetails.SellerName);
-                    CurrSellerDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(CurrSellerDetails.CustomerName);
-                    if (CurrSellerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
-                        DiscountPerc = CurrSellerDiscountGroup.Discount;
-                    else if (CurrSellerDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
-                        DiscountValue = CurrSellerDiscountGroup.Discount;
-                    CurrSellerOrderDetails.ListItemQuantity = null;
-                    CurrSellerOrderDetails.ListItemOrigQuantity = null;
 
-                    picBoxLoading.Visible = true;
-                    lblStatus.Text = "Loading Seller order data from Sales order file. Please wait...";
-                    BackgroundTask = 2;
-                    if (CurrSellerOrderDetails.OrderItemCount > 0)
-                    {
-#if DEBUG
-                        backgroundWorker1_DoWork(null, null);
-                        backgroundWorker1_RunWorkerCompleted(null, null);
-#else
-                        ReportProgress = backgroundWorker1.ReportProgress;
-                        backgroundWorker1.RunWorkerAsync();
-                        backgroundWorker1.WorkerReportsProgress = true;
-#endif
-                    }
-                    else
-                    {
-                        backgroundWorker1_RunWorkerCompleted(null, null);
-                    }
+                    EditCustomerOrder();
                 }
             }
             catch (Exception ex)
@@ -1384,314 +1444,26 @@ namespace SalesOrdersReport.Views
         {
             try
             {
+                EnableItemsPanel(false);
+
+                if (IsSellerOrder)
+                {
+                    picBoxLoading.Visible = true;
+                    lblStatus.Text = "Loading data, please wait.....";
+                    BackgroundTask = 1;
+#if DEBUG
+                    backgroundWorker1_DoWork(null, null);
+                    backgroundWorker1_RunWorkerCompleted(null, null);
+#else
+                    ReportProgress = backgroundWorker1.ReportProgress;
+                    backgroundWorker1.RunWorkerAsync();
+                    backgroundWorker1.WorkerReportsProgress = true;
+#endif
+                }
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.dtTmPckrInvOrdDate_ValueChanged()", ex);
-            }
-        }
-
-        List<ReportType> DefaultSaleReportTypesToCreate = new List<ReportType>();
-        List<ReportType> DefaultSaleReportTypesToLoad = new List<ReportType>();
-
-        void CreateSalesInvoiceForCurrOrder(ReportType EnumReportType, Boolean CreateSummarySheet = true, Boolean IsDummyBill = false)
-        {
-            try
-            {
-                Boolean PrintOldBalance = false;
-                ReportSettings CurrReportSettings = null;
-                String BillNumberText = "", SaveFileName = "";
-                String OutputFolder = "";// Path.GetDirectoryName(MasterFilePath);
-                String SelectedDateTimeString = dtTmPckrInvOrdDate.Value.ToString("dd-MM-yyyy");
-                Boolean PrintBill = false;
-                String InvoiceQuotation = "";
-                List<String> ListSheetNames = null;
-                Boolean CreateSummary = false;
-                switch (EnumReportType)
-                {
-                    case ReportType.INVOICE:
-                        CurrReportSettings = CommonFunctions.ObjInvoiceSettings;
-                        BillNumberText = "Invoice#";
-                        SaveFileName = OutputFolder + "\\Invoice_" + SelectedDateTimeString + ".xlsx";
-                        InvoiceQuotation = "Invoice";
-                        PrintBill = CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatInvoice;
-                        ListSheetNames = ListCustomerInvoiceSheetNames;
-                        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0);
-                        break;
-                    case ReportType.QUOTATION:
-                        CurrReportSettings = CommonFunctions.ObjQuotationSettings;
-                        PrintOldBalance = true;
-                        BillNumberText = "Quotation#";
-                        SaveFileName = OutputFolder + "\\Quotation_" + SelectedDateTimeString + ".xlsx";
-                        InvoiceQuotation = "Quotation";
-                        PrintBill = CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatQuotation;
-                        ListSheetNames = ListCustomerQuotationSheetNames;
-                        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1);
-                        break;
-                    default:
-                        return;
-                }
-                CreateSummary &= CreateSummarySheet;
-                if (IsDummyBill)
-                {
-                    SaveFileName = Path.GetDirectoryName(SaveFileName) + "\\" + Path.GetFileNameWithoutExtension(SaveFileName) + "_Dummy" + Path.GetExtension(SaveFileName);
-                }
-
-                Boolean IsExistingBill = (IsDummyBill ? false : !cmbBoxBillNumber.SelectedItem.ToString().Equals("<New>"));
-                Int32 InvoiceNumber = CurrReportSettings.LastNumber + 1;
-                if (IsExistingBill) InvoiceNumber = Int32.Parse(cmbBoxBillNumber.SelectedItem.ToString());
-                Int32 ValidItemCount = dtGridViewInvOrdProdList.Rows.Count;
-                Int32 ProgressBarCount = ValidItemCount;
-                Int32 Counter = 0, SLNo = 0;
-                Double Quantity, Price;
-                String OrderQuantity = "";
-
-                SLNo = 0;
-                CustomerDetails ObjCurrentSeller = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxSellerCustomer.SelectedValue.ToString());
-                DiscountGroupDetails1 ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
-
-                Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
-                ObjInvoice.SerialNumber = (IsDummyBill ? "Dummy" : InvoiceNumber.ToString());
-                ObjInvoice.InvoiceNumberText = BillNumberText;
-                ObjInvoice.ObjSellerDetails = ObjCurrentSeller.Clone();
-                ObjInvoice.OldBalance = Double.Parse(lblBalanceAmountValue.Text);
-                ObjInvoice.CurrReportSettings = CurrReportSettings;
-                ObjInvoice.DateOfInvoice = dtTmPckrInvOrdDate.Value;
-                ObjInvoice.PrintOldBalance = PrintOldBalance;
-                ObjInvoice.UseNumberToWordsFormula = false;
-                ObjInvoice.ListProducts = new List<ProductDetailsForInvoice>();
-
-                Excel.Workbook xlWorkbook = (IsDummyBill ? xlApp.Workbooks.Add() : xlApp.Workbooks.Open(SaveFileName));
-                Excel.Worksheet xlWorkSheet = null;
-
-                #region Change SheetName
-                String SheetName = "";
-                if (IsExistingBill)
-                {
-                    SheetName = DictCurrCustomerBillNumItemDetails[InvoiceNumber.ToString()].Item1;
-                    xlWorkSheet = CommonFunctions.GetWorksheet(xlWorkbook, SheetName);
-                    xlApp.DisplayAlerts = false;
-                    xlWorkSheet.Cells.Clear();
-                    xlApp.DisplayAlerts = true;
-                }
-                else
-                {
-                    xlWorkSheet = xlWorkbook.Worksheets.Add(Type.Missing, xlWorkbook.Sheets[xlWorkbook.Sheets.Count]);
-
-                    SheetName = ObjCurrentSeller.CustomerName.Replace(":", "").Replace("\\", "").Replace("/", "").
-                            Replace("?", "").Replace("*", "").Replace("[", "").Replace("]", "");
-                    SheetName = ((SheetName.Length > 30) ? SheetName.Substring(0, 30) : SheetName);
-                    Int32 SheetSuffix = 0;
-                    Boolean ContainsCustomerSheet = false;
-                    if (ListSheetNames.Count > 0)
-                    {
-                        for (int i = 0; i < ListSheetNames.Count; i++)
-                        {
-                            if (ListSheetNames[i].Contains(SheetName))
-                            {
-                                String NumberStr = ListSheetNames[i].Replace(SheetName, "").Trim();
-                                Int32 Number;
-                                if (Int32.TryParse(NumberStr, out Number))
-                                {
-                                    SheetSuffix = Math.Max(Number, SheetSuffix);
-                                }
-                                ContainsCustomerSheet = true;
-                            }
-                        }
-
-                        if (ContainsCustomerSheet || SheetSuffix > 0)
-                        {
-                            SheetSuffix++;
-                            SheetName += " " + SheetSuffix;
-                        }
-                    }
-                    ListSheetNames.Add(SheetName);
-                }
-                ObjInvoice.SheetName = SheetName;
-                #endregion
-
-                #region Print Invoice Items
-                String ItemName;
-                for (int i = 0; i < dtGridViewInvOrdProdList.Rows.Count; i++)
-                {
-                    Counter++;
-                    ReportProgressFunc((Counter * 100) / ProgressBarCount);
-
-                    OrderQuantity = dtGridViewInvOrdProdList.Rows[i].Cells[OrdQtyColIndex].Value.ToString();
-                    Quantity = Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[SaleQtyColIndex].Value.ToString());
-                    ItemName = dtGridViewInvOrdProdList.Rows[i].Cells[ItemColIndex].Value.ToString();
-                    if (Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[SaleQtyColIndex].Value.ToString()) == 0) continue;
-                    Price = Double.Parse(dtGridViewInvOrdProdList.Rows[i].Cells[PriceColIndex].Value.ToString());
-                    Price = Price / ((CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(ItemName).Sum() + 100) / 100);
-
-                    SLNo++;
-                    ProductDetailsForInvoice ObjProductDetailsForInvoice = new ProductDetailsForInvoice();
-                    ProductDetails ObjProductDetails = CommonFunctions.ObjProductMaster.GetProductDetails(ItemName);
-                    if (ObjProductDetails == null)
-                    {
-                        xlWorkbook.Close();
-                        CommonFunctions.ReleaseCOMObject(xlWorkbook);
-                        MessageBox.Show(this, "Unable to find Item \"" + ItemName + "\" in ItemMaster", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                    ObjProductDetailsForInvoice.SerialNumber = SLNo;
-                    ObjProductDetailsForInvoice.Description = ObjProductDetails.ItemName;
-                    ObjProductDetailsForInvoice.HSNCode = ObjProductDetails.HSNCode;
-                    ObjProductDetailsForInvoice.UnitsOfMeasurement = ObjProductDetails.UnitsOfMeasurement;
-                    ObjProductDetailsForInvoice.OrderQuantity = OrderQuantity;
-                    ObjProductDetailsForInvoice.SaleQuantity = (IsDummyBill ? 0 : Quantity);
-                    ObjProductDetailsForInvoice.Rate = Price; //CommonFunctions.ObjProductMaster.GetPriceForProduct(ObjProductDetails.ItemName, ObjCurrentSeller.PriceGroupIndex);
-
-                    Double[] TaxRates = CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(ObjProductDetails.ItemName);
-                    ObjProductDetailsForInvoice.CGSTDetails = new TaxDetails();
-                    ObjProductDetailsForInvoice.CGSTDetails.TaxRate = TaxRates[0] / 100;
-                    ObjProductDetailsForInvoice.SGSTDetails = new TaxDetails();
-                    ObjProductDetailsForInvoice.SGSTDetails.TaxRate = TaxRates[1] / 100;
-                    ObjProductDetailsForInvoice.IGSTDetails = new TaxDetails();
-                    ObjProductDetailsForInvoice.IGSTDetails.TaxRate = TaxRates[2] / 100;
-                    ObjProductDetailsForInvoice.DiscountGroup = ObjDiscountGroup.Clone();
-                    if (DiscountPerc > 0)
-                    {
-                        ObjProductDetailsForInvoice.DiscountGroup.DiscountType = DiscountTypes.PERCENT;
-                        ObjProductDetailsForInvoice.DiscountGroup.Discount = DiscountPerc;
-                    }
-                    else if (DiscountValue > 0)
-                    {
-                        ObjProductDetailsForInvoice.DiscountGroup.DiscountType = DiscountTypes.ABSOLUTE;
-                        ObjProductDetailsForInvoice.DiscountGroup.Discount = (DiscountValue / dtGridViewInvOrdProdList.Rows.Count);
-                    }
-                    ObjInvoice.ListProducts.Add(ObjProductDetailsForInvoice);
-                }
-                #endregion
-
-                #region Discount
-                if (EnumReportType == ReportType.INVOICE)
-                {
-                    ObjInvoice.CreateInvoice(xlWorkSheet);
-                }
-                else if (EnumReportType == ReportType.QUOTATION)
-                {
-                    //Override Discount and rollback after creating Quotation
-                    DiscountGroupDetails1 OrigDiscountGroup = ObjDiscountGroup.Clone();
-                    if (DiscountPerc > 0)
-                    {
-                        ObjDiscountGroup.DiscountType = DiscountTypes.PERCENT;
-                        ObjDiscountGroup.Discount = DiscountPerc;
-                    }
-                    else if (DiscountValue > 0)
-                    {
-                        ObjDiscountGroup.DiscountType = DiscountTypes.ABSOLUTE;
-                        ObjDiscountGroup.Discount = DiscountValue;
-                    }
-                    ObjInvoice.CreateInvoice(xlWorkSheet);
-                    ObjDiscountGroup.DiscountType = OrigDiscountGroup.DiscountType;
-                    ObjDiscountGroup.Discount = OrigDiscountGroup.Discount;
-                }
-                #endregion
-
-                #region Update Seller Summary sheet with this Invoice data
-                if (CreateSummary)
-                {
-                    Excel.Worksheet xlSellerSummaryWorkSheet = CommonFunctions.GetWorksheet(xlWorkbook, "Seller Summary");
-                    //Int32 SummaryStartRow = 2;
-                    Int32 CurrRow = xlSellerSummaryWorkSheet.UsedRange.Rows.Count + 1;// ListSheetNames.Count + SummaryStartRow;
-                    Int32 SerialNumber = CurrRow - 2;
-                    if (IsExistingBill)
-                    {
-                        for (Int32 i = 3; i <= xlSellerSummaryWorkSheet.UsedRange.Rows.Count; i++)
-                        {
-                            if (xlSellerSummaryWorkSheet.Cells[i, 3].Value.ToString().Equals(InvoiceNumber.ToString()))
-                            {
-                                CurrRow = i;
-                                SerialNumber = Int32.Parse(xlSellerSummaryWorkSheet.Cells[i, 1].Value.ToString());
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        for (Int32 i = 3; i <= xlSellerSummaryWorkSheet.UsedRange.Rows.Count; i++)
-                        {
-                            try
-                            {
-                                if (!String.IsNullOrEmpty(xlSellerSummaryWorkSheet.Cells[i, 3].Value.ToString()) && Int32.Parse(xlSellerSummaryWorkSheet.Cells[i, 3].Value.ToString()) < 0)
-                                {
-                                    CurrRow = i;
-                                    break;
-                                }
-                            }
-                            catch (Exception)
-                            {
-                                continue;
-                            }
-                        }
-
-                        if (CurrRow < xlSellerSummaryWorkSheet.UsedRange.Rows.Count + 1)
-                        {
-                            xlSellerSummaryWorkSheet.Rows[CurrRow].Insert(CurrRow);
-                        }
-                    }
-
-                    Int32 CurrCol = 0;
-                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = SerialNumber; // CurrRow - 2;// ListSheetNames.Count;
-                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ObjCurrentSeller.LineName;
-                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = InvoiceNumber;
-                    CurrCol++; xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol].Value = ObjCurrentSeller.CustomerName;
-                    CurrCol++; Excel.Range xlRangeSale = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    CurrCol++; Excel.Range xlRangeCancel = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    CurrCol++; Excel.Range xlRangeReturn = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    CurrCol++; Excel.Range xlRangeDiscount = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    CurrCol++; Excel.Range xlRangeTotalTax = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    CurrCol++; Excel.Range xlRangeNetSale = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    CurrCol++; Excel.Range xlRangeOldBalance = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    CurrCol++; Excel.Range xlRangeCash = xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol];
-                    xlRangeSale.Formula = ObjInvoice.TotalSalesValue;
-                    xlRangeDiscount.Formula = ObjInvoice.TotalDiscount;
-                    xlRangeTotalTax.Formula = ObjInvoice.TotalTax;
-                    xlRangeNetSale.Formula = "=Round(" + xlRangeSale.Address[false, false]
-                                                + "-" + xlRangeCancel.Address[false, false]
-                                                + "-" + xlRangeReturn.Address[false, false]
-                                                + "-" + xlRangeDiscount.Address[false, false]
-                                                + "+" + xlRangeTotalTax.Address[false, false] + ", 0)";
-                    xlRangeOldBalance.Value = ObjInvoice.OldBalance;
-                    xlRangeSale.NumberFormat = "#,##0.00"; xlRangeCancel.NumberFormat = "#,##0.00";
-                    xlRangeReturn.NumberFormat = "#,##0.00"; xlRangeDiscount.NumberFormat = "#,##0.00";
-                    xlRangeTotalTax.NumberFormat = "#,##0.00"; xlRangeNetSale.NumberFormat = "#,##0.00";
-                    xlRangeOldBalance.NumberFormat = "#,##0.00"; xlRangeCash.NumberFormat = "#,##0.00";
-
-                    if (CurrRow == 3)
-                    {
-                        Excel.Range xlRange1 = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[CurrRow, 1], xlSellerSummaryWorkSheet.Cells[CurrRow, CurrCol]];
-                        xlRange1.Font.Bold = false;
-                    }
-                }
-                #endregion
-
-                xlApp.DisplayAlerts = true;
-                Excel.Worksheet FirstWorksheet = xlWorkbook.Sheets[1];
-                FirstWorksheet.Select();
-
-                #region Print Invoice
-                if (PrintBill && CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies > 0)
-                {
-                    DialogResult result = MessageBox.Show(this, "Would you like to print the " + InvoiceQuotation + "?", "Sales " + InvoiceQuotation, MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                    if (result == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        xlWorkSheet.PrintOutEx(Type.Missing, Type.Missing, CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies);
-                    }
-                }
-                #endregion
-
-                #region Write InvoiceNumber to Settings File
-                if (!IsExistingBill && !IsDummyBill) CurrReportSettings.LastNumber = InvoiceNumber;
-                #endregion
-
-                xlWorkbook.Close(SaveChanges: !IsDummyBill);
-                CommonFunctions.ReleaseCOMObject(xlWorkbook);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.CreateSalesInvoiceForCurrOrder()", ex);
             }
         }
     }

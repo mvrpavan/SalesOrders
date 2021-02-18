@@ -16,10 +16,10 @@ namespace SalesOrdersReport.Views
     {
         Boolean IsAddProductCategory = true;
         ProductMasterModel ObjProductMaster = null;
-        UpdateProductOnCloseDel UpdateOnClose;
+        UpdateUsingObjectOnCloseDel UpdateOnClose;
         ProductCategoryDetails ObjCategoryDetailsForEdit = null;
 
-        public AddProductCategoryForm(Boolean IsAddProductCategory, String CategoryName, UpdateProductOnCloseDel UpdateOnClose)
+        public AddProductCategoryForm(Boolean IsAddProductCategory, String CategoryName, UpdateUsingObjectOnCloseDel UpdateOnClose)
         {
             try
             {

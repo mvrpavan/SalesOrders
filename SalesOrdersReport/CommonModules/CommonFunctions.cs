@@ -27,6 +27,8 @@ namespace SalesOrdersReport.CommonModules
         public static UserMasterModel ObjUserMasterModel;
         public static CustomerMasterModel ObjCustomerMasterModel;
         public static Char PaddingChar = ' ', CurrencyChar = '\u20B9';
+        public static Type TypeString = Type.GetType("System.String"), TypeInt32 = Type.GetType("System.Int32");
+        public static Type TypeDouble = Type.GetType("System.Double"), TypeBoolean = Type.GetType("System.Boolean");
 
         public static string CurrentUserName = "";
 
