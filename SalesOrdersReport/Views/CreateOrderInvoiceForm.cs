@@ -36,7 +36,7 @@ namespace SalesOrdersReport.Views
 
         ProductMasterModel ObjProductMasterModel = CommonFunctions.ObjProductMaster;
         CustomerMasterModel ObjCustomerMasterModel = CommonFunctions.ObjCustomerMasterModel;
-        OrdersModel ObjOrdersModel = new OrdersModel();
+        OrdersModel ObjOrdersModel;
         Boolean IsNewOrder = false;
         UpdateUsingObjectOnCloseDel UpdateObjectOnClose;
 
@@ -46,7 +46,8 @@ namespace SalesOrdersReport.Views
             {
                 InitializeComponent();
                 CommonFunctions.ResetProgressBar();
-                this.ObjOrdersModel.Initialize();
+                ObjOrdersModel = new OrdersModel();
+                ObjOrdersModel.Initialize();
 
                 if (IsSellerOrder)
                 {
@@ -107,7 +108,6 @@ namespace SalesOrdersReport.Views
                 this.UpdateObjectOnClose = UpdateObjectOnClose;
 
                 CurrentOrderID = OrderID;
-                //this.ObjOrdersModel = ObjOrdersModel;
             }
             catch (Exception ex)
             {

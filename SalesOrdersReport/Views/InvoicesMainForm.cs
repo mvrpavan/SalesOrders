@@ -10,8 +10,10 @@ namespace SalesOrdersReport.Views
 {
     public partial class InvoicesMainForm : Form
     {
-        ProductLine CurrProductLine;
-        ProductMasterModel ObjProductMaster;
+        OrdersModel ObjOrdersModel;
+        DataTable dtAllOrders;
+        String AllOrderstatus = "<All>";
+        ORDERSTATUS CurrOrderStatus;
 
         public InvoicesMainForm()
         {
@@ -19,32 +21,42 @@ namespace SalesOrdersReport.Views
             {
                 InitializeComponent();
 
-                CurrProductLine = CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex];
-                ObjProductMaster = CurrProductLine.ObjProductMaster;
+                CommonFunctions.SetDataGridViewProperties(dtGridViewInvoices);
+                CommonFunctions.SetDataGridViewProperties(dtGridViewInvoicedProducts);
 
-                dtGridViewInvoiceItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                dtGridViewInvoiceItems.MultiSelect = false;
-                dtGridViewInvoiceItems.AllowUserToAddRows = false;
-                dtGridViewInvoiceItems.AllowUserToDeleteRows = false;
-                dtGridViewInvoiceItems.AllowUserToOrderColumns = false;
-                dtGridViewInvoiceItems.AllowUserToResizeColumns = true;
-                dtGridViewInvoiceItems.AllowUserToResizeRows = false;
+                ObjOrdersModel = new OrdersModel();
+                ObjOrdersModel.Initialize();
 
-                dtGridViewInvoices.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                dtGridViewInvoices.MultiSelect = false;
-                dtGridViewInvoices.AllowUserToAddRows = false;
-                dtGridViewInvoices.AllowUserToDeleteRows = false;
-                dtGridViewInvoices.AllowUserToOrderColumns = false;
-                dtGridViewInvoices.AllowUserToResizeColumns = true;
-                dtGridViewInvoices.AllowUserToResizeRows = false;
+                dTimePickerFrom.Value = DateTime.Today;
+                dTimePickerTo.Value = dTimePickerFrom.Value.AddDays(30);
+                CurrOrderStatus = ORDERSTATUS.Created;
 
-                LoadProductCategoryDataGridView(false);
-
-                LoadProductsDataGridView(false);
+                cmbBoxInvoiceStatus.DropDownStyle = ComboBoxStyle.DropDownList;
+                cmbBoxInvoiceStatus.Items.Clear();
+                cmbBoxInvoiceStatus.Items.Add(AllOrderstatus);
+                cmbBoxInvoiceStatus.Items.Add(ORDERSTATUS.Created.ToString());
+                cmbBoxInvoiceStatus.Items.Add(ORDERSTATUS.Completed.ToString());
+                cmbBoxInvoiceStatus.Items.Add(ORDERSTATUS.Cancelled.ToString());
+                cmbBoxInvoiceStatus.SelectedIndex = 1;
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("InvoicesMainForm.ctor()", ex);
+                CommonFunctions.ShowErrorDialog("OrdersMainForm.ctor()", ex);
+            }
+        }
+
+        private void LoadGridView()
+        {
+            try
+            {
+                dtAllOrders = GetOrdersDataTable(dTimePickerFrom.Value, dTimePickerTo.Value, CurrOrderStatus);
+                LoadOrdersGridView();
+
+                dtGridViewInvoicedProducts.DataSource = null;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.LoadGridView()", ex);
             }
         }
 
@@ -58,23 +70,57 @@ namespace SalesOrdersReport.Views
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"{this}.ProductsMainForm_Shown()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.OrdersMainForm_Shown()", ex);
             }
         }
 
-        void UpdateOnClose(Int32 Mode)
+        DataTable GetOrdersDataTable(DateTime FromDate, DateTime ToDate, ORDERSTATUS OrderStatus)
+        {
+            try
+            {
+                DataTable dtOrders = ObjOrdersModel.LoadOrderDetails(FromDate, ToDate, OrderStatus);
+
+                return dtOrders;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetOrdersDataTable()", ex);
+                return null;
+            }
+        }
+
+        void LoadOrdersGridView()
+        {
+            try
+            {
+                dtGridViewInvoices.DataSource = dtAllOrders.DefaultView;
+
+                for (int i = 0; i < dtGridViewInvoices.Columns.Count; i++)
+                {
+                    if (dtGridViewInvoices.Columns[i].Name.Equals("OrderID") || dtGridViewInvoices.Columns[i].Name.Equals("CustomerID"))
+                        dtGridViewInvoices.Columns[i].Visible = false;
+                }
+                dtGridViewInvoices.ClearSelection();
+
+                lblOrdersCount.Text = $"[Displaying {dtGridViewInvoices.Rows.Count} of {dtAllOrders.Rows.Count} Orders]";
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        void UpdateOrdersOnClose(Int32 Mode, Object ObjAddUpdatedDetails = null)
         {
             try
             {
                 switch (Mode)
                 {
-                    case 1:     //Add Product
+                    case 1:     //Add Order
                         break;
-                    case 2:     //Import Products from Excel
-                        LoadProductsDataGridView(true);
+                    case 2:
                         break;
-                    case 3:     //Reload Product Category from DB
-                        LoadProductCategoryDataGridView(true);
+                    case 3:     //Reload Orders
                         break;
                     default:
                         break;
@@ -87,152 +133,11 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        #region Import/Export from/to Excel methods
-        private void btnImportFromExcel_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //CommonFunctions.ShowDialog(new ImportFromExcelForm(IMPORTDATATYPES.PRODUCTS, UpdateOnClose), this);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.btnImportFromExcel_Click()", ex);
-            }
-        }
-
-        private void btnExportToExcel_Click(object sender, EventArgs e)
-        {
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.btnExportToExcel_Click()", ex);
-            }
-        }
-        #endregion
-
-        #region Product Category related methods
-        void LoadProductCategoryDataGridView(Boolean ReloadFromDB)
-        {
-            try
-            {
-                if (ReloadFromDB) CurrProductLine.LoadAllProductMasterTables();
-
-                dtGridViewInvoiceItems.Rows.Clear();
-                dtGridViewInvoiceItems.Columns.Clear();
-                String[] ArrColumnNames = new String[] { "ID", "Name", "Desc", "Active" };
-                String[] ArrColumnHeaders = new String[] { "Category ID", "Category Name", "Description", "Active" };
-                for (int i = 0; i < ArrColumnNames.Length; i++)
-                {
-                    dtGridViewInvoiceItems.Columns.Add(ArrColumnNames[i], ArrColumnHeaders[i]);
-                    DataGridViewColumn CurrentCol = dtGridViewInvoiceItems.Columns[dtGridViewInvoiceItems.Columns.Count - 1];
-                    CurrentCol.ReadOnly = true;
-                    if (i == 0) CurrentCol.Visible = false;
-                    //if (i == 2) CurrentCol.CellTemplate = new DataGridViewCheckBoxCell();
-                }
-
-                foreach (Int32 CategoryID in ObjProductMaster.GetProductCategoryIDList())
-                {
-                    Object[] ArrRowItems = new Object[4];
-                    ProductCategoryDetails tmpCategory = ObjProductMaster.GetCategoryDetails(CategoryID);
-                    ArrRowItems[0] = tmpCategory.CategoryID;
-                    ArrRowItems[1] = tmpCategory.CategoryName;
-                    ArrRowItems[2] = tmpCategory.Description;
-                    ArrRowItems[3] = tmpCategory.Active;
-
-                    dtGridViewInvoiceItems.Rows.Add(ArrRowItems);
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("ProductsMainForm.LoadProductCategoryDataGridView()", ex);
-                throw;
-            }
-        }
-
-        private void btnAddProductCategory_Click(object sender, EventArgs e)
-        {
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("ProductsMainForm.btnAddProductCategory_Click()", ex);
-            }
-        }
-        #endregion
-
-        #region Product related methods
-        void LoadProductsDataGridView(Boolean ReloadFromDB)
-        {
-            try
-            {
-                List<Int32> ListSelectedIDs = new List<Int32>();
-                foreach (DataGridViewRow item in dtGridViewInvoices.SelectedRows)
-                {
-                    ListSelectedIDs.Add(Int32.Parse(item.Cells["ID"].Value.ToString()));
-                }
-                if (ReloadFromDB) CurrProductLine.LoadAllProductMasterTables();
-
-                dtGridViewInvoices.Rows.Clear();
-                dtGridViewInvoices.Columns.Clear();
-                String[] ArrColumnNames = new String[] { "ID", "SKU", "Name", "Desc", "Category", "PP", "SP", "Units", "UOM", "StockQty", "HSN", "Active" };
-                String[] ArrColumnHeaders = new String[] { "ID", "SKU", "Name", "Description", "Category", "Purchase Price", "Selling Price", "Units", "Units of Measurement", "Current Stock", "HSN Code", "Active" };
-                for (Int32 i = 0; i < ArrColumnNames.Length; i++)
-                {
-                    dtGridViewInvoices.Columns.Add(ArrColumnNames[i], ArrColumnHeaders[i]);
-                    DataGridViewColumn CurrentCol = dtGridViewInvoices.Columns[dtGridViewInvoices.Columns.Count - 1];
-                    CurrentCol.ReadOnly = true;
-                    if (ArrColumnNames[i].Equals("ID")) CurrentCol.Visible = false;
-                    //if (ArrColumnNames[i].Equals("Active")) CurrentCol.CellTemplate = new DataGridViewCheckBoxCell();
-                }
-
-                List<ProductDetails> ListAllProducts = new List<ProductDetails>();
-                foreach (DataGridViewRow row in dtGridViewInvoiceItems.Rows)
-                {
-                    Int32 CategoryID = Int32.Parse(row.Cells[0].Value.ToString());
-                    String CategoryName = row.Cells[1].Value.ToString();
-                    List<ProductDetails> ListProducts = ObjProductMaster.GetProductListForCategory(CategoryName);
-                    ListAllProducts.AddRange(ListProducts);
-                }
-                ListAllProducts.OrderBy(e => e.SortName);
-
-                for (Int32 i = 0; i < ListAllProducts.Count; i++)
-                {
-                    Object[] ArrRowItems = new Object[ArrColumnNames.Length];
-                    ArrRowItems[0] = ListAllProducts[i].ProductID;
-                    ArrRowItems[1] = ListAllProducts[i].ProductSKU;
-                    ArrRowItems[2] = ListAllProducts[i].ItemName;
-                    ArrRowItems[3] = ListAllProducts[i].ProductDesc;
-                    ArrRowItems[4] = ListAllProducts[i].CategoryName;
-                    ArrRowItems[5] = ListAllProducts[i].PurchasePrice;
-                    ArrRowItems[6] = ListAllProducts[i].RetailPrice;
-                    ArrRowItems[7] = ListAllProducts[i].Units;
-                    ArrRowItems[8] = ListAllProducts[i].UnitsOfMeasurement;
-                    ArrRowItems[9] = ListAllProducts[i].StockName;
-                    ArrRowItems[10] = ListAllProducts[i].HSNCode;
-                    ArrRowItems[11] = ListAllProducts[i].Active;
-
-                    dtGridViewInvoices.Rows.Add(ArrRowItems);
-
-                    if (ListSelectedIDs.Contains(ListAllProducts[i].ProductID))
-                    {
-                        dtGridViewInvoices.Rows[dtGridViewInvoices.Rows.Count - 1].Selected = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("ProductsMainForm.LoadProductsDataGridView()", ex);
-            }
-        }
-
         private void btnCreateOrder_Click(object sender, EventArgs e)
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(1, true, false, null), this.Parent.FindForm());
+                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(-1, true, false, UpdateOrdersOnClose), this.Parent.FindForm());
             }
             catch (Exception ex)
             {
@@ -246,13 +151,16 @@ namespace SalesOrdersReport.Views
             {
                 if (dtGridViewInvoices.SelectedRows.Count == 0)
                 {
-                    MessageBox.Show(this, "Please select a Product to edit", "Product", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(this, "Please select an Order to View/Update", "View Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                Int32 ProductID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["ID"].Value.ToString());
+                Int32 OrderID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["OrderID"].Value.ToString());
 
-                //CommonFunctions.ShowDialog(new AddProductForm(false, ProductID, UpdateOnClose), this);
+                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(OrderID, true, false, UpdateOrdersOnClose), this);
+
+                dtGridViewInvoices.ClearSelection();
+                dtGridViewInvoicedProducts.DataSource = null;
             }
             catch (Exception ex)
             {
@@ -264,6 +172,25 @@ namespace SalesOrdersReport.Views
         {
             try
             {
+                if (dtGridViewInvoices.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show(this, "Please select an Order to convert to Invoice", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                Int32 OrderID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["OrderID"].Value.ToString());
+
+                if (ObjOrdersModel.ConvertOrderToInvoice(OrderID) == 0)
+                {
+                    MessageBox.Show(this, "Order converted to Invoice successfully", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    dtAllOrders.Select($"OrderID = {OrderID}")[0]["Order Status"] = ORDERSTATUS.Completed;
+                    dtGridViewInvoices.ClearSelection();
+                    dtGridViewInvoicedProducts.DataSource = null;
+                }
+                else
+                {
+                    MessageBox.Show(this, "Unable to convert Order to Invoice", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
@@ -275,6 +202,15 @@ namespace SalesOrdersReport.Views
         {
             try
             {
+                if (dtGridViewInvoices.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show(this, "Please select an Order to convert to Invoice", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                Int32 OrderID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["OrderID"].Value.ToString());
+                OrderDetails ObjOrderDetails = ObjOrdersModel.GetOrderDetailsForOrderID(OrderID);
+                ObjOrdersModel.PrintOrder(ReportType.QUOTATION, true, ObjOrderDetails);
             }
             catch (Exception ex)
             {
@@ -286,7 +222,14 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-
+                List<String> ListFindInFields = new List<String>()
+                {
+                    "Customer Name",
+                    "Order Number",
+                    "Order Status",
+                    "Order Date"
+                };
+                CommonFunctions.ShowDialog(new OrderInvQuotSearchForm(ListFindInFields, null, null), this);
             }
             catch (Exception ex)
             {
@@ -298,7 +241,17 @@ namespace SalesOrdersReport.Views
         {
             try
             {
+                if (dtGridViewInvoices.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show(this, "Please select an Order to Delete", "Delete Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
+                Int32 OrderID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["OrderID"].Value.ToString());
+                if (ObjOrdersModel.DeleteOrderDetails(OrderID) == 0)
+                {
+                    dtGridViewInvoicedProducts.DataSource = null;
+                }
             }
             catch (Exception ex)
             {
@@ -310,23 +263,113 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                LoadProductsDataGridView(true);
+                LoadGridView();
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.btnReloadOrders_Click()", ex);
             }
         }
-        #endregion
 
         private void checkBoxApplyFilter_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
+                if (!checkBoxApplyFilter.Checked)
+                {
+                    dTimePickerFrom.Value = DateTime.Today;
+                    dTimePickerTo.Value = dTimePickerFrom.Value.AddDays(30);
+                }
+                LoadGridView();
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.checkBoxApplyFilter_CheckedChanged()", ex);
+            }
+        }
+
+        private void LoadGridViewOrderItems(OrderDetails ObjOrderDetails)
+        {
+            try
+            {
+                dtGridViewInvoicedProducts.DataSource = null;
+                if (ObjOrderDetails.ListOrderItems == null || ObjOrderDetails.ListOrderItems.Count == 0) return;
+
+                DataTable dtOrderProducts = new DataTable();
+                String[] ArrColumns = new String[] { "ProductID", "Product Name", "Ordered Qty", "Price", "Order Status" };
+                Type[] ArrColumnTypes = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeString };
+
+                for (int i = 0; i < ArrColumns.Length; i++)
+                {
+                    dtOrderProducts.Columns.Add(ArrColumns[i], ArrColumnTypes[i]);
+                }
+
+                for (int i = 0; i < ObjOrderDetails.ListOrderItems.Count; i++)
+                {
+                    OrderItemDetails tmpOrderItem = ObjOrderDetails.ListOrderItems[i];
+                    Object[] ArrObjects = new Object[]
+                    {
+                        tmpOrderItem.ProductID,
+                        tmpOrderItem.ProductName,
+                        tmpOrderItem.OrderQty,
+                        tmpOrderItem.Price,
+                        tmpOrderItem.OrderItemStatus
+                    };
+                    dtOrderProducts.Rows.Add(ArrObjects);
+                }
+
+                dtOrderProducts.DefaultView.Sort = "Product Name";
+                dtGridViewInvoicedProducts.DataSource = dtOrderProducts.DefaultView;
+                dtGridViewInvoicedProducts.Columns["ProductID"].Visible = false;
+                dtGridViewInvoicedProducts.ClearSelection();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.LoadGridViewOrderItems()", ex);
+            }
+        }
+
+        Int32 OrderIDSelected = -1;
+        private void dtGridViewOrders_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            try
+            {
+                Int32 OrderID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["OrderID"].Value.ToString());
+                if (OrderIDSelected == OrderID)
+                {
+                    OrderIDSelected = -1;
+                    dtGridViewInvoices.ClearSelection();
+                    dtGridViewInvoicedProducts.DataSource = null;
+                    return;
+                }
+
+                OrderDetails tmpOrderDetails = ObjOrdersModel.FillOrderItemDetails(OrderID);
+                LoadGridViewOrderItems(tmpOrderDetails);
+                OrderIDSelected = OrderID;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.dtGridViewOrders_CellMouseClick()", ex);
+            }
+        }
+
+        private void cmbBoxOrderStatus_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if(cmbBoxInvoiceStatus.SelectedIndex > 0)
+                {
+                    CurrOrderStatus = (ORDERSTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.ORDERSTATUS"), cmbBoxInvoiceStatus.SelectedItem.ToString());
+                }
+                else
+                {
+                    CurrOrderStatus = ORDERSTATUS.All;
+                }
+                LoadGridView();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.cmbBoxOrderStatus_SelectedIndexChanged()", ex);
             }
         }
     }

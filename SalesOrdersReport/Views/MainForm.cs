@@ -57,6 +57,8 @@ namespace SalesOrdersReport.Views
             vendorHistoryToolStripMenuItem.Visible = false;
             productStockToolStripMenuItem.Visible = false;
 
+            quotationsToolStripMenuItem.Visible = false;
+
             FillShortcuts();
         }
 
@@ -71,15 +73,15 @@ namespace SalesOrdersReport.Views
             {
                 lblShortcuts.Text = "F2:Orders    ";
                 lblShortcuts.Text += "F3:Invoices    ";
-                lblShortcuts.Text += "F4:Quotations    ";
-                lblShortcuts.Text += "F5:Products    ";
-                lblShortcuts.Text += "F6:Customers    ";
+                //lblShortcuts.Text += "F4:Quotations    ";
+                lblShortcuts.Text += "F4:Products    ";
+                lblShortcuts.Text += "F5:Customers    ";
 
                 ordersToolStripMenuItem.ShortcutKeys = Keys.F2;
                 invoicesToolStripMenuItem.ShortcutKeys = Keys.F3;
-                quotationsToolStripMenuItem.ShortcutKeys = Keys.F4;
-                productMenu.ShortcutKeys = Keys.F5;
-                customerToolStripMenuItem.ShortcutKeys = Keys.F6;
+                //quotationsToolStripMenuItem.ShortcutKeys = Keys.F4;
+                productMenu.ShortcutKeys = Keys.F4;
+                customerToolStripMenuItem.ShortcutKeys = Keys.F5;
             }
             catch (Exception ex)
             {
@@ -224,7 +226,7 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void createInvoiceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowCreateCustomerBillForm(object sender, EventArgs e)
         {
             try
             {
@@ -235,7 +237,7 @@ namespace SalesOrdersReport.Views
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("MainForm.createInvoiceToolStripMenuItem_Click()", ex);
+                CommonFunctions.ShowErrorDialog("MainForm.ShowCreateCustomerBillForm()", ex);
             }
         }
 
@@ -658,6 +660,19 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.quotationsToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void customerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ManageCustomerForm ObjManageCustomerForm = new ManageCustomerForm();
+                ShowChildForm(ObjManageCustomerForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.customerToolStripMenuItem_Click()", ex);
             }
         }
     }

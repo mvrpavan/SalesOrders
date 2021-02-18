@@ -35,6 +35,7 @@ namespace SalesOrdersReport.Views
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.ordersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.invoicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quotationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sellerMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.createOrderSheetToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.createInvoiceFromSalesOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,8 +46,6 @@ namespace SalesOrdersReport.Views
             this.updateSalesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.productMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.customerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.manageCustomertoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createInvoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vendorMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.createOrderSheetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,7 +78,6 @@ namespace SalesOrdersReport.Views
             this.picBoxBackgroundLogo = new System.Windows.Forms.PictureBox();
             this.pnlShortcuts = new System.Windows.Forms.Panel();
             this.lblShortcuts = new System.Windows.Forms.Label();
-            this.quotationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -122,6 +120,13 @@ namespace SalesOrdersReport.Views
             this.invoicesToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
             this.invoicesToolStripMenuItem.Text = "&Invoices";
             this.invoicesToolStripMenuItem.Click += new System.EventHandler(this.invoicesToolStripMenuItem_Click);
+            // 
+            // quotationsToolStripMenuItem
+            // 
+            this.quotationsToolStripMenuItem.Name = "quotationsToolStripMenuItem";
+            this.quotationsToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
+            this.quotationsToolStripMenuItem.Text = "&Quotations";
+            this.quotationsToolStripMenuItem.Click += new System.EventHandler(this.quotationsToolStripMenuItem_Click);
             // 
             // sellerMenu
             // 
@@ -196,26 +201,10 @@ namespace SalesOrdersReport.Views
             // 
             // customerToolStripMenuItem
             // 
-            this.customerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.manageCustomertoolStripMenuItem,
-            this.createInvoiceToolStripMenuItem});
             this.customerToolStripMenuItem.Name = "customerToolStripMenuItem";
             this.customerToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
             this.customerToolStripMenuItem.Text = "&Customers";
-            // 
-            // manageCustomertoolStripMenuItem
-            // 
-            this.manageCustomertoolStripMenuItem.Name = "manageCustomertoolStripMenuItem";
-            this.manageCustomertoolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.manageCustomertoolStripMenuItem.Text = "Manage Customer";
-            this.manageCustomertoolStripMenuItem.Click += new System.EventHandler(this.manageCustomertoolStripMenuItem_Click);
-            // 
-            // createInvoiceToolStripMenuItem
-            // 
-            this.createInvoiceToolStripMenuItem.Name = "createInvoiceToolStripMenuItem";
-            this.createInvoiceToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.createInvoiceToolStripMenuItem.Text = "Create &Customer Bill";
-            this.createInvoiceToolStripMenuItem.Click += new System.EventHandler(this.createInvoiceToolStripMenuItem_Click);
+            this.customerToolStripMenuItem.Click += new System.EventHandler(this.customerToolStripMenuItem_Click);
             // 
             // vendorMenu
             // 
@@ -471,13 +460,6 @@ namespace SalesOrdersReport.Views
             this.lblShortcuts.TabIndex = 0;
             this.lblShortcuts.Text = "Shortcuts";
             // 
-            // quotationsToolStripMenuItem
-            // 
-            this.quotationsToolStripMenuItem.Name = "quotationsToolStripMenuItem";
-            this.quotationsToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
-            this.quotationsToolStripMenuItem.Text = "&Quotations";
-            this.quotationsToolStripMenuItem.Click += new System.EventHandler(this.quotationsToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -553,7 +535,6 @@ namespace SalesOrdersReport.Views
         private System.Windows.Forms.ToolStripMenuItem createInvoiceFromSalesOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createSellerOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem customerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem createInvoiceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mergeSalesOrderToolStripMenuItem;
         //public System.Windows.Forms.Label lblCurrentUser;
         private System.Windows.Forms.ToolStripMenuItem administrationToolStripMenuItem;
@@ -564,7 +545,6 @@ namespace SalesOrdersReport.Views
         private System.Windows.Forms.ToolStripMenuItem ProfileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem LogOutToolStripMenuItem;
         public System.Windows.Forms.ToolStripMenuItem UserProfileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem manageCustomertoolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ordersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem invoicesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;

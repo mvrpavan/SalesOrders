@@ -262,17 +262,17 @@
     <Compile Include="Views\AddProductForm.Designer.cs">
       <DependentUpon>AddProductForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\InvoicesMainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\InvoicesMainForm.Designer.cs">
-      <DependentUpon>InvoicesMainForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\OrderInvQuotSearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\OrderInvQuotSearchForm.Designer.cs">
       <DependentUpon>OrderInvQuotSearchForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InvoicesMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\InvoicesMainForm.Designer.cs">
+      <DependentUpon>InvoicesMainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\OrdersMainForm.cs">
       <SubType>Form</SubType>
@@ -470,11 +470,11 @@
     <EmbeddedResource Include="Views\AddProductForm.resx">
       <DependentUpon>AddProductForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\InvoicesMainForm.resx">
-      <DependentUpon>InvoicesMainForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\OrderInvQuotSearchForm.resx">
       <DependentUpon>OrderInvQuotSearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\InvoicesMainForm.resx">
+      <DependentUpon>InvoicesMainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\OrdersMainForm.resx">
       <DependentUpon>OrdersMainForm.cs</DependentUpon>
