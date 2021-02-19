@@ -66,7 +66,8 @@ namespace SalesOrdersReport.Views
 
                 //{
                 //    RunDBScript ObjRunDBScript = new RunDBScript();
-                //    ObjRunDBScript.CreateRunningTables();
+                //    ObjRunDBScript.CreateAccountsMasterTables();
+                //    ObjRunDBScript.CreateTransactionTables();
                 //}
 
                 //TODO: Load all tables to memory here

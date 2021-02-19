@@ -69,7 +69,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                String Query = "Select * from PriceGroupMaster Order by PriceGroupName;";
+                String Query = "Select * from PRICEGROUPMASTER Order by PriceGroupName;";
                 DataTable dtPriceGroupMaster = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 ObjProductMaster.LoadPriceGroupMaster(dtPriceGroupMaster);
 

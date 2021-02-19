@@ -123,7 +123,7 @@ namespace SalesOrdersReport.Models
                                                     "Order Status", "Creation Date", "Last Updated Date", "Delivered Date", "Invoice Created Date",
                                                     "Quotation Created Date" };
 
-                String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)} from Orders a Inner Join CustomerMaster b on a.CustomerID = b.CustomerID", WhereClause = $" Where 1 = 1";
+                String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)} from Orders a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID", WhereClause = $" Where 1 = 1";
                 if (FromDate > DateTime.MinValue && ToDate > DateTime.MinValue)
                 {
                     WhereClause += $" and a.OrderDate between '{MySQLHelper.GetDateStringForDB(FromDate)}' and '{MySQLHelper.GetDateStringForDB(ToDate)}'";
@@ -475,9 +475,6 @@ namespace SalesOrdersReport.Models
                     SaveFileName = Path.GetDirectoryName(SaveFileName) + "\\" + Path.GetFileNameWithoutExtension(SaveFileName) + "_Dummy" + Path.GetExtension(SaveFileName);
                 }
 
-                //Boolean IsExistingBill = false;
-                //Int32 InvoiceNumber = CurrReportSettings.LastNumber + 1;
-                //if (IsExistingBill) InvoiceNumber = Int32.Parse(cmbBoxBillNumber.SelectedItem.ToString());
                 Int32 ValidItemCount = ObjOrderDetails.ListOrderItems.Count;
                 Int32 ProgressBarCount = ValidItemCount;
                 Int32 Counter = 0, SLNo = 0;
@@ -509,52 +506,7 @@ namespace SalesOrdersReport.Models
                 String SheetName = ObjCurrentSeller.CustomerName.Replace(":", "").Replace("\\", "").Replace("/", "").
                         Replace("?", "").Replace("*", "").Replace("[", "").Replace("]", "");
                 SheetName = ((SheetName.Length > 30) ? SheetName.Substring(0, 30) : SheetName);
-
-                #region Change SheetName
-                /*String SheetName = "";
-                if (IsExistingBill)
-                {
-                    SheetName = DictCurrCustomerBillNumItemDetails[InvoiceNumber.ToString()].Item1;
-                    xlWorkSheet = CommonFunctions.GetWorksheet(xlWorkbook, SheetName);
-                    xlApp.DisplayAlerts = false;
-                    xlWorkSheet.Cells.Clear();
-                    xlApp.DisplayAlerts = true;
-                }
-                else
-                {
-                    xlWorkSheet = xlWorkbook.Worksheets.Add(Type.Missing, xlWorkbook.Sheets[xlWorkbook.Sheets.Count]);
-
-                    SheetName = ObjCurrentSeller.CustomerName.Replace(":", "").Replace("\\", "").Replace("/", "").
-                            Replace("?", "").Replace("*", "").Replace("[", "").Replace("]", "");
-                    SheetName = ((SheetName.Length > 30) ? SheetName.Substring(0, 30) : SheetName);
-                    Int32 SheetSuffix = 0;
-                    Boolean ContainsCustomerSheet = false;
-                    if (ListSheetNames.Count > 0)
-                    {
-                        for (int i = 0; i < ListSheetNames.Count; i++)
-                        {
-                            if (ListSheetNames[i].Contains(SheetName))
-                            {
-                                String NumberStr = ListSheetNames[i].Replace(SheetName, "").Trim();
-                                Int32 Number;
-                                if (Int32.TryParse(NumberStr, out Number))
-                                {
-                                    SheetSuffix = Math.Max(Number, SheetSuffix);
-                                }
-                                ContainsCustomerSheet = true;
-                            }
-                        }
-
-                        if (ContainsCustomerSheet || SheetSuffix > 0)
-                        {
-                            SheetSuffix++;
-                            SheetName += " " + SheetSuffix;
-                        }
-                    }
-                    ListSheetNames.Add(SheetName);
-                }*/
                 ObjInvoice.SheetName = SheetName;
-                #endregion
 
                 #region Print Invoice Items
                 String ItemName;
@@ -647,7 +599,7 @@ namespace SalesOrdersReport.Models
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("CustomerInvoiceSellerOrderForm.CreateSalesInvoiceForCurrOrder()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.PrintOrder()", ex);
             }
             finally
             {

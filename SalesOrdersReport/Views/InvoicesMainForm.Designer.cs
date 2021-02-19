@@ -72,7 +72,7 @@
             this.btnCreateInvoice.Text = "Create Invoice";
             this.btnCreateInvoice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnCreateInvoice.UseVisualStyleBackColor = false;
-            this.btnCreateInvoice.Click += new System.EventHandler(this.btnCreateOrder_Click);
+            this.btnCreateInvoice.Click += new System.EventHandler(this.btnCreateInvoice_Click);
             // 
             // panel1
             // 
@@ -116,7 +116,7 @@
             this.cmbBoxInvoiceStatus.Name = "cmbBoxInvoiceStatus";
             this.cmbBoxInvoiceStatus.Size = new System.Drawing.Size(87, 21);
             this.cmbBoxInvoiceStatus.TabIndex = 4;
-            this.cmbBoxInvoiceStatus.SelectedIndexChanged += new System.EventHandler(this.cmbBoxOrderStatus_SelectedIndexChanged);
+            this.cmbBoxInvoiceStatus.SelectedIndexChanged += new System.EventHandler(this.cmbBoxInvoiceStatus_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -194,7 +194,7 @@
             this.btnSearchInvoice.Text = "Search Invoices";
             this.btnSearchInvoice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnSearchInvoice.UseVisualStyleBackColor = false;
-            this.btnSearchInvoice.Click += new System.EventHandler(this.btnSearchOrder_Click);
+            this.btnSearchInvoice.Click += new System.EventHandler(this.btnSearchInvoice_Click);
             // 
             // btnPrintQuotation
             // 
@@ -211,7 +211,7 @@
             this.btnPrintQuotation.Text = "Print as Quotation";
             this.btnPrintQuotation.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnPrintQuotation.UseVisualStyleBackColor = false;
-            this.btnPrintQuotation.Click += new System.EventHandler(this.btnPrintOrder_Click);
+            this.btnPrintQuotation.Click += new System.EventHandler(this.btnPrintInvoice_Click);
             // 
             // btnPrintInvoice
             // 
@@ -228,7 +228,7 @@
             this.btnPrintInvoice.Text = "Print as Invoice";
             this.btnPrintInvoice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnPrintInvoice.UseVisualStyleBackColor = false;
-            this.btnPrintInvoice.Click += new System.EventHandler(this.btnConvertInvoice_Click);
+            this.btnPrintInvoice.Click += new System.EventHandler(this.btnPrintInvoice_Click);
             // 
             // btnReloadInvoices
             // 
@@ -245,7 +245,7 @@
             this.btnReloadInvoices.Text = "Reload Invoices";
             this.btnReloadInvoices.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnReloadInvoices.UseVisualStyleBackColor = false;
-            this.btnReloadInvoices.Click += new System.EventHandler(this.btnReloadOrders_Click);
+            this.btnReloadInvoices.Click += new System.EventHandler(this.btnReloadInvoices_Click);
             // 
             // btnDeleteInvoice
             // 
@@ -262,7 +262,7 @@
             this.btnDeleteInvoice.Text = "Delete Invoice";
             this.btnDeleteInvoice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnDeleteInvoice.UseVisualStyleBackColor = false;
-            this.btnDeleteInvoice.Click += new System.EventHandler(this.btnDeleteOrder_Click);
+            this.btnDeleteInvoice.Click += new System.EventHandler(this.btnDeleteInvoice_Click);
             // 
             // btnViewEditInvoice
             // 
@@ -279,7 +279,7 @@
             this.btnViewEditInvoice.Text = "View/Edit Invoice";
             this.btnViewEditInvoice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnViewEditInvoice.UseVisualStyleBackColor = false;
-            this.btnViewEditInvoice.Click += new System.EventHandler(this.btnViewEditOrder_Click);
+            this.btnViewEditInvoice.Click += new System.EventHandler(this.btnViewEditInvoice_Click);
             // 
             // dtGridViewInvoices
             // 
@@ -292,7 +292,7 @@
             this.dtGridViewInvoices.Name = "dtGridViewInvoices";
             this.dtGridViewInvoices.Size = new System.Drawing.Size(1164, 291);
             this.dtGridViewInvoices.TabIndex = 2;
-            this.dtGridViewInvoices.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtGridViewOrders_CellMouseClick);
+            this.dtGridViewInvoices.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtGridViewInvoices_CellMouseClick);
             // 
             // dtGridViewInvoicedProducts
             // 
@@ -358,7 +358,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Invoices";
-            this.Shown += new System.EventHandler(this.OrdersMainForm_Shown);
+            this.Shown += new System.EventHandler(this.InvoicesMainForm_Shown);
             this.panel1.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();

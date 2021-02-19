@@ -408,22 +408,27 @@ namespace SalesOrdersReport.Views
                 {
                     //Load Order details for selected OrderID
                     CurrentOrderDetails = ObjOrdersModel.GetOrderDetailsForOrderID(CurrentOrderID);
+                    CurrSellerOrderDetails.CurrOrderDetails = CurrentOrderDetails.Clone();
+                    CurrSellerOrderDetails.CurrOrderDetailsOrig = CurrentOrderDetails.Clone();
                 }
                 else
                 {
                     //Create new Order for selected Customer, if already exists then edit the order to ensure that there is only order for a customer on a given date
                     CustomerDetails ObjSellerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxSellerCustomer.Items[cmbBoxSellerCustomer.SelectedIndex].ToString());
                     CurrentOrderDetails = ObjOrdersModel.GetOrderDetailsForCustomer(dtTmPckrInvOrdDate.Value, ObjSellerDetails.CustomerID);
-                    if (CurrentOrderDetails == null)
+                    if (CurrentOrderDetails != null)
                     {
-                        CurrentOrderDetails = new OrderDetails();
-                        CurrentOrderDetails.ListOrderItems = new List<OrderItemDetails>();
+                        CurrentOrderID = CurrentOrderDetails.OrderID;
+                        CurrSellerOrderDetails.CurrOrderDetails = CurrentOrderDetails.Clone();
+                        CurrSellerOrderDetails.CurrOrderDetailsOrig = CurrentOrderDetails.Clone();
                     }
-                    CurrentOrderID = CurrentOrderDetails.OrderID;
+                    //if (CurrentOrderDetails == null)
+                    //{
+                    //    CurrentOrderDetails = new OrderDetails();
+                    //    CurrentOrderDetails.ListOrderItems = new List<OrderItemDetails>();
+                    //}
+                    //CurrentOrderID = CurrentOrderDetails.OrderID;
                 }
-
-                CurrSellerOrderDetails.CurrOrderDetails = CurrentOrderDetails.Clone();
-                CurrSellerOrderDetails.CurrOrderDetailsOrig = CurrentOrderDetails.Clone();
             }
             catch (Exception ex)
             {
@@ -613,11 +618,16 @@ namespace SalesOrdersReport.Views
                     case 2:     //Load Order for Current Customer
                         if (CurrSellerOrderDetails.CurrOrderDetails == null)
                         {
+                            txtBoxInvOrdNumber.Text = this.ObjOrdersModel.GenerateNewOrderNumber();
+
                             CurrSellerOrderDetails.CurrOrderDetails = new OrderDetails();
                             CurrSellerOrderDetails.CurrOrderDetails.OrderID = -1;
                             CurrSellerOrderDetails.CurrOrderDetails.CustomerID = CurrSellerDetails.CustomerID;
                             CurrSellerOrderDetails.CurrOrderDetails.OrderNumber = txtBoxInvOrdNumber.Text;
                             CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems = new List<OrderItemDetails>();
+
+                            FormTitle = "Create New Order";
+                            btnCreateInvOrd.Text = "Create New Order";
                         }
                         else
                         {

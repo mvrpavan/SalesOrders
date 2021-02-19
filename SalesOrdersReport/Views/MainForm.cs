@@ -47,17 +47,10 @@ namespace SalesOrdersReport.Views
             productMenu.Visible = true;
             reportsMenu.Visible = true;
 
-            addModifySellerToolStripMenuItem.Visible = false;
-            discountGroupToolStripMenuItem.Visible = false;
-
-            addModifyItemToolStripMenuItem.Visible = true;
-
             addModifyVendorToolStripMenuItem.Visible = false;
 
             vendorHistoryToolStripMenuItem.Visible = false;
             productStockToolStripMenuItem.Visible = false;
-
-            quotationsToolStripMenuItem.Visible = false;
 
             FillShortcuts();
         }
@@ -71,17 +64,20 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                lblShortcuts.Text = "F2:Orders    ";
+                lblShortcuts.Text = "";
+                lblShortcuts.Text += "F2:Orders    ";
                 lblShortcuts.Text += "F3:Invoices    ";
-                //lblShortcuts.Text += "F4:Quotations    ";
                 lblShortcuts.Text += "F4:Products    ";
                 lblShortcuts.Text += "F5:Customers    ";
+                lblShortcuts.Text += "F6:Payments & Expenses    ";
+                //lblShortcuts.Text += "F7:Vendors    ";
 
                 ordersToolStripMenuItem.ShortcutKeys = Keys.F2;
                 invoicesToolStripMenuItem.ShortcutKeys = Keys.F3;
-                //quotationsToolStripMenuItem.ShortcutKeys = Keys.F4;
                 productMenu.ShortcutKeys = Keys.F4;
                 customerToolStripMenuItem.ShortcutKeys = Keys.F5;
+                PaymentsExpensesToolStripMenuItem.ShortcutKeys = Keys.F6;
+                vendorHistoryToolStripMenuItem.ShortcutKeys = Keys.F7;
             }
             catch (Exception ex)
             {
@@ -253,30 +249,6 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("MainForm.createSellerOrderToolStripMenuItem_Click()", ex);
-            }
-        }
-
-        private void discountGroupToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.discountGroupToolStripMenuItem_Click()", ex);
-            }
-        }
-
-        private void addModifySellerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.addModifySellerToolStripMenuItem_Click()", ex);
             }
         }
 
@@ -625,20 +597,6 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void orgSettingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                SettingsForm ObjSettingsForm = new SettingsForm();
-                ShowChildForm(ObjSettingsForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.orgSettingsToolStripMenuItem_Click()", ex);
-                throw;
-            }
-        }
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -652,17 +610,6 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void quotationsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.quotationsToolStripMenuItem_Click()", ex);
-            }
-        }
-
         private void customerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -673,6 +620,19 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.customerToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void PaymentsExpensesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                PaymentsExpensesMainForm ObjPaymentsExpensesMainForm = new PaymentsExpensesMainForm();
+                ShowChildForm(ObjPaymentsExpensesMainForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.PaymentsExpensesToolStripMenuItem_Click()", ex);
             }
         }
     }

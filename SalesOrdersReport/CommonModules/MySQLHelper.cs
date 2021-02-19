@@ -51,8 +51,8 @@ namespace SalesOrdersReport.CommonModules
             try
             {
                 ObjDbConnectionStringBuilder = new MySqlConnectionStringBuilder();
-                ObjDbConnectionStringBuilder.Add("Database", DBName);
-                ObjDbConnectionStringBuilder.Add("Data Source", DBServer);
+                ObjDbConnectionStringBuilder.Add("Database", DBName.ToLower());
+                ObjDbConnectionStringBuilder.Add("Data Source", DBServer.ToLower());
                 ObjDbConnectionStringBuilder.Add("User Id", DBUsername);
                 ObjDbConnectionStringBuilder.Add("Password", DBPassword);
                 ObjDbConnectionStringBuilder.Add("persistsecurityinfo", "True");
