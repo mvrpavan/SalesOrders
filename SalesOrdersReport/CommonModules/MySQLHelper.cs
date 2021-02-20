@@ -165,6 +165,35 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
+        public Int32 InsertIntoTable(String TableName, List<String> ListColumnNames, List<String> ListColumnValues, List<Types> ListColumnTypes)
+        {
+            try
+            {
+                if (CheckTableExists(TableName)) return -1;
+
+                String Query = $"Insert into {TableName}";
+                if (ListColumnNames != null && ListColumnNames.Count > 0) Query += $"({String.Join(",", ListColumnNames)})";
+                Query += " Values (";
+                for (int i = 0; i < ListColumnValues.Count; i++)
+                {
+                    if (i > 0) Query += ",";
+                    if (ListColumnTypes[i] == Types.Number)
+                        Query += $"{ListColumnValues[i]}";
+                    else
+                        Query += $"'{ListColumnValues[i]}'";
+                }
+                Query += ");";
+                ObjDbCommand.CommandText = Query;
+
+                return ObjDbCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.InsertIntoTable()", ex);
+                throw ex;
+            }
+        }
+
         public Int32 CreateTable(String TableName, List<String> Columns,
                                 Boolean InMemory = false, Boolean DropIfExists = true, Boolean TruncateIfExists = false)
         {
