@@ -48,11 +48,11 @@ namespace SalesOrdersReport.Views
             this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addModifyVendorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updatePurchasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PaymentsExpensesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reportsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.sellerHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vendorHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.productStockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.PaymentsExpensesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.administrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageUsersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.appSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -217,6 +217,13 @@ namespace SalesOrdersReport.Views
             this.updatePurchasesToolStripMenuItem.Text = "&Update Purchases";
             this.updatePurchasesToolStripMenuItem.Click += new System.EventHandler(this.updatePurchasesToolStripMenuItem_Click);
             // 
+            // PaymentsExpensesToolStripMenuItem
+            // 
+            this.PaymentsExpensesToolStripMenuItem.Name = "PaymentsExpensesToolStripMenuItem";
+            this.PaymentsExpensesToolStripMenuItem.Size = new System.Drawing.Size(124, 20);
+            this.PaymentsExpensesToolStripMenuItem.Text = "Payments/&Expenses";
+            this.PaymentsExpensesToolStripMenuItem.Click += new System.EventHandler(this.PaymentsExpensesToolStripMenuItem_Click);
+            // 
             // reportsMenu
             // 
             this.reportsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -230,30 +237,23 @@ namespace SalesOrdersReport.Views
             // sellerHistoryToolStripMenuItem
             // 
             this.sellerHistoryToolStripMenuItem.Name = "sellerHistoryToolStripMenuItem";
-            this.sellerHistoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sellerHistoryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.sellerHistoryToolStripMenuItem.Text = "&Seller History";
             this.sellerHistoryToolStripMenuItem.Click += new System.EventHandler(this.sellerHistoryToolStripMenuItem_Click);
             // 
             // vendorHistoryToolStripMenuItem
             // 
             this.vendorHistoryToolStripMenuItem.Name = "vendorHistoryToolStripMenuItem";
-            this.vendorHistoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.vendorHistoryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.vendorHistoryToolStripMenuItem.Text = "&Vendor History";
             this.vendorHistoryToolStripMenuItem.Click += new System.EventHandler(this.vendorHistoryToolStripMenuItem_Click);
             // 
             // productStockToolStripMenuItem
             // 
             this.productStockToolStripMenuItem.Name = "productStockToolStripMenuItem";
-            this.productStockToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.productStockToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.productStockToolStripMenuItem.Text = "&Product Stock";
             this.productStockToolStripMenuItem.Click += new System.EventHandler(this.productStockToolStripMenuItem_Click);
-            // 
-            // PaymentsExpensesToolStripMenuItem
-            // 
-            this.PaymentsExpensesToolStripMenuItem.Name = "PaymentsExpensesToolStripMenuItem";
-            this.PaymentsExpensesToolStripMenuItem.Size = new System.Drawing.Size(124, 20);
-            this.PaymentsExpensesToolStripMenuItem.Text = "Payments/&Expenses";
-            this.PaymentsExpensesToolStripMenuItem.Click += new System.EventHandler(this.PaymentsExpensesToolStripMenuItem_Click);
             // 
             // administrationToolStripMenuItem
             // 
@@ -369,7 +369,7 @@ namespace SalesOrdersReport.Views
             // toolStripStatusLabel
             // 
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(905, 17);
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(874, 17);
             this.toolStripStatusLabel.Spring = true;
             this.toolStripStatusLabel.Text = "Status";
             this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

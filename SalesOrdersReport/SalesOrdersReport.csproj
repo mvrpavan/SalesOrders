@@ -230,6 +230,12 @@
     <Compile Include="Views\EditUserForm.Designer.cs">
       <DependentUpon>EditUserForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ExportToExcelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ExportToExcelForm.Designer.cs">
+      <DependentUpon>ExportToExcelForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\GetDBConnectionConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -475,6 +481,9 @@
     <EmbeddedResource Include="Views\EditUserForm.resx">
       <DependentUpon>EditUserForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\ExportToExcelForm.resx">
+      <DependentUpon>ExportToExcelForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\GetDBConnectionConfigForm.resx">
       <DependentUpon>GetDBConnectionConfigForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -608,6 +617,7 @@
   <ItemGroup>
     <None Include="Resources\tax.png" />
     <None Include="Resources\tax_menu.png" />
+    <None Include="Resources\database_upload_32.png" />
     <Content Include="SQLScripts\ProductMasterTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

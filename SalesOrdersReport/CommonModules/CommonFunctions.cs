@@ -762,7 +762,8 @@ namespace SalesOrdersReport.CommonModules
                 ObjForm.MaximizeBox = false;
                 ObjForm.MinimizeBox = false;
                 //ObjForm.ControlBox = false;
-				ApplyPrivilegeControl(ObjForm);
+                ObjForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                ApplyPrivilegeControl(ObjForm);
                 ObjForm.ShowDialog(Owner);
             }
             catch (Exception ex)
@@ -879,6 +880,93 @@ namespace SalesOrdersReport.CommonModules
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"CommonFunctions.SetDataGridViewProperties()", ex);
+            }
+        }
+
+        public static Int32 ExportDataTableToExcelFile(DataTable dtDataToExport, String ExcelFilePath, String SheetName, Boolean AppendSheet = false, Int32 StartRow = 1, Int32 StartCol = 1)
+        {
+            Excel.Application xlApp = new Excel.Application();
+            try
+            {
+                xlApp.Visible = false;
+                xlApp.DisplayAlerts = false;
+
+                Excel.Workbook ExcelWorkbook = null;
+                Excel.Worksheet ExcelWorksheet = null;
+
+                if (File.Exists(ExcelFilePath))
+                {
+                    if (AppendSheet)
+                    {
+                        ExcelWorkbook = xlApp.Workbooks.Open(ExcelFilePath);
+                        ExcelWorksheet = GetWorksheet(ExcelWorkbook, SheetName);
+                        if (ExcelWorksheet != null)
+                        {
+                            ExcelWorksheet.Cells.Clear();
+                        }
+                        else
+                        {
+                            ExcelWorksheet = ExcelWorkbook.Worksheets.Add();
+                        }
+                    }
+                    else
+                    {
+                        File.Delete(ExcelFilePath);
+                        ExcelWorkbook = xlApp.Workbooks.Add();
+                        for (int i = 1; i <= 3 && ExcelWorkbook.Sheets.Count > 1; i++)
+                        {
+                            ExcelWorksheet = GetWorksheet(ExcelWorkbook, "Sheet" + i);
+                            if (ExcelWorksheet != null) ExcelWorksheet.Delete();
+                        }
+                        ExcelWorksheet = ExcelWorkbook.Worksheets[1];
+                    }
+                }
+                else
+                {
+                    ExcelWorkbook = xlApp.Workbooks.Add();
+                    for (int i = 1; i <= 3 && ExcelWorkbook.Sheets.Count > 1; i++)
+                    {
+                        ExcelWorksheet = GetWorksheet(ExcelWorkbook, "Sheet" + i);
+                        if (ExcelWorksheet != null) ExcelWorksheet.Delete();
+                    }
+                    ExcelWorksheet = ExcelWorkbook.Worksheets[1];
+                }
+                ExcelWorksheet.Name = SheetName;
+                ExcelWorkbook.SaveAs(ExcelFilePath);
+
+                Int32 CurrCol = StartCol, CurrRow = StartRow;
+                foreach (DataColumn item in dtDataToExport.Columns)
+                {
+                    ExcelWorksheet.Cells[CurrRow, CurrCol] = item.ColumnName;
+                    CurrCol++;
+                }
+
+                CurrRow = StartRow + 1; CurrCol = StartCol;
+                foreach (DataRow item in dtDataToExport.Rows)
+                {
+                    for (int i = 0; i < item.ItemArray.Length; i++)
+                    {
+                        ExcelWorksheet.Cells[CurrRow, CurrCol + i] = item.ItemArray[i].ToString();
+                    }
+                    CurrRow++;
+                }
+
+                ExcelWorkbook.Close(true);
+
+                xlApp.DisplayAlerts = true;
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog($"CommonFunctions.ExportDataTableToExcelFile()", ex);
+                xlApp.Visible = true;
+                xlApp.DisplayAlerts = true;
+                return -1;
+            }
+            finally
+            {
+                xlApp.Quit();
+                ReleaseCOMObject(xlApp);
             }
         }
     }

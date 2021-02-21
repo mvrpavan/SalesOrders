@@ -1512,7 +1512,7 @@ namespace SalesOrdersReport.Models
                     new String[] { "StockName", "Inventory", "Units", "UnitsOfMeasurement", "ReOrderStockLevel", "ReOrderStockQty" },
                     new String[] { "HSNCode", "CGST", "SGST", "IGST" },
         };
-        DataTable dtProductsToImport, dtProductCategoriesToImport, dtProductInventoryToImport, dtHSNCodesToImport;
+        DataTable dtProductsToImport, dtProductsToUpdate, dtProductCategoriesToImport, dtProductInventoryToImport, dtHSNCodesToImport;
         Boolean[] ArrDataToImport = null;
 
         public String ValidateExcelFileToImport(String ExcelFilePathToImport, Boolean[] ArrDataToImport)
@@ -1608,9 +1608,9 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public Int32 ProcessProductsDataFromExcelFile(out String ProcessStatus)
+        public Int32 ProcessProductsDataFromExcelFile(out String ProcessStatus, out Int32 ExistingProductsCount)
         {
-            ProcessStatus = "";
+            ProcessStatus = ""; ExistingProductsCount = 0;
             try
             {
                 Int32 ExistingProductCount = 0, ExistingProductCategoryCount = 0, ExistingProductInventoryCount = 0, ExistingHSNCount = 0;
@@ -1619,15 +1619,22 @@ namespace SalesOrdersReport.Models
                 //Check Products
                 if (ArrDataToImport[0])
                 {
+                    dtProductsToUpdate = new DataTable();
+                    foreach (DataColumn item in dtProductsToImport.Columns)
+                    {
+                        dtProductsToUpdate.Columns.Add(new DataColumn(item.ColumnName, item.DataType));
+                    }
                     foreach (DataRow item in dtProductsToImport.Rows)
                     {
                         ProductDetails tmpProductDetails = GetProductDetails(item["ProductName"].ToString());
                         if (tmpProductDetails != null)
                         {
                             ExistingProductCount++;
+                            dtProductsToUpdate.Rows.Add(item.ItemArray.ToArray());
                             item.Delete();
                         }
                     }
+                    ExistingProductsCount = ExistingProductCount;
                     dtProductsToImport.AcceptChanges();
                     ProcessStatus += $"{(!String.IsNullOrEmpty(ProcessStatus) ? "\n" : "")}Products:: New:{dtProductsToImport.Rows.Count} Existing:{ExistingProductCount}";
                     TotalRecordCount += dtProductsToImport.Rows.Count;
@@ -1684,7 +1691,7 @@ namespace SalesOrdersReport.Models
                     TotalRecordCount += dtHSNCodesToImport.Rows.Count;
                 }
 
-                if (TotalRecordCount > 0) return 0;
+                if ((TotalRecordCount + ExistingProductsCount) > 0) return 0;
                 else return 1;
             }
             catch (Exception ex)
@@ -1695,7 +1702,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public Int32 ImportProductsDataToDatabase(out String ImportStatus)
+        public Int32 ImportProductsDataToDatabase(out String ImportStatus, Int32 ExistingProductsCount)
         {
             ImportStatus = "";
             try
@@ -1761,6 +1768,28 @@ namespace SalesOrdersReport.Models
                 //Import Products
                 if (ArrDataToImport[0])
                 {
+                    Int32 ErrorProductsUpdateCount = 0;
+                    if (ExistingProductsCount == 0) dtProductsToImport.AcceptChanges();
+                    else
+                    {
+                        foreach (DataRow item in dtProductsToUpdate.Rows)
+                        {
+                            ProductDetails tmpProductDetails = GetProductDetails(item["ProductName"].ToString());
+                            if (tmpProductDetails == null)
+                            {
+                                ErrorProductsUpdateCount++;
+                                continue;
+                            }
+                            tmpProductDetails = tmpProductDetails.Clone();
+                            tmpProductDetails.PurchasePrice = Double.Parse(item["PurchasePrice"].ToString());
+                            tmpProductDetails.WholesalePrice = Double.Parse(item["WholesalePrice"].ToString());
+                            tmpProductDetails.RetailPrice = Double.Parse(item["RetailPrice"].ToString());
+                            tmpProductDetails.MaxRetailPrice = Double.Parse(item["MaxRetailPrice"].ToString());
+
+                            UpdateProductPriceDetails(tmpProductDetails);
+                        }
+                    }
+
                     foreach (DataRow item in dtProductsToImport.Rows)
                     {
                         ProductDetails tmpProductDetails = new ProductDetails()
@@ -1785,7 +1814,7 @@ namespace SalesOrdersReport.Models
                         if (AddNewProductDetails(tmpProductDetails, tmpProductInventoryDetails) == null) ErrorProductsCount++;
                     }
 
-                    ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}Inventory:: Imported:{dtProductsToImport.Rows.Count - ErrorProductsCount} Error:{ErrorProductsCount}";
+                    ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}Products:: Imported:{dtProductsToImport.Rows.Count - ErrorProductsCount} Updated:{ExistingProductsCount - ErrorProductsUpdateCount} Error:{ErrorProductsCount + ErrorProductsUpdateCount}";
                 }
 
                 return 0;
@@ -1798,7 +1827,121 @@ namespace SalesOrdersReport.Models
             finally
             {
                 ArrDataToImport = null;
-                dtProductsToImport = dtProductCategoriesToImport = dtProductInventoryToImport = dtHSNCodesToImport = null;
+                dtProductsToImport = dtProductsToUpdate = dtProductCategoriesToImport = dtProductInventoryToImport = dtHSNCodesToImport = null;
+            }
+        }
+
+        public Int32 ExportProductsDataToExcel(List<Int32> ListProductIDs, Boolean[] ObjDetails, String ExcelFilePath, Boolean Append, out String ExportStatus)
+        {
+            ExportStatus = "";
+            try
+            {
+                //Export Inventory
+                if (ObjDetails[1])
+                {
+                    DataTable dtDataToExport = new DataTable(ArrSheetNamesToImport[2]);
+                    for (int i = 0; i < ArrSheetColumns[2].Length; i++)
+                    {
+                        dtDataToExport.Columns.Add(new DataColumn(ArrSheetColumns[2][i]));
+                    }
+
+                    HashSet<Int32> HashProdInvIDs = new HashSet<Int32>();
+                    for (int i = 0; i < ListProductIDs.Count; i++)
+                    {
+                        ProductDetails tmpProductDetails = GetProductDetails(ListProductIDs[i]);
+                        if (tmpProductDetails == null) continue;
+                        if (HashProdInvIDs.Contains(tmpProductDetails.ProductInvID)) continue;
+                        ProductInventoryDetails tmpProductInventoryDetails = GetProductInventoryDetails(tmpProductDetails.ProductInvID);
+
+                        Object[] ArrItems = new Object[]
+                        {
+                            tmpProductInventoryDetails.StockName,
+                            tmpProductInventoryDetails.Inventory,
+                            tmpProductInventoryDetails.Units,
+                            tmpProductInventoryDetails.UnitsOfMeasurement,
+                            tmpProductInventoryDetails.ReOrderStockLevel,
+                            tmpProductInventoryDetails.ReOrderStockQty
+                        };
+
+                        dtDataToExport.Rows.Add(ArrItems);
+                    }
+
+                    Int32 RetVal = CommonFunctions.ExportDataTableToExcelFile(dtDataToExport, ExcelFilePath, dtDataToExport.TableName, Append);
+                    if (RetVal < 0) ExportStatus += $"{(!String.IsNullOrEmpty(ExportStatus) ? "\n" : "")}Inventory:: Failed export";
+                    else ExportStatus += $"{(!String.IsNullOrEmpty(ExportStatus) ? "\n" : "")}Inventory:: Exported:{dtDataToExport.Rows.Count}";
+
+                    Append = true;
+                }
+
+                //Export Products
+                if (ObjDetails[0])
+                {
+                    DataTable dtDataToExport = new DataTable(ArrSheetNamesToImport[0]);
+                    for (int i = 0; i < ArrSheetColumns[0].Length; i++)
+                    {
+                        dtDataToExport.Columns.Add(new DataColumn(ArrSheetColumns[0][i]));
+                    }
+
+                    for (int i = 0; i < ListProductIDs.Count; i++)
+                    {
+                        ProductDetails tmpProductDetails = GetProductDetails(ListProductIDs[i]);
+                        if (tmpProductDetails == null) continue;
+
+                        Object[] ArrItems = new Object[]
+                        {
+                            tmpProductDetails.ItemName,
+                            tmpProductDetails.ProductDesc,
+                            tmpProductDetails.CategoryName,
+                            tmpProductDetails.PurchasePrice,
+                            tmpProductDetails.WholesalePrice,
+                            tmpProductDetails.RetailPrice,
+                            tmpProductDetails.MaxRetailPrice,
+                            tmpProductDetails.Units,
+                            tmpProductDetails.UnitsOfMeasurement,
+                            tmpProductDetails.SortName,
+                            tmpProductDetails.HSNCode,
+                            tmpProductDetails.StockName,
+                            tmpProductDetails.Active
+                        };
+
+                        dtDataToExport.Rows.Add(ArrItems);
+                    }
+
+                    Int32 RetVal = CommonFunctions.ExportDataTableToExcelFile(dtDataToExport, ExcelFilePath, dtDataToExport.TableName, Append);
+                    if (RetVal < 0) ExportStatus += $"{(!String.IsNullOrEmpty(ExportStatus) ? "\n" : "")}Products:: Failed export";
+                    else ExportStatus += $"{(!String.IsNullOrEmpty(ExportStatus) ? "\n" : "")}Products:: Exported {dtDataToExport.Rows.Count} products data";
+                }
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExportProductsDataToExcel()", ex);
+                return -1;
+            }
+        }
+
+        public void UpdateProductPriceDetails(ProductDetails tmpProductDetails)
+        {
+            try
+            {
+                ProductDetails ObjProductDetails = GetProductDetails(tmpProductDetails.ProductID);
+
+                ObjMySQLHelper.UpdateTableDetails("ProductMaster", new List<string>() { "PurchasePrice", "WholesalePrice", "RetailPrice", "MaxRetailPrice" },
+                                        new List<String>() { tmpProductDetails.PurchasePrice.ToString(), tmpProductDetails.WholesalePrice.ToString(),
+                                        tmpProductDetails.RetailPrice.ToString(),tmpProductDetails.MaxRetailPrice.ToString()},
+                                        new List<Types> { Types.Number, Types.Number, Types.Number, Types.Number },
+                                        $"ProductID = {ObjProductDetails.ProductID}");
+
+                ObjProductDetails.PurchasePrice = tmpProductDetails.PurchasePrice;
+                ObjProductDetails.WholesalePrice = tmpProductDetails.WholesalePrice;
+                ObjProductDetails.RetailPrice = tmpProductDetails.RetailPrice;
+                ObjProductDetails.MaxRetailPrice = tmpProductDetails.MaxRetailPrice;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdateProductPriceDetails()", ex);
+                throw;
             }
         }
     }

@@ -256,6 +256,30 @@ namespace SalesOrdersReport.Models
             }
         }
 
+        public List<InvoiceDetails> GetInvoiceDetailsForCustomer(Int32 CustomerID)
+        {
+            try
+            {
+                if (ListInvoices.Count == 0) LoadInvoiceDetails(DateTime.MinValue, DateTime.MinValue, INVOICESTATUS.Created, "CustomerID", CustomerID.ToString());
+                if (ListInvoices.Count == 0) return null;
+
+                List<InvoiceDetails> ListInvoicesForCustomer = ListInvoices.FindAll(e => e.CustomerID == CustomerID);
+                if (ListInvoicesForCustomer == null || ListInvoicesForCustomer.Count == 0) return null;
+
+                for (int i = 0; i < ListInvoicesForCustomer.Count; i++)
+                {
+                    FillInvoiceItemDetails(ListInvoicesForCustomer[i]);
+                }
+
+                return ListInvoicesForCustomer;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetInvoiceDetailsForCustomer()", ex);
+                throw;
+            }
+        }
+
         public List<InvoiceDetails> GetInvoiceDetailsForCustomer(DateTime InvoiceDate, Int32 CustomerID)
         {
             try

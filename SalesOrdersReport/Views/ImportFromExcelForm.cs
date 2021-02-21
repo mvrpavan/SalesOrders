@@ -90,7 +90,7 @@ namespace SalesOrdersReport.Views
                 if (txtImportFrmExclFilePath.Text == string.Empty)
                 {
                     dlgResult = OFDImportExcelFileDialog.ShowDialog();
-                    txtImportFrmExclFilePath.Text = OFDImportExcelFileDialog.FileName;
+                    if (dlgResult == DialogResult.OK) txtImportFrmExclFilePath.Text = OFDImportExcelFileDialog.FileName;
                 }
                 if (!File.Exists(txtImportFrmExclFilePath.Text))
                 {
@@ -100,6 +100,12 @@ namespace SalesOrdersReport.Views
 
                 if (txtImportFrmExclFilePath.Text != string.Empty)
                 {
+
+                    if (chkListBoxDataToImport.CheckedItems.Count == 0)
+                    {
+                        MessageBox.Show(this, "Choose atleast one dataset to Import.", "Import data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
 #if DEBUG
                     bgWorkerImportExcel_DoWork(null, null);
                     bgWorkerImportExcel_RunWorkerCompleted(null, null);

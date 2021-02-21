@@ -133,7 +133,6 @@
         #endregion
 
  
-        private System.Windows.Forms.Label lblImportFrmExcelValidateErrMsg;
         private System.Windows.Forms.Button btnImportFrmExcelBrowse;
         private System.Windows.Forms.TextBox txtImportFrmExclFilePath;
         private System.Windows.Forms.Button btnImportFrmExclUploadFile;
