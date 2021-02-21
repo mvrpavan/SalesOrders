@@ -14,7 +14,7 @@ namespace SalesOrdersReport.Views
 {
     enum ReportType
     {
-        INVOICE, QUOTATION, PURCHASEORDER
+        ORDER, INVOICE, QUOTATION, PURCHASEORDER
     }
 
     public partial class SellerInvoiceForm : Form
@@ -117,7 +117,6 @@ namespace SalesOrdersReport.Views
 #endif
         }
 
-        delegate void ReportProgressDel(Int32 ProgressState);
         ReportProgressDel ReportProgress = null;
 
         private void ReportProgressFunc(Int32 ProgressState)

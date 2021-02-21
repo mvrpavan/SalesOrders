@@ -437,14 +437,142 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public void PrintOrder(ReportType EnumReportType, Boolean IsDummyBill, OrderDetails ObjOrderDetails)
+        /*public void PrintOrderInvoiceQuotation(ReportType EnumReportType, Boolean IsDummyBill, List<Object> ListObjects, DateTime OrdInvQuotDate, Int32 PrintCopies = 1, Boolean CreateSummary = false, Boolean PrintOldBalance = false)
         {
-            Excel.Application xlApp = new Excel.Application();
+            try
+            {
+                String OutputFolder = Path.GetTempPath();
+                String ExcelFilePath = ExportOrdInvQuotToExcel(EnumReportType, IsDummyBill, OrdInvQuotDate, ListObjects, OutputFolder);
+
+                if (PrintCopies > 0)
+                {
+                    Excel.Application xlApp = new Excel.Application();
+                    try
+                    {
+                        xlApp.Visible = false;
+                        xlApp.DisplayAlerts = false;
+
+                        Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(ExcelFilePath);
+
+                        xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, PrintCopies);
+
+                        xlWorkbook.Close(false);
+                        CommonFunctions.ReleaseCOMObject(xlWorkbook);
+                    }
+                    catch (Exception ex)
+                    {
+                        CommonFunctions.ShowErrorDialog($"{this}.PrintOrder()", ex);
+                    }
+                    finally
+                    {
+                        xlApp.Quit();
+                        CommonFunctions.ReleaseCOMObject(xlApp);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.PrintOrderInvoiceQuotation()", ex);
+            }
+        }
+
+        public String ExportOrdInvQuotToExcel(ReportType EnumReportType, Boolean IsDummyBill, DateTime OrdInvQuotDate, List<Object> ListObjects, String ExportFolderPath)
+        {
+            Excel.Application xlApp = null;
+            try
+            {
+                xlApp = new Excel.Application();
+                xlApp.Visible = false;
+                xlApp.DisplayAlerts = false;
+
+                String SaveFilePath = "";
+                String OutputFolder = ExportFolderPath;
+                String SelectedDateTimeString = OrdInvQuotDate.ToString("dd-MM-yyyy");
+                switch (EnumReportType)
+                {
+                    case ReportType.ORDER:
+                        SaveFilePath = OutputFolder + "\\Order_" + SelectedDateTimeString + ".xlsx";
+                        break;
+                    case ReportType.INVOICE:
+                        SaveFilePath = OutputFolder + "\\Invoice_" + SelectedDateTimeString + ".xlsx";
+                        break;
+                    case ReportType.QUOTATION:
+                        SaveFilePath = OutputFolder + "\\Quotation_" + SelectedDateTimeString + ".xlsx";
+                        break;
+                    default:
+                        return null;
+                }
+
+                if (IsDummyBill)
+                {
+                    SaveFilePath = Path.GetDirectoryName(SaveFilePath) + "\\" + Path.GetFileNameWithoutExtension(SaveFilePath) + "_Dummy" + Path.GetExtension(SaveFilePath);
+                }
+
+                Excel.Workbook xlWorkbook = xlApp.Workbooks.Add();
+                Excel.Worksheet xlWorkSheet = null;
+                for (int i = 1; i <= 3 && xlWorkbook.Sheets.Count > 1; i++)
+                {
+                    xlWorkSheet = CommonFunctions.GetWorksheet(xlWorkbook, "Sheet" + i);
+                    if (xlWorkSheet != null) xlWorkSheet.Delete();
+                }
+
+                for (int i = 0; i < ListObjects.Count; i++)
+                {
+                    if (i == 0) xlWorkSheet = xlWorkbook.Sheets[1];
+                    else xlWorkSheet = xlWorkbook.Sheets.Add();
+
+                    switch (EnumReportType)
+                    {
+                        case ReportType.ORDER:
+                            ExportOrder(EnumReportType, IsDummyBill, xlWorkSheet, (OrderDetails)ListObjects[i]);
+                            break;
+                        case ReportType.INVOICE:
+                            break;
+                        case ReportType.QUOTATION:
+                            break;
+                        default:
+                            return null;
+                    }
+                }
+
+                Excel.Worksheet FirstWorksheet = xlWorkbook.Sheets[1];
+                FirstWorksheet.Select();
+
+                xlWorkbook.SaveAs(SaveFilePath);
+                xlWorkbook.Close(true);
+
+                xlApp.DisplayAlerts = true;
+                CommonFunctions.ReleaseCOMObject(xlWorkbook);
+
+                return SaveFilePath;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExportOrdInvQuotToExcel()", ex);
+                if (xlApp != null)
+                {
+                    xlApp.Visible = true;
+                    xlApp.DisplayAlerts = true;
+                }
+                return null;
+            }
+            finally
+            {
+                if (xlApp != null)
+                {
+                    xlApp.Quit();
+                    CommonFunctions.ReleaseCOMObject(xlApp);
+                }
+            }
+        }*/
+
+        public void ExportOrder(ReportType EnumReportType, Boolean IsDummyBill, Excel.Worksheet ExcelWorksheet, OrderDetails ObjOrderDetails)
+        {
             try
             {
                 Boolean PrintOldBalance = false;
                 ReportSettings CurrReportSettings = null;
-                String BillNumberText = "", SaveFileName = "";
+                String BillNumberText = "";
                 String OutputFolder = Path.GetTempPath();
                 String SelectedDateTimeString = ObjOrderDetails.OrderDate.ToString("dd-MM-yyyy");
                 Boolean PrintBill = false;
@@ -454,7 +582,6 @@ namespace SalesOrdersReport.Models
                     case ReportType.INVOICE:
                         CurrReportSettings = CommonFunctions.ObjInvoiceSettings;
                         BillNumberText = "Invoice#";
-                        SaveFileName = OutputFolder + "\\Invoice_" + SelectedDateTimeString + ".xlsx";
                         PrintBill = CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatInvoice;
                         CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0);
                         break;
@@ -462,17 +589,11 @@ namespace SalesOrdersReport.Models
                         CurrReportSettings = CommonFunctions.ObjQuotationSettings;
                         PrintOldBalance = true;
                         BillNumberText = "Quotation#";
-                        SaveFileName = OutputFolder + "\\Quotation_" + SelectedDateTimeString + ".xlsx";
                         PrintBill = CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatQuotation;
                         CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1);
                         break;
                     default:
                         return;
-                }
-
-                if (IsDummyBill)
-                {
-                    SaveFileName = Path.GetDirectoryName(SaveFileName) + "\\" + Path.GetFileNameWithoutExtension(SaveFileName) + "_Dummy" + Path.GetExtension(SaveFileName);
                 }
 
                 Int32 ValidItemCount = ObjOrderDetails.ListOrderItems.Count;
@@ -501,8 +622,7 @@ namespace SalesOrdersReport.Models
                 ObjInvoice.UseNumberToWordsFormula = false;
                 ObjInvoice.ListProducts = new List<ProductDetailsForInvoice>();
 
-                Excel.Workbook xlWorkbook = xlApp.Workbooks.Add();
-                Excel.Worksheet xlWorkSheet = xlWorkbook.Sheets[1];
+                Excel.Worksheet xlWorkSheet = ExcelWorksheet;
                 String SheetName = ObjCurrentSeller.CustomerName.Replace(":", "").Replace("\\", "").Replace("/", "").
                         Replace("?", "").Replace("*", "").Replace("[", "").Replace("]", "");
                 SheetName = ((SheetName.Length > 30) ? SheetName.Substring(0, 30) : SheetName);
@@ -578,33 +698,10 @@ namespace SalesOrdersReport.Models
                     ObjDiscountGroup.Discount = OrigDiscountGroup.Discount;
                 }
                 #endregion
-
-                xlApp.DisplayAlerts = true;
-                Excel.Worksheet FirstWorksheet = xlWorkbook.Sheets[1];
-                FirstWorksheet.Select();
-
-                #region Print Invoice
-                if (PrintBill && CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies > 0)
-                {
-                    //DialogResult result = MessageBox.Show(this, "Would you like to print the " + InvoiceQuotation + "?", "Sales " + InvoiceQuotation, MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                    //if (result == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        xlWorkSheet.PrintOutEx(Type.Missing, Type.Missing, CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies);
-                    }
-                }
-                #endregion
-
-                xlWorkbook.Close(SaveChanges: !IsDummyBill);
-                CommonFunctions.ReleaseCOMObject(xlWorkbook);
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.PrintOrder()", ex);
-            }
-            finally
-            {
-                xlApp.Quit();
-                CommonFunctions.ReleaseCOMObject(xlApp);
             }
         }
     }

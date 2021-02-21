@@ -52,7 +52,6 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        delegate void ReportProgressDel(Int32 ProgressState);
         ReportProgressDel ReportProgress = null;
 
         private void ReportProgressFunc(Int32 ProgressState)

@@ -14,6 +14,10 @@ using SalesOrdersReport.Views;
 
 namespace SalesOrdersReport.CommonModules
 {
+    delegate void ReportProgressDel(Int32 ProgressState);
+    public delegate void UpdateUsingObjectOnCloseDel(Int32 Mode, Object ObjAddUpdated = null);
+    public delegate void UpdateOnCloseDel(Int32 Mode);
+
     class CommonFunctions
     {
         public static List<ProductLine> ListProductLines;
@@ -967,6 +971,137 @@ namespace SalesOrdersReport.CommonModules
             {
                 xlApp.Quit();
                 ReleaseCOMObject(xlApp);
+            }
+        }
+
+        public static void PrintOrderInvoiceQuotation(ReportType EnumReportType, Boolean IsDummyBill, Object ObjectModel, List<Object> ListObjects, 
+            DateTime OrdInvQuotDate, Int32 PrintCopies = 1, Boolean CreateSummary = false, Boolean PrintOldBalance = false, ReportProgressDel ReportProgress = null)
+        {
+            try
+            {
+                String OutputFolder = Path.GetTempPath();
+                String ExcelFilePath = ExportOrdInvQuotToExcel(EnumReportType, IsDummyBill, OrdInvQuotDate, ObjectModel, ListObjects, OutputFolder, CreateSummary, PrintOldBalance, ReportProgress);
+
+                if (PrintCopies > 0)
+                {
+                    Excel.Application xlApp = new Excel.Application();
+                    try
+                    {
+                        xlApp.Visible = false;
+                        xlApp.DisplayAlerts = false;
+
+                        Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(ExcelFilePath);
+
+                        xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, PrintCopies);
+
+                        xlWorkbook.Close(false);
+                        CommonFunctions.ReleaseCOMObject(xlWorkbook);
+                    }
+                    catch (Exception ex)
+                    {
+                        CommonFunctions.ShowErrorDialog($"CommonFunctions.PrintOrderInvoiceQuotation()", ex);
+                    }
+                    finally
+                    {
+                        xlApp.Quit();
+                        CommonFunctions.ReleaseCOMObject(xlApp);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"CommonFunctions.PrintOrderInvoiceQuotation()", ex);
+            }
+        }
+
+        public static String ExportOrdInvQuotToExcel(ReportType EnumReportType, Boolean IsDummyBill, DateTime OrdInvQuotDate, Object ObjectModel, 
+                            List<Object> ListObjects, String ExportFolderPath, Boolean CreateSummary = false, Boolean PrintOldBalance = false, ReportProgressDel ReportProgress = null)
+        {
+            Excel.Application xlApp = null;
+            try
+            {
+                xlApp = new Excel.Application();
+                xlApp.Visible = false;
+                xlApp.DisplayAlerts = false;
+
+                String SaveFilePath = "";
+                String OutputFolder = ExportFolderPath;
+                String SelectedDateTimeString = OrdInvQuotDate.ToString("dd-MM-yyyy");
+                switch (EnumReportType)
+                {
+                    case ReportType.ORDER:
+                        SaveFilePath = OutputFolder + "\\Order_" + SelectedDateTimeString + ".xlsx";
+                        break;
+                    case ReportType.INVOICE:
+                        SaveFilePath = OutputFolder + "\\Invoice_" + SelectedDateTimeString + ".xlsx";
+                        break;
+                    case ReportType.QUOTATION:
+                        SaveFilePath = OutputFolder + "\\Quotation_" + SelectedDateTimeString + ".xlsx";
+                        break;
+                    default:
+                        return null;
+                }
+
+                if (IsDummyBill)
+                {
+                    SaveFilePath = Path.GetDirectoryName(SaveFilePath) + "\\" + Path.GetFileNameWithoutExtension(SaveFilePath) + "_Dummy" + Path.GetExtension(SaveFilePath);
+                }
+
+                Excel.Workbook xlWorkbook = xlApp.Workbooks.Add();
+                Excel.Worksheet xlWorkSheet = null;
+                for (int i = 1; i <= 3 && xlWorkbook.Sheets.Count > 1; i++)
+                {
+                    xlWorkSheet = CommonFunctions.GetWorksheet(xlWorkbook, "Sheet" + i);
+                    if (xlWorkSheet != null) xlWorkSheet.Delete();
+                }
+
+                for (int i = 0; i < ListObjects.Count; i++)
+                {
+                    if (i == 0) xlWorkSheet = xlWorkbook.Sheets[1];
+                    else xlWorkSheet = xlWorkbook.Sheets.Add();
+
+                    switch (EnumReportType)
+                    {
+                        case ReportType.ORDER:
+                            ((OrdersModel)ObjectModel).ExportOrder(EnumReportType, IsDummyBill, xlWorkSheet, (OrderDetails)ListObjects[i]);
+                            break;
+                        case ReportType.INVOICE:
+                            break;
+                        case ReportType.QUOTATION:
+                            break;
+                        default:
+                            return null;
+                    }
+                }
+
+                Excel.Worksheet FirstWorksheet = xlWorkbook.Sheets[1];
+                FirstWorksheet.Select();
+
+                xlWorkbook.SaveAs(SaveFilePath);
+                xlWorkbook.Close(true);
+
+                xlApp.DisplayAlerts = true;
+                CommonFunctions.ReleaseCOMObject(xlWorkbook);
+
+                return SaveFilePath;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"CommonFunctions.ExportOrdInvQuotToExcel()", ex);
+                if (xlApp != null)
+                {
+                    xlApp.Visible = true;
+                    xlApp.DisplayAlerts = true;
+                }
+                return null;
+            }
+            finally
+            {
+                if (xlApp != null)
+                {
+                    xlApp.Quit();
+                    CommonFunctions.ReleaseCOMObject(xlApp);
+                }
             }
         }
     }

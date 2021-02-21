@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Views
 {
     public delegate void UpdateOnCloseDel(Int32 Mode);
     public partial class ManageUsersForm : Form

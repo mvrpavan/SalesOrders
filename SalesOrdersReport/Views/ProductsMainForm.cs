@@ -12,8 +12,6 @@ using SalesOrdersReport.Models;
 
 namespace SalesOrdersReport.Views
 {
-    public delegate void UpdateUsingObjectOnCloseDel(Int32 Mode, Object ObjAddUpdated = null);
-
     public partial class ProductsMainForm : Form
     {
         ProductLine CurrProductLine;
@@ -29,22 +27,6 @@ namespace SalesOrdersReport.Views
 
                 CurrProductLine = CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex];
                 ObjProductMaster = CurrProductLine.ObjProductMaster;
-
-                //dtGridViewProductCategory.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                //dtGridViewProductCategory.MultiSelect = false;
-                //dtGridViewProductCategory.AllowUserToAddRows = false;
-                //dtGridViewProductCategory.AllowUserToDeleteRows = false;
-                //dtGridViewProductCategory.AllowUserToOrderColumns = false;
-                //dtGridViewProductCategory.AllowUserToResizeColumns = true;
-                //dtGridViewProductCategory.AllowUserToResizeRows = false;
-
-                //dtGridViewProducts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                //dtGridViewProducts.MultiSelect = false;
-                //dtGridViewProducts.AllowUserToAddRows = false;
-                //dtGridViewProducts.AllowUserToDeleteRows = false;
-                //dtGridViewProducts.AllowUserToOrderColumns = false;
-                //dtGridViewProducts.AllowUserToResizeColumns = true;
-                //dtGridViewProducts.AllowUserToResizeRows = false;
 
                 CommonFunctions.SetDataGridViewProperties(dtGridViewProducts);
                 CommonFunctions.SetDataGridViewProperties(dtGridViewProductCategory);
@@ -803,7 +785,6 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        delegate void ReportProgressDel(Int32 ProgressState);
         ReportProgressDel ReportProgress = null;
 
         private void ReportProgressFunc(Int32 ProgressState)

@@ -38,6 +38,12 @@ namespace SalesOrdersReport.Views
                 cmbBoxOrderStatus.Items.Add(ORDERSTATUS.Completed.ToString());
                 cmbBoxOrderStatus.Items.Add(ORDERSTATUS.Cancelled.ToString());
                 cmbBoxOrderStatus.SelectedIndex = 1;
+
+                cmbBoxLine.DropDownStyle = ComboBoxStyle.DropDownList;
+                cmbBoxLine.Items.Clear();
+                cmbBoxLine.Items.Add(AllOrderstatus);
+                cmbBoxLine.Items.AddRange(CommonFunctions.ObjCustomerMasterModel.GetAllLineNames().ToArray());
+                cmbBoxLine.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -204,13 +210,19 @@ namespace SalesOrdersReport.Views
             {
                 if (dtGridViewOrders.SelectedRows.Count == 0)
                 {
-                    MessageBox.Show(this, "Please select an Order to convert to Invoice", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(this, "Please select an Order to Print.", "Print Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
-                OrderDetails ObjOrderDetails = ObjOrdersModel.GetOrderDetailsForOrderID(OrderID);
-                ObjOrdersModel.PrintOrder(ReportType.QUOTATION, true, ObjOrderDetails);
+                BackgroundTask = 1;
+#if DEBUG
+                backgroundWorkerOrders_DoWork(null, null);
+                backgroundWorkerOrders_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerOrders.ReportProgress;
+                backgroundWorkerOrders.RunWorkerAsync();
+                backgroundWorkerOrders.WorkerReportsProgress = true;
+#endif
             }
             catch (Exception ex)
             {
@@ -370,6 +382,168 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.cmbBoxOrderStatus_SelectedIndexChanged()", ex);
+            }
+        }
+
+        private void btnExportToExcel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CommonFunctions.ShowDialog(new ExportToExcelForm(ExportDataTypes.Orders, null, ExportOrders), this);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnExportToExcel_Click()", ex);
+            }
+        }
+
+        Int32 ExportOption = -1;
+        private Int32 ExportOrders(String FilePath, Object ObjDetails, Boolean Append)
+        {
+            try
+            {
+                ExportOption = (Int32)ObjDetails;
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExportOrders()", ex);
+                return -1;
+            }
+        }
+
+        Int32 BackgroundTask = 0;
+        ReportProgressDel ReportProgress = null;
+
+        private void ReportProgressFunc(Int32 ProgressState)
+        {
+            if (ReportProgress == null) return;
+            ReportProgress(ProgressState);
+        }
+
+        private void backgroundWorkerOrders_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            try
+            {
+                switch (BackgroundTask)
+                {
+                    case 1: //Print Order
+                        {
+                            ReportType EnumReportType = ReportType.QUOTATION;
+                            Boolean PrintOldBalance = false;
+                            Boolean CreateSummary = false;
+                            Int32 PrintCopies = 1;
+                            //PrintCopies = CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies;
+                            //switch (EnumReportType)
+                            //{
+                            //    case ReportType.INVOICE:
+                            //        PrintOldBalance = false;
+                            //        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0);
+                            //        break;
+                            //    case ReportType.QUOTATION:
+                            //        PrintOldBalance = true;
+                            //        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1);
+                            //        break;
+                            //    default:
+                            //        return;
+                            //}
+
+                            Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
+                            OrderDetails ObjOrderDetails = ObjOrdersModel.GetOrderDetailsForOrderID(OrderID);
+                            CommonFunctions.PrintOrderInvoiceQuotation(EnumReportType, true, ObjOrdersModel, new List<Object>() { ObjOrderDetails }, ObjOrderDetails.OrderDate, PrintCopies, CreateSummary, PrintOldBalance, ReportProgressFunc);
+                        }
+                        break;
+                    case 2: //Export Orders
+                        {
+                            ReportType EnumReportType = ReportType.QUOTATION;
+                            Boolean PrintOldBalance = false;
+                            Boolean CreateSummary = false;
+                            Int32 PrintCopies = CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies;
+                            switch (EnumReportType)
+                            {
+                                case ReportType.INVOICE:
+                                    PrintOldBalance = false;
+                                    CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0);
+                                    break;
+                                case ReportType.QUOTATION:
+                                    PrintOldBalance = true;
+                                    CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1);
+                                    break;
+                                default:
+                                    return;
+                            }
+
+                            List<Object> ListOrdersToExport = new List<Object>();
+                            if (ExportOption == 0)      //Export all displayed Orders
+                            {
+                                for (int i = 0; i < dtGridViewOrders.Rows.Count; i++)
+                                {
+                                    Int32 OrderID = Int32.Parse(dtGridViewOrders.Rows[i].Cells["OrderID"].Value.ToString());
+                                    OrderDetails tmpOrderDetails = ObjOrdersModel.GetOrderDetailsForOrderID(OrderID);
+                                    ListOrdersToExport.Add(tmpOrderDetails);
+                                }
+                            }
+                            else                        //Export only selected Order
+                            {
+                                Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
+                                OrderDetails tmpOrderDetails = ObjOrdersModel.GetOrderDetailsForOrderID(OrderID);
+                                ListOrdersToExport.Add(tmpOrderDetails);
+                            }
+                            String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, true, ((OrderDetails)ListOrdersToExport[0]).OrderDate, ObjOrdersModel, ListOrdersToExport, "", CreateSummary, PrintOldBalance, ReportProgressFunc);
+
+                            MessageBox.Show(this, $"Exported Orders file is created successfully at:{ExportedFilePath}", "Export Orders", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerOrders_DoWork()", ex);
+            }
+        }
+
+        private void backgroundWorkerOrders_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            try
+            {
+                CommonFunctions.UpdateProgressBar(e.ProgressPercentage);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerOrders_ProgressChanged()", ex);
+            }
+        }
+
+        private void backgroundWorkerOrders_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                switch (BackgroundTask)
+                {
+                    case 1: //Print Order
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerOrders_RunWorkerCompleted()", ex);
+            }
+        }
+
+        private void cmbBoxLine_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.cmbBoxLine_SelectedIndexChanged()", ex);
             }
         }
     }

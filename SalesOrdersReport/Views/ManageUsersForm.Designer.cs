@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Views
 {
     partial class ManageUsersForm
     {

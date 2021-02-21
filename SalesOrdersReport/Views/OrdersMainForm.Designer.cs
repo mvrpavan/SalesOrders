@@ -31,6 +31,10 @@
             this.btnCreateOrder = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.cmbBoxLine = new System.Windows.Forms.ComboBox();
+            this.cmbBoxOrderStatus = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.checkBoxApplyFilter = new System.Windows.Forms.CheckBox();
             this.dTimePickerTo = new System.Windows.Forms.DateTimePicker();
             this.dTimePickerFrom = new System.Windows.Forms.DateTimePicker();
@@ -39,6 +43,7 @@
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.btnSearchOrder = new System.Windows.Forms.Button();
             this.btnPrintOrder = new System.Windows.Forms.Button();
+            this.btnExportToExcel = new System.Windows.Forms.Button();
             this.btnConvertInvoice = new System.Windows.Forms.Button();
             this.btnReloadOrders = new System.Windows.Forms.Button();
             this.btnDeleteOrder = new System.Windows.Forms.Button();
@@ -47,9 +52,9 @@
             this.dtGridViewOrderedProducts = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.lblOrdersCount = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.cmbBoxOrderStatus = new System.Windows.Forms.ComboBox();
+            this.backgroundWorkerOrders = new System.ComponentModel.BackgroundWorker();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewOrders)).BeginInit();
@@ -83,6 +88,7 @@
             this.panel1.Controls.Add(this.comboBox2);
             this.panel1.Controls.Add(this.btnSearchOrder);
             this.panel1.Controls.Add(this.btnPrintOrder);
+            this.panel1.Controls.Add(this.btnExportToExcel);
             this.panel1.Controls.Add(this.btnConvertInvoice);
             this.panel1.Controls.Add(this.btnReloadOrders);
             this.panel1.Controls.Add(this.btnDeleteOrder);
@@ -90,24 +96,62 @@
             this.panel1.Controls.Add(this.btnCreateOrder);
             this.panel1.Location = new System.Drawing.Point(12, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1164, 84);
+            this.panel1.Size = new System.Drawing.Size(1338, 84);
             this.panel1.TabIndex = 1;
             // 
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.cmbBoxLine);
             this.groupBox3.Controls.Add(this.cmbBoxOrderStatus);
+            this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.checkBoxApplyFilter);
             this.groupBox3.Controls.Add(this.dTimePickerTo);
             this.groupBox3.Controls.Add(this.dTimePickerFrom);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(655, 3);
+            this.groupBox3.Location = new System.Drawing.Point(829, 3);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(505, 73);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
+            // 
+            // cmbBoxLine
+            // 
+            this.cmbBoxLine.FormattingEnabled = true;
+            this.cmbBoxLine.Location = new System.Drawing.Point(79, 40);
+            this.cmbBoxLine.Name = "cmbBoxLine";
+            this.cmbBoxLine.Size = new System.Drawing.Size(101, 21);
+            this.cmbBoxLine.TabIndex = 4;
+            this.cmbBoxLine.SelectedIndexChanged += new System.EventHandler(this.cmbBoxLine_SelectedIndexChanged);
+            // 
+            // cmbBoxOrderStatus
+            // 
+            this.cmbBoxOrderStatus.FormattingEnabled = true;
+            this.cmbBoxOrderStatus.Location = new System.Drawing.Point(79, 13);
+            this.cmbBoxOrderStatus.Name = "cmbBoxOrderStatus";
+            this.cmbBoxOrderStatus.Size = new System.Drawing.Size(101, 21);
+            this.cmbBoxOrderStatus.TabIndex = 4;
+            this.cmbBoxOrderStatus.SelectedIndexChanged += new System.EventHandler(this.cmbBoxOrderStatus_SelectedIndexChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(46, 45);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(27, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Line";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 16);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(66, 13);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Order Status";
             // 
             // checkBoxApplyFilter
             // 
@@ -186,14 +230,31 @@
             this.btnPrintOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPrintOrder.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnPrintOrder.Image = global::SalesOrdersReport.Properties.Resources.Iconshow_Hardware_Printer;
-            this.btnPrintOrder.Location = new System.Drawing.Point(450, 3);
+            this.btnPrintOrder.Location = new System.Drawing.Point(628, 3);
             this.btnPrintOrder.Name = "btnPrintOrder";
             this.btnPrintOrder.Size = new System.Drawing.Size(83, 73);
             this.btnPrintOrder.TabIndex = 0;
-            this.btnPrintOrder.Text = "Print Order";
+            this.btnPrintOrder.Text = "Print Orders";
             this.btnPrintOrder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnPrintOrder.UseVisualStyleBackColor = false;
             this.btnPrintOrder.Click += new System.EventHandler(this.btnPrintOrder_Click);
+            // 
+            // btnExportToExcel
+            // 
+            this.btnExportToExcel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnExportToExcel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnExportToExcel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnExportToExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExportToExcel.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnExportToExcel.Image = global::SalesOrdersReport.Properties.Resources.export_icon;
+            this.btnExportToExcel.Location = new System.Drawing.Point(450, 3);
+            this.btnExportToExcel.Name = "btnExportToExcel";
+            this.btnExportToExcel.Size = new System.Drawing.Size(83, 73);
+            this.btnExportToExcel.TabIndex = 0;
+            this.btnExportToExcel.Text = "Export to Excel";
+            this.btnExportToExcel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnExportToExcel.UseVisualStyleBackColor = false;
+            this.btnExportToExcel.Click += new System.EventHandler(this.btnExportToExcel_Click);
             // 
             // btnConvertInvoice
             // 
@@ -272,7 +333,7 @@
             this.dtGridViewOrders.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
             this.dtGridViewOrders.Location = new System.Drawing.Point(12, 127);
             this.dtGridViewOrders.Name = "dtGridViewOrders";
-            this.dtGridViewOrders.Size = new System.Drawing.Size(1164, 291);
+            this.dtGridViewOrders.Size = new System.Drawing.Size(1330, 342);
             this.dtGridViewOrders.TabIndex = 2;
             this.dtGridViewOrders.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtGridViewOrders_CellMouseClick);
             // 
@@ -283,9 +344,9 @@
             this.dtGridViewOrderedProducts.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dtGridViewOrderedProducts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
             this.dtGridViewOrderedProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtGridViewOrderedProducts.Location = new System.Drawing.Point(0, 22);
+            this.dtGridViewOrderedProducts.Location = new System.Drawing.Point(0, 36);
             this.dtGridViewOrderedProducts.Name = "dtGridViewOrderedProducts";
-            this.dtGridViewOrderedProducts.Size = new System.Drawing.Size(1164, 279);
+            this.dtGridViewOrderedProducts.Size = new System.Drawing.Size(1330, 214);
             this.dtGridViewOrderedProducts.TabIndex = 2;
             // 
             // label1
@@ -303,13 +364,23 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.dtGridViewOrderedProducts);
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.groupBox1.Location = new System.Drawing.Point(12, 424);
+            this.groupBox1.Controls.Add(this.label6);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(12, 475);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1164, 307);
+            this.groupBox1.Size = new System.Drawing.Size(1330, 256);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Ordered Products";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(6, 13);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(134, 20);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "Ordered Products";
             // 
             // lblOrdersCount
             // 
@@ -321,23 +392,11 @@
             this.lblOrdersCount.TabIndex = 4;
             this.lblOrdersCount.Text = "[Displaying all Orders]";
             // 
-            // label4
+            // backgroundWorkerOrders
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 16);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(66, 13);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Order Status";
-            // 
-            // cmbBoxOrderStatus
-            // 
-            this.cmbBoxOrderStatus.FormattingEnabled = true;
-            this.cmbBoxOrderStatus.Location = new System.Drawing.Point(79, 13);
-            this.cmbBoxOrderStatus.Name = "cmbBoxOrderStatus";
-            this.cmbBoxOrderStatus.Size = new System.Drawing.Size(101, 21);
-            this.cmbBoxOrderStatus.TabIndex = 4;
-            this.cmbBoxOrderStatus.SelectedIndexChanged += new System.EventHandler(this.cmbBoxOrderStatus_SelectedIndexChanged);
+            this.backgroundWorkerOrders.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerOrders_DoWork);
+            this.backgroundWorkerOrders.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerOrders_ProgressChanged);
+            this.backgroundWorkerOrders.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerOrders_RunWorkerCompleted);
             // 
             // OrdersMainForm
             // 
@@ -345,7 +404,7 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1184, 743);
+            this.ClientSize = new System.Drawing.Size(1350, 743);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblOrdersCount);
             this.Controls.Add(this.label1);
@@ -365,6 +424,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewOrders)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewOrderedProducts)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -394,5 +454,10 @@
         private System.Windows.Forms.Label lblOrdersCount;
         private System.Windows.Forms.ComboBox cmbBoxOrderStatus;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox cmbBoxLine;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button btnExportToExcel;
+        private System.Windows.Forms.Label label6;
+        private System.ComponentModel.BackgroundWorker backgroundWorkerOrders;
     }
 }

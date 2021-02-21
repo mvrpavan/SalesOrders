@@ -13,10 +13,8 @@ using System.Windows.Forms;
 
 namespace SalesOrdersReport.Views
 {
-    public delegate void UpdateOnCloseDel(Int32 Mode);
     public partial class ManageCustomerForm : Form
     {
-        //public delegate void UpdateOnCloseDel(Int32 Mode);
         MySQLHelper tmpMySQlHelper = MySQLHelper.GetMySqlHelperObj();
         CheckBox headerCheckBox = new CheckBox();
         public ManageCustomerForm()

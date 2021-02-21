@@ -40,7 +40,6 @@ namespace SalesOrdersReport.Views
             CommonFunctions.ObjProductMaster.ResetStockProducts();
         }
 
-        delegate void ReportProgressDel(Int32 ProgressState);
         ReportProgressDel ReportProgress = null;
 
         private void ReportProgressFunc(Int32 ProgressState)

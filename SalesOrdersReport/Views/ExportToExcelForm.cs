@@ -9,7 +9,7 @@ namespace SalesOrdersReport.Views
 
     public enum ExportDataTypes
     {
-        Products, Customers
+        Products, Customers, Orders
     };
 
     public delegate Int32 ExportDataToFileDel(String FilePath, Object ObjDetails, Boolean Append);
@@ -49,6 +49,14 @@ namespace SalesOrdersReport.Views
                         saveFileDialogExportToExcel.OverwritePrompt = false;
                         chkBoxAppend.Checked = false;
                         break;
+                    case ExportDataTypes.Orders:
+                        this.Text = "Export Orders Data to Excel";
+                        chkListBoxDataToExport.Items.Add("Export all displayed Orders", true);
+                        chkListBoxDataToExport.Items.Add("Export only selected Order", false);
+                        btnExportToExcelFile.Text = "Export Orders Data to Excel File";
+                        folderBrowserDialogExport.Description = "Save Exported file to";
+                        chkBoxAppend.Checked = false;
+                        break;
                     default:
                         break;
                 }
@@ -63,10 +71,25 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                DialogResult result = saveFileDialogExportToExcel.ShowDialog();
-                if (result == DialogResult.OK)
+                DialogResult result;
+                switch (this.ExportDataType)
                 {
-                    txtExportToExcelFilePath.Text = saveFileDialogExportToExcel.FileName;
+                    case ExportDataTypes.Products:
+                        result = saveFileDialogExportToExcel.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            txtExportToExcelFilePath.Text = saveFileDialogExportToExcel.FileName;
+                        }
+                        break;
+                    case ExportDataTypes.Orders:
+                        result = folderBrowserDialogExport.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            txtExportToExcelFilePath.Text = folderBrowserDialogExport.SelectedPath;
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
             catch (Exception ex)
@@ -79,33 +102,48 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                DialogResult dlgResult = new DialogResult();
-                if (txtExportToExcelFilePath.Text == string.Empty)
-                {
-                    dlgResult = saveFileDialogExportToExcel.ShowDialog();
-                    if (dlgResult == DialogResult.OK) txtExportToExcelFilePath.Text = saveFileDialogExportToExcel.FileName;
-                }
+                btnExportToExcelBrowse.PerformClick();
 
                 if (txtExportToExcelFilePath.Text != string.Empty)
                 {
                     String FilePath = txtExportToExcelFilePath.Text;
 
-                    if (!Directory.Exists(Path.GetDirectoryName(FilePath)))
+                    switch (ExportDataType)
                     {
-                        MessageBox.Show(this, "Choose a valid directory to Save file to.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                        return;
-                    }
+                        case ExportDataTypes.Products:
+                            if (!Directory.Exists(Path.GetDirectoryName(FilePath)))
+                            {
+                                MessageBox.Show(this, "Choose a valid directory to Save file to.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
 
-                    if (chkListBoxDataToExport.CheckedItems.Count == 0)
-                    {
-                        MessageBox.Show(this, "Choose atleast one dataset to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                        return;
-                    }
+                            if (chkListBoxDataToExport.CheckedItems.Count == 0)
+                            {
+                                MessageBox.Show(this, "Choose atleast one dataset to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
 
-                    if (!chkBoxAppend.Checked && File.Exists(FilePath))
-                    {
-                        DialogResult dialogResult = MessageBox.Show(this, "Do you want to overwrite the file?", "Export data", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
-                        if (dialogResult == DialogResult.No) return;
+                            if (!chkBoxAppend.Checked && File.Exists(FilePath))
+                            {
+                                DialogResult dialogResult = MessageBox.Show(this, "Do you want to overwrite the file?", "Export data", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                                if (dialogResult == DialogResult.No) return;
+                            }
+                            break;
+                        case ExportDataTypes.Orders:
+                            if (chkListBoxDataToExport.CheckedItems.Count == 0)
+                            {
+                                MessageBox.Show(this, "Choose an option to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
+
+                            if (chkListBoxDataToExport.CheckedItems.Count == 2)
+                            {
+                                MessageBox.Show(this, "Choose only one option to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
+                            break;
+                        default:
+                            break;
                     }
 #if DEBUG
                     bgWorkerExportExcel_DoWork(null, null);
@@ -141,6 +179,7 @@ namespace SalesOrdersReport.Views
                         }
 
                         Retval = ExportDataToFile(txtExportToExcelFilePath.Text, ArrOptionsSelected, chkBoxAppend.Checked);
+
                         if (Retval == 0)
                         {
                             MessageBox.Show(this, "Exporting Products data to Excel File is successful!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
@@ -154,6 +193,34 @@ namespace SalesOrdersReport.Views
                         else
                         {
                             MessageBox.Show(this, "Exporting Products data to Excel file failed!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                            ExportResult = -1;
+                        }
+                        break;
+                    case ExportDataTypes.Orders:
+                        Int32 OptionsSelected = -1;
+                        for (int i = 0; i < chkListBoxDataToExport.Items.Count; i++)
+                        {
+                            if (chkListBoxDataToExport.GetItemChecked(i))
+                            {
+                                OptionsSelected = i;
+                                break;
+                            }
+                        }
+
+                        Retval = ExportDataToFile(txtExportToExcelFilePath.Text, OptionsSelected, chkBoxAppend.Checked);
+                        if (Retval == 0)
+                        {
+                            MessageBox.Show(this, "Exporting Orders data to Excel File is successful!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                            ExportResult = 0;
+                        }
+                        else if (Retval == 1)
+                        {
+                            MessageBox.Show(this, "No Orders data available to export!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                            ExportResult = 1;
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, "Exporting Orders data to Excel file failed!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                             ExportResult = -1;
                         }
                         break;
@@ -176,8 +243,6 @@ namespace SalesOrdersReport.Views
 
                 switch (ExportDataType)
                 {
-                    case ExportDataTypes.Products:
-                        break;
                     default:
                         break;
                 }

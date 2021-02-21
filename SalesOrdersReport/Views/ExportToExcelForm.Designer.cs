@@ -38,6 +38,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.saveFileDialogExportToExcel = new System.Windows.Forms.SaveFileDialog();
             this.chkBoxAppend = new System.Windows.Forms.CheckBox();
+            this.folderBrowserDialogExport = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
             // btnExportToExcelBrowse
@@ -155,5 +156,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.SaveFileDialog saveFileDialogExportToExcel;
         private System.Windows.Forms.CheckBox chkBoxAppend;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogExport;
     }
 }

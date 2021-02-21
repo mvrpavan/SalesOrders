@@ -123,4 +123,7 @@
   <metadata name="saveFileDialogExportToExcel.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>6, 20</value>
   </metadata>
+  <metadata name="folderBrowserDialogExport.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>414, 26</value>
+  </metadata>
 </root>

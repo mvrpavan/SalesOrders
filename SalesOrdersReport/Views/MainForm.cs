@@ -90,7 +90,12 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                if (MdiChildren.Length > 0) return;
+                if (MdiChildren.Length > 0)
+                {
+                    if (ObjForm.GetType() == CommonFunctions.CurrentForm.GetType()) return;
+                    CommonFunctions.CurrentForm.Close();
+                    if (!CommonFunctions.CurrentForm.IsDisposed) return;
+                }
 
                 CommonFunctions.ResetProgressBar();
 
