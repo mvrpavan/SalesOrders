@@ -43,6 +43,7 @@ namespace SalesOrdersReport
             {
                 //Load General Settings from CommonFunctions Module
                 ddlSummaryLocation.Items.Clear();
+                ddlSummaryLocation.Items.Add("Order");
                 ddlSummaryLocation.Items.Add("Invoice");
                 ddlSummaryLocation.Items.Add("Quotation");
                 ddlSummaryLocation.SelectedIndex = CommonFunctions.ObjGeneralSettings.SummaryLocation;

@@ -306,7 +306,7 @@ namespace SalesOrdersReport.CommonModules
         static XmlNode ProductLinesNode;
         public static ApplicationSettings ObjApplicationSettings;
         public static GeneralSettings ObjGeneralSettings;
-        public static ReportSettings ObjInvoiceSettings, ObjQuotationSettings, ObjPurchaseOrderSettings;
+        public static ReportSettings ObjOrderSettings, ObjInvoiceSettings, ObjQuotationSettings, ObjPurchaseOrderSettings;
         public static ProductMasterModel ObjProductMaster;
         //public static SellerMaster ObjSellerMaster;
         public static VendorMaster ObjVendorMaster;
@@ -390,6 +390,7 @@ namespace SalesOrdersReport.CommonModules
                 }
 
                 ObjGeneralSettings = CurrProductLine.ObjSettings.GeneralSettings;
+                ObjOrderSettings = CurrProductLine.ObjSettings.OrderSettings;
                 ObjInvoiceSettings = CurrProductLine.ObjSettings.InvoiceSettings;
                 ObjQuotationSettings = CurrProductLine.ObjSettings.QuotationSettings;
                 ObjPurchaseOrderSettings = CurrProductLine.ObjSettings.PurchaseOrderSettings;
@@ -938,6 +939,31 @@ namespace SalesOrdersReport.CommonModules
                 ExcelWorksheet.Name = SheetName;
                 ExcelWorkbook.SaveAs(ExcelFilePath);
 
+                Int32 RetVal = ExportDataTableToExcelWorksheet(dtDataToExport, ExcelWorksheet, StartRow, StartCol);
+
+                ExcelWorkbook.Close(true);
+
+                xlApp.DisplayAlerts = true;
+                return RetVal;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog($"CommonFunctions.ExportDataTableToExcelFile()", ex);
+                xlApp.Visible = true;
+                xlApp.DisplayAlerts = true;
+                return -1;
+            }
+            finally
+            {
+                xlApp.Quit();
+                ReleaseCOMObject(xlApp);
+            }
+        }
+
+        public static Int32 ExportDataTableToExcelWorksheet(DataTable dtDataToExport, Excel.Worksheet ExcelWorksheet, Int32 StartRow = 1, Int32 StartCol = 1)
+        {
+            try
+            {
                 Int32 CurrCol = StartCol, CurrRow = StartRow;
                 foreach (DataColumn item in dtDataToExport.Columns)
                 {
@@ -955,24 +981,15 @@ namespace SalesOrdersReport.CommonModules
                     CurrRow++;
                 }
 
-                ExcelWorkbook.Close(true);
-
-                xlApp.DisplayAlerts = true;
                 return 0;
             }
             catch (Exception ex)
             {
-                ShowErrorDialog($"CommonFunctions.ExportDataTableToExcelFile()", ex);
-                xlApp.Visible = true;
-                xlApp.DisplayAlerts = true;
+                ShowErrorDialog($"CommonFunctions.ExportDataTableToExcelWorksheet()", ex);
                 return -1;
             }
-            finally
-            {
-                xlApp.Quit();
-                ReleaseCOMObject(xlApp);
-            }
         }
+
 
         public static void PrintOrderInvoiceQuotation(ReportType EnumReportType, Boolean IsDummyBill, Object ObjectModel, List<Object> ListObjects, 
             DateTime OrdInvQuotDate, Int32 PrintCopies = 1, Boolean CreateSummary = false, Boolean PrintOldBalance = false, ReportProgressDel ReportProgress = null)
@@ -1048,30 +1065,41 @@ namespace SalesOrdersReport.CommonModules
                 }
 
                 Excel.Workbook xlWorkbook = xlApp.Workbooks.Add();
-                Excel.Worksheet xlWorkSheet = null;
-                for (int i = 1; i <= 3 && xlWorkbook.Sheets.Count > 1; i++)
-                {
-                    xlWorkSheet = CommonFunctions.GetWorksheet(xlWorkbook, "Sheet" + i);
-                    if (xlWorkSheet != null) xlWorkSheet.Delete();
-                }
 
                 for (int i = 0; i < ListObjects.Count; i++)
                 {
-                    if (i == 0) xlWorkSheet = xlWorkbook.Sheets[1];
-                    else xlWorkSheet = xlWorkbook.Sheets.Add();
-
                     switch (EnumReportType)
                     {
                         case ReportType.ORDER:
-                            ((OrdersModel)ObjectModel).ExportOrder(EnumReportType, IsDummyBill, xlWorkSheet, (OrderDetails)ListObjects[i]);
+                            ((OrdersModel)ObjectModel).ExportOrder(EnumReportType, IsDummyBill, xlWorkbook, (OrderDetails)ListObjects[i]);
                             break;
                         case ReportType.INVOICE:
                             break;
                         case ReportType.QUOTATION:
                             break;
                         default:
-                            return null;
+                            break;
                     }
+                    ReportProgress((Int32)(100 * (i + 1) * 1.0 / ListObjects.Count));
+                }
+
+                switch (EnumReportType)
+                {
+                    case ReportType.ORDER:
+                        ((OrdersModel)ObjectModel).ExportItemSummary(xlWorkbook, ListObjects.Select(e => (OrderDetails)e).ToList());
+                        break;
+                    case ReportType.INVOICE:
+                        break;
+                    case ReportType.QUOTATION:
+                        break;
+                    default:
+                        break;
+                }
+
+                for (int i = 1; i <= 3 && xlWorkbook.Sheets.Count > 1; i++)
+                {
+                    Excel.Worksheet xlWorkSheet = CommonFunctions.GetWorksheet(xlWorkbook, "Sheet" + i);
+                    if (xlWorkSheet != null) xlWorkSheet.Delete();
                 }
 
                 Excel.Worksheet FirstWorksheet = xlWorkbook.Sheets[1];
@@ -1083,6 +1111,7 @@ namespace SalesOrdersReport.CommonModules
                 xlApp.DisplayAlerts = true;
                 CommonFunctions.ReleaseCOMObject(xlWorkbook);
 
+                ReportProgress(100);
                 return SaveFilePath;
             }
             catch (Exception ex)
@@ -1102,6 +1131,50 @@ namespace SalesOrdersReport.CommonModules
                     xlApp.Quit();
                     CommonFunctions.ReleaseCOMObject(xlApp);
                 }
+            }
+        }
+
+        public static String GetWorksheetNameToAppend(String SheetName, Excel.Workbook ExcelWorkbook)
+        {
+            try
+            {
+                List<String> ListSheetNames = new List<String>();
+                for (int i = 1; i <= ExcelWorkbook.Sheets.Count; i++)
+                {
+                    String tmpSheetName = ExcelWorkbook.Worksheets[i].Name;
+                    ListSheetNames.Add(tmpSheetName);
+                }
+
+                Int32 SheetSuffix = 0;
+                Boolean ContainsCustomerSheet = false;
+                if (ListSheetNames.Count > 0)
+                {
+                    for (int i = 0; i < ListSheetNames.Count; i++)
+                    {
+                        if (ListSheetNames[i].Contains(SheetName))
+                        {
+                            String NumberStr = ListSheetNames[i].Replace(SheetName, "").Trim();
+                            Int32 Number;
+                            if (Int32.TryParse(NumberStr, out Number))
+                            {
+                                SheetSuffix = Math.Max(Number, SheetSuffix);
+                            }
+                            ContainsCustomerSheet = true;
+                        }
+                    }
+
+                    if (ContainsCustomerSheet || SheetSuffix > 0)
+                    {
+                        SheetSuffix++;
+                        SheetName += " " + SheetSuffix;
+                    }
+                }
+                return SheetName;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"CommonFunctions.GetWorksheetNameToAppend()", ex);
+                throw ex;
             }
         }
     }

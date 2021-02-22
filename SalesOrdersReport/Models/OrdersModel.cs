@@ -152,6 +152,13 @@ namespace SalesOrdersReport.Models
                         case "ORDER STATUS":
                             WhereClause += $" and a.OrderStatus like '%{SearchFieldValue}%'";
                             break;
+                        case "LINE":
+                            Query += $" Inner Join LINEMASTER c on b.LineID = c.LineID";
+                            WhereClause += $" and c.LineName = '{SearchFieldValue}'";
+                            break;
+                        case "LINEID":
+                            WhereClause += $" and b.LineID = '{SearchFieldValue}'";
+                            break;
                         default:
                             break;
                     }
@@ -566,7 +573,7 @@ namespace SalesOrdersReport.Models
             }
         }*/
 
-        public void ExportOrder(ReportType EnumReportType, Boolean IsDummyBill, Excel.Worksheet ExcelWorksheet, OrderDetails ObjOrderDetails)
+        public void ExportOrder(ReportType EnumReportType, Boolean IsDummyBill, Excel.Workbook ExcelWorkbook, OrderDetails ObjOrderDetails)
         {
             try
             {
@@ -575,21 +582,25 @@ namespace SalesOrdersReport.Models
                 String BillNumberText = "";
                 String OutputFolder = Path.GetTempPath();
                 String SelectedDateTimeString = ObjOrderDetails.OrderDate.ToString("dd-MM-yyyy");
-                Boolean PrintBill = false;
                 Boolean CreateSummary = false;
+                EnumReportType = ReportType.QUOTATION;
                 switch (EnumReportType)
                 {
+                    case ReportType.ORDER:
+                        CurrReportSettings = CommonFunctions.ObjOrderSettings;
+                        PrintOldBalance = true;
+                        BillNumberText = "Order#";
+                        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 2);
+                        break;
                     case ReportType.INVOICE:
                         CurrReportSettings = CommonFunctions.ObjInvoiceSettings;
                         BillNumberText = "Invoice#";
-                        PrintBill = CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatInvoice;
                         CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0);
                         break;
                     case ReportType.QUOTATION:
                         CurrReportSettings = CommonFunctions.ObjQuotationSettings;
                         PrintOldBalance = true;
                         BillNumberText = "Quotation#";
-                        PrintBill = CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatQuotation;
                         CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1);
                         break;
                     default:
@@ -622,11 +633,11 @@ namespace SalesOrdersReport.Models
                 ObjInvoice.UseNumberToWordsFormula = false;
                 ObjInvoice.ListProducts = new List<ProductDetailsForInvoice>();
 
-                Excel.Worksheet xlWorkSheet = ExcelWorksheet;
+                Excel.Worksheet xlWorkSheet = ExcelWorkbook.Sheets.Add(Type.Missing, ExcelWorkbook.Sheets[ExcelWorkbook.Sheets.Count]);
                 String SheetName = ObjCurrentSeller.CustomerName.Replace(":", "").Replace("\\", "").Replace("/", "").
                         Replace("?", "").Replace("*", "").Replace("[", "").Replace("]", "");
                 SheetName = ((SheetName.Length > 30) ? SheetName.Substring(0, 30) : SheetName);
-                ObjInvoice.SheetName = SheetName;
+                ObjInvoice.SheetName = CommonFunctions.GetWorksheetNameToAppend(SheetName, ExcelWorkbook);
 
                 #region Print Invoice Items
                 String ItemName;
@@ -701,7 +712,50 @@ namespace SalesOrdersReport.Models
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"{this}.PrintOrder()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.ExportOrder()", ex);
+            }
+        }
+
+        public void ExportItemSummary(Excel.Workbook xlWorkbook, List<OrderDetails> ListOrderDetails)
+        {
+            try
+            {
+                String SheetName = "Item Summary";
+                SheetName = CommonFunctions.GetWorksheetNameToAppend(SheetName, xlWorkbook);
+
+                Excel.Worksheet xlWorksheet = xlWorkbook.Worksheets.Add(xlWorkbook.Worksheets[1]);
+                xlWorksheet.Name = SheetName;
+
+                String OrderIDs = String.Join(",", ListOrderDetails.Select(e => e.OrderID));
+
+                String Query = "Select row_number() over () 'Sl.No.', a.* from (Select b.ProductName 'Item Name', Sum(a.OrderQty) TotalQuantity ";
+                List<String> ListLines = CommonFunctions.ObjCustomerMasterModel.GetAllLineNames();
+                for (int i = 0; i < ListLines.Count; i++)
+                {
+                    Int32 LineID = CommonFunctions.ObjCustomerMasterModel.GetLineID(ListLines[i]);
+                    Query += $", Sum(Case When d.LineID = {LineID} then a.OrderQty else 0 end) '{ListLines[i]}'";
+                }
+                Query += " from OrderItems a Inner Join ProductMaster b on a.ProductID = b.ProductID";
+                Query += " Inner Join Orders c on a.OrderID = c.OrderID";
+                Query += " Inner Join CUSTOMERMASTER d on c.CustomerID = d.CustomerID";
+                Query += $" Where a.OrderID in ({OrderIDs}) and a.OrderItemStatus = 'Ordered' Group by b.ProductName Order by b.ProductName) a;";
+                DataTable dtItemSummary = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+
+                Int32 RetVal = CommonFunctions.ExportDataTableToExcelWorksheet(dtItemSummary, xlWorksheet, 1, 1);
+                if (RetVal < 0) return;
+
+                Excel.Range xlRange = null;
+                xlRange = xlWorksheet.Range[xlWorksheet.Cells[1, 1], xlWorksheet.Cells[1, 3 + ListLines.Count]];
+                xlRange.Font.Bold = true;
+
+                xlWorksheet.UsedRange.Columns.AutoFit();
+                SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorksheet, CommonFunctions.ObjOrderSettings.HeaderSubTitle, CommonFunctions.ObjOrderSettings);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExportItemSummary()", ex);
+
+                throw;
             }
         }
     }

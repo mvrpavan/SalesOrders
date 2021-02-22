@@ -238,12 +238,13 @@ namespace SalesOrdersReport
 
     class Settings
     {
-        public ReportSettings InvoiceSettings, QuotationSettings, PurchaseOrderSettings;
+        public ReportSettings OrderSettings, InvoiceSettings, QuotationSettings, PurchaseOrderSettings;
         public GeneralSettings GeneralSettings;
 
         public Settings()
         {
             GeneralSettings = new GeneralSettings();
+            OrderSettings = new ReportSettings();
             InvoiceSettings = new ReportSettings();
             QuotationSettings = new ReportSettings();
             PurchaseOrderSettings = new ReportSettings();
@@ -257,6 +258,9 @@ namespace SalesOrdersReport
                 {
                     case "GENERAL":
                         GeneralSettings.ReadSettingsFromNode(Node);
+                        break;
+                    case "ORDER":
+                        OrderSettings.ReadSettingsFromNode(Node, ReportType.ORDER);
                         break;
                     case "INVOICE":
                         InvoiceSettings.ReadSettingsFromNode(Node, ReportType.INVOICE);
@@ -281,6 +285,7 @@ namespace SalesOrdersReport
             try
             {
                 GeneralSettings.UpdateSettingsToNode();
+                OrderSettings.UpdateSettingsToNode();
                 InvoiceSettings.UpdateSettingsToNode();
                 QuotationSettings.UpdateSettingsToNode();
                 PurchaseOrderSettings.UpdateSettingsToNode();

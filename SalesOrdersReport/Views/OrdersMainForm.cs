@@ -14,6 +14,7 @@ namespace SalesOrdersReport.Views
         DataTable dtAllOrders;
         String AllOrderstatus = "<All>";
         ORDERSTATUS CurrOrderStatus;
+        DateTime FilterFromDate, FilterToDate;
 
         public OrdersMainForm()
         {
@@ -28,7 +29,9 @@ namespace SalesOrdersReport.Views
                 ObjOrdersModel.Initialize();
 
                 dTimePickerFrom.Value = DateTime.Today;
-                dTimePickerTo.Value = dTimePickerFrom.Value.AddDays(30);
+                dTimePickerTo.Value = DateTime.Today.AddDays(30);
+                FilterFromDate = DateTime.MinValue;
+                FilterToDate = DateTime.MinValue;
                 CurrOrderStatus = ORDERSTATUS.Created;
 
                 cmbBoxOrderStatus.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -55,7 +58,10 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                dtAllOrders = GetOrdersDataTable(dTimePickerFrom.Value, dTimePickerTo.Value, CurrOrderStatus);
+                if (cmbBoxLine.SelectedIndex > 0)
+                    dtAllOrders = GetOrdersDataTable(FilterFromDate, FilterToDate, CurrOrderStatus, cmbBoxLine.SelectedItem.ToString());
+                else
+                    dtAllOrders = GetOrdersDataTable(FilterFromDate, FilterToDate, CurrOrderStatus, null);
                 LoadOrdersGridView();
 
                 dtGridViewOrderedProducts.DataSource = null;
@@ -80,11 +86,16 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        DataTable GetOrdersDataTable(DateTime FromDate, DateTime ToDate, ORDERSTATUS OrderStatus)
+        DataTable GetOrdersDataTable(DateTime FromDate, DateTime ToDate, ORDERSTATUS OrderStatus, String LineName)
         {
             try
             {
-                DataTable dtOrders = ObjOrdersModel.LoadOrderDetails(FromDate, ToDate, OrderStatus);
+                DataTable dtOrders = null;
+
+                if (String.IsNullOrEmpty(LineName)) 
+                    dtOrders = ObjOrdersModel.LoadOrderDetails(FromDate, ToDate, OrderStatus);
+                else
+                    dtOrders = ObjOrdersModel.LoadOrderDetails(FromDate, ToDate, OrderStatus, "Line", LineName);
 
                 return dtOrders;
             }
@@ -275,7 +286,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                LoadGridView();
+                LoadGridViewBG();
             }
             catch (Exception ex)
             {
@@ -289,10 +300,15 @@ namespace SalesOrdersReport.Views
             {
                 if (!checkBoxApplyFilter.Checked)
                 {
-                    dTimePickerFrom.Value = DateTime.Today;
-                    dTimePickerTo.Value = dTimePickerFrom.Value.AddDays(30);
+                    FilterFromDate = DateTime.MinValue;
+                    FilterToDate = DateTime.MinValue;
                 }
-                LoadGridView();
+                else
+                {
+                    FilterFromDate = dTimePickerFrom.Value;
+                    FilterToDate = dTimePickerTo.Value;
+                }
+                LoadGridViewBG();
             }
             catch (Exception ex)
             {
@@ -308,7 +324,7 @@ namespace SalesOrdersReport.Views
                 if (ObjOrderDetails.ListOrderItems == null || ObjOrderDetails.ListOrderItems.Count == 0) return;
 
                 DataTable dtOrderProducts = new DataTable();
-                String[] ArrColumns = new String[] { "ProductID", "Product Name", "Ordered Qty", "Price", "Order Status" };
+                String[] ArrColumns = new String[] { "ProductID", "Product Name", "Ordered Qty", "Price", "Order Item Status" };
                 Type[] ArrColumnTypes = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeString };
 
                 for (int i = 0; i < ArrColumns.Length; i++)
@@ -377,7 +393,7 @@ namespace SalesOrdersReport.Views
                 {
                     CurrOrderStatus = ORDERSTATUS.All;
                 }
-                LoadGridView();
+                LoadGridViewBG();
             }
             catch (Exception ex)
             {
@@ -398,12 +414,29 @@ namespace SalesOrdersReport.Views
         }
 
         Int32 ExportOption = -1;
+        String ExportFolderPath = "";
         private Int32 ExportOrders(String FilePath, Object ObjDetails, Boolean Append)
         {
             try
             {
                 ExportOption = (Int32)ObjDetails;
+                ExportFolderPath = FilePath;
 
+                if ((ExportOption & 2) > 0 && dtGridViewOrders.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show(this, "No Order was selected. Please select an Order.", "Export Order", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+
+                BackgroundTask = 2;
+#if DEBUG
+                backgroundWorkerOrders_DoWork(null, null);
+                backgroundWorkerOrders_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerOrders.ReportProgress;
+                backgroundWorkerOrders.RunWorkerAsync();
+                backgroundWorkerOrders.WorkerReportsProgress = true;
+#endif
                 return 0;
             }
             catch (Exception ex)
@@ -430,24 +463,10 @@ namespace SalesOrdersReport.Views
                 {
                     case 1: //Print Order
                         {
-                            ReportType EnumReportType = ReportType.QUOTATION;
+                            ReportType EnumReportType = ReportType.ORDER;
                             Boolean PrintOldBalance = false;
                             Boolean CreateSummary = false;
                             Int32 PrintCopies = 1;
-                            //PrintCopies = CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies;
-                            //switch (EnumReportType)
-                            //{
-                            //    case ReportType.INVOICE:
-                            //        PrintOldBalance = false;
-                            //        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0);
-                            //        break;
-                            //    case ReportType.QUOTATION:
-                            //        PrintOldBalance = true;
-                            //        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1);
-                            //        break;
-                            //    default:
-                            //        return;
-                            //}
 
                             Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
                             OrderDetails ObjOrderDetails = ObjOrdersModel.GetOrderDetailsForOrderID(OrderID);
@@ -456,26 +475,12 @@ namespace SalesOrdersReport.Views
                         break;
                     case 2: //Export Orders
                         {
-                            ReportType EnumReportType = ReportType.QUOTATION;
-                            Boolean PrintOldBalance = false;
-                            Boolean CreateSummary = false;
-                            Int32 PrintCopies = CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies;
-                            switch (EnumReportType)
-                            {
-                                case ReportType.INVOICE:
-                                    PrintOldBalance = false;
-                                    CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0);
-                                    break;
-                                case ReportType.QUOTATION:
-                                    PrintOldBalance = true;
-                                    CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1);
-                                    break;
-                                default:
-                                    return;
-                            }
+                            ReportType EnumReportType = ReportType.ORDER;
+                            Boolean PrintOldBalance = true;
+                            Boolean CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 2) || ((ExportOption & 4) > 0);
 
                             List<Object> ListOrdersToExport = new List<Object>();
-                            if (ExportOption == 0)      //Export all displayed Orders
+                            if ((ExportOption & 1) > 0)      //Export all displayed Orders
                             {
                                 for (int i = 0; i < dtGridViewOrders.Rows.Count; i++)
                                 {
@@ -484,17 +489,22 @@ namespace SalesOrdersReport.Views
                                     ListOrdersToExport.Add(tmpOrderDetails);
                                 }
                             }
-                            else                        //Export only selected Order
+                            else if ((ExportOption & 2) > 0) //Export only selected Order
                             {
                                 Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
                                 OrderDetails tmpOrderDetails = ObjOrdersModel.GetOrderDetailsForOrderID(OrderID);
                                 ListOrdersToExport.Add(tmpOrderDetails);
                             }
-                            String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, true, ((OrderDetails)ListOrdersToExport[0]).OrderDate, ObjOrdersModel, ListOrdersToExport, "", CreateSummary, PrintOldBalance, ReportProgressFunc);
+                            String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, true, 
+                                        ((OrderDetails)ListOrdersToExport[0]).OrderDate, ObjOrdersModel, ListOrdersToExport, ExportFolderPath, 
+                                        CreateSummary, PrintOldBalance, ReportProgressFunc);
 
                             MessageBox.Show(this, $"Exported Orders file is created successfully at:{ExportedFilePath}", "Export Orders", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
 
+                        break;
+                    case 3:     //Load Grid View
+                        LoadGridView();
                         break;
                     default:
                         break;
@@ -526,6 +536,9 @@ namespace SalesOrdersReport.Views
                 {
                     case 1: //Print Order
                         break;
+                    case 2:
+                        ExportOption = -1; ExportFolderPath = "";
+                        break;
                     default:
                         break;
                 }
@@ -536,10 +549,31 @@ namespace SalesOrdersReport.Views
             }
         }
 
+        private void LoadGridViewBG()
+        {
+            try
+            {
+                BackgroundTask = 3;
+#if DEBUG
+                backgroundWorkerOrders_DoWork(null, null);
+                backgroundWorkerOrders_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerOrders.ReportProgress;
+                backgroundWorkerOrders.RunWorkerAsync();
+                backgroundWorkerOrders.WorkerReportsProgress = true;
+#endif
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.LoadGridViewBG()", ex);
+            }
+        }
+
         private void cmbBoxLine_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
+                LoadGridViewBG();
             }
             catch (Exception ex)
             {

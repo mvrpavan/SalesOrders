@@ -53,9 +53,10 @@ namespace SalesOrdersReport.Views
                         this.Text = "Export Orders Data to Excel";
                         chkListBoxDataToExport.Items.Add("Export all displayed Orders", true);
                         chkListBoxDataToExport.Items.Add("Export only selected Order", false);
+                        chkListBoxDataToExport.Items.Add("Export Item Summary", false);
                         btnExportToExcelFile.Text = "Export Orders Data to Excel File";
                         folderBrowserDialogExport.Description = "Save Exported file to";
-                        chkBoxAppend.Checked = false;
+                        chkBoxAppend.Visible = false;
                         break;
                     default:
                         break;
@@ -102,7 +103,40 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                btnExportToExcelBrowse.PerformClick();
+                switch (ExportDataType)
+                {
+                    case ExportDataTypes.Products:
+                        if (chkListBoxDataToExport.CheckedItems.Count == 0)
+                        {
+                            MessageBox.Show(this, "Choose atleast one dataset to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                            return;
+                        }
+                        break;
+                    case ExportDataTypes.Orders:
+                        if (chkListBoxDataToExport.CheckedItems.Count == 0)
+                        {
+                            MessageBox.Show(this, "Choose an option to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                            return;
+                        }
+
+                        if (chkListBoxDataToExport.CheckedItems.Count == 1 && chkListBoxDataToExport.CheckedItems.Contains(2))
+                        {
+                            MessageBox.Show(this, "Choose another option along with Export Item Summary.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                            return;
+                        }
+
+                        if (chkListBoxDataToExport.CheckedIndices.Contains(0) && chkListBoxDataToExport.CheckedIndices.Contains(1))
+                        {
+                            MessageBox.Show(this, "Choose either All orders option or Selected order option to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                            return;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                if (txtExportToExcelFilePath.Text == string.Empty)
+                    btnExportToExcelBrowse.PerformClick();
 
                 if (txtExportToExcelFilePath.Text != string.Empty)
                 {
@@ -117,12 +151,6 @@ namespace SalesOrdersReport.Views
                                 return;
                             }
 
-                            if (chkListBoxDataToExport.CheckedItems.Count == 0)
-                            {
-                                MessageBox.Show(this, "Choose atleast one dataset to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                                return;
-                            }
-
                             if (!chkBoxAppend.Checked && File.Exists(FilePath))
                             {
                                 DialogResult dialogResult = MessageBox.Show(this, "Do you want to overwrite the file?", "Export data", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
@@ -130,17 +158,6 @@ namespace SalesOrdersReport.Views
                             }
                             break;
                         case ExportDataTypes.Orders:
-                            if (chkListBoxDataToExport.CheckedItems.Count == 0)
-                            {
-                                MessageBox.Show(this, "Choose an option to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                                return;
-                            }
-
-                            if (chkListBoxDataToExport.CheckedItems.Count == 2)
-                            {
-                                MessageBox.Show(this, "Choose only one option to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                                return;
-                            }
                             break;
                         default:
                             break;
@@ -197,13 +214,12 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case ExportDataTypes.Orders:
-                        Int32 OptionsSelected = -1;
+                        Int32 OptionsSelected = 0;
                         for (int i = 0; i < chkListBoxDataToExport.Items.Count; i++)
                         {
                             if (chkListBoxDataToExport.GetItemChecked(i))
                             {
-                                OptionsSelected = i;
-                                break;
+                                OptionsSelected += (Int32)Math.Pow(2, i);
                             }
                         }
 

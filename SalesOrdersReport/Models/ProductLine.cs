@@ -44,6 +44,10 @@ namespace SalesOrdersReport.Models
                 XMLFileUtils.GetChildNode(ProductLineNode, "General", out GeneralNode);
                 ObjSettings.LoadSettingsFromNode(GeneralNode);
 
+                XmlNode OrderNode;
+                XMLFileUtils.GetChildNode(ProductLineNode, "Order", out OrderNode);
+                ObjSettings.LoadSettingsFromNode(OrderNode);
+
                 XmlNode InvoiceNode;
                 XMLFileUtils.GetChildNode(ProductLineNode, "Invoice", out InvoiceNode);
                 ObjSettings.LoadSettingsFromNode(InvoiceNode);
