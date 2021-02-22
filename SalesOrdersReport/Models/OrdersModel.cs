@@ -30,7 +30,7 @@ namespace SalesOrdersReport.Models
         public String CustomerName;
         public Double EstimateOrderAmount;
         public ORDERSTATUS OrderStatus;
-        public DateTime DateDelivered, DateInvoiceCreated, DateQuotationCreated;
+        public DateTime DateDelivered, DateInvoiceCreated;
         public List<OrderItemDetails> ListOrderItems;
         public Int32 OrderItemCount = 0;
 
@@ -116,12 +116,10 @@ namespace SalesOrdersReport.Models
             try
             {
                 String[] ArrDtColumns1 = new string[] { "OrderID", "CustomerID", "OrderNumber", "OrderDate" };
-                String[] ArrDtColumns2 = new string[] { "OrderItemCount", "EstimateOrderAmount", "OrderStatus", "CreationDate", "LastUpdatedDate", "DateDelivered", "DateInvoiceCreated",
-                                                    "DateQuotationCreated" };
+                String[] ArrDtColumns2 = new string[] { "OrderItemCount", "EstimateOrderAmount", "OrderStatus", "CreationDate", "LastUpdatedDate", "DateDelivered", "DateInvoiceCreated" };
 
                 String[] ArrColumns = new string[] { "OrderID", "CustomerID", "Order Number", "Order Date", "Customer Name", "Order Item Count", "Estimate Order Amount",
-                                                    "Order Status", "Creation Date", "Last Updated Date", "Delivered Date", "Invoice Created Date",
-                                                    "Quotation Created Date" };
+                                                    "Order Status", "Creation Date", "Last Updated Date", "Delivered Date", "Invoice Created Date" };
 
                 String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)} from Orders a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID", WhereClause = $" Where 1 = 1";
                 if (FromDate > DateTime.MinValue && ToDate > DateTime.MinValue)
@@ -183,8 +181,7 @@ namespace SalesOrdersReport.Models
                         EstimateOrderAmount = Double.Parse(dtRow["EstimateOrderAmount"].ToString()),
                         OrderStatus = (ORDERSTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.ORDERSTATUS"), dtRow["OrderStatus"].ToString()),
                         DateDelivered = ((dtRow["DateDelivered"] == DBNull.Value) ? DateTime.MinValue : DateTime.Parse(dtRow["DateDelivered"].ToString())),
-                        DateInvoiceCreated = ((dtRow["DateInvoiceCreated"] == DBNull.Value) ? DateTime.MinValue : DateTime.Parse(dtRow["DateInvoiceCreated"].ToString())),
-                        DateQuotationCreated = ((dtRow["DateQuotationCreated"] == DBNull.Value) ? DateTime.MinValue : DateTime.Parse(dtRow["DateQuotationCreated"].ToString())),
+                        DateInvoiceCreated = ((dtRow["DateInvoiceCreated"] == DBNull.Value) ? DateTime.MinValue : DateTime.Parse(dtRow["DateInvoiceCreated"].ToString()))
                     };
 
                     ListOrders.Add(tmpOrderDetails);
@@ -398,7 +395,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public void UpdateOrderDetails(OrderDetails ObjOrderDetails)
+        public OrderDetails UpdateOrderDetails(OrderDetails ObjOrderDetails)
         {
             try
             {
@@ -420,6 +417,14 @@ namespace SalesOrdersReport.Models
                     }
                 }
 
+                //Find Deleted Items
+                List<OrderItemDetails> ListItemsDeleted = new List<OrderItemDetails>();
+                for (int i = 0; i < ObjOrderDetailsOrig.ListOrderItems.Count; i++)
+                {
+                    Int32 Index = ObjOrderDetails.ListOrderItems.FindIndex(e => e.ProductID == ObjOrderDetailsOrig.ListOrderItems[i].ProductID);
+                    if (Index < 0) ListItemsDeleted.Add(ObjOrderDetailsOrig.ListOrderItems[i]);
+                }
+
                 //Update Modified Items
                 for (int i = 0; i < ListItemsModified.Count; i++)
                 {
@@ -429,6 +434,15 @@ namespace SalesOrdersReport.Models
                                                 $"OrderID = {ObjOrderDetails.OrderID} and ProductID = {ListItemsModified[i].ProductID}");
                 }
 
+                //Update status for Deleted Items
+                for (int i = 0; i < ListItemsDeleted.Count; i++)
+                {
+                    ObjMySQLHelper.UpdateTableDetails("OrderItems", new List<String>() { "OrderItemStatus" },
+                                                new List<String>() { ORDERITEMSTATUS.Cancelled.ToString() },
+                                                new List<Types>() { Types.String },
+                                                $"OrderID = {ObjOrderDetails.OrderID} and ProductID = {ListItemsDeleted[i].ProductID}");
+                }
+
                 //Insert New Items
                 InsertOrderItems(ListItemsAdded, ObjOrderDetails.OrderID);
 
@@ -436,6 +450,9 @@ namespace SalesOrdersReport.Models
                 ObjMySQLHelper.UpdateTableDetails("Orders", new List<String>() { "OrderItemCount", "EstimateOrderAmount" },
                                             new List<String>() { OrderItemCount.ToString(), EstimatedOrderAmount.ToString() },
                                             new List<Types>() { Types.Number, Types.Number }, $"OrderID = {ObjOrderDetails.OrderID}");
+
+                FillOrderItemDetails(ObjOrderDetails);
+                return ObjOrderDetails;
             }
             catch (Exception ex)
             {

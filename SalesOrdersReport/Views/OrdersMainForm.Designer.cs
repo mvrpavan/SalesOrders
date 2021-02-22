@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OrdersMainForm));
             this.btnCreateOrder = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -42,6 +43,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.btnSearchOrder = new System.Windows.Forms.Button();
+            this.btnPrintPreview = new System.Windows.Forms.Button();
             this.btnPrintOrder = new System.Windows.Forms.Button();
             this.btnExportToExcel = new System.Windows.Forms.Button();
             this.btnConvertInvoice = new System.Windows.Forms.Button();
@@ -55,6 +57,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.lblOrdersCount = new System.Windows.Forms.Label();
             this.backgroundWorkerOrders = new System.ComponentModel.BackgroundWorker();
+            this.printDocumentOrders = new System.Drawing.Printing.PrintDocument();
+            this.printPreviewDialogOrders = new System.Windows.Forms.PrintPreviewDialog();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewOrders)).BeginInit();
@@ -87,6 +91,7 @@
             this.panel1.Controls.Add(this.groupBox3);
             this.panel1.Controls.Add(this.comboBox2);
             this.panel1.Controls.Add(this.btnSearchOrder);
+            this.panel1.Controls.Add(this.btnPrintPreview);
             this.panel1.Controls.Add(this.btnPrintOrder);
             this.panel1.Controls.Add(this.btnExportToExcel);
             this.panel1.Controls.Add(this.btnConvertInvoice);
@@ -213,14 +218,31 @@
             this.btnSearchOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSearchOrder.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnSearchOrder.Image = global::SalesOrdersReport.Properties.Resources.Search_icon;
-            this.btnSearchOrder.Location = new System.Drawing.Point(539, 3);
+            this.btnSearchOrder.Location = new System.Drawing.Point(523, 3);
             this.btnSearchOrder.Name = "btnSearchOrder";
-            this.btnSearchOrder.Size = new System.Drawing.Size(83, 73);
+            this.btnSearchOrder.Size = new System.Drawing.Size(58, 73);
             this.btnSearchOrder.TabIndex = 0;
             this.btnSearchOrder.Text = "Search Orders";
             this.btnSearchOrder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnSearchOrder.UseVisualStyleBackColor = false;
             this.btnSearchOrder.Click += new System.EventHandler(this.btnSearchOrder_Click);
+            // 
+            // btnPrintPreview
+            // 
+            this.btnPrintPreview.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnPrintPreview.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnPrintPreview.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnPrintPreview.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrintPreview.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnPrintPreview.Image = global::SalesOrdersReport.Properties.Resources.Iconshow_Hardware_Printer;
+            this.btnPrintPreview.Location = new System.Drawing.Point(650, 3);
+            this.btnPrintPreview.Name = "btnPrintPreview";
+            this.btnPrintPreview.Size = new System.Drawing.Size(63, 73);
+            this.btnPrintPreview.TabIndex = 0;
+            this.btnPrintPreview.Text = "Preview";
+            this.btnPrintPreview.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnPrintPreview.UseVisualStyleBackColor = false;
+            this.btnPrintPreview.Click += new System.EventHandler(this.btnPrintPreview_Click);
             // 
             // btnPrintOrder
             // 
@@ -230,9 +252,9 @@
             this.btnPrintOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPrintOrder.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnPrintOrder.Image = global::SalesOrdersReport.Properties.Resources.Iconshow_Hardware_Printer;
-            this.btnPrintOrder.Location = new System.Drawing.Point(628, 3);
+            this.btnPrintOrder.Location = new System.Drawing.Point(587, 3);
             this.btnPrintOrder.Name = "btnPrintOrder";
-            this.btnPrintOrder.Size = new System.Drawing.Size(83, 73);
+            this.btnPrintOrder.Size = new System.Drawing.Size(57, 73);
             this.btnPrintOrder.TabIndex = 0;
             this.btnPrintOrder.Text = "Print Orders";
             this.btnPrintOrder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -249,7 +271,7 @@
             this.btnExportToExcel.Image = global::SalesOrdersReport.Properties.Resources.export_icon;
             this.btnExportToExcel.Location = new System.Drawing.Point(450, 3);
             this.btnExportToExcel.Name = "btnExportToExcel";
-            this.btnExportToExcel.Size = new System.Drawing.Size(83, 73);
+            this.btnExportToExcel.Size = new System.Drawing.Size(67, 73);
             this.btnExportToExcel.TabIndex = 0;
             this.btnExportToExcel.Text = "Export to Excel";
             this.btnExportToExcel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -398,6 +420,20 @@
             this.backgroundWorkerOrders.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerOrders_ProgressChanged);
             this.backgroundWorkerOrders.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerOrders_RunWorkerCompleted);
             // 
+            // printDocumentOrders
+            // 
+            this.printDocumentOrders.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocumentOrders_PrintPage);
+            // 
+            // printPreviewDialogOrders
+            // 
+            this.printPreviewDialogOrders.AutoScrollMargin = new System.Drawing.Size(0, 0);
+            this.printPreviewDialogOrders.AutoScrollMinSize = new System.Drawing.Size(0, 0);
+            this.printPreviewDialogOrders.ClientSize = new System.Drawing.Size(400, 300);
+            this.printPreviewDialogOrders.Enabled = true;
+            this.printPreviewDialogOrders.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialogOrders.Icon")));
+            this.printPreviewDialogOrders.Name = "printPreviewDialogOrders";
+            this.printPreviewDialogOrders.Visible = false;
+            // 
             // OrdersMainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -459,5 +495,8 @@
         private System.Windows.Forms.Button btnExportToExcel;
         private System.Windows.Forms.Label label6;
         private System.ComponentModel.BackgroundWorker backgroundWorkerOrders;
+        private System.Windows.Forms.Button btnPrintPreview;
+        private System.Drawing.Printing.PrintDocument printDocumentOrders;
+        private System.Windows.Forms.PrintPreviewDialog printPreviewDialogOrders;
     }
 }

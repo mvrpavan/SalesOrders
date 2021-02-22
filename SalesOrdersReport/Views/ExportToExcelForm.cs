@@ -44,6 +44,7 @@ namespace SalesOrdersReport.Views
                         //chkListBoxDataToExport.Items.Add("Category Details", false);
                         chkListBoxDataToExport.Items.Add("Product Inventory", false);
                         //chkListBoxDataToExport.Items.Add("HSN Code (Tax Details)", false);
+                        lblExport.Text = "Export to File";
                         btnExportToExcelFile.Text = "Export Products Data to Excel File";
                         saveFileDialogExportToExcel.Title = "Save Exported file as";
                         saveFileDialogExportToExcel.OverwritePrompt = false;
@@ -54,6 +55,7 @@ namespace SalesOrdersReport.Views
                         chkListBoxDataToExport.Items.Add("Export all displayed Orders", true);
                         chkListBoxDataToExport.Items.Add("Export only selected Order", false);
                         chkListBoxDataToExport.Items.Add("Export Item Summary", false);
+                        lblExport.Text = "Export to Folder";
                         btnExportToExcelFile.Text = "Export Orders Data to Excel File";
                         folderBrowserDialogExport.Description = "Save Exported file to";
                         chkBoxAppend.Visible = false;

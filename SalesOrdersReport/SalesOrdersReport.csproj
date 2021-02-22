@@ -251,6 +251,30 @@
     <Compile Include="Views\ImportFromExcelForm.Designer.cs">
       <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\PurchaseInvoicesMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\PurchaseInvoicesMainForm.Designer.cs">
+      <DependentUpon>PurchaseInvoicesMainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PurchaseOrdersMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\PurchaseOrdersMainForm.Designer.cs">
+      <DependentUpon>PurchaseOrdersMainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VendorsMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\VendorsMainForm.Designer.cs">
+      <DependentUpon>VendorsMainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductInventoryMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ProductInventoryMainForm.Designer.cs">
+      <DependentUpon>ProductInventoryMainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\PaymentsExpensesMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -489,6 +513,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ImportFromExcelForm.resx">
       <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\PurchaseInvoicesMainForm.resx">
+      <DependentUpon>PurchaseInvoicesMainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\PurchaseOrdersMainForm.resx">
+      <DependentUpon>PurchaseOrdersMainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\VendorsMainForm.resx">
+      <DependentUpon>VendorsMainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ProductInventoryMainForm.resx">
+      <DependentUpon>ProductInventoryMainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\PaymentsExpensesMainForm.resx">
       <DependentUpon>PaymentsExpensesMainForm.cs</DependentUpon>

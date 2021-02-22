@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using SalesOrdersReport.CommonModules;
@@ -47,6 +48,8 @@ namespace SalesOrdersReport.Views
                 cmbBoxLine.Items.Add(AllOrderstatus);
                 cmbBoxLine.Items.AddRange(CommonFunctions.ObjCustomerMasterModel.GetAllLineNames().ToArray());
                 cmbBoxLine.SelectedIndex = 0;
+
+                btnPrintPreview.Visible = false;
             }
             catch (Exception ex)
             {
@@ -131,11 +134,31 @@ namespace SalesOrdersReport.Views
         {
             try
             {
+                OrderDetails tmpOrderDetails = (OrderDetails)ObjAddUpdatedDetails;
                 switch (Mode)
                 {
                     case 1:     //Add Order
+                        Object[] ArrItems = new Object[] {
+                            tmpOrderDetails.OrderID,
+                            tmpOrderDetails.CustomerID,
+                            tmpOrderDetails.OrderNumber,
+                            tmpOrderDetails.OrderDate,
+                            tmpOrderDetails.OrderItemCount,
+                            tmpOrderDetails.EstimateOrderAmount,
+                            tmpOrderDetails.OrderStatus,
+                            tmpOrderDetails.CreationDate,
+                            tmpOrderDetails.LastUpdatedDate,
+                            tmpOrderDetails.DateDelivered,
+                            tmpOrderDetails.DateInvoiceCreated
+                        };
+                        dtAllOrders.Rows.Add(ArrItems);
                         break;
-                    case 2:
+                    case 2:     //Update Order
+                        DataRow dtRow = dtAllOrders.Select($"OrderID = {tmpOrderDetails.OrderID}")[0];
+                        dtRow["Order Item Count"] = tmpOrderDetails.OrderItemCount;
+                        dtRow["Estimate Order Amount"] = tmpOrderDetails.EstimateOrderAmount;
+                        dtRow["Order Status"] = tmpOrderDetails.EstimateOrderAmount;
+                        dtRow["Last Updated Date"] = new MySql.Data.Types.MySqlDateTime(tmpOrderDetails.LastUpdatedDate);
                         break;
                     case 3:     //Reload Orders
                         break;
@@ -578,6 +601,34 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.cmbBoxLine_SelectedIndexChanged()", ex);
+            }
+        }
+
+        private void printDocumentOrders_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            Bitmap bm = new Bitmap(250, 600);
+            this.DrawToBitmap(bm, new Rectangle(0, 0, 250, 600));
+            e.Graphics.DrawImage(bm, new Point(0, 0));
+
+            //e.Graphics.DrawString("Test Print Document", new System.Drawing.Font(new System.Drawing.FontFamily("Times New Roman"), 8, System.Drawing.FontStyle.Bold), Brushes.Black, new Point(10, 20));
+            //e.Graphics.DrawLine(new Pen(Brushes.Red), new Point(10, 40), new Point(100, 40));
+            //e.Graphics.DrawString("This is in Line 2", new System.Drawing.Font(new System.Drawing.FontFamily("Times New Roman"), 8, System.Drawing.FontStyle.Bold), Brushes.Black, new Point(10, 60));
+            //e.Graphics.DrawLine(new Pen(Brushes.Red), new Point(10, 80), new Point(100, 80));
+            //e.Graphics.DrawString("This is in Line 3", new System.Drawing.Font(new System.Drawing.FontFamily("Times New Roman"), 8, System.Drawing.FontStyle.Bold), Brushes.Black, new Point(10, 100));
+            //e.Graphics.DrawLine(new Pen(Brushes.Red), new Point(10, 120), new Point(100, 120));
+        }
+
+        private void btnPrintPreview_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                printPreviewDialogOrders.Document = printDocumentOrders;
+                printDocumentOrders.DefaultPageSettings.PaperSize = new System.Drawing.Printing.PaperSize("", 250, 600);
+                printPreviewDialogOrders.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnPrintPreview_Click()", ex);
             }
         }
     }

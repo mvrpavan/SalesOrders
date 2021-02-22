@@ -42,13 +42,12 @@ namespace SalesOrdersReport.Views
 
             //LoadProductLines();
 
-            sellerMenu.Visible = true;
-            vendorMenu.Visible = true;
+            sellerMenu.Visible = false;
+            vendorMenu.Visible = false;
             productMenu.Visible = true;
             reportsMenu.Visible = true;
 
             addModifyVendorToolStripMenuItem.Visible = false;
-
             vendorHistoryToolStripMenuItem.Visible = false;
             productStockToolStripMenuItem.Visible = false;
 
@@ -317,11 +316,6 @@ namespace SalesOrdersReport.Views
             {
                 CommonFunctions.ShowErrorDialog("MainForm.createPurchaseOrderToolStripMenuItem_Click()", ex);
             }
-        }
-
-        private void ManageVendorsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void updatePurchasesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -638,6 +632,54 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.PaymentsExpensesToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void manageInventoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowChildForm(new ProductInventoryMainForm());
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.manageInventoryToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void manageVendorsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowChildForm(new VendorsMainForm());
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.manageVendorsToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void purchaseOrdersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowChildForm(new PurchaseOrdersMainForm());
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.purchaseOrdersToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void purchaseInvoicesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowChildForm(new PurchaseInvoicesMainForm());
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.purchaseInvoicesToolStripMenuItem_Click()", ex);
             }
         }
     }

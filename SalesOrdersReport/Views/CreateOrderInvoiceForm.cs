@@ -387,10 +387,17 @@ namespace SalesOrdersReport.Views
         {
             try
             {
+                OrderDetails AddUpdatedOrderDetails = null;
                 if (CurrSellerOrderDetails.CurrOrderDetails.OrderID < 0)
-                    ObjOrdersModel.CreateNewOrderForCustomer(CurrSellerDetails.CustomerID, dtTmPckrInvOrdDate.Value, CurrSellerOrderDetails.CurrOrderDetails.OrderNumber, CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems);
+                {
+                    AddUpdatedOrderDetails = ObjOrdersModel.CreateNewOrderForCustomer(CurrSellerDetails.CustomerID, dtTmPckrInvOrdDate.Value, CurrSellerOrderDetails.CurrOrderDetails.OrderNumber, CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems);
+                    UpdateObjectOnClose(1, AddUpdatedOrderDetails);
+                }
                 else
-                    ObjOrdersModel.UpdateOrderDetails(CurrSellerOrderDetails.CurrOrderDetails);
+                {
+                    AddUpdatedOrderDetails = ObjOrdersModel.UpdateOrderDetails(CurrSellerOrderDetails.CurrOrderDetails);
+                    UpdateObjectOnClose(2, AddUpdatedOrderDetails);
+                }
             }
             catch (Exception ex)
             {
@@ -635,6 +642,7 @@ namespace SalesOrdersReport.Views
                             foreach (var item in CurrSellerOrderDetails.CurrOrderDetails.ListOrderItems)
                             {
                                 if (item.OrderQty <= 0) continue;
+                                if (item.OrderItemStatus != ORDERITEMSTATUS.Ordered) continue;
 
                                 Object[] row = new Object[6];
                                 row[CategoryColIndex] = ObjProductMasterModel.GetProductDetails(item.ProductID).CategoryName;

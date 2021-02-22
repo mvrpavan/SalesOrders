@@ -34,7 +34,7 @@
             this.bgWorkerExportExcel = new System.ComponentModel.BackgroundWorker();
             this.chkListBoxDataToExport = new System.Windows.Forms.CheckedListBox();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblExport = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.saveFileDialogExportToExcel = new System.Windows.Forms.SaveFileDialog();
             this.chkBoxAppend = new System.Windows.Forms.CheckBox();
@@ -53,9 +53,9 @@
             // 
             // txtExportToExcelFilePath
             // 
-            this.txtExportToExcelFilePath.Location = new System.Drawing.Point(85, 27);
+            this.txtExportToExcelFilePath.Location = new System.Drawing.Point(97, 27);
             this.txtExportToExcelFilePath.Name = "txtExportToExcelFilePath";
-            this.txtExportToExcelFilePath.Size = new System.Drawing.Size(307, 20);
+            this.txtExportToExcelFilePath.Size = new System.Drawing.Size(295, 20);
             this.txtExportToExcelFilePath.TabIndex = 1;
             // 
             // btnExportToExcelFile
@@ -92,14 +92,14 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // label1
+            // lblExport
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 30);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Export to File";
+            this.lblExport.AutoSize = true;
+            this.lblExport.Location = new System.Drawing.Point(9, 30);
+            this.lblExport.Name = "lblExport";
+            this.lblExport.Size = new System.Drawing.Size(68, 13);
+            this.lblExport.TabIndex = 4;
+            this.lblExport.Text = "Export to File";
             // 
             // label2
             // 
@@ -113,7 +113,7 @@
             // chkBoxAppend
             // 
             this.chkBoxAppend.AutoSize = true;
-            this.chkBoxAppend.Location = new System.Drawing.Point(85, 53);
+            this.chkBoxAppend.Location = new System.Drawing.Point(97, 54);
             this.chkBoxAppend.Name = "chkBoxAppend";
             this.chkBoxAppend.Size = new System.Drawing.Size(317, 17);
             this.chkBoxAppend.TabIndex = 8;
@@ -129,7 +129,7 @@
             this.ClientSize = new System.Drawing.Size(484, 241);
             this.Controls.Add(this.chkBoxAppend);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblExport);
             this.Controls.Add(this.chkListBoxDataToExport);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnExportToExcelFile);
@@ -152,7 +152,7 @@
         private System.ComponentModel.BackgroundWorker bgWorkerExportExcel;
         private System.Windows.Forms.CheckedListBox chkListBoxDataToExport;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblExport;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.SaveFileDialog saveFileDialogExportToExcel;
         private System.Windows.Forms.CheckBox chkBoxAppend;

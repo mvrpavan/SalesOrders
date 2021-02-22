@@ -126,22 +126,6 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-
-
-//        ID AddedDate
-//SellerName LastUpdateDate
-//Address
-//Phone
-//GSTIN string
-
-//PriceGroupID
-//DiscountGroupID
-//StateID
-//LineID
-//Active
-//OrderDays CSV
-
-
         private void CreateCustomerTable()
         {
             try
@@ -287,8 +271,9 @@ namespace SalesOrdersReport.CommonModules
                 TableColumns.Add("SortName, varchar(50) NOT NULL");
                 TableColumns.Add("TaxID, smallint(5) unsigned DEFAULT NULL");
                 TableColumns.Add("ProductInvID, mediumint unsigned DEFAULT NULL");
+                TableColumns.Add("VendorID, smallint unsigned DEFAULT NULL");
                 TableColumns.Add("Active, tinyint(4) NOT NULL DEFAULT '1'");
-                TableColumns.Add("AddedDate, datetime NOT NULL");
+                TableColumns.Add("AddedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP");
                 TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
                 TableColumns.Add("PRIMARY KEY, ProductID");
                 ObjMySQLHelper.CreateTable("ProductMaster", TableColumns);
@@ -314,7 +299,7 @@ namespace SalesOrdersReport.CommonModules
                 TableColumns.Add("ReOrderStockLevel, float DEFAULT NULL");
                 TableColumns.Add("ReOrderStockQty, float DEFAULT NULL");
                 TableColumns.Add("LastPODate, datetime DEFAULT NULL");
-                TableColumns.Add("LastUpdateDate, datetime DEFAULT NULL");
+                TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
                 TableColumns.Add("PRIMARY KEY, ProductInvID");
                 ObjMySQLHelper.CreateTable("ProductInventory", TableColumns);
                 #endregion
@@ -342,11 +327,66 @@ namespace SalesOrdersReport.CommonModules
                 TableColumns.Add("PRIMARY KEY, PriceGroupID");
                 ObjMySQLHelper.CreateTable("PRICEGROUPMASTER", TableColumns);
                 #endregion
+
+                #region Create VendorMaster Table
+                TableColumns.Clear();
+                TableColumns.Add("VendorID, smallint(5) unsigned NOT NULL AUTO_INCREMENT");
+                TableColumns.Add("VendorName, varchar(100) NOT NULL");
+                TableColumns.Add("Address, varchar(100) NULL");
+                TableColumns.Add("PhoneNo, varchar(20) NULL");
+                TableColumns.Add("GSTIN, varchar(20) NULL");
+                TableColumns.Add("StateID, smallint DEFAULT NULL");
+                TableColumns.Add("Active, tinyint Not NULL DEFAULT '1'");
+                TableColumns.Add("AddedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP");
+                TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+                TableColumns.Add("PRIMARY KEY, VendorID");
+                ObjMySQLHelper.CreateTable("VendorMaster", TableColumns);
+                #endregion
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("RunDBScript.CreateProductMasterTables()", ex);
                 throw ex;
+            }
+        }
+
+        public void CreateInventoryTables()
+        {
+            try
+            {
+                List<String> TableColumns = new List<String>();
+
+                #region Create ProductStockHistory Table
+                TableColumns.Clear();
+                TableColumns.Add("HistoryEntryID, int unsigned NOT NULL AUTO_INCREMENT");
+                TableColumns.Add("ProductInvID, smallint unsigned NOT NULL");
+                TableColumns.Add("Type, varchar(10) DEFAULT Not NULL");
+                TableColumns.Add("OrderedQty, float DEFAULT 0");
+                TableColumns.Add("ReceivedQty, float DEFAULT 0");
+                TableColumns.Add("NetQty, float DEFAULT 0");
+                TableColumns.Add("PODate, datetime DEFAULT NULL");
+                TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+                TableColumns.Add("PRIMARY KEY, HistoryEntryID");
+                ObjMySQLHelper.CreateTable("ProductStockHistory", TableColumns);
+                #endregion
+
+                #region Create PurchaseOrders Table
+                TableColumns.Clear();
+                TableColumns.Add("HistoryEntryID, int unsigned NOT NULL AUTO_INCREMENT");
+                TableColumns.Add("ProductInvID, smallint unsigned NOT NULL");
+                TableColumns.Add("Type, varchar(10) DEFAULT Not NULL");
+                TableColumns.Add("OrderedQty, float DEFAULT 0");
+                TableColumns.Add("ReceivedQty, float DEFAULT 0");
+                TableColumns.Add("NetQty, float DEFAULT 0");
+                TableColumns.Add("PODate, datetime DEFAULT NULL");
+                TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+                TableColumns.Add("PRIMARY KEY, ProductInvID");
+                ObjMySQLHelper.CreateTable("PurchaseOrders", TableColumns);
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.CreateInventoryTables()", ex);
             }
         }
 
@@ -374,15 +414,14 @@ namespace SalesOrdersReport.CommonModules
                     "OrderID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
                     "OrderNumber, varchar(20) NOT NULL",
                     "OrderDate, datetime NOT NULL",
-                    "CreationDate, datetime NOT NULL",
-                    "LastUpdatedDate, datetime NOT NULL",
                     "CustomerID, smallint(5) NOT NULL",
                     "OrderItemCount, smallint(5) DEFAULT 0",
                     "EstimateOrderAmount, float DEFAULT 0",
                     "OrderStatus, varchar(20) DEFAULT NULL",      //Placed/Completed/Cancelled/Void
                     "DateDelivered, datetime NULL",
                     "DateInvoiceCreated, datetime NULL",
-                    "DateQuotationCreated, datetime NULL",
+                    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                    "LastUpdatedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
                     "PRIMARY KEY, OrderID"
                 };
                 ObjMySQLHelper.CreateTable("Orders", TableColumns);
@@ -414,13 +453,13 @@ namespace SalesOrdersReport.CommonModules
                     "InvoiceID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
                     "InvoiceNumber, varchar(20) NOT NULL",
                     "InvoiceDate, datetime NOT NULL",
-                    "CreationDate, datetime NOT NULL",
-                    "LastUpdatedDate, datetime NOT NULL",
                     "CustomerID, Int unsigned NOT NULL",
                     "OrderID, bigint NOT NULL",
                     "InvoiceItemCount, smallint(5) DEFAULT 0",
                     "NetInvoiceAmount, float DEFAULT 0",
                     "InvoiceStatus, varchar(20) DEFAULT NULL",
+                    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                    "LastUpdatedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
                     "PRIMARY KEY, InvoiceID"
                 };
                 ObjMySQLHelper.CreateTable("Invoices", TableColumns);
@@ -458,8 +497,8 @@ namespace SalesOrdersReport.CommonModules
                     "AccountID, mediumint unsigned NOT NULL AUTO_INCREMENT",
                     "CustomerID, mediumint unsigned NOT NULL",
                     "BalanceAmount, float DEFAULT 0",
-                    "CreationDate, datetime NOT NULL",
-                    "LastUpdatedDate, datetime NOT NULL",
+                    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                    "LastUpdatedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
                     "Active, tinyint(4) NOT NULL DEFAULT '1'",
                     "PRIMARY KEY, AccountID"
                 };
@@ -503,8 +542,8 @@ namespace SalesOrdersReport.CommonModules
                     "PaymentModeID, smallint unsigned not NULL",
                     "PaymentAmount, float DEFAULT 0",
                     "Description, varchar(100) NULL",
-                    "CreationDate, datetime NOT NULL",
-                    "LastUpdateDate, datetime NOT NULL",
+                    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                    "LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
                     "UserID, smallint unsigned NULL",
                     "PRIMARY KEY, PaymentID"
                 };
@@ -517,8 +556,8 @@ namespace SalesOrdersReport.CommonModules
                     "PaymentModeID, smallint unsigned not NULL",
                     "PaymentAmount, float DEFAULT 0",
                     "Description, varchar(100) NULL",
-                    "CreationDate, datetime NOT NULL",
-                    "LastUpdateDate, datetime NOT NULL",
+                    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                    "LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
                     "UserID, smallint unsigned NULL",
                     "PRIMARY KEY, ExpenseID"
                 };
