@@ -34,6 +34,9 @@ namespace SalesOrdersReport.CommonModules
         public static Type TypeString = Type.GetType("System.String"), TypeInt32 = Type.GetType("System.Int32");
         public static Type TypeDouble = Type.GetType("System.Double"), TypeBoolean = Type.GetType("System.Boolean");
 
+        
+        public static Dictionary<string, string> DictFilterNamesWithActualDBColNames;
+
         public static string CurrentUserName = "";
 
         public static void Initialize()
@@ -61,6 +64,21 @@ namespace SalesOrdersReport.CommonModules
 
                 ListSelectedCustomer = new List<String>();
                 ListSelectedVendors = new List<String>();
+                DictFilterNamesWithActualDBColNames = new Dictionary<string, string>()
+                {
+                    // { 111, new StudentName { FirstName="Sachin", LastName="Karnik", ID=211 } },
+                    { "Customer Name","CUSTOMERNAME" } ,
+                    { "Invoice Number","INVOICENUMBER"  },
+                    { "Invoice Status","INVOICESTATUS"  },
+                    { "Invoice Date","INVOICEDATE"  },
+                    { "Order Number","ORDERNUMBER"  },
+                    { "Order Status","ORDERSTATUS"  },
+                    { "Order Date","ORDERDATE" } ,
+                    { "Payment Date","PAYMENTDATE" } ,
+                    {"Payment Amount","PAYMENTAMOUNT" } ,
+                    {"Payment Method","PAYMENTMODE" } ,
+                    {"Payment Received by","USERNAME" }
+                };
             }
             catch (Exception ex)
             {

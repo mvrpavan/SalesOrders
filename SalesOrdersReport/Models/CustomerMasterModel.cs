@@ -88,6 +88,8 @@ namespace SalesOrdersReport.Models
             }
         }
 
+
+
         public List<string> GetAllDiscGrp()
         {
             try
@@ -150,6 +152,23 @@ namespace SalesOrdersReport.Models
                 CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetLineDetails()", ex);
             }
             return null;
+        }
+        public string GetCustomerName(int CustomerID)
+        {
+            try
+            {
+                int Index = ListCustomerDetails.FindIndex(e => e.CustomerID.Equals(CustomerID));
+                if (Index >= 0)
+                {
+                    return ListCustomerDetails[Index].CustomerName;
+                }
+                return "";
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetCustomerName()", ex);
+                throw ex;
+            }
         }
         public DiscountGroupDetails1 GetDiscountGrpDetails(string DiscountGrpName)
         {

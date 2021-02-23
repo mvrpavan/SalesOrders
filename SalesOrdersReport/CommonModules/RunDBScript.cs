@@ -545,6 +545,7 @@ namespace SalesOrdersReport.CommonModules
                     "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
                     "LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
                     "UserID, smallint unsigned NULL",
+                    "Active, tinyint(4) NOT NULL DEFAULT '1'", 
                     "PRIMARY KEY, PaymentID"
                 };
                 ObjMySQLHelper.CreateTable("Payments", TableColumns);
@@ -562,6 +563,25 @@ namespace SalesOrdersReport.CommonModules
                     "PRIMARY KEY, ExpenseID"
                 };
                 ObjMySQLHelper.CreateTable("Expenses", TableColumns);
+
+
+                TableColumns = new List<String>
+                {
+                    "HISTORYENTRYID, BIGINT UNSIGNED NOT NULL AUTO_INCREMENT",
+                    "ACCOUNTID, MEDIUMINT UNSIGNED NOT NULL",
+                    "PAYMENTID, BIGINT UNSIGNED NOT NULL",
+                    "SALEAMOUNT, FLOAT DEFAULT 0",
+                    "CANCELAMOUNT, FLOAT DEFAULT 0",
+                    "RETURNAMOUNT, FLOAT DEFAULT 0",
+                    "DISCOUNTAMOUNT, FLOAT DEFAULT 0",
+                    "TOTALTAX, FLOAT DEFAULT 0",
+                    "NETSALEAMOUNT, FLOAT DEFAULT 0",
+                    "BALANCEAMOUNT, FLOAT DEFAULT 0",
+                    "AMOUNTRECEIVED, FLOAT DEFAULT 0",
+                    "NEWBALANCEAMOUNT, FLOAT DEFAULT 0",
+                    "PRIMARY KEY, HISTORYENTRYID"
+                };
+                ObjMySQLHelper.CreateTable("CUSTOMERACCOUNTHISTORY", TableColumns);
 
                 //TableColumns = new List<String>
                 //{

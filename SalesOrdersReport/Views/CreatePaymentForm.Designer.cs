@@ -29,22 +29,25 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cmbxCreatePaymentCustomerNames = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.cmbxCreatePaymentPaymentAgainst = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.cmbxCreatePaymentNumber = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.cmbBoxPaymentModes = new System.Windows.Forms.ComboBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtbxCreatePaymentAmount = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.textBox11 = new System.Windows.Forms.TextBox();
+            this.dtpCreatePaymentPaidOn = new System.Windows.Forms.DateTimePicker();
+            this.grpbxCreatePaymentPaymentDtls = new System.Windows.Forms.GroupBox();
+            this.chckActive = new System.Windows.Forms.CheckBox();
+            this.txtCreatePaymentDesc = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.cmbxcreatePaymentStaffName = new System.Windows.Forms.ComboBox();
+            this.grpbxCreatePaymentInvoiceDtls = new System.Windows.Forms.GroupBox();
+            this.chckbxCreatePaymentMarkInvoiceAsPaid = new System.Windows.Forms.CheckBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -52,34 +55,33 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentNetSaleAmt = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentTotalTax = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentDiscAmt = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentRefundAmt = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentCancelAmt = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentSaleAmount = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentInvoiceItems = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentInvoiceDate = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentInvoiceNum = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.grpbxCreatePaymentCustDtls = new System.Windows.Forms.GroupBox();
             this.label22 = new System.Windows.Forms.Label();
-            this.textBox17 = new System.Windows.Forms.TextBox();
-            this.textBox12 = new System.Windows.Forms.TextBox();
-            this.textBox18 = new System.Windows.Forms.TextBox();
-            this.textBox19 = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentCustAddress = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentOB = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentBA = new System.Windows.Forms.TextBox();
+            this.txtCreatePaymentCustName = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
-            this.btnAddUpdate = new System.Windows.Forms.Button();
+            this.btnCreateUpdatePayment = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.lblValidateErrMsg = new System.Windows.Forms.Label();
+            this.grpbxCreatePaymentPaymentDtls.SuspendLayout();
+            this.grpbxCreatePaymentInvoiceDtls.SuspendLayout();
+            this.grpbxCreatePaymentCustDtls.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -91,14 +93,15 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Customer";
             // 
-            // comboBox1
+            // cmbxCreatePaymentCustomerNames
             // 
-            this.comboBox1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(109, 19);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(220, 21);
-            this.comboBox1.TabIndex = 1;
+            this.cmbxCreatePaymentCustomerNames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbxCreatePaymentCustomerNames.FormattingEnabled = true;
+            this.cmbxCreatePaymentCustomerNames.Location = new System.Drawing.Point(109, 19);
+            this.cmbxCreatePaymentCustomerNames.Name = "cmbxCreatePaymentCustomerNames";
+            this.cmbxCreatePaymentCustomerNames.Size = new System.Drawing.Size(220, 21);
+            this.cmbxCreatePaymentCustomerNames.TabIndex = 1;
+            this.cmbxCreatePaymentCustomerNames.SelectedIndexChanged += new System.EventHandler(this.cmbxCreatePaymentCustomerNames_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -109,14 +112,19 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Payment against";
             // 
-            // comboBox2
+            // cmbxCreatePaymentPaymentAgainst
             // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(109, 46);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(134, 21);
-            this.comboBox2.TabIndex = 1;
+            this.cmbxCreatePaymentPaymentAgainst.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbxCreatePaymentPaymentAgainst.FormattingEnabled = true;
+            this.cmbxCreatePaymentPaymentAgainst.Items.AddRange(new object[] {
+            "Select Payment Against",
+            "Invoice",
+            "Quotations"});
+            this.cmbxCreatePaymentPaymentAgainst.Location = new System.Drawing.Point(109, 46);
+            this.cmbxCreatePaymentPaymentAgainst.Name = "cmbxCreatePaymentPaymentAgainst";
+            this.cmbxCreatePaymentPaymentAgainst.Size = new System.Drawing.Size(175, 21);
+            this.cmbxCreatePaymentPaymentAgainst.TabIndex = 1;
+            this.cmbxCreatePaymentPaymentAgainst.SelectedIndexChanged += new System.EventHandler(this.cmbxCreatePaymentPaymentAgainst_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -127,14 +135,15 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "Number";
             // 
-            // comboBox3
+            // cmbxCreatePaymentNumber
             // 
-            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(109, 73);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(134, 21);
-            this.comboBox3.TabIndex = 1;
+            this.cmbxCreatePaymentNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbxCreatePaymentNumber.FormattingEnabled = true;
+            this.cmbxCreatePaymentNumber.Location = new System.Drawing.Point(109, 73);
+            this.cmbxCreatePaymentNumber.Name = "cmbxCreatePaymentNumber";
+            this.cmbxCreatePaymentNumber.Size = new System.Drawing.Size(134, 21);
+            this.cmbxCreatePaymentNumber.TabIndex = 1;
+            this.cmbxCreatePaymentNumber.SelectedIndexChanged += new System.EventHandler(this.cmbxCreatePaymentNumber_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -163,12 +172,13 @@
             this.cmbBoxPaymentModes.Size = new System.Drawing.Size(105, 21);
             this.cmbBoxPaymentModes.TabIndex = 1;
             // 
-            // textBox1
+            // txtbxCreatePaymentAmount
             // 
-            this.textBox1.Location = new System.Drawing.Point(109, 153);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(105, 20);
-            this.textBox1.TabIndex = 2;
+            this.txtbxCreatePaymentAmount.Location = new System.Drawing.Point(109, 153);
+            this.txtbxCreatePaymentAmount.Name = "txtbxCreatePaymentAmount";
+            this.txtbxCreatePaymentAmount.Size = new System.Drawing.Size(105, 20);
+            this.txtbxCreatePaymentAmount.TabIndex = 2;
+            this.txtbxCreatePaymentAmount.TextChanged += new System.EventHandler(this.txtbxCreatePaymentAmount_TextChanged);
             // 
             // label6
             // 
@@ -179,46 +189,58 @@
             this.label6.TabIndex = 0;
             this.label6.Text = "Paid on";
             // 
-            // dateTimePicker1
+            // dtpCreatePaymentPaidOn
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(109, 100);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(157, 20);
-            this.dateTimePicker1.TabIndex = 3;
+            this.dtpCreatePaymentPaidOn.Location = new System.Drawing.Point(109, 100);
+            this.dtpCreatePaymentPaidOn.Name = "dtpCreatePaymentPaidOn";
+            this.dtpCreatePaymentPaidOn.Size = new System.Drawing.Size(157, 20);
+            this.dtpCreatePaymentPaidOn.TabIndex = 3;
             // 
-            // groupBox1
+            // grpbxCreatePaymentPaymentDtls
             // 
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.textBox11);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.dateTimePicker1);
-            this.groupBox1.Controls.Add(this.label16);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.textBox1);
-            this.groupBox1.Controls.Add(this.label18);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.comboBox5);
-            this.groupBox1.Controls.Add(this.cmbBoxPaymentModes);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.comboBox3);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.comboBox2);
-            this.groupBox1.Controls.Add(this.comboBox1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(359, 305);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Payment Details";
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.chckActive);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.label1);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.txtCreatePaymentDesc);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.label2);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.dtpCreatePaymentPaidOn);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.label16);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.label4);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.txtbxCreatePaymentAmount);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.label18);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.label5);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.cmbxcreatePaymentStaffName);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.cmbBoxPaymentModes);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.label6);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.cmbxCreatePaymentNumber);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.label3);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.cmbxCreatePaymentPaymentAgainst);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.cmbxCreatePaymentCustomerNames);
+            this.grpbxCreatePaymentPaymentDtls.Location = new System.Drawing.Point(12, 12);
+            this.grpbxCreatePaymentPaymentDtls.Name = "grpbxCreatePaymentPaymentDtls";
+            this.grpbxCreatePaymentPaymentDtls.Size = new System.Drawing.Size(359, 305);
+            this.grpbxCreatePaymentPaymentDtls.TabIndex = 5;
+            this.grpbxCreatePaymentPaymentDtls.TabStop = false;
+            this.grpbxCreatePaymentPaymentDtls.Text = "Payment Details";
             // 
-            // textBox11
+            // chckActive
             // 
-            this.textBox11.Enabled = false;
-            this.textBox11.Location = new System.Drawing.Point(109, 179);
-            this.textBox11.Multiline = true;
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(203, 84);
-            this.textBox11.TabIndex = 2;
+            this.chckActive.AutoSize = true;
+            this.chckActive.Checked = true;
+            this.chckActive.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chckActive.Location = new System.Drawing.Point(221, 270);
+            this.chckActive.Name = "chckActive";
+            this.chckActive.Size = new System.Drawing.Size(56, 17);
+            this.chckActive.TabIndex = 4;
+            this.chckActive.Text = "Active";
+            this.chckActive.UseVisualStyleBackColor = true;
+            // 
+            // txtCreatePaymentDesc
+            // 
+            this.txtCreatePaymentDesc.Location = new System.Drawing.Point(109, 179);
+            this.txtCreatePaymentDesc.Multiline = true;
+            this.txtCreatePaymentDesc.Name = "txtCreatePaymentDesc";
+            this.txtCreatePaymentDesc.Size = new System.Drawing.Size(203, 84);
+            this.txtCreatePaymentDesc.TabIndex = 2;
             // 
             // label16
             // 
@@ -229,43 +251,62 @@
             this.label16.TabIndex = 0;
             this.label16.Text = "Description";
             // 
-            // groupBox2
+            // label18
             // 
-            this.groupBox2.Controls.Add(this.checkBox1);
-            this.groupBox2.Controls.Add(this.label15);
-            this.groupBox2.Controls.Add(this.label14);
-            this.groupBox2.Controls.Add(this.label13);
-            this.groupBox2.Controls.Add(this.label12);
-            this.groupBox2.Controls.Add(this.label10);
-            this.groupBox2.Controls.Add(this.label11);
-            this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.textBox10);
-            this.groupBox2.Controls.Add(this.textBox9);
-            this.groupBox2.Controls.Add(this.textBox8);
-            this.groupBox2.Controls.Add(this.textBox7);
-            this.groupBox2.Controls.Add(this.textBox6);
-            this.groupBox2.Controls.Add(this.textBox5);
-            this.groupBox2.Controls.Add(this.textBox4);
-            this.groupBox2.Controls.Add(this.textBox3);
-            this.groupBox2.Controls.Add(this.textBox2);
-            this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Location = new System.Drawing.Point(12, 323);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(692, 170);
-            this.groupBox2.TabIndex = 5;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Invoice Details";
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(43, 272);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(60, 13);
+            this.label18.TabIndex = 0;
+            this.label18.Text = "Staff Name";
             // 
-            // checkBox1
+            // cmbxcreatePaymentStaffName
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(399, 130);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(126, 17);
-            this.checkBox1.TabIndex = 5;
-            this.checkBox1.Text = "Mark Invoice as Paid";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.cmbxcreatePaymentStaffName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbxcreatePaymentStaffName.FormattingEnabled = true;
+            this.cmbxcreatePaymentStaffName.Location = new System.Drawing.Point(109, 269);
+            this.cmbxcreatePaymentStaffName.Name = "cmbxcreatePaymentStaffName";
+            this.cmbxcreatePaymentStaffName.Size = new System.Drawing.Size(105, 21);
+            this.cmbxcreatePaymentStaffName.TabIndex = 1;
+            // 
+            // grpbxCreatePaymentInvoiceDtls
+            // 
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.chckbxCreatePaymentMarkInvoiceAsPaid);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.label15);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.label14);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.label13);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.label12);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.label10);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.label11);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.label9);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.txtCreatePaymentNetSaleAmt);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.txtCreatePaymentTotalTax);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.txtCreatePaymentDiscAmt);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.txtCreatePaymentRefundAmt);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.txtCreatePaymentCancelAmt);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.txtCreatePaymentSaleAmount);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.txtCreatePaymentInvoiceItems);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.txtCreatePaymentInvoiceDate);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.txtCreatePaymentInvoiceNum);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.label7);
+            this.grpbxCreatePaymentInvoiceDtls.Controls.Add(this.label8);
+            this.grpbxCreatePaymentInvoiceDtls.Location = new System.Drawing.Point(12, 323);
+            this.grpbxCreatePaymentInvoiceDtls.Name = "grpbxCreatePaymentInvoiceDtls";
+            this.grpbxCreatePaymentInvoiceDtls.Size = new System.Drawing.Size(692, 170);
+            this.grpbxCreatePaymentInvoiceDtls.TabIndex = 5;
+            this.grpbxCreatePaymentInvoiceDtls.TabStop = false;
+            this.grpbxCreatePaymentInvoiceDtls.Text = "Invoice Details";
+            // 
+            // chckbxCreatePaymentMarkInvoiceAsPaid
+            // 
+            this.chckbxCreatePaymentMarkInvoiceAsPaid.AutoSize = true;
+            this.chckbxCreatePaymentMarkInvoiceAsPaid.Location = new System.Drawing.Point(399, 130);
+            this.chckbxCreatePaymentMarkInvoiceAsPaid.Name = "chckbxCreatePaymentMarkInvoiceAsPaid";
+            this.chckbxCreatePaymentMarkInvoiceAsPaid.Size = new System.Drawing.Size(126, 17);
+            this.chckbxCreatePaymentMarkInvoiceAsPaid.TabIndex = 5;
+            this.chckbxCreatePaymentMarkInvoiceAsPaid.Text = "Mark Invoice as Paid";
+            this.chckbxCreatePaymentMarkInvoiceAsPaid.UseVisualStyleBackColor = true;
+            this.chckbxCreatePaymentMarkInvoiceAsPaid.CheckedChanged += new System.EventHandler(this.chckbxCreatePaymentMarkInvoiceAsPaid_CheckedChanged);
             // 
             // label15
             // 
@@ -330,77 +371,77 @@
             this.label9.TabIndex = 4;
             this.label9.Text = "Invoice Items";
             // 
-            // textBox10
+            // txtCreatePaymentNetSaleAmt
             // 
-            this.textBox10.Location = new System.Drawing.Point(105, 128);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.ReadOnly = true;
-            this.textBox10.Size = new System.Drawing.Size(105, 20);
-            this.textBox10.TabIndex = 2;
+            this.txtCreatePaymentNetSaleAmt.Location = new System.Drawing.Point(105, 128);
+            this.txtCreatePaymentNetSaleAmt.Name = "txtCreatePaymentNetSaleAmt";
+            this.txtCreatePaymentNetSaleAmt.ReadOnly = true;
+            this.txtCreatePaymentNetSaleAmt.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentNetSaleAmt.TabIndex = 2;
             // 
-            // textBox9
+            // txtCreatePaymentTotalTax
             // 
-            this.textBox9.Location = new System.Drawing.Point(399, 102);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.ReadOnly = true;
-            this.textBox9.Size = new System.Drawing.Size(105, 20);
-            this.textBox9.TabIndex = 2;
+            this.txtCreatePaymentTotalTax.Location = new System.Drawing.Point(399, 102);
+            this.txtCreatePaymentTotalTax.Name = "txtCreatePaymentTotalTax";
+            this.txtCreatePaymentTotalTax.ReadOnly = true;
+            this.txtCreatePaymentTotalTax.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentTotalTax.TabIndex = 2;
             // 
-            // textBox8
+            // txtCreatePaymentDiscAmt
             // 
-            this.textBox8.Location = new System.Drawing.Point(399, 76);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.ReadOnly = true;
-            this.textBox8.Size = new System.Drawing.Size(105, 20);
-            this.textBox8.TabIndex = 2;
+            this.txtCreatePaymentDiscAmt.Location = new System.Drawing.Point(399, 76);
+            this.txtCreatePaymentDiscAmt.Name = "txtCreatePaymentDiscAmt";
+            this.txtCreatePaymentDiscAmt.ReadOnly = true;
+            this.txtCreatePaymentDiscAmt.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentDiscAmt.TabIndex = 2;
             // 
-            // textBox7
+            // txtCreatePaymentRefundAmt
             // 
-            this.textBox7.Location = new System.Drawing.Point(399, 50);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.ReadOnly = true;
-            this.textBox7.Size = new System.Drawing.Size(105, 20);
-            this.textBox7.TabIndex = 2;
+            this.txtCreatePaymentRefundAmt.Location = new System.Drawing.Point(399, 50);
+            this.txtCreatePaymentRefundAmt.Name = "txtCreatePaymentRefundAmt";
+            this.txtCreatePaymentRefundAmt.ReadOnly = true;
+            this.txtCreatePaymentRefundAmt.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentRefundAmt.TabIndex = 2;
             // 
-            // textBox6
+            // txtCreatePaymentCancelAmt
             // 
-            this.textBox6.Location = new System.Drawing.Point(399, 24);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.ReadOnly = true;
-            this.textBox6.Size = new System.Drawing.Size(105, 20);
-            this.textBox6.TabIndex = 2;
+            this.txtCreatePaymentCancelAmt.Location = new System.Drawing.Point(399, 24);
+            this.txtCreatePaymentCancelAmt.Name = "txtCreatePaymentCancelAmt";
+            this.txtCreatePaymentCancelAmt.ReadOnly = true;
+            this.txtCreatePaymentCancelAmt.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentCancelAmt.TabIndex = 2;
             // 
-            // textBox5
+            // txtCreatePaymentSaleAmount
             // 
-            this.textBox5.Location = new System.Drawing.Point(105, 102);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(105, 20);
-            this.textBox5.TabIndex = 2;
+            this.txtCreatePaymentSaleAmount.Location = new System.Drawing.Point(105, 102);
+            this.txtCreatePaymentSaleAmount.Name = "txtCreatePaymentSaleAmount";
+            this.txtCreatePaymentSaleAmount.ReadOnly = true;
+            this.txtCreatePaymentSaleAmount.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentSaleAmount.TabIndex = 2;
             // 
-            // textBox4
+            // txtCreatePaymentInvoiceItems
             // 
-            this.textBox4.Location = new System.Drawing.Point(105, 76);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(105, 20);
-            this.textBox4.TabIndex = 2;
+            this.txtCreatePaymentInvoiceItems.Location = new System.Drawing.Point(105, 76);
+            this.txtCreatePaymentInvoiceItems.Name = "txtCreatePaymentInvoiceItems";
+            this.txtCreatePaymentInvoiceItems.ReadOnly = true;
+            this.txtCreatePaymentInvoiceItems.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentInvoiceItems.TabIndex = 2;
             // 
-            // textBox3
+            // txtCreatePaymentInvoiceDate
             // 
-            this.textBox3.Location = new System.Drawing.Point(105, 50);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(105, 20);
-            this.textBox3.TabIndex = 2;
+            this.txtCreatePaymentInvoiceDate.Location = new System.Drawing.Point(105, 50);
+            this.txtCreatePaymentInvoiceDate.Name = "txtCreatePaymentInvoiceDate";
+            this.txtCreatePaymentInvoiceDate.ReadOnly = true;
+            this.txtCreatePaymentInvoiceDate.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentInvoiceDate.TabIndex = 2;
             // 
-            // textBox2
+            // txtCreatePaymentInvoiceNum
             // 
-            this.textBox2.Location = new System.Drawing.Point(105, 24);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(105, 20);
-            this.textBox2.TabIndex = 2;
+            this.txtCreatePaymentInvoiceNum.Location = new System.Drawing.Point(105, 24);
+            this.txtCreatePaymentInvoiceNum.Name = "txtCreatePaymentInvoiceNum";
+            this.txtCreatePaymentInvoiceNum.ReadOnly = true;
+            this.txtCreatePaymentInvoiceNum.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentInvoiceNum.TabIndex = 2;
             // 
             // label7
             // 
@@ -420,22 +461,22 @@
             this.label8.TabIndex = 4;
             this.label8.Text = "Invoice Number";
             // 
-            // groupBox3
+            // grpbxCreatePaymentCustDtls
             // 
-            this.groupBox3.Controls.Add(this.label22);
-            this.groupBox3.Controls.Add(this.textBox17);
-            this.groupBox3.Controls.Add(this.textBox12);
-            this.groupBox3.Controls.Add(this.textBox18);
-            this.groupBox3.Controls.Add(this.textBox19);
-            this.groupBox3.Controls.Add(this.label17);
-            this.groupBox3.Controls.Add(this.label23);
-            this.groupBox3.Controls.Add(this.label24);
-            this.groupBox3.Location = new System.Drawing.Point(377, 12);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(327, 291);
-            this.groupBox3.TabIndex = 6;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Customer Details";
+            this.grpbxCreatePaymentCustDtls.Controls.Add(this.label22);
+            this.grpbxCreatePaymentCustDtls.Controls.Add(this.txtCreatePaymentCustAddress);
+            this.grpbxCreatePaymentCustDtls.Controls.Add(this.txtCreatePaymentOB);
+            this.grpbxCreatePaymentCustDtls.Controls.Add(this.txtCreatePaymentBA);
+            this.grpbxCreatePaymentCustDtls.Controls.Add(this.txtCreatePaymentCustName);
+            this.grpbxCreatePaymentCustDtls.Controls.Add(this.label17);
+            this.grpbxCreatePaymentCustDtls.Controls.Add(this.label23);
+            this.grpbxCreatePaymentCustDtls.Controls.Add(this.label24);
+            this.grpbxCreatePaymentCustDtls.Location = new System.Drawing.Point(377, 12);
+            this.grpbxCreatePaymentCustDtls.Name = "grpbxCreatePaymentCustDtls";
+            this.grpbxCreatePaymentCustDtls.Size = new System.Drawing.Size(327, 291);
+            this.grpbxCreatePaymentCustDtls.TabIndex = 6;
+            this.grpbxCreatePaymentCustDtls.TabStop = false;
+            this.grpbxCreatePaymentCustDtls.Text = "Customer Details";
             // 
             // label22
             // 
@@ -446,38 +487,38 @@
             this.label22.TabIndex = 4;
             this.label22.Text = "Customer Address";
             // 
-            // textBox17
+            // txtCreatePaymentCustAddress
             // 
-            this.textBox17.Enabled = false;
-            this.textBox17.Location = new System.Drawing.Point(105, 50);
-            this.textBox17.Multiline = true;
-            this.textBox17.Name = "textBox17";
-            this.textBox17.Size = new System.Drawing.Size(203, 84);
-            this.textBox17.TabIndex = 2;
+            this.txtCreatePaymentCustAddress.Enabled = false;
+            this.txtCreatePaymentCustAddress.Location = new System.Drawing.Point(105, 50);
+            this.txtCreatePaymentCustAddress.Multiline = true;
+            this.txtCreatePaymentCustAddress.Name = "txtCreatePaymentCustAddress";
+            this.txtCreatePaymentCustAddress.Size = new System.Drawing.Size(203, 84);
+            this.txtCreatePaymentCustAddress.TabIndex = 2;
             // 
-            // textBox12
+            // txtCreatePaymentOB
             // 
-            this.textBox12.Location = new System.Drawing.Point(105, 140);
-            this.textBox12.Name = "textBox12";
-            this.textBox12.ReadOnly = true;
-            this.textBox12.Size = new System.Drawing.Size(105, 20);
-            this.textBox12.TabIndex = 2;
+            this.txtCreatePaymentOB.Location = new System.Drawing.Point(105, 140);
+            this.txtCreatePaymentOB.Name = "txtCreatePaymentOB";
+            this.txtCreatePaymentOB.ReadOnly = true;
+            this.txtCreatePaymentOB.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentOB.TabIndex = 2;
             // 
-            // textBox18
+            // txtCreatePaymentBA
             // 
-            this.textBox18.Location = new System.Drawing.Point(105, 166);
-            this.textBox18.Name = "textBox18";
-            this.textBox18.ReadOnly = true;
-            this.textBox18.Size = new System.Drawing.Size(105, 20);
-            this.textBox18.TabIndex = 2;
+            this.txtCreatePaymentBA.Location = new System.Drawing.Point(105, 166);
+            this.txtCreatePaymentBA.Name = "txtCreatePaymentBA";
+            this.txtCreatePaymentBA.ReadOnly = true;
+            this.txtCreatePaymentBA.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentBA.TabIndex = 2;
             // 
-            // textBox19
+            // txtCreatePaymentCustName
             // 
-            this.textBox19.Enabled = false;
-            this.textBox19.Location = new System.Drawing.Point(105, 24);
-            this.textBox19.Name = "textBox19";
-            this.textBox19.Size = new System.Drawing.Size(105, 20);
-            this.textBox19.TabIndex = 2;
+            this.txtCreatePaymentCustName.Enabled = false;
+            this.txtCreatePaymentCustName.Location = new System.Drawing.Point(105, 24);
+            this.txtCreatePaymentCustName.Name = "txtCreatePaymentCustName";
+            this.txtCreatePaymentCustName.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentCustName.TabIndex = 2;
             // 
             // label17
             // 
@@ -506,16 +547,15 @@
             this.label24.TabIndex = 4;
             this.label24.Text = "Customer Name";
             // 
-            // btnAddUpdate
+            // btnCreateUpdatePayment
             // 
-            this.btnAddUpdate.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnAddUpdate.Location = new System.Drawing.Point(139, 519);
-            this.btnAddUpdate.Name = "btnAddUpdate";
-            this.btnAddUpdate.Size = new System.Drawing.Size(133, 23);
-            this.btnAddUpdate.TabIndex = 7;
-            this.btnAddUpdate.Text = "Add Payment";
-            this.btnAddUpdate.UseVisualStyleBackColor = true;
-            this.btnAddUpdate.Click += new System.EventHandler(this.btnAddUpdate_Click);
+            this.btnCreateUpdatePayment.Location = new System.Drawing.Point(139, 519);
+            this.btnCreateUpdatePayment.Name = "btnCreateUpdatePayment";
+            this.btnCreateUpdatePayment.Size = new System.Drawing.Size(133, 23);
+            this.btnCreateUpdatePayment.TabIndex = 7;
+            this.btnCreateUpdatePayment.Text = "Create Payment";
+            this.btnCreateUpdatePayment.UseVisualStyleBackColor = true;
+            this.btnCreateUpdatePayment.Click += new System.EventHandler(this.btnAddUpdate_Click);
             // 
             // btnClose
             // 
@@ -538,100 +578,97 @@
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
-            // comboBox5
+            // lblValidateErrMsg
             // 
-            this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(109, 269);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(105, 21);
-            this.comboBox5.TabIndex = 1;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(43, 272);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(60, 13);
-            this.label18.TabIndex = 0;
-            this.label18.Text = "Staff Name";
+            this.lblValidateErrMsg.AutoSize = true;
+            this.lblValidateErrMsg.ForeColor = System.Drawing.Color.Red;
+            this.lblValidateErrMsg.Location = new System.Drawing.Point(136, 499);
+            this.lblValidateErrMsg.Name = "lblValidateErrMsg";
+            this.lblValidateErrMsg.Size = new System.Drawing.Size(0, 13);
+            this.lblValidateErrMsg.TabIndex = 4;
+            this.lblValidateErrMsg.Visible = false;
             // 
             // CreatePaymentForm
             // 
-            this.AcceptButton = this.btnAddUpdate;
+            this.AcceptButton = this.btnCreateUpdatePayment;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(720, 561);
+            this.Controls.Add(this.lblValidateErrMsg);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.btnAddUpdate);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.btnCreateUpdatePayment);
+            this.Controls.Add(this.grpbxCreatePaymentCustDtls);
+            this.Controls.Add(this.grpbxCreatePaymentInvoiceDtls);
+            this.Controls.Add(this.grpbxCreatePaymentPaymentDtls);
             this.Name = "CreatePaymentForm";
-            this.Text = "Add Payment";
+            this.Text = "Create Payment";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CreatePaymentForm_FormClosed);
             this.Load += new System.EventHandler(this.CreatePaymentForm_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.grpbxCreatePaymentPaymentDtls.ResumeLayout(false);
+            this.grpbxCreatePaymentPaymentDtls.PerformLayout();
+            this.grpbxCreatePaymentInvoiceDtls.ResumeLayout(false);
+            this.grpbxCreatePaymentInvoiceDtls.PerformLayout();
+            this.grpbxCreatePaymentCustDtls.ResumeLayout(false);
+            this.grpbxCreatePaymentCustDtls.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cmbxCreatePaymentCustomerNames;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox cmbxCreatePaymentPaymentAgainst;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.ComboBox cmbxCreatePaymentNumber;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox cmbBoxPaymentModes;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtbxCreatePaymentAmount;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.DateTimePicker dtpCreatePaymentPaidOn;
+        private System.Windows.Forms.GroupBox grpbxCreatePaymentPaymentDtls;
+        private System.Windows.Forms.GroupBox grpbxCreatePaymentInvoiceDtls;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txtCreatePaymentDiscAmt;
+        private System.Windows.Forms.TextBox txtCreatePaymentRefundAmt;
+        private System.Windows.Forms.TextBox txtCreatePaymentCancelAmt;
+        private System.Windows.Forms.TextBox txtCreatePaymentSaleAmount;
+        private System.Windows.Forms.TextBox txtCreatePaymentInvoiceItems;
+        private System.Windows.Forms.TextBox txtCreatePaymentInvoiceDate;
+        private System.Windows.Forms.TextBox txtCreatePaymentInvoiceNum;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.TextBox txtCreatePaymentTotalTax;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.TextBox txtCreatePaymentNetSaleAmt;
+        private System.Windows.Forms.GroupBox grpbxCreatePaymentCustDtls;
         private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.TextBox textBox17;
-        private System.Windows.Forms.TextBox textBox18;
-        private System.Windows.Forms.TextBox textBox19;
+        private System.Windows.Forms.TextBox txtCreatePaymentCustAddress;
+        private System.Windows.Forms.TextBox txtCreatePaymentBA;
+        private System.Windows.Forms.TextBox txtCreatePaymentCustName;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Button btnAddUpdate;
+        private System.Windows.Forms.Button btnCreateUpdatePayment;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnReset;
-        private System.Windows.Forms.TextBox textBox11;
+        private System.Windows.Forms.TextBox txtCreatePaymentDesc;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.TextBox textBox12;
+        private System.Windows.Forms.CheckBox chckbxCreatePaymentMarkInvoiceAsPaid;
+        private System.Windows.Forms.TextBox txtCreatePaymentOB;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.ComboBox comboBox5;
+        private System.Windows.Forms.ComboBox cmbxcreatePaymentStaffName;
+        private System.Windows.Forms.Label lblValidateErrMsg;
+        private System.Windows.Forms.CheckBox chckActive;
     }
 }

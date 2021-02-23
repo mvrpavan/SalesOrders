@@ -730,23 +730,17 @@ namespace SalesOrdersReport.Views
                     }
                     CountOfDisctinctCustomers++;
                     CustomerDetails ObjCustomerDetails = new CustomerDetails();
-                    // ObjCustomerDetails.CustomerID = int.Parse(dtRow["CUSTOMERID"].ToString().Trim());
                     ObjCustomerDetails.CustomerName = arr[CustomerNameIndex].Trim();
                     ObjCustomerDetails.Address = arr[AddressIndex].Trim();
                     ObjCustomerDetails.GSTIN = arr[GSTINIndex].Trim();
                     ObjCustomerDetails.PhoneNo = ((arr[PhoneIndex] == null) || arr[PhoneIndex].Trim() == "") ? 0 : Int64.Parse(arr[PhoneIndex].Trim());
-                    //ObjCustomerDetails.Active = bool.Parse(arr[ActiveIndex].ToString().Trim() == "1" ? "true" : "false");
                     if (arr[ActiveIndex].Trim() != "") ObjCustomerDetails.Active = bool.Parse(arr[ActiveIndex].Trim());
                     ObjCustomerDetails.State = ((arr[StateIndex] == null) || arr[StateIndex].Trim() == "") ? "" : arr[StateIndex].Trim();
                     ObjCustomerDetails.OrderDaysAssigned = arr[OrderDaysIndex].Trim();
-                    //ObjCustomerDetails.LastUpdateDate = ((arr[LastUpdateDateIndex] == null) || arr[LastUpdateDateIndex].ToString().Trim() == "") ? DateTime.MinValue : DateTime.Parse(arr[LastUpdateDateIndex].ToString());
-                    //ObjCustomerDetails.AddedDate = ((arr[AddedDateIndex] == null) || arr[AddedDateIndex].ToString().Trim() == "") ? DateTime.MinValue : DateTime.Parse(arr[AddedDateIndex].ToString());
                     ObjCustomerDetails.LineName = ((arr[LineNameIndex] == null) || arr[LineNameIndex].Trim() == "") ? "" : arr[LineNameIndex].Trim();
                     ObjCustomerDetails.DiscountGroupName = ((arr[DiscountGroupNameIndex] == null) || arr[DiscountGroupNameIndex].Trim() == "") ? "" : arr[DiscountGroupNameIndex].Trim();
                     ObjCustomerDetails.PriceGroupName = ((arr[PriceGroupNameIndex] == null) || arr[PriceGroupNameIndex].Trim() == "") ? "" : arr[PriceGroupNameIndex].Trim();
                     int Index = -1, AlreadyExistsIndex = -1;
-
-
 
                     AlreadyExistsIndex = ListExistingLineNamesinDB.FindIndex(e => e.Equals(ObjCustomerDetails.LineName, StringComparison.InvariantCultureIgnoreCase));
                     if (AlreadyExistsIndex < 0)
@@ -756,17 +750,9 @@ namespace SalesOrdersReport.Views
                         Index = ListTempLineDtls.BinarySearch(ObjLineDetails, ObjLineDetails);
                         if (Index < 0)
                         {
-                            //&&&&&
-                            //ResultVal = CommonFunctions.ObjCustomerMasterModel.CreateNewLine(ObjLineDetails.LineName, "");
-                            //if (ResultVal < 0) MessageBox.Show("Wasnt able to create line", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else if (ResultVal == 2) MessageBox.Show("Line already Exists, Please try adding new Line", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else
-                            //{
                             ObjLineDetails.LineID = ObjCustomerDetails.LineID = LineID;
                             ListTempLineDtls.Insert(~Index, ObjLineDetails);
-                            //CommonFunctions.ObjCustomerMasterModel.AddLineDetailsToCache(ObjLineDetails);
                             LineID++;
-                            // }
                         }
                         else ListTempLineDtls[Index] = ObjLineDetails;
                     }
@@ -780,20 +766,12 @@ namespace SalesOrdersReport.Views
                         Index = ListTempDGDtls.BinarySearch(ObjDiscountGroupDetails, ObjDiscountGroupDetails);
                         if (Index < 0)
                         {
-                            //ResultVal = CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp(ObjDiscountGroupDetails.DiscountGrpName,"");
-                            //if (ResultVal < 0) MessageBox.Show("Wasnt able to create line", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else if (ResultVal == 2) MessageBox.Show("Line already Exists, Please try adding new Line", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else
-                            //{
                             ObjDiscountGroupDetails.DiscountGrpID = ObjCustomerDetails.DiscountGroupID = DGID;
                             ObjDiscountGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(arr[DG_DiscountTypeIndex].Trim());
                             ObjDiscountGroupDetails.IsDefault = bool.Parse(arr[DGDefaultIndex].Trim());
                             if (arr[DGDefaultIndex].Trim() != "") ListTempDGDtls.Insert(~Index, ObjDiscountGroupDetails);
-                            //CommonFunctions.ObjCustomerMasterModel.AddDiscountGroupToCache(ObjDiscountGroupDetails);
                             DGID++;
-                            //}
                         }
-                        else ListTempDGDtls[Index] = ObjDiscountGroupDetails;
                     }
                     else ObjCustomerDetails.DiscountGroupID = CommonFunctions.ObjCustomerMasterModel.GetDisGrpID(ListExistingDiscGrpNamesinDB[AlreadyExistsIndex]);
                     AlreadyExistsIndex = ListExistingPriceGrpNamesinDB.FindIndex(e => e.Equals(ObjCustomerDetails.PriceGroupName, StringComparison.InvariantCultureIgnoreCase));
@@ -804,49 +782,26 @@ namespace SalesOrdersReport.Views
                         Index = ListTempPGDtls.BinarySearch(ObjPriceGroupDetails, ObjPriceGroupDetails);
                         if (Index < 0)
                         {
-                            //ResultVal = CommonFunctions.ObjCustomerMasterModel.CreateNewLine(ObjLineDetails.LineName, "");
-                            //if (ResultVal < 0) MessageBox.Show("Wasnt able to create line", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else if (ResultVal == 2) MessageBox.Show("Line already Exists, Please try adding new Line", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else
-                            //{
                             ObjPriceGroupDetails.PriceGroupID = ObjCustomerDetails.PriceGroupID = PGID;
                             ObjPriceGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(arr[PG_DiscountTypeIndex].Trim());
                             ObjPriceGroupDetails.IsDefault = bool.Parse(arr[PGDefaultIndex].Trim());
                             if (arr[PGDefaultIndex].Trim() != "") ObjPriceGroupDetails.PriceColumn = arr[SelectedPriceGroupColNameIndex].Trim();
                             ListTempPGDtls.Insert(~Index, ObjPriceGroupDetails);
-                            //CommonFunctions.ObjCustomerMasterModel.AddPriceGroupToCache(ObjPriceGroupDetails);
                             PGID++;
-                            //}
                         }
-                        else ListTempPGDtls[Index] = ObjPriceGroupDetails;
                     }
                     else ObjCustomerDetails.PriceGroupID = CommonFunctions.ObjCustomerMasterModel.GetPriceGrpID(ListExistingPriceGrpNamesinDB[AlreadyExistsIndex]);
-                    //ObjCustomerDetails.LineID = ((arr["LINEID"] == null) || arr["LINEID"].ToString().Trim() == "") ? -1 : int.Parse(arr["LINEID"].ToString().Trim());
-                    //ObjCustomerDetails.DiscountGroupID = ((arr["DISCOUNTGROUPID"] == null) || arr["DISCOUNTGROUPID"].ToString().Trim() == "") ? -1 : int.Parse(arr["DISCOUNTGROUPID"].ToString().Trim());
-                    //ObjCustomerDetails.PriceGroupID = ((arr["PRICEGROUPID"] == null) || arr["PRICEGROUPID"].ToString().Trim() == "") ? -1 : int.Parse(arr["PRICEGROUPID"].ToString().Trim());
-                    //if (ObjCustomerDetails.LineID != -1) ObjCustomerDetails.LineName = ListLineDetails.Where(e => e.LineID.Equals(ObjCustomerDetails.LineID)).FirstOrDefault().LineName;
-                    //if (ObjCustomerDetails.DiscountGroupID != -1) ObjCustomerDetails.DiscountGroupName = ListDiscountGroupDetails.Where(e => e.DiscountGrpID.Equals(ObjCustomerDetails.DiscountGroupID)).FirstOrDefault().DiscountGrpName;
-                    //if (ObjCustomerDetails.PriceGroupID != -1) ObjCustomerDetails.PriceGroupName = ListPriceGroupDetails.Where(e => e.PriceGroupID.Equals(ObjCustomerDetails.PriceGroupID)).FirstOrDefault().PriceGrpName;
-                    //if (ObjCustomerDetails.StateID != -1) ObjCustomerDetails.State = ListStateDetails.Where(e => e.StateID.Equals(ObjCustomerDetails.StateID)).FirstOrDefault().State;
                     AlreadyExistsIndex = ListExistingCustomerNamesinDB.FindIndex(e => e.Equals(ObjCustomerDetails.CustomerName, StringComparison.InvariantCultureIgnoreCase));
                     if (AlreadyExistsIndex < 0)
                     {
                         Index = ListTempCustDtls.BinarySearch(ObjCustomerDetails, ObjCustomerDetails);
                         if (Index < 0)
                         {
-                            //ResultVal = CommonFunctions.ObjCustomerMasterModel.CreateNewLine(ObjLineDetails.LineName, "");
-                            //if (ResultVal < 0) MessageBox.Show("Wasnt able to create line", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else if (ResultVal == 2) MessageBox.Show("Line already Exists, Please try adding new Line", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else
-                            //{
                             ObjCustomerDetails.CustomerID = CustID;
                             ObjCustomerDetails.StateID = CommonFunctions.ObjCustomerMasterModel.GetStateID(ObjCustomerDetails.State);
                             ListTempCustDtls.Insert(~Index, ObjCustomerDetails);
-                            // CommonFunctions.ObjCustomerMasterModel.AddCustomerDataToCache(ObjCustomerDetails);
                             CustID++;
-                            //}
                         }
-                        else ListTempCustDtls[Index] = ObjCustomerDetails;
                     }
                 }
                 srReadSelectedFile.Close();

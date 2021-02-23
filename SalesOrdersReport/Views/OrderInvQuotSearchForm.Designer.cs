@@ -34,7 +34,7 @@
             this.cmbBoxSearchIn = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbBoxMatch = new System.Windows.Forms.ComboBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.chkMatchCase = new System.Windows.Forms.CheckBox();
             this.btnFind = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -89,15 +89,15 @@
             this.cmbBoxMatch.Size = new System.Drawing.Size(177, 21);
             this.cmbBoxMatch.TabIndex = 2;
             // 
-            // checkBox1
+            // chkMatchCase
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(327, 86);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(83, 17);
-            this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "Match Case";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.chkMatchCase.AutoSize = true;
+            this.chkMatchCase.Location = new System.Drawing.Point(327, 86);
+            this.chkMatchCase.Name = "chkMatchCase";
+            this.chkMatchCase.Size = new System.Drawing.Size(83, 17);
+            this.chkMatchCase.TabIndex = 3;
+            this.chkMatchCase.Text = "Match Case";
+            this.chkMatchCase.UseVisualStyleBackColor = true;
             // 
             // btnFind
             // 
@@ -129,7 +129,7 @@
             this.ClientSize = new System.Drawing.Size(435, 169);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnFind);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.chkMatchCase);
             this.Controls.Add(this.cmbBoxMatch);
             this.Controls.Add(this.cmbBoxSearchIn);
             this.Controls.Add(this.txtBoxSearchString);
@@ -151,7 +151,7 @@
         private System.Windows.Forms.ComboBox cmbBoxSearchIn;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cmbBoxMatch;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chkMatchCase;
         private System.Windows.Forms.Button btnFind;
         private System.Windows.Forms.Button btnClose;
     }

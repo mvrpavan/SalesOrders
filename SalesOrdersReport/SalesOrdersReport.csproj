@@ -78,6 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonModules\CryptoGraphy.cs" />
+    <Compile Include="Models\AccountsMasterModel.cs" />
+    <Compile Include="Models\CustomerAccountHistoryModel.cs" />
     <Compile Include="Models\CustomerDetails.cs" />
     <Compile Include="Models\CustomerMasterModel.cs" />
     <Compile Include="Models\InvoicesModel.cs" />

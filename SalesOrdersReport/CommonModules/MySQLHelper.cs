@@ -169,7 +169,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                if (CheckTableExists(TableName)) return -1;
+                if (!CheckTableExists(TableName)) return -1;
 
                 String Query = $"Insert into {TableName}";
                 if (ListColumnNames != null && ListColumnNames.Count > 0) Query += $"({String.Join(",", ListColumnNames)})";
