@@ -141,7 +141,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                ProductDetails UpdatedProductDetails = (ProductDetails)ObjAddUpdated;
+                ProductDetails UpdatedProductDetails = ((ObjAddUpdated == null) ? null : (ProductDetails)ObjAddUpdated);
                 switch (Mode)
                 {
                     case 1:     //Add/Update Product
@@ -474,14 +474,15 @@ namespace SalesOrdersReport.Views
             try
             {
                 DataTable dtProducts = new DataTable();
-                String[] ArrColumns = new String[] { "ID", "SKU", "Name", "SortName", "Description", "Category", "Purchase Price", "Wholesale Price",
+                String[] ArrColumns = new String[] { "ID", "Product SKU", "Name", "SortName", "Description", "Category", "Purchase Price", "Wholesale Price",
                                                 "Retail Price", "Max. Retail Price", "Units", "Current Stock", "ReOrder Stock Level",
-                                                "ReOrder Stock Qty", "HSN Code", "Active" };
-                Type[] ArrColumnsType = new Type[] { Type.GetType("System.Int32"), Type.GetType("System.String"), Type.GetType("System.String"),
-                                                    Type.GetType("System.String"), Type.GetType("System.String"), Type.GetType("System.String"),
-                                                    Type.GetType("System.Double"), Type.GetType("System.Double"), Type.GetType("System.Double"),
-                                                    Type.GetType("System.Double"), Type.GetType("System.String"), Type.GetType("System.String"),
-                                                    Type.GetType("System.String"), Type.GetType("System.String"), Type.GetType("System.String"), Type.GetType("System.Boolean") };
+                                                "ReOrder Stock Qty", "Vendor Name", "HSN Code", "Active" };
+                Type[] ArrColumnsType = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeString,
+                                                    CommonFunctions.TypeString, CommonFunctions.TypeString, CommonFunctions.TypeString,
+                                                    CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble,
+                                                    CommonFunctions.TypeDouble, CommonFunctions.TypeString, CommonFunctions.TypeString,
+                                                    CommonFunctions.TypeString, CommonFunctions.TypeString, CommonFunctions.TypeString,
+                                                    CommonFunctions.TypeString, CommonFunctions.TypeString };
                 for (int i = 0; i < ArrColumns.Length; i++)
                 {
                     dtProducts.Columns.Add(new DataColumn(ArrColumns[i], ArrColumnsType[i]));
@@ -506,8 +507,9 @@ namespace SalesOrdersReport.Views
                     ArrRowItems[col++] = (productInventoryDetails.Inventory * productInventoryDetails.Units) + " " + productInventoryDetails.UnitsOfMeasurement;
                     ArrRowItems[col++] = (productInventoryDetails.ReOrderStockLevel * productInventoryDetails.Units) + " " + productInventoryDetails.UnitsOfMeasurement;
                     ArrRowItems[col++] = (productInventoryDetails.ReOrderStockQty * productInventoryDetails.Units) + " " + productInventoryDetails.UnitsOfMeasurement; ;
+                    ArrRowItems[col++] = ListProducts[i].VendorName;
                     ArrRowItems[col++] = ListProducts[i].HSNCode;
-                    ArrRowItems[col++] = ListProducts[i].Active;
+                    ArrRowItems[col++] = ListProducts[i].Active.ToString();
 
                     dtProducts.Rows.Add(ArrRowItems);
                 }
@@ -538,14 +540,14 @@ namespace SalesOrdersReport.Views
         private void btnEditProduct_Click(object sender, EventArgs e)
         {
             try
-            {
-                if (dtGridViewProducts.SelectedRows.Count == 0)
+            {                
+                if (dtGridViewProducts.SelectedCells.Count == 0)
                 {
                     MessageBox.Show(this, "Please select a Product to edit", "Product", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                Int32 ProductID = Int32.Parse(dtGridViewProducts.SelectedRows[0].Cells["ID"].Value.ToString());
+                Int32 ProductID = Int32.Parse(dtGridViewProducts.Rows[dtGridViewProducts.SelectedCells[0].RowIndex].Cells["ID"].Value.ToString());
 
                 CommonFunctions.ShowDialog(new AddProductForm(false, ProductID, UpdateProductOnClose), this);
             }
@@ -588,14 +590,15 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                if (dtGridViewProducts.SelectedRows.Count == 0)
+                if (dtGridViewProducts.SelectedCells.Count == 0)
                 {
                     MessageBox.Show(this, "Please select a Product to delete", "Product", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                String ProductID = dtGridViewProducts.SelectedRows[0].Cells["ID"].Value.ToString();
-                String ProductName = dtGridViewProducts.SelectedRows[0].Cells["Name"].Value.ToString();
+                DataGridViewRow SelectedRow = dtGridViewProducts.Rows[dtGridViewProducts.SelectedCells[0].RowIndex];
+                String ProductID = SelectedRow.Cells["ID"].Value.ToString();
+                String ProductName = SelectedRow.Cells["Name"].Value.ToString();
 
                 DialogResult result = MessageBox.Show(this, $"Do you want to delete this Product:{ProductName}?", "Delete", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
@@ -604,8 +607,6 @@ namespace SalesOrdersReport.Views
                 ObjProductMaster.DeleteProduct(Int32.Parse(ProductID));
 
                 dtAllProducts.Select($"ID = {ProductID}")[0]["Active"] = false;
-                //dtAllProducts.Select($"ID = {ProductID}")[0].Delete();
-                //dtAllProducts.AcceptChanges();
 
                 LoadProductsDataGridViewFromDataTable(null);
             }
@@ -619,7 +620,17 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                LoadProductsDataGridView(true);
+                //LoadProductsDataGridView(true);
+
+                BackgroundTask = 1;
+#if DEBUG
+                backgroundWorkerProducts_DoWork(null, null);
+                backgroundWorkerProducts_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerProducts.ReportProgress;
+                backgroundWorkerProducts.RunWorkerAsync();
+                backgroundWorkerProducts.WorkerReportsProgress = true;
+#endif
             }
             catch (Exception ex)
             {
@@ -642,32 +653,6 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.dtGridViewProducts_CellMouseDoubleClick()", ex);
-            }
-        }
-
-        private void editProductToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Point point = cntxtMenuProducts.Bounds.Location;
-                MessageBox.Show("Edit Button " + dtGridViewProducts.HitTest(point.X, point.Y).RowIndex + $" X:{point.X} Y:{point.Y}");
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.editProductToolStripMenuItem_Click()", ex);
-            }
-        }
-
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Point point = cntxtMenuProducts.Bounds.Location;
-                MessageBox.Show("Delete Button " + dtGridViewProducts.HitTest(point.X, point.Y).RowIndex + $" X:{point.X} Y:{point.Y}");
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.deleteToolStripMenuItem_Click()", ex);
             }
         }
 

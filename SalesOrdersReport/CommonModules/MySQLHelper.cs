@@ -115,6 +115,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                CheckAndReconnectToDB();
                 String Database = ObjDbConnection.Database;
                 String ChkTableExistsance;
                 ChkTableExistsance = " SELECT count(*) CNT FROM information_schema.tables";
@@ -288,6 +289,8 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                if (!CheckTableExists(TableName)) return 0;
+
                 String DeleteTableQry;
                 DeleteTableQry = "TRUNCATE Table `" + TableName + "`;";
                 ObjDbCommand.CommandText = DeleteTableQry;
@@ -302,6 +305,8 @@ namespace SalesOrdersReport.CommonModules
 
         public IEnumerable<String[]> ExecuteQuery(String Query)
         {
+            CheckAndReconnectToDB();
+
             ObjDbCommand.CommandText = Query;
             using (MySqlDataReader ObjDBDataReader = (MySqlDataReader)ObjDbCommand.ExecuteReader())
             {
@@ -322,6 +327,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                CheckAndReconnectToDB();
                 ObjDbCommand.CommandText = Query;
                 return ObjDbCommand.ExecuteNonQuery();
             }
@@ -336,6 +342,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                CheckAndReconnectToDB();
                 ObjDbCommand.CommandText = Query;
                 return ObjDbCommand.ExecuteScalar();
             }
@@ -350,6 +357,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                CheckAndReconnectToDB();
                 ObjDbCommand.CommandText = Query;
                 return ObjDbCommand.ExecuteReader();
             }
@@ -364,6 +372,8 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                if (!CheckTableExists(TableName)) return -1;
+
                 String Query = "SELECT COUNT(1) IndexIsThere FROM INFORMATION_SCHEMA.STATISTICS"
                                 + " WHERE table_schema = DATABASE() AND table_name = '" + TableName
                                 + "' AND index_name = '" + IndexName + "'";
@@ -432,6 +442,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                CheckAndReconnectToDB();
                 MySqlBulkLoader objMySqlBulk = new MySqlBulkLoader((MySqlConnection)ObjDbConnection);
                 objMySqlBulk.TableName = TableName;
                 objMySqlBulk.Timeout = 600;
@@ -476,6 +487,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                CheckAndReconnectToDB();
                 ObjDbCommand.CommandText = Query;
                 DbDataAdapter dbAdapter = new MySqlDataAdapter((MySqlCommand)ObjDbCommand);
                 DataTable dtResult = new DataTable();

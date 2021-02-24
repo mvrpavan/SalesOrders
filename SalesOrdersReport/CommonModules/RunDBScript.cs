@@ -39,6 +39,7 @@ namespace SalesOrdersReport.CommonModules
                 CreateIDValueMasterTable();
                 CreateUserTable();
                 CreateAccountsMasterTables();
+                CreateVendorMasterTables();
             }
             catch (Exception ex)
             {
@@ -599,6 +600,32 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
+        public void CreateVendorMasterTables()
+        {
+            try
+            {
+                List<String> TableColumns = new List<String>
+                {
+                    "VendorID, SmallInt unsigned NOT NULL AUTO_INCREMENT",
+                    "VendorName, Varchar(50) NOT NULL",
+                    "Address, Varchar(200) NULL",
+                    "PhoneNo, Varchar(20) NULL",
+                    "GSTIN, Varchar(20) NULL",
+                    "StateID, SmallInt unsigned not NULL",
+                    "PriceGroupID, SmallInt unsigned NULL",
+                    "DiscountGroupID, SmallInt unsigned NULL",
+                    "Active, tinyint(4) NOT NULL DEFAULT '1'",
+                    "AddedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                    "LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+                    "PRIMARY KEY, VendorID"
+                };
+                ObjMySQLHelper.CreateTable("VendorMaster", TableColumns);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.CreateVendorMasterTables()", ex);
+            }
+        }
         public void ExecuteOneTimeExecutionScript()
         {
             try

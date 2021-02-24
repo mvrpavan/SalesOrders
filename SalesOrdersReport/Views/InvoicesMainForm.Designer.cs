@@ -31,7 +31,9 @@
             this.btnCreateInvoice = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.cmbBoxLine = new System.Windows.Forms.ComboBox();
             this.cmbBoxInvoiceStatus = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.checkBoxApplyFilter = new System.Windows.Forms.CheckBox();
             this.dTimePickerTo = new System.Windows.Forms.DateTimePicker();
@@ -49,10 +51,10 @@
             this.dtGridViewInvoicedProducts = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblOrdersCount = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.cmbBoxLine = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.lblOrdersCount = new System.Windows.Forms.Label();
+            this.backgroundWorkerInvoices = new System.ComponentModel.BackgroundWorker();
+            this.btnExportInvoice = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvoices)).BeginInit();
@@ -84,6 +86,7 @@
             this.panel1.AutoSize = true;
             this.panel1.Controls.Add(this.groupBox3);
             this.panel1.Controls.Add(this.comboBox2);
+            this.panel1.Controls.Add(this.btnExportInvoice);
             this.panel1.Controls.Add(this.btnSearchInvoice);
             this.panel1.Controls.Add(this.btnPrintQuotation);
             this.panel1.Controls.Add(this.btnPrintInvoice);
@@ -114,6 +117,15 @@
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             // 
+            // cmbBoxLine
+            // 
+            this.cmbBoxLine.FormattingEnabled = true;
+            this.cmbBoxLine.Location = new System.Drawing.Point(88, 40);
+            this.cmbBoxLine.Name = "cmbBoxLine";
+            this.cmbBoxLine.Size = new System.Drawing.Size(87, 21);
+            this.cmbBoxLine.TabIndex = 4;
+            this.cmbBoxLine.SelectedIndexChanged += new System.EventHandler(this.cmbBoxLine_SelectedIndexChanged);
+            // 
             // cmbBoxInvoiceStatus
             // 
             this.cmbBoxInvoiceStatus.FormattingEnabled = true;
@@ -122,6 +134,15 @@
             this.cmbBoxInvoiceStatus.Size = new System.Drawing.Size(87, 21);
             this.cmbBoxInvoiceStatus.TabIndex = 4;
             this.cmbBoxInvoiceStatus.SelectedIndexChanged += new System.EventHandler(this.cmbBoxInvoiceStatus_SelectedIndexChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(55, 44);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(27, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Line";
             // 
             // label4
             // 
@@ -192,9 +213,9 @@
             this.btnSearchInvoice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSearchInvoice.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnSearchInvoice.Image = global::SalesOrdersReport.Properties.Resources.Search_icon;
-            this.btnSearchInvoice.Location = new System.Drawing.Point(539, 3);
+            this.btnSearchInvoice.Location = new System.Drawing.Point(540, 3);
             this.btnSearchInvoice.Name = "btnSearchInvoice";
-            this.btnSearchInvoice.Size = new System.Drawing.Size(83, 73);
+            this.btnSearchInvoice.Size = new System.Drawing.Size(63, 73);
             this.btnSearchInvoice.TabIndex = 0;
             this.btnSearchInvoice.Text = "Search Invoices";
             this.btnSearchInvoice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -209,14 +230,14 @@
             this.btnPrintQuotation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPrintQuotation.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnPrintQuotation.Image = global::SalesOrdersReport.Properties.Resources.Iconshow_Hardware_Printer;
-            this.btnPrintQuotation.Location = new System.Drawing.Point(450, 3);
+            this.btnPrintQuotation.Location = new System.Drawing.Point(382, 3);
             this.btnPrintQuotation.Name = "btnPrintQuotation";
             this.btnPrintQuotation.Size = new System.Drawing.Size(83, 73);
             this.btnPrintQuotation.TabIndex = 0;
             this.btnPrintQuotation.Text = "Print as Quotation";
             this.btnPrintQuotation.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnPrintQuotation.UseVisualStyleBackColor = false;
-            this.btnPrintQuotation.Click += new System.EventHandler(this.btnPrintInvoice_Click);
+            this.btnPrintQuotation.Click += new System.EventHandler(this.btnPrintQuotation_Click);
             // 
             // btnPrintInvoice
             // 
@@ -226,9 +247,9 @@
             this.btnPrintInvoice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPrintInvoice.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnPrintInvoice.Image = global::SalesOrdersReport.Properties.Resources.Iconshow_Hardware_Printer;
-            this.btnPrintInvoice.Location = new System.Drawing.Point(361, 3);
+            this.btnPrintInvoice.Location = new System.Drawing.Point(316, 3);
             this.btnPrintInvoice.Name = "btnPrintInvoice";
-            this.btnPrintInvoice.Size = new System.Drawing.Size(83, 73);
+            this.btnPrintInvoice.Size = new System.Drawing.Size(60, 73);
             this.btnPrintInvoice.TabIndex = 0;
             this.btnPrintInvoice.Text = "Print as Invoice";
             this.btnPrintInvoice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -243,9 +264,9 @@
             this.btnReloadInvoices.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReloadInvoices.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnReloadInvoices.Image = global::SalesOrdersReport.Properties.Resources.Refresh_icon_32;
-            this.btnReloadInvoices.Location = new System.Drawing.Point(272, 3);
+            this.btnReloadInvoices.Location = new System.Drawing.Point(247, 3);
             this.btnReloadInvoices.Name = "btnReloadInvoices";
-            this.btnReloadInvoices.Size = new System.Drawing.Size(83, 73);
+            this.btnReloadInvoices.Size = new System.Drawing.Size(63, 73);
             this.btnReloadInvoices.TabIndex = 0;
             this.btnReloadInvoices.Text = "Reload Invoices";
             this.btnReloadInvoices.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -262,7 +283,7 @@
             this.btnDeleteInvoice.Image = global::SalesOrdersReport.Properties.Resources.delete_icon_32;
             this.btnDeleteInvoice.Location = new System.Drawing.Point(183, 3);
             this.btnDeleteInvoice.Name = "btnDeleteInvoice";
-            this.btnDeleteInvoice.Size = new System.Drawing.Size(83, 73);
+            this.btnDeleteInvoice.Size = new System.Drawing.Size(58, 73);
             this.btnDeleteInvoice.TabIndex = 0;
             this.btnDeleteInvoice.Text = "Delete Invoice";
             this.btnDeleteInvoice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -334,6 +355,16 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(6, 13);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(135, 20);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "Invoiced Products";
+            // 
             // lblOrdersCount
             // 
             this.lblOrdersCount.AutoSize = true;
@@ -344,33 +375,28 @@
             this.lblOrdersCount.TabIndex = 4;
             this.lblOrdersCount.Text = "[Displaying all Invoices]";
             // 
-            // label5
+            // backgroundWorkerInvoices
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(55, 44);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(27, 13);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "Line";
+            this.backgroundWorkerInvoices.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerInvoices_DoWork);
+            this.backgroundWorkerInvoices.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerInvoices_ProgressChanged);
+            this.backgroundWorkerInvoices.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerInvoices_RunWorkerCompleted);
             // 
-            // cmbBoxLine
+            // btnExportInvoice
             // 
-            this.cmbBoxLine.FormattingEnabled = true;
-            this.cmbBoxLine.Location = new System.Drawing.Point(88, 40);
-            this.cmbBoxLine.Name = "cmbBoxLine";
-            this.cmbBoxLine.Size = new System.Drawing.Size(87, 21);
-            this.cmbBoxLine.TabIndex = 4;
-            this.cmbBoxLine.SelectedIndexChanged += new System.EventHandler(this.cmbBoxLine_SelectedIndexChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(6, 13);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(135, 20);
-            this.label6.TabIndex = 4;
-            this.label6.Text = "Invoiced Products";
+            this.btnExportInvoice.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnExportInvoice.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnExportInvoice.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnExportInvoice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExportInvoice.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnExportInvoice.Image = global::SalesOrdersReport.Properties.Resources.export_icon;
+            this.btnExportInvoice.Location = new System.Drawing.Point(471, 3);
+            this.btnExportInvoice.Name = "btnExportInvoice";
+            this.btnExportInvoice.Size = new System.Drawing.Size(63, 73);
+            this.btnExportInvoice.TabIndex = 0;
+            this.btnExportInvoice.Text = "Export Invoice";
+            this.btnExportInvoice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnExportInvoice.UseVisualStyleBackColor = false;
+            this.btnExportInvoice.Click += new System.EventHandler(this.btnExportInvoice_Click);
             // 
             // InvoicesMainForm
             // 
@@ -431,5 +457,7 @@
         private System.Windows.Forms.ComboBox cmbBoxLine;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        private System.ComponentModel.BackgroundWorker backgroundWorkerInvoices;
+        private System.Windows.Forms.Button btnExportInvoice;
     }
 }

@@ -364,6 +364,8 @@ namespace SalesOrdersReport.Models
 
                 SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorkSheet, CurrReportSettings.HeaderSubTitle, CurrReportSettings);
 
+                xlWorkSheet.UsedRange.Rows.AutoFit();
+
                 xlWorkSheet.PageSetup.Zoom = false;
                 xlWorkSheet.PageSetup.FitToPagesTall = false;
                 xlWorkSheet.PageSetup.FitToPagesWide = 1;

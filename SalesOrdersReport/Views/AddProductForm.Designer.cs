@@ -79,6 +79,8 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.errorProviderAddProductForm = new System.Windows.Forms.ErrorProvider(this.components);
             this.btnCreateUpdateClose = new System.Windows.Forms.Button();
+            this.label20 = new System.Windows.Forms.Label();
+            this.cmbBoxVendors = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -227,6 +229,7 @@
             this.groupBox2.Controls.Add(this.txtBoxStockName);
             this.groupBox2.Controls.Add(this.cmbBoxStockList);
             this.groupBox2.Controls.Add(this.cmbBoxStockMeasurementUnitList);
+            this.groupBox2.Controls.Add(this.cmbBoxVendors);
             this.groupBox2.Controls.Add(this.label14);
             this.groupBox2.Controls.Add(this.label16);
             this.groupBox2.Controls.Add(this.label15);
@@ -236,6 +239,7 @@
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.txtBoxStockQty);
             this.groupBox2.Controls.Add(this.txtBoxStockUnits);
+            this.groupBox2.Controls.Add(this.label20);
             this.groupBox2.Location = new System.Drawing.Point(6, 225);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(524, 183);
@@ -586,6 +590,25 @@
             this.btnCreateUpdateClose.UseVisualStyleBackColor = true;
             this.btnCreateUpdateClose.Click += new System.EventHandler(this.btnCreateUpdateClose_Click);
             // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(16, 159);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(72, 13);
+            this.label20.TabIndex = 0;
+            this.label20.Text = "Vendor Name";
+            // 
+            // cmbBoxVendors
+            // 
+            this.cmbBoxVendors.CausesValidation = false;
+            this.cmbBoxVendors.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxVendors.FormattingEnabled = true;
+            this.cmbBoxVendors.Location = new System.Drawing.Point(94, 156);
+            this.cmbBoxVendors.Name = "cmbBoxVendors";
+            this.cmbBoxVendors.Size = new System.Drawing.Size(195, 21);
+            this.cmbBoxVendors.TabIndex = 9;
+            // 
             // AddProductForm
             // 
             this.AcceptButton = this.btnOK;
@@ -664,5 +687,7 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox txtBoxStockQty;
         private System.Windows.Forms.Button btnEditHSNCode;
+        private System.Windows.Forms.ComboBox cmbBoxVendors;
+        private System.Windows.Forms.Label label20;
     }
 }

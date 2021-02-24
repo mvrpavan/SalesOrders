@@ -67,33 +67,30 @@ namespace SalesOrdersReport.Views
                 //    RunDBScript ObjRunDBScript = new RunDBScript();
                 //    ObjRunDBScript.CreateAccountsMasterTables();
                 //    ObjRunDBScript.CreateTransactionTables();
+                //    ObjRunDBScript.CreateVendorMasterTables();
                 //}
 
                 //TODO: Load all tables to memory here
                 lblLoadingStatus.Text = "Loading User tables...";
                 CommonFunctions.ObjUserMasterModel.LoadAllUserMasterTables();
+                lblLoadingStatus.Text = "Loading User tables...completed";
                 ReportProgressFunc(25);
 
                 lblLoadingStatus.Text = "Loading Customer tables...";
                 CommonFunctions.ObjCustomerMasterModel.LoadAllCustomerMasterTables();
+                lblLoadingStatus.Text = "Loading Customer tables...completed";
                 ReportProgressFunc(50);
+
+                lblLoadingStatus.Text = "Loading Vendor tables...";
+                ProductLine CurrProductLine = CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex];
+                CurrProductLine.LoadVendorMasterTable();
+                lblLoadingStatus.Text = "Loading Vendor tables...completed";
+                ReportProgressFunc(60);
 
                 lblLoadingStatus.Text = "Loading Product tables...";
-                ProductLine CurrProductLine = CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex];
                 CurrProductLine.LoadAllProductMasterTables();
                 lblLoadingStatus.Text = "Loading Product tables...completed";
-                ReportProgressFunc(75);
-
-                /*DataTable dtDiscountGroupMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("DiscountGroupMaster", CommonFunctions.MasterFilePath, "*");
-                DataTable dtSellerMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("SellerMaster", CommonFunctions.MasterFilePath, "*");
-                CurrProductLine.LoadSellerMaster(dtSellerMaster, dtDiscountGroupMaster);
-                lblLoadingStatus.Text = "Completed loading Seller details";
-                ReportProgressFunc(50);
-
-                DataTable dtVendorMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("VendorMaster", CommonFunctions.MasterFilePath, "*");
-                CurrProductLine.LoadVendorMaster(dtVendorMaster, dtDiscountGroupMaster);
-                lblLoadingStatus.Text = "Completed loading Vendor details";
-                ReportProgressFunc(75);*/
+                ReportProgressFunc(80);
 
                 CommonFunctions.SelectProductLine(CommonFunctions.SelectedProductLineIndex);
                 ReportProgressFunc(100);

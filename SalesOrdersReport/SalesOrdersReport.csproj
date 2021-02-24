@@ -83,6 +83,7 @@
     <Compile Include="Models\CustomerDetails.cs" />
     <Compile Include="Models\CustomerMasterModel.cs" />
     <Compile Include="Models\InvoicesModel.cs" />
+    <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrdersModel.cs" />
     <Compile Include="Models\PaymentsModel.cs" />
     <Compile Include="Models\ProductMasterModel.cs" />
@@ -352,7 +353,7 @@
     <Compile Include="Views\UpdateProductPurchasesForm.Designer.cs">
       <DependentUpon>UpdateProductPurchasesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\VendorDetails.cs" />
+    <Compile Include="Models\VendorMasterModel.cs" />
     <Compile Include="Views\VendorListForm.cs">
       <SubType>Form</SubType>
     </Compile>

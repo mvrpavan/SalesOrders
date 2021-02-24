@@ -26,7 +26,7 @@ namespace SalesOrdersReport.Models
         public string CustomerName = "";
         public string LineName = "", PriceGroupName = "", DiscountGroupName = "", State = "", StateCode = "";
         public int CustomerID = -1, LineID = -1, StateID = -1, PriceGroupID = -1, DiscountGroupID = -1;
-        public Int32 LineIndex, PriceGroupIndex, DiscountGroupIndex;
+        public Int32 PriceGroupIndex, DiscountGroupIndex;
         public DateTime AddedDate = DateTime.MinValue, LastUpdateDate = DateTime.MinValue;
         public string Address = "";
         public bool Active = true;

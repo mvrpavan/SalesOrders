@@ -474,7 +474,6 @@ namespace SalesOrdersReport
                     ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
                 }
 
-
                 return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -967,7 +966,6 @@ namespace SalesOrdersReport
                 {
                     ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
                 }
-
 
                 return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery(); 
             }

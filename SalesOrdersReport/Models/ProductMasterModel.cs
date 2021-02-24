@@ -19,7 +19,6 @@ namespace SalesOrdersReport.Models
         public List<TaxGroupDetails> ListTaxGroupDetails;
         Int32 DefaultPriceGroupIndex;
         MySQLHelper ObjMySQLHelper = null;
-        DataTable dtProcessedProductsFromExcel = null;
         List<String> ListPriceGroupColumns;
         const String SKUPrefix = "SKU";
 
@@ -81,6 +80,8 @@ namespace SalesOrdersReport.Models
                 ObjProductDetails.CategoryName = GetCategoryDetails(ObjProductDetails.CategoryID).CategoryName;
                 ObjProductDetails.StockName = GetProductInventoryDetails(ObjProductDetails.ProductInvID).StockName;
                 ObjProductDetails.HSNCode = GetTaxDetails(ObjProductDetails.TaxID).HSNCode;
+                VendorDetails tmpVendorDetails = CommonFunctions.ObjVendorMaster.GetVendorDetails(ObjProductDetails.VendorID);
+                ObjProductDetails.VendorName = (tmpVendorDetails?.VendorName);
 
                 Int32 ProductIndex = ListProducts.BinarySearch(ObjProductDetails, ObjProductDetails);
                 if (ProductIndex < 0)
@@ -121,7 +122,7 @@ namespace SalesOrdersReport.Models
 
                 //Insert new Category to CategoryMaster
                 String Query = String.Format("Insert into ProductCategoryMaster (CategoryName, Description, Active) "
-                                            + "VALUES ('{0}', '{1}', {2});", CategoryName, Description, Active);
+                                            + "VALUES ('{0}', '{1}', {2});", CategoryName, Description, (Active ? "1" : "0"));
                 ObjMySQLHelper.ExecuteNonQuery(Query);
 
                 LoadProductCategoryMaster(ObjMySQLHelper.GetQueryResultInDataTable("Select * from ProductCategoryMaster Order by CategoryID"));
@@ -140,7 +141,7 @@ namespace SalesOrdersReport.Models
             try
             {
                 String Query = "Update ProductCategoryMaster Set ";
-                Query = String.Format("{0} CategoryName = '{1}', Description = '{2}', Active = {3}", Query, CategoryName, Description, Active);
+                Query = String.Format("{0} CategoryName = '{1}', Description = '{2}', Active = {3}", Query, CategoryName, Description, (Active ? "1" : "0"));
                 Query = String.Format("{0} Where CategoryID = {1};", Query, CategoryID);
                 ObjMySQLHelper.ExecuteNonQuery(Query);
 
@@ -156,8 +157,8 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                String Query = String.Format("Delete from ProductCategoryMaster Where CategoryID = {0};", CategoryID);
-                ObjMySQLHelper.ExecuteNonQuery(Query);
+                ObjMySQLHelper.UpdateTableDetails("ProductCategoryMaster", new List<string>() { "Active" }, new List<string>() { "0" },
+                                                new List<Types>() { Types.Number }, $"CategoryID = {CategoryID}");
 
                 LoadProductCategoryMaster(ObjMySQLHelper.GetQueryResultInDataTable("Select * from ProductCategoryMaster Order by CategoryID"));
             }
@@ -219,6 +220,7 @@ namespace SalesOrdersReport.Models
                     ObjProductDetails.ProductDesc = dtRow["Description"].ToString();
                     ObjProductDetails.CategoryID = Int32.Parse(dtRow["CategoryID"].ToString());
                     ObjProductDetails.ProductInvID = Int32.Parse(dtRow["ProductInvID"].ToString());
+                    ObjProductDetails.VendorID = Int32.Parse(dtRow["VendorID"].ToString());
                     ObjProductDetails.TaxID = Int32.Parse(dtRow["TaxID"].ToString());
                     ObjProductDetails.Units = Double.Parse(dtRow["Units"].ToString());
                     ObjProductDetails.PurchasePrice = Double.Parse(dtRow["PurchasePrice"].ToString());
@@ -1243,12 +1245,14 @@ namespace SalesOrdersReport.Models
                 tmpProductDetails.HSNCodeIndex = ListHSNCodeDetails.FindIndex(e => e.HSNCode.Equals(tmpProductDetails.HSNCode));
                 tmpProductDetails.TaxID = ListHSNCodeDetails[tmpProductDetails.HSNCodeIndex].TaxID;
                 tmpProductDetails.StockProductIndex = ListProductInventoryDetails.FindIndex(e => e.StockName.Equals(tmpProductInventoryDetails.StockName));
+                VendorDetails tmpVendorDetails = CommonFunctions.ObjVendorMaster.GetVendorDetails(tmpProductDetails.VendorName);
+                tmpProductDetails.VendorID = (tmpVendorDetails != null) ? tmpVendorDetails.VendorID : -1;
 
                 Query = "Insert into ProductMaster(ProductSKU, ProductName, Description, CategoryID, Units, UnitsOfMeasurement, " +
-                        "SortName, TaxID, ProductInvID, Active, AddedDate, PurchasePrice, WholesalePrice, RetailPrice, MaxRetailPrice)";
+                        "SortName, TaxID, ProductInvID, VendorID, Active, AddedDate, PurchasePrice, WholesalePrice, RetailPrice, MaxRetailPrice)";
                 Query += $" Values ('{tmpProductDetails.ProductSKU}', '{tmpProductDetails.ItemName}', '{tmpProductDetails.ProductDesc}', " +
                          $"{tmpProductDetails.CategoryID}, {tmpProductDetails.Units}, '{tmpProductDetails.UnitsOfMeasurement}', " +
-                         $"'{tmpProductDetails.SortName}', {tmpProductDetails.TaxID}, {tmpProductDetails.ProductInvID}, " +
+                         $"'{tmpProductDetails.SortName}', {tmpProductDetails.TaxID}, {tmpProductDetails.ProductInvID}, {tmpProductDetails.VendorID}, " +
                          $"{(tmpProductDetails.Active ? 1 : 0)}, '{MySQLHelper.GetDateStringForDB(tmpProductDetails.AddedDate)}', " +
                          $"{tmpProductDetails.PurchasePrice}, {tmpProductDetails.WholesalePrice}, {tmpProductDetails.RetailPrice}, {tmpProductDetails.MaxRetailPrice})";
                 ObjMySQLHelper.ExecuteNonQuery(Query);
@@ -1352,6 +1356,7 @@ namespace SalesOrdersReport.Models
                     CurProductDetails.HSNCodeIndex = ListHSNCodeDetails.FindIndex(e => e.TaxID == CurProductDetails.TaxID);
                 }
 
+                CurProductDetails.VendorID = tmpProductDetails.VendorID;
                 CurProductDetails.Active = tmpProductDetails.Active;
                 CurProductDetails.PurchasePrice = tmpProductDetails.PurchasePrice;
                 CurProductDetails.WholesalePrice = tmpProductDetails.WholesalePrice;
@@ -1361,7 +1366,7 @@ namespace SalesOrdersReport.Models
                 String Query = "Update ProductMaster Set ";
                 Query += $" ProductName = '{CurProductDetails.ItemName}', Description = '{CurProductDetails.ProductDesc}', CategoryID = {CurProductDetails.CategoryID}," +
                          $" Units = '{CurProductDetails.Units}', UnitsOfMeasurement = '{CurProductDetails.UnitsOfMeasurement}', SortName = '{CurProductDetails.SortName}'," +
-                         $" TaxID = {CurProductDetails.TaxID}, ProductInvID = {CurProductDetails.ProductInvID}, Active = {(CurProductDetails.Active ? 1 : 0)}," +
+                         $" TaxID = {CurProductDetails.TaxID}, ProductInvID = {CurProductDetails.ProductInvID}, VendorID = {CurProductDetails.VendorID}, Active = {(CurProductDetails.Active ? 1 : 0)}," +
                          $" PurchasePrice = {CurProductDetails.PurchasePrice}, WholesalePrice = {CurProductDetails.WholesalePrice}," +
                          $" RetailPrice = {CurProductDetails.RetailPrice}, MaxRetailPrice = {CurProductDetails.MaxRetailPrice}";
                 Query += $" Where ProductID = {CurProductDetails.ProductID}";
@@ -1456,7 +1461,7 @@ namespace SalesOrdersReport.Models
         String[] ArrSheetNamesToImport = new String[] { "Products", "Categories", "Inventory", "HSNCodes" };
         String[][] ArrSheetColumns = new String[4][]
         {
-                    new String[] { "ProductName", "Description", "Category", "PurchasePrice", "WholesalePrice", "RetailPrice", "MaxRetailPrice", "Units", "UnitsOfMeasurement", "SortName", "HSNCode", "StockName", "Active" },
+                    new String[] { "ProductName", "Description", "Category", "PurchasePrice", "WholesalePrice", "RetailPrice", "MaxRetailPrice", "Units", "UnitsOfMeasurement", "SortName", "HSNCode", "StockName", "VendorName", "Active" },
                     new String[] { "CategoryName", "Description" },
                     new String[] { "StockName", "Inventory", "Units", "UnitsOfMeasurement", "ReOrderStockLevel", "ReOrderStockQty" },
                     new String[] { "HSNCode", "CGST", "SGST", "IGST" },
@@ -1756,6 +1761,7 @@ namespace SalesOrdersReport.Models
                             SortName = item["SortName"].ToString(),
                             HSNCode = item["HSNCode"].ToString(),
                             StockName = item["StockName"].ToString(),
+                            VendorName = item["VendorName"].ToString(),
                             Active = Boolean.Parse(item["Active"].ToString())
                         };
                         ProductInventoryDetails tmpProductInventoryDetails = GetStockProductDetails(tmpProductDetails.StockName);
@@ -1850,6 +1856,7 @@ namespace SalesOrdersReport.Models
                             tmpProductDetails.SortName,
                             tmpProductDetails.HSNCode,
                             tmpProductDetails.StockName,
+                            tmpProductDetails.VendorName,
                             tmpProductDetails.Active
                         };
 

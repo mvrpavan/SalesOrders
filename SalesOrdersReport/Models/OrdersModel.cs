@@ -18,7 +18,7 @@ namespace SalesOrdersReport.Models
 
     enum ORDERITEMSTATUS
     {
-        Ordered, Cancelled, OutOfStock
+        Ordered, Delivered, Cancelled, OutOfStock
     };
 
     class OrderDetails
@@ -204,7 +204,44 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                return 0;
+                OrderDetails ObjOrderDetails = GetOrderDetailsForOrderID(orderID).Clone();
+                if (ObjOrderDetails == null) return -2;
+
+                FillOrderItemDetails(ObjOrderDetails);
+
+                InvoicesModel ObjInvoicesModel = new InvoicesModel();
+                ObjInvoicesModel.Initialize();
+
+                List<InvoiceItemDetails> ListInvoiceItems = new List<InvoiceItemDetails>();
+                for (int i = 0; i < ObjOrderDetails.ListOrderItems.Count; i++)
+                {
+                    OrderItemDetails tmpOrderItem = ObjOrderDetails.ListOrderItems[i];
+                    if (tmpOrderItem.OrderItemStatus != ORDERITEMSTATUS.Ordered) continue;
+                    tmpOrderItem.OrderItemStatus = ORDERITEMSTATUS.Delivered;
+                    ObjOrderDetails.EstimateOrderAmount = 0;
+
+                    InvoiceItemDetails tmpInvoiceItem = new InvoiceItemDetails() {
+                        ProductName = tmpOrderItem.ProductName,
+                        ProductID = tmpOrderItem.ProductID,
+                        OrderQty = tmpOrderItem.OrderQty,
+                        SaleQty = tmpOrderItem.OrderQty,
+                        Price = tmpOrderItem.Price,
+                        InvoiceItemStatus = INVOICEITEMSTATUS.Invoiced,
+                        TaxableValue = tmpOrderItem.Price * tmpOrderItem.OrderQty,
+                        NetTotal = tmpOrderItem.Price * tmpOrderItem.OrderQty
+                    };
+
+                    ListInvoiceItems.Add(tmpInvoiceItem);
+                    ObjOrderDetails.EstimateOrderAmount += tmpInvoiceItem.TaxableValue;
+                }
+
+                ObjOrderDetails.OrderStatus = ORDERSTATUS.Completed;
+                UpdateOrderDetails(ObjOrderDetails);
+
+                InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(ObjOrderDetails.CustomerID, ObjOrderDetails.OrderID, DateTime.Now, ObjInvoicesModel.GenerateNewInvoiceNumber(), ListInvoiceItems);
+
+                if (ObjInvoiceDetails != null) return 0;
+                else return -1;
             }
             catch (Exception ex)
             {
@@ -220,10 +257,16 @@ namespace SalesOrdersReport.Models
                 ObjMySQLHelper.UpdateTableDetails("Orders", new List<string>() { "OrderStatus" }, new List<string>() { ORDERSTATUS.Cancelled.ToString() }, 
                                             new List<Types>() { Types.String }, $"OrderID = {OrderID}");
 
+                ObjMySQLHelper.UpdateTableDetails("OrderItems", new List<string>() { "OrderItemStatus" }, new List<string>() { ORDERITEMSTATUS.Cancelled.ToString() },
+                            new List<Types>() { Types.String }, $"OrderID = {OrderID}");
+
                 dtAllOrders.Select($"OrderID = {OrderID}")[0]["Order Status"] = ORDERSTATUS.Cancelled;
                 dtAllOrders.AcceptChanges();
 
-                ListOrders.Find(e => e.OrderID == OrderID).OrderStatus = ORDERSTATUS.Cancelled;
+                OrderDetails orderDetails = ListOrders.Find(e => e.OrderID == OrderID);
+                orderDetails.OrderStatus = ORDERSTATUS.Cancelled;
+
+                FillOrderItemDetails(orderDetails);
 
                 return 0;
             }
@@ -405,6 +448,7 @@ namespace SalesOrdersReport.Models
                 List<OrderItemDetails> ListItemsAdded = new List<OrderItemDetails>();
                 Int32 OrderItemCount = 0;
                 Double EstimatedOrderAmount = 0;
+                ObjOrderDetails.ListOrderItems.RemoveAll(e => e.OrderItemStatus == ORDERITEMSTATUS.Cancelled);
                 for (int i = 0; i < ObjOrderDetails.ListOrderItems.Count; i++)
                 {
                     Int32 Index = ObjOrderDetailsOrig.ListOrderItems.FindIndex(e => e.ProductID == ObjOrderDetails.ListOrderItems[i].ProductID);
@@ -447,9 +491,9 @@ namespace SalesOrdersReport.Models
                 InsertOrderItems(ListItemsAdded, ObjOrderDetails.OrderID);
 
                 //Update OrderItemCount
-                ObjMySQLHelper.UpdateTableDetails("Orders", new List<String>() { "OrderItemCount", "EstimateOrderAmount" },
-                                            new List<String>() { OrderItemCount.ToString(), EstimatedOrderAmount.ToString() },
-                                            new List<Types>() { Types.Number, Types.Number }, $"OrderID = {ObjOrderDetails.OrderID}");
+                ObjMySQLHelper.UpdateTableDetails("Orders", new List<String>() { "OrderItemCount", "EstimateOrderAmount", "OrderStatus" },
+                                            new List<String>() { OrderItemCount.ToString(), EstimatedOrderAmount.ToString(), ObjOrderDetails.OrderStatus.ToString() },
+                                            new List<Types>() { Types.Number, Types.Number, Types.String }, $"OrderID = {ObjOrderDetails.OrderID}");
 
                 FillOrderItemDetails(ObjOrderDetails);
                 return ObjOrderDetails;
@@ -461,135 +505,6 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        /*public void PrintOrderInvoiceQuotation(ReportType EnumReportType, Boolean IsDummyBill, List<Object> ListObjects, DateTime OrdInvQuotDate, Int32 PrintCopies = 1, Boolean CreateSummary = false, Boolean PrintOldBalance = false)
-        {
-            try
-            {
-                String OutputFolder = Path.GetTempPath();
-                String ExcelFilePath = ExportOrdInvQuotToExcel(EnumReportType, IsDummyBill, OrdInvQuotDate, ListObjects, OutputFolder);
-
-                if (PrintCopies > 0)
-                {
-                    Excel.Application xlApp = new Excel.Application();
-                    try
-                    {
-                        xlApp.Visible = false;
-                        xlApp.DisplayAlerts = false;
-
-                        Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(ExcelFilePath);
-
-                        xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, PrintCopies);
-
-                        xlWorkbook.Close(false);
-                        CommonFunctions.ReleaseCOMObject(xlWorkbook);
-                    }
-                    catch (Exception ex)
-                    {
-                        CommonFunctions.ShowErrorDialog($"{this}.PrintOrder()", ex);
-                    }
-                    finally
-                    {
-                        xlApp.Quit();
-                        CommonFunctions.ReleaseCOMObject(xlApp);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.PrintOrderInvoiceQuotation()", ex);
-            }
-        }
-
-        public String ExportOrdInvQuotToExcel(ReportType EnumReportType, Boolean IsDummyBill, DateTime OrdInvQuotDate, List<Object> ListObjects, String ExportFolderPath)
-        {
-            Excel.Application xlApp = null;
-            try
-            {
-                xlApp = new Excel.Application();
-                xlApp.Visible = false;
-                xlApp.DisplayAlerts = false;
-
-                String SaveFilePath = "";
-                String OutputFolder = ExportFolderPath;
-                String SelectedDateTimeString = OrdInvQuotDate.ToString("dd-MM-yyyy");
-                switch (EnumReportType)
-                {
-                    case ReportType.ORDER:
-                        SaveFilePath = OutputFolder + "\\Order_" + SelectedDateTimeString + ".xlsx";
-                        break;
-                    case ReportType.INVOICE:
-                        SaveFilePath = OutputFolder + "\\Invoice_" + SelectedDateTimeString + ".xlsx";
-                        break;
-                    case ReportType.QUOTATION:
-                        SaveFilePath = OutputFolder + "\\Quotation_" + SelectedDateTimeString + ".xlsx";
-                        break;
-                    default:
-                        return null;
-                }
-
-                if (IsDummyBill)
-                {
-                    SaveFilePath = Path.GetDirectoryName(SaveFilePath) + "\\" + Path.GetFileNameWithoutExtension(SaveFilePath) + "_Dummy" + Path.GetExtension(SaveFilePath);
-                }
-
-                Excel.Workbook xlWorkbook = xlApp.Workbooks.Add();
-                Excel.Worksheet xlWorkSheet = null;
-                for (int i = 1; i <= 3 && xlWorkbook.Sheets.Count > 1; i++)
-                {
-                    xlWorkSheet = CommonFunctions.GetWorksheet(xlWorkbook, "Sheet" + i);
-                    if (xlWorkSheet != null) xlWorkSheet.Delete();
-                }
-
-                for (int i = 0; i < ListObjects.Count; i++)
-                {
-                    if (i == 0) xlWorkSheet = xlWorkbook.Sheets[1];
-                    else xlWorkSheet = xlWorkbook.Sheets.Add();
-
-                    switch (EnumReportType)
-                    {
-                        case ReportType.ORDER:
-                            ExportOrder(EnumReportType, IsDummyBill, xlWorkSheet, (OrderDetails)ListObjects[i]);
-                            break;
-                        case ReportType.INVOICE:
-                            break;
-                        case ReportType.QUOTATION:
-                            break;
-                        default:
-                            return null;
-                    }
-                }
-
-                Excel.Worksheet FirstWorksheet = xlWorkbook.Sheets[1];
-                FirstWorksheet.Select();
-
-                xlWorkbook.SaveAs(SaveFilePath);
-                xlWorkbook.Close(true);
-
-                xlApp.DisplayAlerts = true;
-                CommonFunctions.ReleaseCOMObject(xlWorkbook);
-
-                return SaveFilePath;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.ExportOrdInvQuotToExcel()", ex);
-                if (xlApp != null)
-                {
-                    xlApp.Visible = true;
-                    xlApp.DisplayAlerts = true;
-                }
-                return null;
-            }
-            finally
-            {
-                if (xlApp != null)
-                {
-                    xlApp.Quit();
-                    CommonFunctions.ReleaseCOMObject(xlApp);
-                }
-            }
-        }*/
-
         public void ExportOrder(ReportType EnumReportType, Boolean IsDummyBill, Excel.Workbook ExcelWorkbook, OrderDetails ObjOrderDetails)
         {
             try
@@ -600,29 +515,10 @@ namespace SalesOrdersReport.Models
                 String OutputFolder = Path.GetTempPath();
                 String SelectedDateTimeString = ObjOrderDetails.OrderDate.ToString("dd-MM-yyyy");
                 Boolean CreateSummary = false;
-                EnumReportType = ReportType.QUOTATION;
-                switch (EnumReportType)
-                {
-                    case ReportType.ORDER:
-                        CurrReportSettings = CommonFunctions.ObjOrderSettings;
-                        PrintOldBalance = true;
-                        BillNumberText = "Order#";
-                        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 2);
-                        break;
-                    case ReportType.INVOICE:
-                        CurrReportSettings = CommonFunctions.ObjInvoiceSettings;
-                        BillNumberText = "Invoice#";
-                        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0);
-                        break;
-                    case ReportType.QUOTATION:
-                        CurrReportSettings = CommonFunctions.ObjQuotationSettings;
-                        PrintOldBalance = true;
-                        BillNumberText = "Quotation#";
-                        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1);
-                        break;
-                    default:
-                        return;
-                }
+                CurrReportSettings = CommonFunctions.ObjOrderSettings;
+                PrintOldBalance = true;
+                BillNumberText = "Order#";
+                CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 2);
 
                 Int32 ValidItemCount = ObjOrderDetails.ListOrderItems.Count;
                 Int32 ProgressBarCount = ValidItemCount;
@@ -703,28 +599,21 @@ namespace SalesOrdersReport.Models
                 #endregion
 
                 #region Discount
-                if (EnumReportType == ReportType.INVOICE)
+                //Override Discount and rollback after creating Quotation
+                DiscountGroupDetails1 OrigDiscountGroup = ObjDiscountGroup.Clone();
+                if (DiscountPerc > 0)
                 {
-                    ObjInvoice.CreateInvoice(xlWorkSheet);
+                    ObjDiscountGroup.DiscountType = DiscountTypes.PERCENT;
+                    ObjDiscountGroup.Discount = DiscountPerc;
                 }
-                else if (EnumReportType == ReportType.QUOTATION)
+                else if (DiscountValue > 0)
                 {
-                    //Override Discount and rollback after creating Quotation
-                    DiscountGroupDetails1 OrigDiscountGroup = ObjDiscountGroup.Clone();
-                    if (DiscountPerc > 0)
-                    {
-                        ObjDiscountGroup.DiscountType = DiscountTypes.PERCENT;
-                        ObjDiscountGroup.Discount = DiscountPerc;
-                    }
-                    else if (DiscountValue > 0)
-                    {
-                        ObjDiscountGroup.DiscountType = DiscountTypes.ABSOLUTE;
-                        ObjDiscountGroup.Discount = DiscountValue;
-                    }
-                    ObjInvoice.CreateInvoice(xlWorkSheet);
-                    ObjDiscountGroup.DiscountType = OrigDiscountGroup.DiscountType;
-                    ObjDiscountGroup.Discount = OrigDiscountGroup.Discount;
+                    ObjDiscountGroup.DiscountType = DiscountTypes.ABSOLUTE;
+                    ObjDiscountGroup.Discount = DiscountValue;
                 }
+                ObjInvoice.CreateInvoice(xlWorkSheet);
+                ObjDiscountGroup.DiscountType = OrigDiscountGroup.DiscountType;
+                ObjDiscountGroup.Discount = OrigDiscountGroup.Discount;
                 #endregion
             }
             catch (Exception ex)
@@ -766,7 +655,7 @@ namespace SalesOrdersReport.Models
                 xlRange.Font.Bold = true;
 
                 xlWorksheet.UsedRange.Columns.AutoFit();
-                SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorksheet, CommonFunctions.ObjOrderSettings.HeaderSubTitle, CommonFunctions.ObjOrderSettings);
+                SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorksheet, "Item Summary", CommonFunctions.ObjOrderSettings);
             }
             catch (Exception ex)
             {

@@ -326,7 +326,7 @@ namespace SalesOrdersReport.CommonModules
         public static GeneralSettings ObjGeneralSettings;
         public static ReportSettings ObjOrderSettings, ObjInvoiceSettings, ObjQuotationSettings, ObjPurchaseOrderSettings;
         public static ProductMasterModel ObjProductMaster;
-        public static VendorMaster ObjVendorMaster;
+        public static VendorMasterModel ObjVendorMaster;
         static Boolean SettingsFileUpdated = false;
 
         public static void LoadSettingsFile()
@@ -675,6 +675,8 @@ namespace SalesOrdersReport.CommonModules
                     return new InvoiceGST();
                 else if (EnumReportType == ReportType.QUOTATION)
                     return new InvoiceVAT();
+                else if (EnumReportType == ReportType.ORDER)
+                    return new Order();
 
                 return null;
             }
@@ -1013,7 +1015,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                String OutputFolder = Path.GetTempPath();
+                String OutputFolder = Path.GetDirectoryName(Path.GetTempPath());
                 String ExcelFilePath = ExportOrdInvQuotToExcel(EnumReportType, IsDummyBill, OrdInvQuotDate, ObjectModel, ListObjects, OutputFolder, CreateSummary, PrintOldBalance, ReportProgress);
 
                 if (PrintCopies > 0)
@@ -1091,8 +1093,10 @@ namespace SalesOrdersReport.CommonModules
                             ((OrdersModel)ObjectModel).ExportOrder(EnumReportType, IsDummyBill, xlWorkbook, (OrderDetails)ListObjects[i]);
                             break;
                         case ReportType.INVOICE:
+                            ((InvoicesModel)ObjectModel).ExportInvoice(EnumReportType, IsDummyBill, xlWorkbook, (InvoiceDetails)ListObjects[i]);
                             break;
                         case ReportType.QUOTATION:
+                            ((InvoicesModel)ObjectModel).ExportInvoice(EnumReportType, IsDummyBill, xlWorkbook, (InvoiceDetails)ListObjects[i]);
                             break;
                         default:
                             break;
@@ -1100,17 +1104,21 @@ namespace SalesOrdersReport.CommonModules
                     ReportProgress((Int32)(100 * (i + 1) * 1.0 / ListObjects.Count));
                 }
 
-                switch (EnumReportType)
+                if (CreateSummary)
                 {
-                    case ReportType.ORDER:
-                        ((OrdersModel)ObjectModel).ExportItemSummary(xlWorkbook, ListObjects.Select(e => (OrderDetails)e).ToList());
-                        break;
-                    case ReportType.INVOICE:
-                        break;
-                    case ReportType.QUOTATION:
-                        break;
-                    default:
-                        break;
+                    switch (EnumReportType)
+                    {
+                        case ReportType.ORDER:
+                            ((OrdersModel)ObjectModel).ExportItemSummary(xlWorkbook, ListObjects.Select(e => (OrderDetails)e).ToList());
+                            break;
+                        case ReportType.INVOICE:
+                            ((InvoicesModel)ObjectModel).ExportCustomerSummary(xlWorkbook, ListObjects.Select(e => (InvoiceDetails)e).ToList());
+                            break;
+                        case ReportType.QUOTATION:
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 for (int i = 1; i <= 3 && xlWorkbook.Sheets.Count > 1; i++)

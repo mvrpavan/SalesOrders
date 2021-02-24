@@ -18,7 +18,6 @@ namespace SalesOrdersReport.Views
         UpdateUsingObjectOnCloseDel UpdateOnClose = null;
         Int32 ProductIDToEdit = -1;
         ProductMasterModel ObjProductMaster = null;
-        //Dictionary<String, TextBox> DictPriceGroupPrices = new Dictionary<String, TextBox>();
 
         public AddProductForm(Boolean IsAddProduct, Int32 ProductID, UpdateUsingObjectOnCloseDel UpdateOnClose)
         {
@@ -50,22 +49,18 @@ namespace SalesOrdersReport.Views
                 cmbBoxHSNCodeList.Items.AddRange(ListHSNCodes.ToArray());
                 if (cmbBoxHSNCodeList.Items.Count > 0) cmbBoxHSNCodeList.SelectedIndex = 0;
 
+                List<String> ListVendors = CommonFunctions.ObjVendorMaster.GetVendorList();
+                cmbBoxVendors.Items.Clear();
+                cmbBoxVendors.Items.AddRange(ListVendors.ToArray());
+                if (cmbBoxVendors.Items.Count > 0) cmbBoxVendors.SelectedIndex = 0;
+
                 List<String> ListStockProducts = ObjProductMaster.GetStockProductsList();
                 cmbBoxStockList.Items.Clear();
                 cmbBoxStockList.Items.AddRange(ListStockProducts.ToArray());
                 if (cmbBoxStockList.Items.Count > 0) cmbBoxStockList.SelectedIndex = 0;
                 btnOK.CausesValidation = true;
                 btnCreateUpdateClose.CausesValidation = true;
-
-               /*DictPriceGroupPrices.Add("PurchasePrice", txtBoxPurchasePrice);
-                DictPriceGroupPrices.Add("MaxRetailPrice", txtBoxMaxRetailPrice);
-                DictPriceGroupPrices.Add("WholesalePrice", txtBoxWholePrice);
-                DictPriceGroupPrices.Add("RetailPrice", txtBoxRetailPrice);
-                foreach (var item in DictPriceGroupPrices)
-                {
-                    item.Value.Text = "10.0";
-                    item.Value.Validating += Value_Validating;
-                }*/
+  
                 txtBoxPurchasePrice.Validating += Value_Validating;
                 txtBoxMaxRetailPrice.Validating += Value_Validating;
                 txtBoxWholePrice.Validating += Value_Validating;
@@ -103,6 +98,7 @@ namespace SalesOrdersReport.Views
 
                     ProductInventoryDetails tmpProductInventoryDetails = ObjProductMaster.GetProductInventoryDetails(tmpProductDetails.ProductInvID);
                     cmbBoxStockList.SelectedIndex = cmbBoxStockList.Items.IndexOf(tmpProductInventoryDetails.StockName);
+                    cmbBoxVendors.SelectedIndex = cmbBoxVendors.Items.IndexOf(tmpProductDetails.VendorName);
                     txtBoxStockQty.Text = tmpProductInventoryDetails.Inventory.ToString();
                     txtBoxStockUnits.Text = tmpProductInventoryDetails.Units.ToString();
                     cmbBoxStockMeasurementUnitList.SelectedIndex = cmbBoxMeasurementUnitList.Items.IndexOf(tmpProductInventoryDetails.UnitsOfMeasurement);
@@ -250,6 +246,7 @@ namespace SalesOrdersReport.Views
                     SortName = txtBoxSortName.Text,
                     HSNCode = cmbBoxHSNCodeList.SelectedItem.ToString(),
                     StockName = txtBoxStockName.Text,
+                    VendorName = cmbBoxVendors.SelectedItem.ToString(),
                     PurchasePrice = Double.Parse(txtBoxPurchasePrice.Text),
                     WholesalePrice = Double.Parse(txtBoxWholePrice.Text),
                     RetailPrice = Double.Parse(txtBoxRetailPrice.Text),

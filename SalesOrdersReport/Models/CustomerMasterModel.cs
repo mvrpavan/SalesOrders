@@ -73,6 +73,21 @@ namespace SalesOrdersReport.Models
                 throw ex;
             }
         }
+
+        public List<string> GetAllDiscountGrp()
+        {
+            try
+            {
+                List<string> ListDiscountGrp = new List<string>();
+                ListDiscountGrp.AddRange(ListDiscountGroupDetails.Select(e => e.DiscountGrpName).ToList());
+                return ListDiscountGrp;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetAllDiscountGrp()", ex);
+                throw ex;
+            }
+        }
         public List<string> GetAllLineNames()
         {
             try
@@ -187,6 +202,20 @@ namespace SalesOrdersReport.Models
             return null;
         }
 
+        public DiscountGroupDetails1 GetDiscountGrpDetails(Int32 DiscountGroupID)
+        {
+            try
+            {
+                int Index = ListDiscountGroupDetails.FindIndex(e => e.DiscountGrpID == DiscountGroupID);
+                return Index < 0 ? null : ListDiscountGroupDetails[Index];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetDiscountGrpDetails(DiscountGroupID)", ex);
+                return null;
+            }
+        }
+
         public PriceGroupDetails GetPriceGrpDetails(string PriceGrpName)
         {
             try
@@ -203,6 +232,21 @@ namespace SalesOrdersReport.Models
             }
             return null;
         }
+
+        public PriceGroupDetails GetPriceGrpDetails(Int32 PriceGroupID)
+        {
+            try
+            {
+                int Index = ListPriceGroupDetails.FindIndex(e => e.PriceGroupID == PriceGroupID);
+                return Index < 0 ? null : ListPriceGroupDetails[Index];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetPriceGrpDetails(PriceGroupID)", ex);
+                return null;
+            }
+        }
+
         public CustomerDetails GetCustomerDetails(String CustomerName)
         {
             try
@@ -334,12 +378,7 @@ namespace SalesOrdersReport.Models
                 {
                     return 2;
                 }
-                Query = "INSERT INTO LINEMASTER (LINENAME,DESCRIPTION"
-                    + ")"
-                    + "VALUES (@linename, @description"
-                    + ")"
-                    ;
-                Query += ";";
+                Query = "INSERT INTO LINEMASTER (LINENAME,DESCRIPTION) VALUES (@linename, @description);";
                 ObjMySQLHelper.ObjDbCommand.CommandText = Query;
                 ObjMySQLHelper.ObjDbCommand.Parameters.Clear();
                 ObjMySQLHelper.ObjDbCommand.Parameters.Add("@linename", MySqlDbType.VarChar).Value = LineName;
@@ -941,11 +980,9 @@ namespace SalesOrdersReport.Models
                 string Query = "";
                 for (int i = 0; i < listtemp.Count; i++)
                 {
-                    //Query = "INSERT INTO PRICEGROUPMASTER (PRICEGROUPNAME,DESCRIPTION)";
                     Query = "INSERT INTO LINEMASTER (LINEID,LINENAME,DESCRIPTION) VALUES (" + listtemp[i].LineID + ",'" + listtemp[i].LineName + "','" + listtemp[i].LineDescription + "')";
                     Query += ";";
-                    ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                    ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
+                    ObjMySQLHelper.ExecuteNonQuery(Query);
                 }
             }
             catch (Exception ex)
@@ -962,11 +999,9 @@ namespace SalesOrdersReport.Models
                 string Query = "";
                 for (int i = 0; i < listtemp.Count; i++)
                 {
-                    //Query = "";
                     Query = "INSERT INTO PRICEGROUPMASTER (PRICEGROUPID,PRICEGROUPNAME,DESCRIPTION,DISCOUNT,DISCOUNTTYPE,ISDEFAULT,PRICECOLUMN) VALUES (" + listtemp[i].PriceGroupID + ",'" + listtemp[i].PriceGrpName + "','" + listtemp[i].Description + "'," + listtemp[i].Discount + ",'" + listtemp[i].DiscountType + "'," + (listtemp[i].IsDefault == true ? 1 : 0) + ",'" + listtemp[i].PriceColumn + "')";
                     Query += ";";
-                    ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                    ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
+                    ObjMySQLHelper.ExecuteNonQuery(Query);
                 }
             }
             catch (Exception ex)
@@ -985,8 +1020,7 @@ namespace SalesOrdersReport.Models
                 {
                     Query = "INSERT INTO DISCOUNTGROUPMASTER (DISCOUNTGROUPID,DISCOUNTGROUPNAME,DESCRIPTION,DISCOUNT,DISCOUNTTYPE,ISDEFAULT) VALUES (" + listtemp[i].DiscountGrpID + ",'" + listtemp[i].DiscountGrpName + "','" + listtemp[i].Description + "'," + listtemp[i].Discount + ",'" + listtemp[i].DiscountType + "'," + (listtemp[i].IsDefault == true ? 1 : 0) + ")";
                     Query += ";";
-                    ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                    ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
+                    ObjMySQLHelper.ExecuteNonQuery(Query);
                 }
             }
             catch (Exception ex)
@@ -1019,8 +1053,7 @@ namespace SalesOrdersReport.Models
                                              + ",'" + DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") + "','" + DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") + "'"
                                              + ")";
                     Query += ";";
-                    ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                    ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
+                    ObjMySQLHelper.ExecuteNonQuery(Query);
                 }
             }
             catch (Exception ex)

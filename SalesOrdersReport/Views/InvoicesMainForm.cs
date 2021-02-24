@@ -200,13 +200,45 @@ namespace SalesOrdersReport.Views
                     return;
                 }
 
-                Int32 OrderID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["OrderID"].Value.ToString());
-                InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(OrderID);
-                ObjInvoicesModel.PrintInvoice(ReportType.QUOTATION, true, ObjInvoiceDetails);
+                BackgroundTask = 1;
+#if DEBUG
+                backgroundWorkerInvoices_DoWork(null, null);
+                backgroundWorkerInvoices_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerInvoices.ReportProgress;
+                backgroundWorkerInvoices.RunWorkerAsync();
+                backgroundWorkerInvoices.WorkerReportsProgress = true;
+#endif
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.btnPrintInvoice_Click()", ex);
+            }
+        }
+
+        private void btnPrintQuotation_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dtGridViewInvoices.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show(this, "Please select an Invoice to Print", "Print Quotation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                BackgroundTask = 2;
+#if DEBUG
+                backgroundWorkerInvoices_DoWork(null, null);
+                backgroundWorkerInvoices_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerInvoices.ReportProgress;
+                backgroundWorkerInvoices.RunWorkerAsync();
+                backgroundWorkerInvoices.WorkerReportsProgress = true;
+#endif
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnPrintQuotation_Click()", ex);
             }
         }
 
@@ -400,6 +432,163 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.cmbBoxLine_SelectedIndexChanged()", ex);
+            }
+        }
+
+        Int32 ExportOption = -1;
+        String ExportFolderPath = "";
+        private void btnExportInvoice_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CommonFunctions.ShowDialog(new ExportToExcelForm(ExportDataTypes.Invoices, null, ExportInvoices), this);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnExportInvoice_Click()", ex);
+            }
+        }
+
+        private Int32 ExportInvoices(String FilePath, Object ObjDetails, Boolean Append)
+        {
+            try
+            {
+                ExportOption = (Int32)ObjDetails;
+                ExportFolderPath = FilePath;
+
+                if ((ExportOption & 2) > 0 && dtGridViewInvoices.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show(this, "No Invoice was selected. Please select an Invoice.", "Export Invoice", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+
+                BackgroundTask = 3;
+#if DEBUG
+                backgroundWorkerInvoices_DoWork(null, null);
+                backgroundWorkerInvoices_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerInvoices.ReportProgress;
+                backgroundWorkerInvoices.RunWorkerAsync();
+                backgroundWorkerInvoices.WorkerReportsProgress = true;
+#endif
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExportInvoices()", ex);
+                return -1;
+            }
+        }
+
+        Int32 BackgroundTask = 0;
+        ReportProgressDel ReportProgress = null;
+
+        private void ReportProgressFunc(Int32 ProgressState)
+        {
+            if (ReportProgress == null) return;
+            ReportProgress(ProgressState);
+        }
+
+        private void backgroundWorkerInvoices_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            try
+            {
+                switch (BackgroundTask)
+                {
+                    case 1: //Print Invoice
+                        {
+                            ReportType EnumReportType = ReportType.INVOICE;
+                            Boolean PrintOldBalance = false;
+                            Boolean CreateSummary = false;
+                            Int32 PrintCopies = 1;
+
+                            Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
+                            InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
+                            CommonFunctions.PrintOrderInvoiceQuotation(EnumReportType, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, PrintCopies, CreateSummary, PrintOldBalance, ReportProgressFunc);
+                        }
+                        break;
+                    case 2: //Print Quotation
+                        {
+                            ReportType EnumReportType = ReportType.QUOTATION;
+                            Boolean PrintOldBalance = false;
+                            Boolean CreateSummary = false;
+                            Int32 PrintCopies = 1;
+
+                            Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
+                            InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
+                            CommonFunctions.PrintOrderInvoiceQuotation(EnumReportType, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, PrintCopies, CreateSummary, PrintOldBalance, ReportProgressFunc);
+                        }
+                        break;
+                    case 3: //Export Invoices
+                        {
+                            ReportType EnumReportType = ReportType.INVOICE;
+                            Boolean PrintOldBalance = true;
+                            Boolean CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 2) || ((ExportOption & 4) > 0);
+
+                            List<Object> ListInvoicesToExport = new List<Object>();
+                            if ((ExportOption & 1) > 0)      //Export all displayed Invoices
+                            {
+                                for (int i = 0; i < dtGridViewInvoices.Rows.Count; i++)
+                                {
+                                    Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.Rows[i].Cells["InvoiceID"].Value.ToString());
+                                    InvoiceDetails tmpInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
+                                    ListInvoicesToExport.Add(tmpInvoiceDetails);
+                                }
+                            }
+                            else if ((ExportOption & 2) > 0) //Export only selected Invoice
+                            {
+                                Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
+                                InvoiceDetails tmpInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
+                                ListInvoicesToExport.Add(tmpInvoiceDetails);
+                            }
+                            String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, false,
+                                        ((InvoiceDetails)ListInvoicesToExport[0]).InvoiceDate, ObjInvoicesModel, ListInvoicesToExport, ExportFolderPath,
+                                        CreateSummary, PrintOldBalance, ReportProgressFunc);
+
+                            MessageBox.Show(this, $"Exported Invoices file is created successfully at:{ExportedFilePath}", "Export Invoices", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerInvoices_DoWork()", ex);
+            }
+        }
+
+        private void backgroundWorkerInvoices_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            try
+            {
+                CommonFunctions.UpdateProgressBar(e.ProgressPercentage);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerInvoices_ProgressChanged()", ex);
+            }
+        }
+
+        private void backgroundWorkerInvoices_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                switch (BackgroundTask)
+                {
+                    case 1: //Print Invoice
+                    case 2: //Print Quotation
+                        break;
+                    case 3:
+                        ExportOption = -1; ExportFolderPath = "";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerInvoices_RunWorkerCompleted()", ex);
             }
         }
     }

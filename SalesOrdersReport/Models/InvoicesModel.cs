@@ -360,7 +360,6 @@ namespace SalesOrdersReport.Models
                 NewInvoiceDetails.OrderID = InsertInvoiceDetails(NewInvoiceDetails);
                 ObjMySQLHelper.UpdateIDValue("Invoices", InvoiceNumber);
 
-                ListInvoices.Add(NewInvoiceDetails);
                 Object[] ArrItems = new Object[] {
                     NewInvoiceDetails.InvoiceID,
                     NewInvoiceDetails.CustomerID,
@@ -374,7 +373,11 @@ namespace SalesOrdersReport.Models
                     new MySql.Data.Types.MySqlDateTime(NewInvoiceDetails.CreationDate),
                     new MySql.Data.Types.MySqlDateTime(NewInvoiceDetails.LastUpdatedDate)
                 };
-                dtAllInvoices.Rows.Add(ArrItems);
+                if (dtAllInvoices != null)
+                {
+                    ListInvoices.Add(NewInvoiceDetails);
+                    dtAllInvoices.Rows.Add(ArrItems);
+                }
 
                 return NewInvoiceDetails;
             }
@@ -507,6 +510,178 @@ namespace SalesOrdersReport.Models
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.UpdateInvoiceDetails()", ex);
+                throw;
+            }
+        }
+
+        public void ExportInvoice(ReportType EnumReportType, Boolean IsDummyBill, Excel.Workbook ExcelWorkbook, InvoiceDetails ObjInvoiceDetails)
+        {
+            try
+            {
+                Boolean PrintOldBalance = false;
+                ReportSettings CurrReportSettings = null;
+                String BillNumberText = "";
+                String SelectedDateTimeString = ObjInvoiceDetails.InvoiceDate.ToString("dd-MM-yyyy");
+                Boolean CreateSummary = false;
+                switch (EnumReportType)
+                {
+                    case ReportType.INVOICE:
+                        CurrReportSettings = CommonFunctions.ObjInvoiceSettings;
+                        PrintOldBalance = true;
+                        BillNumberText = "Invoice#";
+                        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0);
+                        break;
+                    case ReportType.QUOTATION:
+                        CurrReportSettings = CommonFunctions.ObjQuotationSettings;
+                        PrintOldBalance = false;
+                        BillNumberText = "Quotation#";
+                        CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1);
+                        break;
+                    default:
+                        break;
+                }
+
+                Int32 ValidItemCount = ObjInvoiceDetails.ListInvoiceItems.Count;
+                Int32 ProgressBarCount = ValidItemCount;
+                Int32 Counter = 0, SLNo = 0;
+                Double Quantity, Price;
+                String OrderQuantity = "";
+
+                SLNo = 0;
+                CustomerDetails ObjCurrentSeller = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(ObjInvoiceDetails.CustomerName);
+                DiscountGroupDetails1 ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
+                Double DiscountPerc = 0, DiscountValue = 0;
+                if (ObjDiscountGroup.DiscountType == DiscountTypes.PERCENT)
+                    DiscountPerc = ObjDiscountGroup.Discount;
+                else if (ObjDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
+                    DiscountValue = ObjDiscountGroup.Discount;
+
+                Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
+                ObjInvoice.SerialNumber = ObjInvoiceDetails.InvoiceNumber;
+                ObjInvoice.InvoiceNumberText = BillNumberText;
+                ObjInvoice.ObjSellerDetails = ObjCurrentSeller.Clone();
+                ObjInvoice.OldBalance = 0;//TODO:Double.Parse(lblBalanceAmountValue.Text);
+                ObjInvoice.CurrReportSettings = CurrReportSettings;
+                ObjInvoice.DateOfInvoice = ObjInvoiceDetails.InvoiceDate;
+                ObjInvoice.PrintOldBalance = PrintOldBalance;
+                ObjInvoice.UseNumberToWordsFormula = false;
+                ObjInvoice.ListProducts = new List<ProductDetailsForInvoice>();
+
+                Excel.Worksheet xlWorkSheet = ExcelWorkbook.Sheets.Add(Type.Missing, ExcelWorkbook.Sheets[ExcelWorkbook.Sheets.Count]);
+                String SheetName = ObjCurrentSeller.CustomerName.Replace(":", "").Replace("\\", "").Replace("/", "").
+                        Replace("?", "").Replace("*", "").Replace("[", "").Replace("]", "");
+                SheetName = ((SheetName.Length > 30) ? SheetName.Substring(0, 30) : SheetName);
+                ObjInvoice.SheetName = CommonFunctions.GetWorksheetNameToAppend(SheetName, ExcelWorkbook);
+
+                #region Print Invoice Items
+                String ItemName;
+                for (int i = 0; i < ObjInvoiceDetails.ListInvoiceItems.Count; i++)
+                {
+                    Counter++;
+
+                    OrderQuantity = ObjInvoiceDetails.ListInvoiceItems[i].OrderQty.ToString();
+                    Quantity = ObjInvoiceDetails.ListInvoiceItems[i].SaleQty;
+                    ItemName = ObjInvoiceDetails.ListInvoiceItems[i].ProductName;
+                    if (Quantity == 0) continue;
+                    Price = ObjInvoiceDetails.ListInvoiceItems[i].Price;
+                    Price = Price / ((CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(ItemName).Sum() + 100) / 100);
+
+                    SLNo++;
+                    ProductDetailsForInvoice ObjProductDetailsForInvoice = new ProductDetailsForInvoice();
+                    ProductDetails ObjProductDetails = CommonFunctions.ObjProductMaster.GetProductDetails(ItemName);
+                    ObjProductDetailsForInvoice.SerialNumber = SLNo;
+                    ObjProductDetailsForInvoice.Description = ObjProductDetails.ItemName;
+                    ObjProductDetailsForInvoice.HSNCode = ObjProductDetails.HSNCode;
+                    ObjProductDetailsForInvoice.UnitsOfMeasurement = ObjProductDetails.UnitsOfMeasurement;
+                    ObjProductDetailsForInvoice.OrderQuantity = OrderQuantity;
+                    ObjProductDetailsForInvoice.SaleQuantity = (IsDummyBill ? 0 : Quantity);
+                    ObjProductDetailsForInvoice.Rate = Price; //CommonFunctions.ObjProductMaster.GetPriceForProduct(ObjProductDetails.ItemName, ObjCurrentSeller.PriceGroupIndex);
+
+                    Double[] TaxRates = CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(ObjProductDetails.ItemName);
+                    ObjProductDetailsForInvoice.CGSTDetails = new TaxDetails();
+                    ObjProductDetailsForInvoice.CGSTDetails.TaxRate = TaxRates[0] / 100;
+                    ObjProductDetailsForInvoice.SGSTDetails = new TaxDetails();
+                    ObjProductDetailsForInvoice.SGSTDetails.TaxRate = TaxRates[1] / 100;
+                    ObjProductDetailsForInvoice.IGSTDetails = new TaxDetails();
+                    ObjProductDetailsForInvoice.IGSTDetails.TaxRate = TaxRates[2] / 100;
+                    ObjProductDetailsForInvoice.DiscountGroup = ObjDiscountGroup.Clone();
+                    if (DiscountPerc > 0)
+                    {
+                        ObjProductDetailsForInvoice.DiscountGroup.DiscountType = DiscountTypes.PERCENT;
+                        ObjProductDetailsForInvoice.DiscountGroup.Discount = DiscountPerc;
+                    }
+                    else if (DiscountValue > 0)
+                    {
+                        ObjProductDetailsForInvoice.DiscountGroup.DiscountType = DiscountTypes.ABSOLUTE;
+                        ObjProductDetailsForInvoice.DiscountGroup.Discount = (DiscountValue / ObjInvoiceDetails.ListInvoiceItems.Count);
+                    }
+                    ObjInvoice.ListProducts.Add(ObjProductDetailsForInvoice);
+                }
+                #endregion
+
+                ObjInvoice.CreateInvoice(xlWorkSheet);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExportInvoice()", ex);
+                throw;
+            }
+        }
+
+        public void ExportCustomerSummary(Excel.Workbook xlWorkbook, List<InvoiceDetails> ListInvoiceDetails)
+        {
+            try
+            {
+                String SheetName = "Customer Summary";
+                SheetName = CommonFunctions.GetWorksheetNameToAppend(SheetName, xlWorkbook);
+
+                Excel.Worksheet xlWorksheet = xlWorkbook.Worksheets.Add(xlWorkbook.Worksheets[1]);
+                xlWorksheet.Name = SheetName;
+
+                String InvoiceIDs = String.Join(",", ListInvoiceDetails.Select(e => e.InvoiceID));
+
+                String Query = "Select row_number() over () 'Sl#', a.* from (Select d.LineName Line, b.InvoiceNumber 'Invoice#', " +
+                                "c.CustomerName, Sum(a.SaleQty * a.Price) Sale, Sum(null) Cancel, Sum(null) 'Return', Sum(a.Discount) Discount, " +
+                                "Sum(a.CGST + a.SGST + a.IGST) 'Total Tax', Sum((a.SaleQty * a.Price) - a.Discount + (a.CGST + a.SGST + a.IGST)) 'Net Sale', " +
+                                "Sum(0) OB, Sum(null) Cash";
+                Query += " from InvoiceItems a Inner join Invoices b on a.InvoiceID = b.InvoiceID";
+                Query += " Inner Join CUSTOMERMASTER c on b.CustomerID = c.CustomerID";
+                Query += " Inner Join LINEMASTER d on c.LineID = d.LineID";
+                Query += $" Where a.InvoiceID in ({InvoiceIDs}) and a.InvoiceItemStatus = 'Invoiced' Group by d.LineName, b.InvoiceNumber, c.CustomerName " +
+                            "Order by b.InvoiceNumber) a;";
+                DataTable dtCustomerSummary = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+
+                Int32 SummaryStartRow = 2;
+                Int32 RetVal = CommonFunctions.ExportDataTableToExcelWorksheet(dtCustomerSummary, xlWorksheet, SummaryStartRow, 1);
+                if (RetVal < 0) return;
+
+                Excel.Range xlRange = null;
+                xlRange = xlWorksheet.Range[xlWorksheet.Cells[SummaryStartRow, 1], xlWorksheet.Cells[SummaryStartRow, 12]];
+                xlRange.Font.Bold = true;
+
+                xlWorksheet.Cells[1, 1].Value = "Date";
+                xlWorksheet.Cells[1, 1].Font.Bold = true;
+                xlWorksheet.Cells[1, 2].Value = DateTime.Now.ToShortDateString();
+
+                xlRange = xlWorksheet.Range[xlWorksheet.Cells[SummaryStartRow + 1, 5], xlWorksheet.Cells[SummaryStartRow + 1 + dtCustomerSummary.Rows.Count + 1, 12]];
+                xlRange.NumberFormat = "#,##0.00";
+                xlRange = xlWorksheet.Range[xlWorksheet.Cells[SummaryStartRow, 1], xlWorksheet.Cells[SummaryStartRow + dtCustomerSummary.Rows.Count + 1, 12]];
+                SellerInvoiceForm.SetAllBorders(xlRange);
+
+                xlWorksheet.UsedRange.Columns.AutoFit();
+
+                xlRange = xlWorksheet.Columns["B"];
+                xlRange.ColumnWidth = 7;
+                xlRange = xlWorksheet.Columns["C"];
+                xlRange.ColumnWidth = 7;
+                xlRange = xlWorksheet.Columns["D"];
+                xlRange.ColumnWidth = 24;
+
+                SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorksheet, "Customer Summary", CommonFunctions.ObjInvoiceSettings);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExportCustomerSummary()", ex);
                 throw;
             }
         }

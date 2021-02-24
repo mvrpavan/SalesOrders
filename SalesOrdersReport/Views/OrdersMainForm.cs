@@ -195,6 +195,12 @@ namespace SalesOrdersReport.Views
                     return;
                 }
 
+                if (!dtGridViewOrders.SelectedRows[0].Cells["Order Status"].Value.ToString().Equals(ORDERSTATUS.Created.ToString()))
+                {
+                    MessageBox.Show(this, "Please select an Order which is not Completed/Cancelled to edit.\nIf the Order is already completed then you can view/update in Invoices.", "View Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
                 Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
 
                 CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(OrderID, true, false, UpdateOrdersOnClose), this);
@@ -218,14 +224,28 @@ namespace SalesOrdersReport.Views
                     return;
                 }
 
+                if (!dtGridViewOrders.SelectedRows[0].Cells["Order Status"].Value.ToString().Equals(ORDERSTATUS.Created.ToString()))
+                {
+                    MessageBox.Show(this, "Please select an Order which is not Completed/Cancelled to convert to Invoice.", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                DialogResult dialogResult = MessageBox.Show(this, "This Order will be created as Invoice. Do you want to continue?", "Convert Order", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (dialogResult == DialogResult.No) return;
+
                 Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
 
-                if (ObjOrdersModel.ConvertOrderToInvoice(OrderID) == 0)
+                Int32 RetVal = ObjOrdersModel.ConvertOrderToInvoice(OrderID);
+                if (RetVal == 0)
                 {
                     MessageBox.Show(this, "Order converted to Invoice successfully", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     dtAllOrders.Select($"OrderID = {OrderID}")[0]["Order Status"] = ORDERSTATUS.Completed;
                     dtGridViewOrders.ClearSelection();
                     dtGridViewOrderedProducts.DataSource = null;
+                }
+                else if (RetVal == -2)
+                {
+                    MessageBox.Show(this, "Unable to find Order to convert to Invoice", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
@@ -290,6 +310,18 @@ namespace SalesOrdersReport.Views
                 if (dtGridViewOrders.SelectedRows.Count == 0)
                 {
                     MessageBox.Show(this, "Please select an Order to Delete", "Delete Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                if (!dtGridViewOrders.SelectedRows[0].Cells["Order Status"].Value.ToString().Equals(ORDERSTATUS.Created.ToString()))
+                {
+                    MessageBox.Show(this, "Please select an Order which is not Completed/Cancelled to delete.", "Delete Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                DialogResult dialogResult = MessageBox.Show(this, "Are you sure to Cancel the selected Order?", "Delete Order", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (dialogResult == DialogResult.No)
+                {
                     return;
                 }
 

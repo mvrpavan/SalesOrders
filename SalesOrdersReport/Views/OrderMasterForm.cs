@@ -133,8 +133,8 @@ namespace SalesOrdersReport
                 //ReportProgressFunc(50);
 
                 DataTable dtVendorMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("VendorMaster", CommonFunctions.MasterFilePath, "*");
-                CurrProductLine.LoadVendorMaster(dtVendorMaster, dtDiscountGroupMaster);
-                lblStatus.Text = "Completed loading Vendor details";
+                //CurrProductLine.LoadVendorMaster(dtVendorMaster, dtDiscountGroupMaster);
+                //lblStatus.Text = "Completed loading Vendor details";
                 ReportProgressFunc(75);
 
                 CommonFunctions.SelectProductLine(CommonFunctions.SelectedProductLineIndex);

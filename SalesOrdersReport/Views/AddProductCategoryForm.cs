@@ -26,7 +26,6 @@ namespace SalesOrdersReport.Views
                 InitializeComponent();
                 this.IsAddProductCategory = IsAddProductCategory;
                 this.UpdateOnClose = UpdateOnClose;
-                this.FormClosed += AddProductCategoryForm_FormClosed;
                 chkBoxActive.Checked = true;
 
                 ObjProductMaster = CommonFunctions.ListProductLines[CommonFunctions.SelectedProductLineIndex].ObjProductMaster;
@@ -53,18 +52,6 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void AddProductCategoryForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                UpdateOnClose(1);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("AddProductCategoryForm.AddProductCategoryForm_FormClosed()", ex);
-            }
-        }
-
         private void btnOK_Click(object sender, EventArgs e)
         {
             try
@@ -81,7 +68,7 @@ namespace SalesOrdersReport.Views
                     ProductCategoryDetails tmpCategory = ObjProductMaster.GetCategoryDetails(CategoryName);
                     if (tmpCategory != null)
                     {
-                        MessageBox.Show(this, "Category:" + CategoryName + " already exists, Please choose another name.", "Category error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, "Category:" + CategoryName + " already exists, Please choose another name.", "Add Category", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -101,7 +88,7 @@ namespace SalesOrdersReport.Views
                         ProductCategoryDetails tmpCategory = ObjProductMaster.GetCategoryDetails(CategoryName);
                         if (tmpCategory != null)
                         {
-                            MessageBox.Show(this, "Category:" + CategoryName + " already exists, Please choose another name.", "Category error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(this, "Category:" + CategoryName + " already exists, Please choose another name.", "Update Category", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             txtBoxName.Text = ObjCategoryDetailsForEdit.CategoryName;
                             return;
                         }
@@ -109,6 +96,7 @@ namespace SalesOrdersReport.Views
 
                     ObjProductMaster.EditProductCategory(ObjCategoryDetailsForEdit.CategoryID, CategoryName, txtBoxDescription.Text.Trim(), chkBoxActive.Checked);
                 }
+                UpdateOnClose(3);
                 this.Close();
             }
             catch (Exception ex)

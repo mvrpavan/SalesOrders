@@ -85,7 +85,7 @@ namespace SalesOrdersReport
 
     class ProductDetails : IComparer<ProductDetails>, IEquatable<ProductDetails>
     {
-        public Int32 ProductID, CategoryID, TaxID, ProductInvID;
+        public Int32 ProductID, CategoryID, TaxID, ProductInvID, VendorID;
         public String ProductSKU, ItemName, ProductDesc, SortName, StockName, VendorName, HSNCode, UnitsOfMeasurement, CategoryName;
         public Double PurchasePrice, WholesalePrice, RetailPrice, MaxRetailPrice, Units;
         public Int32 StockProductIndex, HSNCodeIndex;
@@ -142,6 +142,7 @@ namespace SalesOrdersReport
                    CategoryID == other.CategoryID &&
                    TaxID == other.TaxID &&
                    ProductInvID == other.ProductInvID &&
+                   VendorID == other.VendorID &&
                    ProductSKU == other.ProductSKU &&
                    ItemName == other.ItemName &&
                    ProductDesc == other.ProductDesc &&
@@ -165,6 +166,7 @@ namespace SalesOrdersReport
             hashCode = hashCode * -1521134295 + CategoryID.GetHashCode();
             hashCode = hashCode * -1521134295 + TaxID.GetHashCode();
             hashCode = hashCode * -1521134295 + ProductInvID.GetHashCode();
+            hashCode = hashCode * -1521134295 + VendorID.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ProductSKU);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ItemName);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ProductDesc);
