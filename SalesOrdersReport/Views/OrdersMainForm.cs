@@ -142,14 +142,14 @@ namespace SalesOrdersReport.Views
                             tmpOrderDetails.OrderID,
                             tmpOrderDetails.CustomerID,
                             tmpOrderDetails.OrderNumber,
-                            tmpOrderDetails.OrderDate,
+                            new MySql.Data.Types.MySqlDateTime(tmpOrderDetails.OrderDate),
+                            CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(tmpOrderDetails.CustomerID).CustomerName,
                             tmpOrderDetails.OrderItemCount,
                             tmpOrderDetails.EstimateOrderAmount,
                             tmpOrderDetails.OrderStatus,
-                            tmpOrderDetails.CreationDate,
-                            tmpOrderDetails.LastUpdatedDate,
-                            tmpOrderDetails.DateDelivered,
-                            tmpOrderDetails.DateInvoiceCreated
+                            new MySql.Data.Types.MySqlDateTime(tmpOrderDetails.CreationDate),
+                            new MySql.Data.Types.MySqlDateTime(tmpOrderDetails.LastUpdatedDate),
+                            null, null
                         };
                         dtAllOrders.Rows.Add(ArrItems);
                         break;

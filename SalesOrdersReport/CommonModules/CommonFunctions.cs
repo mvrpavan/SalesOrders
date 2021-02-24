@@ -326,7 +326,6 @@ namespace SalesOrdersReport.CommonModules
         public static GeneralSettings ObjGeneralSettings;
         public static ReportSettings ObjOrderSettings, ObjInvoiceSettings, ObjQuotationSettings, ObjPurchaseOrderSettings;
         public static ProductMasterModel ObjProductMaster;
-        //public static SellerMaster ObjSellerMaster;
         public static VendorMaster ObjVendorMaster;
         static Boolean SettingsFileUpdated = false;
 

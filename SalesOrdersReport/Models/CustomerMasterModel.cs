@@ -221,6 +221,21 @@ namespace SalesOrdersReport.Models
             return null;
         }
 
+        public CustomerDetails GetCustomerDetails(Int32 CustomerID)
+        {
+            try
+            {
+                Int32 Index = ListCustomerDetails.FindIndex(e => e.CustomerID == CustomerID);
+                if (Index < 0) return null;
+                return ListCustomerDetails[Index];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetCustomerDetails(CustomerID)", ex);
+            }
+            return null;
+        }
+
         public Double GetCustomerDiscount(String CustomerName, Double Amount)
         {
             try

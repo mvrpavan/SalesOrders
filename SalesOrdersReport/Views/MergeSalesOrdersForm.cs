@@ -198,7 +198,7 @@ namespace SalesOrdersReport.Views
         List<String> ListProductNames = new List<String>();
 
         private void LoadSalesOrderSheet(Excel.Application xlApp, String SalesOrderWorkbookPath, 
-            out Dictionary<String, Int32> DictItemToColIndexes, out Dictionary<String, Int32> DictSellerToRowIndexes, out List<SellerOrderDetails> ListSellerOrderDetails,
+            out Dictionary<String, Int32> DictItemToColIndexes, out Dictionary<String, Int32> DictSellerToRowIndexes, out List<CustomerOrderInvoiceDetails> ListSellerOrderDetails,
             out List<String> ListProductNames)
         {
             try
@@ -232,7 +232,7 @@ namespace SalesOrdersReport.Views
                 #endregion
 
                 #region Identify Sellers in SalesOrderSheet
-                ListSellerOrderDetails = new List<SellerOrderDetails>();
+                ListSellerOrderDetails = new List<CustomerOrderInvoiceDetails>();
                 DictSellerToRowIndexes = new Dictionary<String, Int32>();
                 for (int i = StartRow + 1; i <= RowCount; i++)
                 {
@@ -249,8 +249,8 @@ namespace SalesOrdersReport.Views
                     }
 
                     DictSellerToRowIndexes.Add(ListSellerNames[SellerIndex].ToUpper(), i);
-                    SellerOrderDetails tmpSellerOrderDetails = new SellerOrderDetails();
-                    tmpSellerOrderDetails.SellerName = ListSellerNames[SellerIndex];
+                    CustomerOrderInvoiceDetails tmpSellerOrderDetails = new CustomerOrderInvoiceDetails();
+                    tmpSellerOrderDetails.CustomerName = ListSellerNames[SellerIndex];
                     tmpSellerOrderDetails.SellerRowIndex = i;
                     if (xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value != null)
                         tmpSellerOrderDetails.OrderItemCount = Int32.Parse(xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value.ToString());
@@ -282,7 +282,7 @@ namespace SalesOrdersReport.Views
                                 else
                                 {
                                     KeyValuePair<String, Int32> item = DictItemToColIndexes.ElementAt(j - (StartColumn + DetailsCount));
-                                    MessageBox.Show(this, "Invalid Quantity in Sales Order sheet\nSeller:" + tmpSellerOrderDetails.SellerName + ", Item:" + item.Key + ", Quantity:" + Value + "\nIgnoring quantity for this item",
+                                    MessageBox.Show(this, "Invalid Quantity in Sales Order sheet\nSeller:" + tmpSellerOrderDetails.CustomerName + ", Item:" + item.Key + ", Quantity:" + Value + "\nIgnoring quantity for this item",
                                                     "Quantity Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                     tmpSellerOrderDetails.ListItemQuantity.Add(0);
                                 }
@@ -325,7 +325,7 @@ namespace SalesOrdersReport.Views
 
                 File.Copy(ListFiles[0], txtBoxOutputFolder.Text, true);
                 Dictionary<String, Int32> DictItemToColIndexesToUpdate, DictSellerToRowIndexesToUpdate;
-                List<SellerOrderDetails> ListSellerOrderDetailsToUpdate;
+                List<CustomerOrderInvoiceDetails> ListSellerOrderDetailsToUpdate;
                 List<String> ListProductNamesToUpdate;
                 LoadSalesOrderSheet(xlApp, ListFiles[0], out DictItemToColIndexesToUpdate, out DictSellerToRowIndexesToUpdate, out ListSellerOrderDetailsToUpdate, out ListProductNamesToUpdate);
                 Int32 ProgressBarCount = (ListFiles.Count + 1);
@@ -334,23 +334,23 @@ namespace SalesOrdersReport.Views
                 for (int i = 1; i < ListFiles.Count; i++)
                 {
                     Dictionary<String, Int32> DictItemToColIndexes, DictSellerToRowIndexes;
-                    List<SellerOrderDetails> ListSellerOrderDetails;
+                    List<CustomerOrderInvoiceDetails> ListSellerOrderDetails;
                     List<String> ListProductNames;
                     LoadSalesOrderSheet(xlApp, ListFiles[i], out DictItemToColIndexes, out DictSellerToRowIndexes, out ListSellerOrderDetails, out ListProductNames);
 
                     for (int j = 0; j < ListSellerOrderDetailsToUpdate.Count; j++)
                     {
-                        SellerOrderDetails CurrSellerOrder = ListSellerOrderDetailsToUpdate[j];
+                        CustomerOrderInvoiceDetails CurrSellerOrder = ListSellerOrderDetailsToUpdate[j];
 
                         Int32 SellerIndex = -1;
                         if (j < ListSellerOrderDetails.Count
-                            && ListSellerOrderDetails[j].SellerName.Equals(CurrSellerOrder.SellerName, StringComparison.InvariantCultureIgnoreCase))
+                            && ListSellerOrderDetails[j].CustomerName.Equals(CurrSellerOrder.CustomerName, StringComparison.InvariantCultureIgnoreCase))
                         {
                             SellerIndex = j;
                         }
                         else
                         {
-                            SellerIndex = ListSellerOrderDetails.FindIndex(s => s.SellerName.Equals(CurrSellerOrder.SellerName, StringComparison.InvariantCultureIgnoreCase));
+                            SellerIndex = ListSellerOrderDetails.FindIndex(s => s.CustomerName.Equals(CurrSellerOrder.CustomerName, StringComparison.InvariantCultureIgnoreCase));
                         }
 
                         if (SellerIndex < 0) continue;
@@ -376,7 +376,7 @@ namespace SalesOrdersReport.Views
 
                 for (int i = 0, row = StartRow + 1; i < ListSellerOrderDetailsToUpdate.Count; i++, row++)
                 {
-                    SellerOrderDetails CurrSellerOrder = ListSellerOrderDetailsToUpdate[i];
+                    CustomerOrderInvoiceDetails CurrSellerOrder = ListSellerOrderDetailsToUpdate[i];
                     if (CurrSellerOrder.OrderItemCount == 0) continue;
                     //xlSalesOrderWorksheet.Cells[i + StartRow + 1, StartColumn + 1].Value = CurrSellerOrder.OrderItemCount;
                     for (int j = 0, col = StartColumn + DetailsCount; col <= ColumnCount; j++, col++)

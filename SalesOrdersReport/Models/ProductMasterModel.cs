@@ -1037,57 +1037,6 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public void ImportProductsFromExcel(String ExcelFilePath, out Int32 NumValidProducts, out Int32 NumInvalidProducts, out Int32 NumExistingProducts)
-        {
-            try
-            {
-                NumValidProducts = 0;
-                NumInvalidProducts = 0;
-                NumExistingProducts = 0;
-
-                DataTable dtTmpProductMaster = CommonFunctions.ReturnDataTableFromExcelWorksheet("ProductMaster", ExcelFilePath, "*");
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("ProductMasterModel.ImportProductsFromExcel()", ex);
-                throw ex;
-            }
-        }
-
-        public Int32 ImportProcessedProducts()
-        {
-            try
-            {
-                if (dtProcessedProductsFromExcel == null || dtProcessedProductsFromExcel.Rows.Count == 0) return 0;
-
-                LoadProductMaster(dtProcessedProductsFromExcel);
-
-                Int32 RowCount = dtProcessedProductsFromExcel.Rows.Count;
-                dtProcessedProductsFromExcel.Clear();
-                dtProcessedProductsFromExcel = null;
-
-                return RowCount;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("ProductMasterModel.ImportProcessedProducts()", ex);
-                throw ex;
-            }
-        }
-
-        public void ExportProductsToExcel(String ExcelFilePath)
-        {
-            try
-            {
-
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("ProductMasterModel.ExportProductsToExcel()", ex);
-                throw ex;
-            }
-        }
-
         public List<String> GetHSNCodeList()
         {
             try

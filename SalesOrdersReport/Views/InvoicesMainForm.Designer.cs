@@ -50,6 +50,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblOrdersCount = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cmbBoxLine = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvoices)).BeginInit();
@@ -96,7 +99,9 @@
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.cmbBoxLine);
             this.groupBox3.Controls.Add(this.cmbBoxInvoiceStatus);
+            this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.checkBoxApplyFilter);
             this.groupBox3.Controls.Add(this.dTimePickerTo);
@@ -112,7 +117,7 @@
             // cmbBoxInvoiceStatus
             // 
             this.cmbBoxInvoiceStatus.FormattingEnabled = true;
-            this.cmbBoxInvoiceStatus.Location = new System.Drawing.Point(79, 13);
+            this.cmbBoxInvoiceStatus.Location = new System.Drawing.Point(88, 13);
             this.cmbBoxInvoiceStatus.Name = "cmbBoxInvoiceStatus";
             this.cmbBoxInvoiceStatus.Size = new System.Drawing.Size(87, 21);
             this.cmbBoxInvoiceStatus.TabIndex = 4;
@@ -121,7 +126,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(-2, 16);
+            this.label4.Location = new System.Drawing.Point(7, 17);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(75, 13);
             this.label4.TabIndex = 3;
@@ -301,9 +306,9 @@
             this.dtGridViewInvoicedProducts.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dtGridViewInvoicedProducts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
             this.dtGridViewInvoicedProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtGridViewInvoicedProducts.Location = new System.Drawing.Point(0, 22);
+            this.dtGridViewInvoicedProducts.Location = new System.Drawing.Point(0, 36);
             this.dtGridViewInvoicedProducts.Name = "dtGridViewInvoicedProducts";
-            this.dtGridViewInvoicedProducts.Size = new System.Drawing.Size(1164, 279);
+            this.dtGridViewInvoicedProducts.Size = new System.Drawing.Size(1164, 265);
             this.dtGridViewInvoicedProducts.TabIndex = 2;
             // 
             // label1
@@ -321,13 +326,13 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.dtGridViewInvoicedProducts);
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.groupBox1.Controls.Add(this.label6);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.groupBox1.Location = new System.Drawing.Point(12, 424);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(1164, 307);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Invoiced Products";
             // 
             // lblOrdersCount
             // 
@@ -338,6 +343,34 @@
             this.lblOrdersCount.Size = new System.Drawing.Size(170, 20);
             this.lblOrdersCount.TabIndex = 4;
             this.lblOrdersCount.Text = "[Displaying all Invoices]";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(55, 44);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(27, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Line";
+            // 
+            // cmbBoxLine
+            // 
+            this.cmbBoxLine.FormattingEnabled = true;
+            this.cmbBoxLine.Location = new System.Drawing.Point(88, 40);
+            this.cmbBoxLine.Name = "cmbBoxLine";
+            this.cmbBoxLine.Size = new System.Drawing.Size(87, 21);
+            this.cmbBoxLine.TabIndex = 4;
+            this.cmbBoxLine.SelectedIndexChanged += new System.EventHandler(this.cmbBoxLine_SelectedIndexChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(6, 13);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(135, 20);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "Invoiced Products";
             // 
             // InvoicesMainForm
             // 
@@ -365,6 +398,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvoices)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvoicedProducts)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -394,5 +428,8 @@
         private System.Windows.Forms.Label lblOrdersCount;
         private System.Windows.Forms.ComboBox cmbBoxInvoiceStatus;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox cmbBoxLine;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
     }
 }

@@ -14,6 +14,8 @@ namespace SalesOrdersReport.Views
         DataTable dtAllInvoices;
         String AllInvoicestatus = "<All>";
         INVOICESTATUS CurrInvoiceStatus;
+        DateTime FilterFromDate, FilterToDate;
+        Boolean IsFormLoaded = false;
 
         public InvoicesMainForm()
         {
@@ -28,7 +30,9 @@ namespace SalesOrdersReport.Views
                 ObjInvoicesModel.Initialize();
 
                 dTimePickerFrom.Value = DateTime.Today.AddDays(-30);
-                dTimePickerTo.Value = DateTime.Today;
+                dTimePickerTo.Value = DateTime.Today.AddDays(30);
+                FilterFromDate = DateTime.MinValue;
+                FilterToDate = DateTime.MinValue;
                 CurrInvoiceStatus = INVOICESTATUS.Created;
 
                 cmbBoxInvoiceStatus.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -38,6 +42,14 @@ namespace SalesOrdersReport.Views
                 cmbBoxInvoiceStatus.Items.Add(INVOICESTATUS.Paid.ToString());
                 cmbBoxInvoiceStatus.Items.Add(INVOICESTATUS.Cancelled.ToString());
                 cmbBoxInvoiceStatus.SelectedIndex = 1;
+
+                cmbBoxLine.DropDownStyle = ComboBoxStyle.DropDownList;
+                cmbBoxLine.Items.Clear();
+                cmbBoxLine.Items.Add(AllInvoicestatus);
+                cmbBoxLine.Items.AddRange(CommonFunctions.ObjCustomerMasterModel.GetAllLineNames().ToArray());
+                cmbBoxLine.SelectedIndex = 0;
+
+                LoadGridView();
             }
             catch (Exception ex)
             {
@@ -49,7 +61,10 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                dtAllInvoices = GetInvoicesDataTable(dTimePickerFrom.Value, dTimePickerTo.Value, CurrInvoiceStatus);
+                if (cmbBoxLine.SelectedIndex == 0)
+                    dtAllInvoices = GetInvoicesDataTable(FilterFromDate, FilterToDate, CurrInvoiceStatus, null);
+                else
+                    dtAllInvoices = GetInvoicesDataTable(FilterFromDate, FilterToDate, CurrInvoiceStatus, cmbBoxLine.SelectedItem.ToString());
                 LoadInvoicesGridView();
 
                 dtGridViewInvoicedProducts.DataSource = null;
@@ -67,6 +82,8 @@ namespace SalesOrdersReport.Views
                 this.MaximizeBox = true;
                 this.WindowState = FormWindowState.Maximized;
                 this.StartPosition = FormStartPosition.CenterScreen;
+
+                IsFormLoaded = true;
             }
             catch (Exception ex)
             {
@@ -74,11 +91,16 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        DataTable GetInvoicesDataTable(DateTime FromDate, DateTime ToDate, INVOICESTATUS InvoiceStatus)
+        DataTable GetInvoicesDataTable(DateTime FromDate, DateTime ToDate, INVOICESTATUS InvoiceStatus, String LineName)
         {
             try
             {
-                DataTable dtInvoices = ObjInvoicesModel.LoadInvoiceDetails(FromDate, ToDate, InvoiceStatus);
+                DataTable dtInvoices = null;
+
+                if (String.IsNullOrEmpty(LineName))
+                    dtInvoices = ObjInvoicesModel.LoadInvoiceDetails(FromDate, ToDate, InvoiceStatus);
+                else
+                    dtInvoices = ObjInvoicesModel.LoadInvoiceDetails(FromDate, ToDate, InvoiceStatus, "Line", LineName);
 
                 return dtInvoices;
             }
@@ -137,7 +159,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(-1, true, false, UpdateInvoicesOnClose), this.Parent.FindForm());
+                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(-1, false, true, UpdateInvoicesOnClose), this.Parent.FindForm());
             }
             catch (Exception ex)
             {
@@ -157,7 +179,7 @@ namespace SalesOrdersReport.Views
 
                 Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
 
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(InvoiceID, true, false, UpdateInvoicesOnClose), this);
+                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(InvoiceID, false, true, UpdateInvoicesOnClose), this);
 
                 dtGridViewInvoices.ClearSelection();
                 dtGridViewInvoicedProducts.DataSource = null;
@@ -233,6 +255,15 @@ namespace SalesOrdersReport.Views
         {
             try
             {
+                IsFormLoaded = false;
+                CurrInvoiceStatus = INVOICESTATUS.Created;
+                FilterFromDate = DateTime.MinValue;
+                FilterToDate = DateTime.MinValue;
+                checkBoxApplyFilter.Checked = false;
+                cmbBoxInvoiceStatus.SelectedIndex = 1;
+                cmbBoxLine.SelectedIndex = 0;
+                IsFormLoaded = true;
+
                 LoadGridView();
             }
             catch (Exception ex)
@@ -247,9 +278,15 @@ namespace SalesOrdersReport.Views
             {
                 if (!checkBoxApplyFilter.Checked)
                 {
-                    dTimePickerFrom.Value = DateTime.Today;
-                    dTimePickerTo.Value = dTimePickerFrom.Value.AddDays(30);
+                    FilterFromDate = DateTime.MinValue;
+                    FilterToDate = DateTime.MinValue;
                 }
+                else
+                {
+                    dTimePickerFrom.Value = DateTime.Today.AddDays(-30);
+                    dTimePickerTo.Value = DateTime.Today.AddDays(30);
+                }
+
                 LoadGridView();
             }
             catch (Exception ex)
@@ -266,8 +303,11 @@ namespace SalesOrdersReport.Views
                 if (ObjInvoiceDetails.ListInvoiceItems == null || ObjInvoiceDetails.ListInvoiceItems.Count == 0) return;
 
                 DataTable dtInvoiceProducts = new DataTable();
-                String[] ArrColumns = new String[] { "ProductID", "Product Name", "Ordered Qty", "Price", "Order Status" };
-                Type[] ArrColumnTypes = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeString };
+                String[] ArrColumns = new String[] { "ProductID", "Product Name", "Ordered Qty", "Sale Qty", "Price",
+                                                    "Gross Total", "Tax", "Net Total", "Invoice Item Status" };
+                Type[] ArrColumnTypes = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeDouble,
+                                                    CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble,
+                                                    CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeString };
 
                 for (int i = 0; i < ArrColumns.Length; i++)
                 {
@@ -282,7 +322,12 @@ namespace SalesOrdersReport.Views
                         tmpInvoiceItem.ProductID,
                         tmpInvoiceItem.ProductName,
                         tmpInvoiceItem.OrderQty,
-                        tmpInvoiceItem.Price
+                        tmpInvoiceItem.SaleQty,
+                        tmpInvoiceItem.Price,
+                        tmpInvoiceItem.TaxableValue,
+                        tmpInvoiceItem.CGST + tmpInvoiceItem.SGST + tmpInvoiceItem.IGST,
+                        tmpInvoiceItem.NetTotal,
+                        tmpInvoiceItem.InvoiceItemStatus
                     };
                     dtInvoiceProducts.Rows.Add(ArrObjects);
                 }
@@ -326,6 +371,8 @@ namespace SalesOrdersReport.Views
         {
             try
             {
+                if (!IsFormLoaded) return;
+
                 if(cmbBoxInvoiceStatus.SelectedIndex > 0)
                 {
                     CurrInvoiceStatus = (INVOICESTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.INVOICESTATUS"), cmbBoxInvoiceStatus.SelectedItem.ToString());
@@ -339,6 +386,20 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.cmbBoxInvoiceStatus_SelectedIndexChanged()", ex);
+            }
+        }
+
+        private void cmbBoxLine_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!IsFormLoaded) return;
+
+                LoadGridView();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.cmbBoxLine_SelectedIndexChanged()", ex);
             }
         }
     }

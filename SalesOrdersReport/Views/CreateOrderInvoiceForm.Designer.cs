@@ -33,7 +33,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreateOrderInvoiceForm));
             this.lblSelectName = new System.Windows.Forms.Label();
-            this.cmbBoxSellerCustomer = new System.Windows.Forms.ComboBox();
+            this.cmbBoxCustomers = new System.Windows.Forms.ComboBox();
             this.dtGridViewProdListForSelection = new System.Windows.Forms.DataGridView();
             this.CategoryCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -92,8 +92,8 @@
             this.lblBalanceAmountText = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.lblSelectBillNum = new System.Windows.Forms.Label();
-            this.cmbBoxBillNumber = new System.Windows.Forms.ComboBox();
+            this.lblSelectInvoiceNum = new System.Windows.Forms.Label();
+            this.cmbBoxInvoiceNumber = new System.Windows.Forms.ComboBox();
             this.picBoxLoading = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProdListForSelection)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvOrdProdList)).BeginInit();
@@ -116,14 +116,14 @@
             this.lblSelectName.Text = "Select Seller/Customer";
             this.lblSelectName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // cmbBoxSellerCustomer
+            // cmbBoxCustomers
             // 
-            this.cmbBoxSellerCustomer.FormattingEnabled = true;
-            this.cmbBoxSellerCustomer.Location = new System.Drawing.Point(151, 69);
-            this.cmbBoxSellerCustomer.Name = "cmbBoxSellerCustomer";
-            this.cmbBoxSellerCustomer.Size = new System.Drawing.Size(212, 21);
-            this.cmbBoxSellerCustomer.TabIndex = 1;
-            this.cmbBoxSellerCustomer.SelectedIndexChanged += new System.EventHandler(this.cmbBoxSellerCustomer_SelectedIndexChanged);
+            this.cmbBoxCustomers.FormattingEnabled = true;
+            this.cmbBoxCustomers.Location = new System.Drawing.Point(151, 69);
+            this.cmbBoxCustomers.Name = "cmbBoxCustomers";
+            this.cmbBoxCustomers.Size = new System.Drawing.Size(212, 21);
+            this.cmbBoxCustomers.TabIndex = 1;
+            this.cmbBoxCustomers.SelectedIndexChanged += new System.EventHandler(this.cmbBoxCustomers_SelectedIndexChanged);
             // 
             // dtGridViewProdListForSelection
             // 
@@ -278,7 +278,6 @@
             // 
             this.btnCreateInvOrd.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.btnCreateInvOrd.BackColor = System.Drawing.Color.CadetBlue;
-            this.btnCreateInvOrd.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCreateInvOrd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCreateInvOrd.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCreateInvOrd.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
@@ -731,7 +730,6 @@
             // 
             this.btnCancelChanges.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.btnCancelChanges.BackColor = System.Drawing.Color.DarkOrange;
-            this.btnCancelChanges.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancelChanges.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancelChanges.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelChanges.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
@@ -846,26 +844,26 @@
             this.lblStatus.TabIndex = 13;
             this.lblStatus.Text = "Status";
             // 
-            // lblSelectBillNum
+            // lblSelectInvoiceNum
             // 
-            this.lblSelectBillNum.Location = new System.Drawing.Point(426, 72);
-            this.lblSelectBillNum.Name = "lblSelectBillNum";
-            this.lblSelectBillNum.Size = new System.Drawing.Size(72, 13);
-            this.lblSelectBillNum.TabIndex = 0;
-            this.lblSelectBillNum.Text = "Select Bill#";
-            this.lblSelectBillNum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lblSelectBillNum.Visible = false;
+            this.lblSelectInvoiceNum.Location = new System.Drawing.Point(426, 72);
+            this.lblSelectInvoiceNum.Name = "lblSelectInvoiceNum";
+            this.lblSelectInvoiceNum.Size = new System.Drawing.Size(72, 13);
+            this.lblSelectInvoiceNum.TabIndex = 0;
+            this.lblSelectInvoiceNum.Text = "Select Bill#";
+            this.lblSelectInvoiceNum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblSelectInvoiceNum.Visible = false;
             // 
-            // cmbBoxBillNumber
+            // cmbBoxInvoiceNumber
             // 
-            this.cmbBoxBillNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBoxBillNumber.FormattingEnabled = true;
-            this.cmbBoxBillNumber.Location = new System.Drawing.Point(504, 69);
-            this.cmbBoxBillNumber.Name = "cmbBoxBillNumber";
-            this.cmbBoxBillNumber.Size = new System.Drawing.Size(97, 21);
-            this.cmbBoxBillNumber.TabIndex = 3;
-            this.cmbBoxBillNumber.Visible = false;
-            this.cmbBoxBillNumber.SelectedIndexChanged += new System.EventHandler(this.cmbBoxBillNumber_SelectedIndexChanged);
+            this.cmbBoxInvoiceNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxInvoiceNumber.FormattingEnabled = true;
+            this.cmbBoxInvoiceNumber.Location = new System.Drawing.Point(504, 69);
+            this.cmbBoxInvoiceNumber.Name = "cmbBoxInvoiceNumber";
+            this.cmbBoxInvoiceNumber.Size = new System.Drawing.Size(97, 21);
+            this.cmbBoxInvoiceNumber.TabIndex = 3;
+            this.cmbBoxInvoiceNumber.Visible = false;
+            this.cmbBoxInvoiceNumber.SelectedIndexChanged += new System.EventHandler(this.cmbBoxInvoiceNumber_SelectedIndexChanged);
             // 
             // picBoxLoading
             // 
@@ -890,12 +888,12 @@
             this.Controls.Add(this.txtBoxInvOrdNumber);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.dtTmPckrInvOrdDate);
-            this.Controls.Add(this.cmbBoxSellerCustomer);
+            this.Controls.Add(this.cmbBoxCustomers);
             this.Controls.Add(this.cmbBoxProdCat);
             this.Controls.Add(this.lblInvoiceNumber);
-            this.Controls.Add(this.cmbBoxBillNumber);
+            this.Controls.Add(this.cmbBoxInvoiceNumber);
             this.Controls.Add(this.cmbBoxProduct);
-            this.Controls.Add(this.lblSelectBillNum);
+            this.Controls.Add(this.lblSelectInvoiceNum);
             this.Controls.Add(this.lblInvoiceDate);
             this.Controls.Add(this.lblSelectName);
             this.Controls.Add(this.panelOrderControls);
@@ -927,7 +925,7 @@
         #endregion
 
         private System.Windows.Forms.Label lblSelectName;
-        private System.Windows.Forms.ComboBox cmbBoxSellerCustomer;
+        private System.Windows.Forms.ComboBox cmbBoxCustomers;
         private System.Windows.Forms.DataGridView dtGridViewProdListForSelection;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cmbBoxProduct;
@@ -972,8 +970,8 @@
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.PictureBox picBoxLoading;
         private System.Windows.Forms.Button btnCancelChanges;
-        private System.Windows.Forms.Label lblSelectBillNum;
-        private System.Windows.Forms.ComboBox cmbBoxBillNumber;
+        private System.Windows.Forms.Label lblSelectInvoiceNum;
+        private System.Windows.Forms.ComboBox cmbBoxInvoiceNumber;
         private System.Windows.Forms.Button btnEditBalanceAmount;
         private System.Windows.Forms.Label lblBalanceAmountValue;
         private System.Windows.Forms.Label lblBalanceAmountText;

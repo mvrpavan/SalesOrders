@@ -21,6 +21,8 @@ namespace SalesOrdersReport.CommonModules
         public string CurrentUser;
         public DateTime LoginTime;
         static MySQLHelper ObjMySqlHelper = new MySQLHelper();
+        String DBServer, DBName, DBUsername, DBPassword;
+
         private MySQLHelper()
         {
             try
@@ -50,6 +52,11 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                this.DBServer = DBServer;
+                this.DBName = DBName;
+                this.DBUsername = DBUsername;
+                this.DBPassword = DBPassword;
+
                 ObjDbConnectionStringBuilder = new MySqlConnectionStringBuilder();
                 ObjDbConnectionStringBuilder.Add("Database", DBName.ToLower());
                 ObjDbConnectionStringBuilder.Add("Data Source", DBServer.ToLower());
@@ -72,6 +79,22 @@ namespace SalesOrdersReport.CommonModules
             {
                 CommonFunctions.ShowErrorDialog("MySQLHelper.OpenConnection()", ex);
                 throw ex;
+            }
+        }
+
+        public void CheckAndReconnectToDB()
+        {
+            try
+            {
+                if (ObjDbConnection.State == ConnectionState.Closed || ObjDbConnection.State == ConnectionState.Broken)
+                {
+                    CloseConnection();
+                    OpenConnection(DBServer, DBName, DBUsername, DBPassword);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.CheckAndReconnectToDB()", ex);
             }
         }
 

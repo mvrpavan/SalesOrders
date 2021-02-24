@@ -21,9 +21,9 @@ namespace SalesOrdersReport.Views
         List<String> ListSellerNames;
         CustomerDetails CurrSellerDetails;
         DiscountGroupDetails1 CurrSellerDiscountGroup;
-        SellerOrderDetails CurrSellerOrderDetails;
+        CustomerOrderInvoiceDetails CurrSellerOrderDetails;
         Dictionary<String, Int32> DictItemToColIndexes, DictSellerToRowIndexes;
-        List<SellerOrderDetails> ListSellerOrderDetails;
+        List<CustomerOrderInvoiceDetails> ListSellerOrderDetails;
         Int32 CategoryColIndex = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4, OrdQtyColIndex = 3, SaleQtyColIndex = 4, ItemSelectionSelectColIndex = 5;
         Int32 PaddingSpace = 6;
         Char PaddingChar = ' ', CurrencyChar = '\u20B9';
@@ -370,7 +370,7 @@ namespace SalesOrdersReport.Views
                         else
                         {
                             KeyValuePair<String, Int32> item = DictItemToColIndexes.ElementAt(i - (StartColumn + DetailsCount));
-                            MessageBox.Show(this, "Invalid Quantity in Sales Order sheet\nSeller:" + CurrSellerOrderDetails.SellerName + ", Item:" + item.Key + ", Quantity:" + Value + "\nIgnoring quantity for this item",
+                            MessageBox.Show(this, "Invalid Quantity in Sales Order sheet\nSeller:" + CurrSellerOrderDetails.CustomerName + ", Item:" + item.Key + ", Quantity:" + Value + "\nIgnoring quantity for this item",
                                             "Quantity Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             CurrSellerOrderDetails.ListItemQuantity.Add(0);
                         }
@@ -1162,7 +1162,7 @@ namespace SalesOrdersReport.Views
                         return;
                     }
 
-                    Int32 SellerIndex = ListSellerOrderDetails.FindIndex(s => s.SellerName.Equals(SellerName, StringComparison.InvariantCultureIgnoreCase));
+                    Int32 SellerIndex = ListSellerOrderDetails.FindIndex(s => s.CustomerName.Equals(SellerName, StringComparison.InvariantCultureIgnoreCase));
                     if (SellerIndex < 0)
                     {
                         MessageBox.Show(this, "Selected Seller does not exist in Seller Master\nChoose another Seller or Recreate Sales Order with all Sellers", "Seller Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1171,7 +1171,7 @@ namespace SalesOrdersReport.Views
 
                     UpdateCustomerDetails();
                     CurrSellerOrderDetails = ListSellerOrderDetails[SellerIndex];
-                    CurrSellerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CurrSellerOrderDetails.SellerName);
+                    CurrSellerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CurrSellerOrderDetails.CustomerName);
                     CurrSellerDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(CurrSellerDetails.CustomerName);
                     if (CurrSellerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
                         DiscountPerc = CurrSellerDiscountGroup.Discount;
@@ -1829,7 +1829,7 @@ namespace SalesOrdersReport.Views
                 #endregion
 
                 #region Identify Sellers in SalesOrderSheet
-                ListSellerOrderDetails = new List<SellerOrderDetails>();
+                ListSellerOrderDetails = new List<CustomerOrderInvoiceDetails>();
                 DictSellerToRowIndexes = new Dictionary<String, Int32>();
                 for (int i = StartRow + 1; i <= RowCount; i++)
                 {
@@ -1846,8 +1846,8 @@ namespace SalesOrdersReport.Views
                     }
 
                     DictSellerToRowIndexes.Add(ListSellerNames[SellerIndex].ToUpper(), i);
-                    SellerOrderDetails tmpSellerOrderDetails = new SellerOrderDetails();
-                    tmpSellerOrderDetails.SellerName = ListSellerNames[SellerIndex];
+                    CustomerOrderInvoiceDetails tmpSellerOrderDetails = new CustomerOrderInvoiceDetails();
+                    tmpSellerOrderDetails.CustomerName = ListSellerNames[SellerIndex];
                     tmpSellerOrderDetails.SellerRowIndex = i;
                     if (xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value != null)
                         tmpSellerOrderDetails.OrderItemCount = Int32.Parse(xlSalesOrderWorksheet.Cells[i, StartColumn + 1].Value.ToString());
@@ -2319,11 +2319,12 @@ namespace SalesOrdersReport.Views
         }
     }
 
-    class SellerOrderDetails
+    class CustomerOrderInvoiceDetails
     {
-        public String SellerName;
+        public String CustomerName;
         public List<Double> ListItemQuantity, ListItemOrigQuantity;
         public Int32 SellerRowIndex = -1, OrderItemCount = 0;
         public Models.OrderDetails CurrOrderDetails, CurrOrderDetailsOrig;
+        public Models.InvoiceDetails CurrInvoiceDetails, CurrInvoiceDetailsOrig;
     }
 }

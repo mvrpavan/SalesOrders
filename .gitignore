@@ -223,3 +223,5 @@ SalesOrdersReport/.vs/*
 SalesOrdersReport/.vs/*.*
 .vs/
 *.zip
+*.ide
+*.ide-wal

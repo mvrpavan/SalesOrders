@@ -16,6 +16,11 @@ namespace SalesOrdersReport.Models
         Created, Paid, Cancelled, Void, All
     };
 
+    enum INVOICEITEMSTATUS
+    {
+        Invoiced, Cancelled, OutOfStock
+    };
+
     class InvoiceDetails
     {
         public Int32 InvoiceID;
@@ -32,10 +37,10 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                InvoiceDetails ObjOrderDetailsCopy = (InvoiceDetails)MemberwiseClone();
-                ObjOrderDetailsCopy.ListInvoiceItems = this.ListInvoiceItems.Select(e => e.Clone()).ToList();
+                InvoiceDetails ObjInvoiceDetailsCopy = (InvoiceDetails)MemberwiseClone();
+                ObjInvoiceDetailsCopy.ListInvoiceItems = this.ListInvoiceItems.Select(e => e.Clone()).ToList();
 
-                return ObjOrderDetailsCopy;
+                return ObjInvoiceDetailsCopy;
             }
             catch (Exception ex)
             {
@@ -47,9 +52,10 @@ namespace SalesOrdersReport.Models
 
     class InvoiceItemDetails
     {
-        public Int32 ProductID;
+        public Int32 InvoiceID, ProductID;
         public String ProductName;
-        public Double OrderQty, SaleQty, Price, Discount, TaxableValue, CGST, SGST, IGST, NetTotal;
+        public Double OrderQty, SaleQty, Price, TaxableValue, CGST, SGST, IGST, NetTotal;
+        public INVOICEITEMSTATUS InvoiceItemStatus;
 
         public InvoiceItemDetails Clone()
         {
@@ -67,7 +73,7 @@ namespace SalesOrdersReport.Models
 
     class InvoicesModel
     {
-        public DataTable dtAllInvoices;
+        DataTable dtAllInvoices;
         List<InvoiceDetails> ListInvoices;
         MySQLHelper ObjMySQLHelper;
         const String InvoiceNumberPrefix = "INV";
@@ -146,6 +152,13 @@ namespace SalesOrdersReport.Models
                         case "INVOICE STATUS":
                             WhereClause += $" and a.InvoiceStatus like '%{SearchFieldValue}%'";
                             break;
+                        case "LINE":
+                            Query += $" Inner Join LINEMASTER c on b.LineID = c.LineID";
+                            WhereClause += $" and c.LineName = '{SearchFieldValue}'";
+                            break;
+                        case "LINEID":
+                            WhereClause += $" and b.LineID = '{SearchFieldValue}'";
+                            break;
                         default:
                             break;
                     }
@@ -160,16 +173,16 @@ namespace SalesOrdersReport.Models
                     InvoiceDetails tmpInvoiceDetails = new InvoiceDetails
                     {
                         InvoiceID = Int32.Parse(dtRow["InvoiceID"].ToString()),
-                        OrderID = Int32.Parse(dtRow["OrderID"].ToString()),
                         InvoiceNumber = dtRow["InvoiceNumber"].ToString(),
                         InvoiceDate = DateTime.Parse(dtRow["InvoiceDate"].ToString()),
-                        InvoiceItemCount = Int32.Parse(dtRow["InvoiceItemCount"].ToString()),
-                        CreationDate = DateTime.Parse(dtRow["CreationDate"].ToString()),
-                        LastUpdatedDate = DateTime.Parse(dtRow["LastUpdatedDate"].ToString()),
                         CustomerID = Int32.Parse(dtRow["CustomerID"].ToString()),
                         CustomerName = dtRow["CustomerName"].ToString(),
+                        OrderID = Int32.Parse(dtRow["OrderID"].ToString()),
+                        InvoiceItemCount = Int32.Parse(dtRow["InvoiceItemCount"].ToString()),
                         NetInvoiceAmount = Double.Parse(dtRow["NetInvoiceAmount"].ToString()),
-                        InvoiceStatus = (INVOICESTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.INVOICESTATUS"), dtRow["InvoiceStatus"].ToString())
+                        InvoiceStatus = (INVOICESTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.INVOICESTATUS"), dtRow["InvoiceStatus"].ToString()),
+                        CreationDate = DateTime.Parse(dtRow["CreationDate"].ToString()),
+                        LastUpdatedDate = DateTime.Parse(dtRow["LastUpdatedDate"].ToString())
                     };
 
                     ListInvoices.Add(tmpInvoiceDetails);
@@ -192,7 +205,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                ObjMySQLHelper.UpdateTableDetails("Orders", new List<string>() { "InvoiceStatus" }, new List<string>() { INVOICESTATUS.Cancelled.ToString() }, 
+                ObjMySQLHelper.UpdateTableDetails("Invoices", new List<string>() { "InvoiceStatus" }, new List<string>() { INVOICESTATUS.Cancelled.ToString() }, 
                                             new List<Types>() { Types.String }, $"InvoiceID = {InvoiceID}");
 
                 dtAllInvoices.Select($"InvoiceID = {InvoiceID}")[0]["Invoice Status"] = INVOICESTATUS.Cancelled;
@@ -233,16 +246,16 @@ namespace SalesOrdersReport.Models
                 {
                     InvoiceItemDetails tmpInvoiceItem = new InvoiceItemDetails()
                     {
+                        InvoiceID = Int32.Parse(item["InvoiceID"].ToString()),
                         ProductID = Int32.Parse(item["ProductID"].ToString()),
-                        SaleQty = Double.Parse(item["SaleQty"].ToString()),
                         OrderQty = Double.Parse(item["OrderQty"].ToString()),
+                        SaleQty = Double.Parse(item["SaleQty"].ToString()),
                         Price = Double.Parse(item["Price"].ToString()),
                         TaxableValue = Double.Parse(item["TaxableValue"].ToString()),
-                        Discount = Double.Parse(item["Discount"].ToString()),
                         CGST = Double.Parse(item["CGST"].ToString()),
                         SGST = Double.Parse(item["SGST"].ToString()),
                         IGST = Double.Parse(item["IGST"].ToString()),
-                        NetTotal = Double.Parse(item["NetTotal"].ToString()),
+                        NetTotal = Double.Parse(item["NetTotal"].ToString())
                     };
                     tmpInvoiceItem.ProductName = ObjProductMasterModel.GetProductDetails(tmpInvoiceItem.ProductID).ItemName;
 
@@ -284,7 +297,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                if (ListInvoices.Count == 0) LoadInvoiceDetails(InvoiceDate, InvoiceDate, INVOICESTATUS.Created, "CustomerID", CustomerID.ToString());
+                if (ListInvoices.Count == 0) LoadInvoiceDetails(InvoiceDate, InvoiceDate, INVOICESTATUS.All, "CustomerID", CustomerID.ToString());
                 if (ListInvoices.Count == 0) return null;
 
                 List<InvoiceDetails> ListInvoicesForCustomer = ListInvoices.FindAll(e => e.CustomerID == CustomerID);
@@ -308,7 +321,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                if (ListInvoices.Count == 0) LoadInvoiceDetails(DateTime.MinValue, DateTime.MinValue, INVOICESTATUS.Created, "InvoiceID", InvoiceID.ToString());
+                if (ListInvoices.Count == 0) LoadInvoiceDetails(DateTime.MinValue, DateTime.MinValue, INVOICESTATUS.All, "InvoiceID", InvoiceID.ToString());
                 if (ListInvoices.Count == 0) return null;
 
                 InvoiceDetails ObjInvoiceDetails = ListInvoices.Find(e => e.InvoiceID == InvoiceID);
@@ -334,19 +347,34 @@ namespace SalesOrdersReport.Models
                     InvoiceDate = InvoiceDate,
                     InvoiceNumber = InvoiceNumber,
                     InvoiceStatus = INVOICESTATUS.Created,
-                    NetInvoiceAmount = ListInvoiceItems.Sum(e => e.Price * e.OrderQty),
+                    NetInvoiceAmount = ListInvoiceItems.Sum(e => e.Price * e.SaleQty),
                     LastUpdatedDate = DateTime.Now,
                     CustomerID = CustomerID,
                     OrderID = OrderID,
                     ListInvoiceItems = ListInvoiceItems.Select(e => e.Clone()).ToList(),
                     CreationDate = DateTime.Now,
-                    InvoiceItemCount = ListInvoiceItems.Count(e => e.OrderQty > 0)
+                    InvoiceItemCount = ListInvoiceItems.Count(e => e.OrderQty > 0),
                 };
 
+                NewInvoiceDetails.CustomerName = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CustomerID).CustomerName;
                 NewInvoiceDetails.OrderID = InsertInvoiceDetails(NewInvoiceDetails);
                 ObjMySQLHelper.UpdateIDValue("Invoices", InvoiceNumber);
 
-                ListInvoices.Insert(0, NewInvoiceDetails);
+                ListInvoices.Add(NewInvoiceDetails);
+                Object[] ArrItems = new Object[] {
+                    NewInvoiceDetails.InvoiceID,
+                    NewInvoiceDetails.CustomerID,
+                    NewInvoiceDetails.OrderID,
+                    NewInvoiceDetails.InvoiceNumber,
+                    new MySql.Data.Types.MySqlDateTime(NewInvoiceDetails.InvoiceDate),
+                    NewInvoiceDetails.CustomerName,
+                    NewInvoiceDetails.InvoiceItemCount,
+                    NewInvoiceDetails.NetInvoiceAmount,
+                    NewInvoiceDetails.InvoiceStatus,
+                    new MySql.Data.Types.MySqlDateTime(NewInvoiceDetails.CreationDate),
+                    new MySql.Data.Types.MySqlDateTime(NewInvoiceDetails.LastUpdatedDate)
+                };
+                dtAllInvoices.Rows.Add(ArrItems);
 
                 return NewInvoiceDetails;
             }
@@ -390,19 +418,21 @@ namespace SalesOrdersReport.Models
                 String Query = "";
                 foreach (var item in ListInvoiceItems)
                 {
-                    Query = "Insert into InvoiceItems(InvoiceID, ProductID, OrderQty, Price) Values (";
-                    Query += $"{InvoiceID}, {item.ProductID}, {item.OrderQty}, {item.Price}";
-                    Query += ")";
+                    Query = "Insert into InvoiceItems(InvoiceID, ProductID, OrderQty, SaleQty, Price, " +
+                            "TaxableValue, CGST, SGST, IGST, NetTotal, InvoiceItemStatus) Values (";
+                    Query += $"{InvoiceID}, {item.ProductID}, {item.OrderQty}, {item.SaleQty}, {item.Price}, " +
+                            $"{item.TaxableValue}, {item.CGST}, {item.SGST}, {item.IGST}, {item.NetTotal}, '{item.InvoiceItemStatus}')";
                     ObjMySQLHelper.ExecuteNonQuery(Query);
                 }
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.InsertInvoiceItems()", ex);
+                throw;
             }
         }
 
-        public void UpdateInvoiceDetails(InvoiceDetails ObjInvoiceDetails)
+        public InvoiceDetails UpdateInvoiceDetails(InvoiceDetails ObjInvoiceDetails)
         {
             try
             {
@@ -412,25 +442,55 @@ namespace SalesOrdersReport.Models
                 List<InvoiceItemDetails> ListItemsAdded = new List<InvoiceItemDetails>();
                 Int32 InvoiceItemCount = 0;
                 Double NetInvoiceAmount = 0;
-                for (int i = 0; i < ObjInvoiceDetails.ListInvoiceItems.Count; i++)
+                for (Int32 i = 0; i < ObjInvoiceDetails.ListInvoiceItems.Count; i++)
                 {
                     Int32 Index = ObjInvoiceDetailsOrig.ListInvoiceItems.FindIndex(e => e.ProductID == ObjInvoiceDetails.ListInvoiceItems[i].ProductID);
                     if (Index < 0) ListItemsAdded.Add(ObjInvoiceDetails.ListInvoiceItems[i]);
                     else ListItemsModified.Add(ObjInvoiceDetails.ListInvoiceItems[i]);
-                    if (ObjInvoiceDetails.ListInvoiceItems[i].OrderQty > 0)
+                    if (ObjInvoiceDetails.ListInvoiceItems[i].SaleQty > 0)
                     {
                         InvoiceItemCount++;
-                        NetInvoiceAmount += (ObjInvoiceDetails.ListInvoiceItems[i].OrderQty * ObjInvoiceDetails.ListInvoiceItems[i].Price);
+                        NetInvoiceAmount += (ObjInvoiceDetails.ListInvoiceItems[i].SaleQty * ObjInvoiceDetails.ListInvoiceItems[i].Price);
                     }
                 }
 
-                //Update Modified Items
-                for (int i = 0; i < ListItemsModified.Count; i++)
+                //Find Deleted Items
+                List<InvoiceItemDetails> ListItemsDeleted = new List<InvoiceItemDetails>();
+                for (int i = 0; i < ObjInvoiceDetailsOrig.ListInvoiceItems.Count; i++)
                 {
-                    ObjMySQLHelper.UpdateTableDetails("InvoiceItems", new List<String>() { "InvoiceQty", "Price" },
-                                                new List<String>() { ListItemsModified[i].OrderQty.ToString(), ListItemsModified[i].Price.ToString() },
-                                                new List<Types>() { Types.Number, Types.Number, Types.String },
-                                                $"OrderID = {ObjInvoiceDetails.InvoiceID} and ProductID = {ListItemsModified[i].ProductID}");
+                    Int32 Index = ObjInvoiceDetails.ListInvoiceItems.FindIndex(e => e.ProductID == ObjInvoiceDetailsOrig.ListInvoiceItems[i].ProductID);
+                    if (Index < 0) ListItemsDeleted.Add(ObjInvoiceDetailsOrig.ListInvoiceItems[i]);
+                }
+
+                //Update Modified Items
+                for (Int32 i = 0; i < ListItemsModified.Count; i++)
+                {
+                    ObjMySQLHelper.UpdateTableDetails("InvoiceItems", new List<String>() { "OrderQty", "SaleQty", "Price", "TaxableValue",
+                                                                                        "CGST", "SGST", "IGST", "NetTotal", "InvoiceItemStatus" },
+                                                new List<String>() {
+                                                    ListItemsModified[i].OrderQty.ToString(),
+                                                    ListItemsModified[i].SaleQty.ToString(),
+                                                    ListItemsModified[i].Price.ToString(),
+                                                    ListItemsModified[i].TaxableValue.ToString(),
+                                                    ListItemsModified[i].CGST.ToString(),
+                                                    ListItemsModified[i].CGST.ToString(),
+                                                    ListItemsModified[i].IGST.ToString(),
+                                                    ListItemsModified[i].NetTotal.ToString(),
+                                                    ListItemsModified[i].InvoiceItemStatus.ToString()
+                                                },
+                                                new List<Types>() { Types.Number, Types.Number, Types.Number, Types.Number,
+                                                                    Types.Number, Types.Number, Types.Number, Types.Number, Types.String},
+                                                $"InvoiceID = {ObjInvoiceDetails.InvoiceID} and ProductID = {ListItemsModified[i].ProductID}");
+                }
+
+
+                //Update status for Deleted Items
+                for (int i = 0; i < ListItemsDeleted.Count; i++)
+                {
+                    ObjMySQLHelper.UpdateTableDetails("InvoiceItems", new List<String>() { "InvoiceItemStatus" },
+                                                new List<String>() { INVOICEITEMSTATUS.Cancelled.ToString() },
+                                                new List<Types>() { Types.String },
+                                                $"InvoiceID = {ObjInvoiceDetails.InvoiceID} and ProductID = {ListItemsDeleted[i].ProductID}");
                 }
 
                 //Insert New Items
@@ -440,6 +500,9 @@ namespace SalesOrdersReport.Models
                 ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceItemCount", "NetInvoiceAmount" },
                                             new List<String>() { InvoiceItemCount.ToString(), NetInvoiceAmount.ToString() },
                                             new List<Types>() { Types.Number, Types.Number }, $"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
+
+                FillInvoiceItemDetails(ObjInvoiceDetails);
+                return ObjInvoiceDetails;
             }
             catch (Exception ex)
             {
