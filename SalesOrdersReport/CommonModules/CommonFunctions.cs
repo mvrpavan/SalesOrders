@@ -45,7 +45,7 @@ namespace SalesOrdersReport.CommonModules
             {
                 AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SalesOrders";
                 if (!Directory.Exists(AppDataFolder)) Directory.CreateDirectory(AppDataFolder);
-                SettingsFilePath = CommonFunctions.AppDataFolder + @"\Settings.xml";
+                SettingsFilePath = CommonFunctions.AppDataFolder + @"\Settings_V8.xml";
 
                 ListProductLines = new List<ProductLine>();
                 SelectedProductLineIndex = 1;
