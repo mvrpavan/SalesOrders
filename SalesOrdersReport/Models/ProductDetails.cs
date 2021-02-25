@@ -251,28 +251,27 @@ namespace SalesOrdersReport
             return hashCode;
         }
 
-        /*public Double ComputeInventory(Double ProductUnits, String ProductUOM)
+        public Double ComputeInventory(Double Quantity, Double ProductUnits, String ProductUOM)
         {
             try
             {
                 ProductUOM = ProductUOM.ToUpper();
-                if (UnitsOfMeasurement.ToUpper().Equals(ProductUOM)) return Inventory * Units;
+                if (UnitsOfMeasurement.ToUpper().Equals(ProductUOM)) return Quantity * Units;
 
                 switch (UnitsOfMeasurement.ToUpper())
                 {
-                    case "KG":
-                        if (ProductUOM.Equals("GM"))
-                            return Inventory * 1000;
-                        break;
-                    default:
-                        break;
+                    case "KG": if (ProductUOM.Equals("GM")) return Quantity / 1000 * Units; break;
+                    case "LITRE": if (ProductUOM.Equals("ML")) return Quantity / 1000 * Units; break;
+                    default: return Quantity * Units;
                 }
+                return 0;
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.ComputeInventory()", ex);
+                return -1;
             }
-        }*/
+        }
     }
 
     class ProductCategoryDetails : IComparer<ProductCategoryDetails>

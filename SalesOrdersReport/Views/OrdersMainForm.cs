@@ -242,6 +242,13 @@ namespace SalesOrdersReport.Views
                     dtAllOrders.Select($"OrderID = {OrderID}")[0]["Order Status"] = ORDERSTATUS.Completed;
                     dtGridViewOrders.ClearSelection();
                     dtGridViewOrderedProducts.DataSource = null;
+
+                    dialogResult = MessageBox.Show(this, "Would you like to open the new Invoice?", "Invoice", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        InvoicesMainForm invoicesMainForm = new InvoicesMainForm(OrderID);
+                        ((MainForm)this.MdiParent).ShowChildForm(invoicesMainForm);
+                    }
                 }
                 else if (RetVal == -2)
                 {
@@ -608,7 +615,8 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                BackgroundTask = 3;
+                LoadGridView();
+                /*BackgroundTask = 3;
 #if DEBUG
                 backgroundWorkerOrders_DoWork(null, null);
                 backgroundWorkerOrders_RunWorkerCompleted(null, null);
@@ -617,6 +625,7 @@ namespace SalesOrdersReport.Views
                 backgroundWorkerOrders.RunWorkerAsync();
                 backgroundWorkerOrders.WorkerReportsProgress = true;
 #endif
+                */
             }
             catch (Exception ex)
             {

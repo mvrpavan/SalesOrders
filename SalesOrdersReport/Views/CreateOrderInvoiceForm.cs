@@ -678,6 +678,7 @@ namespace SalesOrdersReport.Views
                     //Check for existing Invoice or create new Invoice for selected Customer
                     CustomerDetails ObjCustomerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxCustomers.Items[cmbBoxCustomers.SelectedIndex].ToString());
                     ListCustomerInvoices = ObjInvoicesModel.GetInvoiceDetailsForCustomer(dtTmPckrInvOrdDate.Value, ObjCustomerDetails.CustomerID);
+                    ListCustomerInvoices.RemoveAll(e => e.InvoiceStatus != INVOICESTATUS.Created);
                     if (ListCustomerInvoices != null && ListCustomerInvoices.Count >= 0)
                     {
                         cmbBoxInvoiceNumber.Items.Clear();
@@ -789,13 +790,16 @@ namespace SalesOrdersReport.Views
                         picBoxLoading.Visible = false;
                         cmbBoxCustomers.Enabled = true;
                         cmbBoxCustomers.Focus();
-                        if (IsCustomerOrder)
+                        if (CurrentOrderInvoiceID < 0)
                         {
-                            MessageBox.Show(this, "Loaded Order data for selected Customer", "Customer Order", MessageBoxButtons.OK);
-                        }
-                        else if(IsCustomerInvoice)
-                        {
-                            MessageBox.Show(this, "Loaded Invoice data for selected Customer", "Customer Invoice", MessageBoxButtons.OK);
+                            if (IsCustomerOrder)
+                            {
+                                MessageBox.Show(this, "Loaded Order data for selected Customer", "Customer Order", MessageBoxButtons.OK);
+                            }
+                            else if (IsCustomerInvoice)
+                            {
+                                MessageBox.Show(this, "Loaded Invoice data for selected Customer", "Customer Invoice", MessageBoxButtons.OK);
+                            }
                         }
                         break;
                     case 3:     //Update Seller Order for Current Seller or Create Sales Invoice

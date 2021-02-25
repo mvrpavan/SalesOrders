@@ -13,7 +13,7 @@ namespace SalesOrdersReport.Models
 {
     enum INVOICESTATUS
     {
-        Created, Paid, Cancelled, Void, All
+        Created, Delivered, Paid, Cancelled, Void, All
     };
 
     enum INVOICEITEMSTATUS
@@ -469,20 +469,20 @@ namespace SalesOrdersReport.Models
                 for (Int32 i = 0; i < ListItemsModified.Count; i++)
                 {
                     ObjMySQLHelper.UpdateTableDetails("InvoiceItems", new List<String>() { "OrderQty", "SaleQty", "Price", "TaxableValue",
-                                                                                        "CGST", "SGST", "IGST", "NetTotal", "InvoiceItemStatus" },
+                                                                                    "CGST", "SGST", "IGST", "NetTotal", "InvoiceItemStatus" },
                                                 new List<String>() {
-                                                    ListItemsModified[i].OrderQty.ToString(),
-                                                    ListItemsModified[i].SaleQty.ToString(),
-                                                    ListItemsModified[i].Price.ToString(),
-                                                    ListItemsModified[i].TaxableValue.ToString(),
-                                                    ListItemsModified[i].CGST.ToString(),
-                                                    ListItemsModified[i].CGST.ToString(),
-                                                    ListItemsModified[i].IGST.ToString(),
-                                                    ListItemsModified[i].NetTotal.ToString(),
-                                                    ListItemsModified[i].InvoiceItemStatus.ToString()
+                                                ListItemsModified[i].OrderQty.ToString(),
+                                                ListItemsModified[i].SaleQty.ToString(),
+                                                ListItemsModified[i].Price.ToString(),
+                                                ListItemsModified[i].TaxableValue.ToString(),
+                                                ListItemsModified[i].CGST.ToString(),
+                                                ListItemsModified[i].CGST.ToString(),
+                                                ListItemsModified[i].IGST.ToString(),
+                                                ListItemsModified[i].NetTotal.ToString(),
+                                                ListItemsModified[i].InvoiceItemStatus.ToString()
                                                 },
                                                 new List<Types>() { Types.Number, Types.Number, Types.Number, Types.Number,
-                                                                    Types.Number, Types.Number, Types.Number, Types.Number, Types.String},
+                                                                Types.Number, Types.Number, Types.Number, Types.Number, Types.String},
                                                 $"InvoiceID = {ObjInvoiceDetails.InvoiceID} and ProductID = {ListItemsModified[i].ProductID}");
                 }
 
@@ -498,13 +498,14 @@ namespace SalesOrdersReport.Models
 
                 //Insert New Items
                 InsertInvoiceItems(ListItemsAdded, ObjInvoiceDetails.InvoiceID);
-                
+
                 //Update InvoiceItemCount
-                ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceItemCount", "NetInvoiceAmount" },
-                                            new List<String>() { InvoiceItemCount.ToString(), NetInvoiceAmount.ToString() },
-                                            new List<Types>() { Types.Number, Types.Number }, $"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
+                ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceItemCount", "NetInvoiceAmount", "InvoiceStatus" },
+                                            new List<String>() { InvoiceItemCount.ToString(), NetInvoiceAmount.ToString(), ObjInvoiceDetails.InvoiceStatus.ToString() },
+                                            new List<Types>() { Types.Number, Types.Number, Types.String }, $"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
 
                 FillInvoiceItemDetails(ObjInvoiceDetails);
+
                 return ObjInvoiceDetails;
             }
             catch (Exception ex)
@@ -854,6 +855,115 @@ namespace SalesOrdersReport.Models
             {
                 xlApp.Quit();
                 CommonFunctions.ReleaseCOMObject(xlApp);
+            }
+        }
+
+        public Int32 MarkInvoicesAsPaid(List<Int32> ListInvoiceIDsToUpdate)
+        {
+            try
+            {
+                List<Int32> ListInvoiceIDsToDeliver = new List<Int32>();
+                List<InvoiceDetails> ListInvoiceDetails = new List<InvoiceDetails>();
+                for (int i = 0; i < ListInvoiceIDsToUpdate.Count; i++)
+                {
+                    InvoiceDetails tmpInvoiceDetails = GetInvoiceDetailsForInvoiceID(ListInvoiceIDsToUpdate[i]);
+                    if (tmpInvoiceDetails.InvoiceStatus == INVOICESTATUS.Paid) continue;
+
+                    ListInvoiceDetails.Add(tmpInvoiceDetails);
+
+                    if (tmpInvoiceDetails.InvoiceStatus == INVOICESTATUS.Created)
+                    {
+                        ListInvoiceIDsToDeliver.Add(ListInvoiceIDsToUpdate[i]);
+                    }
+                }
+
+                if (ListInvoiceIDsToDeliver.Count > 0)
+                {
+                    Int32 RetVal = MarkInvoicesAsDelivered(ListInvoiceIDsToDeliver);
+                    if (RetVal < 0) return RetVal;
+                }
+
+                //Update InvoiceStatus as Paid
+                for (int i = 0; i < ListInvoiceDetails.Count; i++)
+                {
+                    ListInvoiceDetails[i].InvoiceStatus = INVOICESTATUS.Paid;
+                    UpdateInvoiceDetails(ListInvoiceDetails[i]);
+                }
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.MarkInvoicesAsPaid()", ex);
+                return -1;
+            }
+        }
+
+        public Int32 MarkInvoicesAsDelivered(List<Int32> ListInvoiceIDsToUpdate, Boolean UpdateInvoiceStatus = true)
+        {
+            try
+            {
+                DateTime MinInvoiceDate = DateTime.MaxValue;
+                List<InvoiceItemDetails> ListAllInvoiceItems = new List<InvoiceItemDetails>();
+                List<InvoiceDetails> ListInvoiceDetails = new List<InvoiceDetails>();
+                for (int i = 0; i < ListInvoiceIDsToUpdate.Count; i++)
+                {
+                    InvoiceDetails tmpInvoiceDetails = GetInvoiceDetailsForInvoiceID(ListInvoiceIDsToUpdate[i]);
+                    MinInvoiceDate = (tmpInvoiceDetails.InvoiceDate < MinInvoiceDate ? tmpInvoiceDetails.InvoiceDate : MinInvoiceDate);
+
+                    for (int j = 0; j < tmpInvoiceDetails.ListInvoiceItems.Count; j++)
+                    {
+                        InvoiceItemDetails tmpItem = tmpInvoiceDetails.ListInvoiceItems[j];
+                        if (tmpItem.InvoiceItemStatus != INVOICEITEMSTATUS.Invoiced) continue;
+
+                        Int32 ItemIndex = ListAllInvoiceItems.FindIndex(e => e.ProductID == tmpItem.ProductID);
+                        if (ItemIndex < 0)
+                        {
+                            ListAllInvoiceItems.Add(tmpItem.Clone());
+                            ItemIndex = ListAllInvoiceItems.Count - 1;
+                        }
+                        else
+                        {
+                            ListAllInvoiceItems[ItemIndex].OrderQty += tmpItem.OrderQty;
+                            ListAllInvoiceItems[ItemIndex].SaleQty += tmpItem.SaleQty;
+                        }
+                    }
+                    ListInvoiceDetails.Add(tmpInvoiceDetails.Clone());
+                }
+
+                ObjProductMasterModel.UpdateProductInventoryDataFromInvoice(ListAllInvoiceItems, MinInvoiceDate);
+
+                if (UpdateInvoiceStatus)
+                {
+                    //Update InvoiceStatus as Delivered
+                    for (int i = 0; i < ListInvoiceDetails.Count; i++)
+                    {
+                        ListInvoiceDetails[i].InvoiceStatus = INVOICESTATUS.Delivered;
+                        ListInvoiceDetails[i] = UpdateInvoiceDetails(ListInvoiceDetails[i]);
+                    }
+                }
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.MarkInvoicesAsDelivered()", ex);
+                return -1;
+            }
+        }
+
+        public Int32 GetInvoiceIDFromNum(string InvoiceNum)
+        {
+            try
+            {
+                if (ListInvoices.Count == 0) LoadInvoiceDetails(DateTime.MinValue, DateTime.MinValue, INVOICESTATUS.Created, "INVOICE NUMBER", InvoiceNum.ToString());
+                int Index = ListInvoices.FindIndex(e => e.InvoiceNumber == InvoiceNum);
+                return Index;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetInvoiceIDFromNum()", ex);
+                return -1;
             }
         }
     }

@@ -16,8 +16,9 @@ namespace SalesOrdersReport.Views
         INVOICESTATUS CurrInvoiceStatus;
         DateTime FilterFromDate, FilterToDate;
         Boolean IsFormLoaded = false;
+        Int32 OrderIDToEditInvoice;
 
-        public InvoicesMainForm()
+        public InvoicesMainForm(Int32 OrderIDToEditInvoice = -1)
         {
             try
             {
@@ -50,6 +51,11 @@ namespace SalesOrdersReport.Views
                 cmbBoxLine.SelectedIndex = 0;
 
                 LoadGridView();
+
+                if (OrderIDToEditInvoice > 0)
+                {
+                    this.OrderIDToEditInvoice = OrderIDToEditInvoice;
+                }
             }
             catch (Exception ex)
             {
@@ -84,6 +90,18 @@ namespace SalesOrdersReport.Views
                 this.StartPosition = FormStartPosition.CenterScreen;
 
                 IsFormLoaded = true;
+                if (OrderIDToEditInvoice > 0)
+                {
+                    for (int i = 0; i < dtGridViewInvoices.Rows.Count; i++)
+                    {
+                        if (dtGridViewInvoices.Rows[i].Cells["OrderID"].Value.ToString().Equals(OrderIDToEditInvoice.ToString()))
+                        {
+                            dtGridViewInvoices.Rows[i].Selected = true;
+                            break;
+                        }
+                    }
+                    btnViewEditInvoice.PerformClick();
+                }
             }
             catch (Exception ex)
             {
@@ -177,6 +195,12 @@ namespace SalesOrdersReport.Views
                     return;
                 }
 
+                if (!dtGridViewInvoices.SelectedRows[0].Cells["Invoice Status"].Value.ToString().Equals(INVOICESTATUS.Created.ToString()))
+                {
+                    MessageBox.Show(this, "Unable to edit a Delivered/Paid Invoice.", "View Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
                 Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
 
                 CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(InvoiceID, false, true, UpdateInvoicesOnClose), this);
@@ -267,7 +291,13 @@ namespace SalesOrdersReport.Views
             {
                 if (dtGridViewInvoices.SelectedRows.Count == 0)
                 {
-                    MessageBox.Show(this, "Please select an Invoice to Delete", "Delete Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(this, "Please select an Invoice to Cancel", "Cancel Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                if (!dtGridViewInvoices.SelectedRows[0].Cells["Invoice Status"].Value.ToString().Equals(INVOICESTATUS.Created.ToString()))
+                {
+                    MessageBox.Show(this, "Unable to cancel a Delivered/Paid Invoice.", "View Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
@@ -315,8 +345,8 @@ namespace SalesOrdersReport.Views
                 }
                 else
                 {
-                    dTimePickerFrom.Value = DateTime.Today.AddDays(-30);
-                    dTimePickerTo.Value = DateTime.Today.AddDays(30);
+                    FilterFromDate = dTimePickerFrom.Value;
+                    FilterToDate = dTimePickerTo.Value;
                 }
 
                 LoadGridView();
@@ -462,6 +492,25 @@ namespace SalesOrdersReport.Views
                     return -1;
                 }
 
+                if ((ExportOption & 1) > 0)      //Export all displayed Invoices
+                {
+                    Int32 PendingInvoicesCount = 0, CompletedInvoiceCount = 0, CancelledInvoiceCount = 0;
+                    for (int i = 0; i < dtGridViewInvoices.Rows.Count; i++)
+                    {
+                        String InvoiceStatus = dtGridViewInvoices.Rows[i].Cells["Invoice Status"].Value.ToString();
+                        if (InvoiceStatus.Equals(INVOICESTATUS.Created)) PendingInvoicesCount++;
+                        else if (InvoiceStatus.Equals(INVOICESTATUS.Cancelled)) CancelledInvoiceCount++;
+                        else CompletedInvoiceCount++;
+                    }
+
+                    if ((PendingInvoicesCount > 0 && (CompletedInvoiceCount > 0 || CancelledInvoiceCount > 0))
+                        || (CompletedInvoiceCount > 0 && CancelledInvoiceCount > 0))
+                    {
+                        MessageBox.Show(this, "Unable to export Invoices with multiple Invoice Status. Please filter Invoices with same status.", "Export Invoice", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        return 2;
+                    }
+                }
+
                 BackgroundTask = 3;
 #if DEBUG
                 backgroundWorkerInvoices_DoWork(null, null);
@@ -523,7 +572,7 @@ namespace SalesOrdersReport.Views
                         {
                             ReportType EnumReportType = ReportType.INVOICE;
                             Boolean PrintOldBalance = true;
-                            Boolean CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 2) || ((ExportOption & 4) > 0);
+                            Boolean CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0) || ((ExportOption & 4) > 0);
 
                             List<Object> ListInvoicesToExport = new List<Object>();
                             if ((ExportOption & 1) > 0)      //Export all displayed Invoices
@@ -547,6 +596,9 @@ namespace SalesOrdersReport.Views
 
                             MessageBox.Show(this, $"Exported Invoices file is created successfully at:{ExportedFilePath}", "Export Invoices", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
+                        break;
+                    case 4: //Mark Invoices as Delivered
+                        MarkInvoicesAsDelivered();
                         break;
                     default:
                         break;
@@ -589,6 +641,88 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerInvoices_RunWorkerCompleted()", ex);
+            }
+        }
+
+        private void MarkInvoicesAsDelivered()
+        {
+            try
+            {
+                List<Int32> ListInvoiceIDsToUpdate = new List<Int32>();
+
+                DialogResult dialogResult = MessageBox.Show(this, "Do you want to update all Invoices or only selected Invoice as Delivered?\nYes: All Invoices\nNo: Only Selected Invoice",
+                                        "Deliver Invoice", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button3);
+                if (dialogResult == DialogResult.Cancel) return;
+                else if (dialogResult == DialogResult.Yes)
+                {
+                    dialogResult = MessageBox.Show(this, "This will update all displayed Invoices as Delivered. Please confirm.",
+                                            "Deliver Invoice", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                    if (dialogResult == DialogResult.Cancel) return;
+
+                    for (int i = 0; i < dtGridViewInvoices.Rows.Count; i++)
+                    {
+                        Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.Rows[i].Cells["InvoiceID"].Value.ToString());
+                        if (ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID).InvoiceStatus == INVOICESTATUS.Created)
+                            ListInvoiceIDsToUpdate.Add(InvoiceID);
+                    }
+                }
+                else
+                {
+                    if (dtGridViewInvoices.SelectedRows.Count == 0)
+                    {
+                        MessageBox.Show(this, "Please select an Invoice to Mark as Deilvered", "Deliver Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+
+                    dialogResult = MessageBox.Show(this, "This will update selected Invoice as Delivered. Please confirm.",
+                            "Deliver Invoice", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                    if (dialogResult == DialogResult.Cancel) return;
+
+                    Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
+                    if (ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID).InvoiceStatus == INVOICESTATUS.Created)
+                        ListInvoiceIDsToUpdate.Add(InvoiceID);
+                }
+
+                if (ListInvoiceIDsToUpdate.Count == 0)
+                {
+                    MessageBox.Show(this, "There are no Invoices to update as Delivered.", "Deliver Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                Int32 RetVal = ObjInvoicesModel.MarkInvoicesAsDelivered(ListInvoiceIDsToUpdate);
+
+                if (RetVal == 0)
+                {
+                    MessageBox.Show(this, "All displayed/selected Invoices are updated as Delivered successfully", "Deliver Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if (RetVal == -1)
+                {
+                    MessageBox.Show(this, "All displayed/selected Invoices are updated as Delivered failed with unknown error", "Deliver Invoice", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.MarkInvoicesAsDelivered()", ex);
+            }
+        }
+
+        private void btnMarkAsDelivered_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BackgroundTask = 4;
+#if DEBUG
+                backgroundWorkerInvoices_DoWork(null, null);
+                backgroundWorkerInvoices_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerInvoices.ReportProgress;
+                backgroundWorkerInvoices.RunWorkerAsync();
+                backgroundWorkerInvoices.WorkerReportsProgress = true;
+#endif
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnMarkAsDelivered_Click()", ex);
             }
         }
     }

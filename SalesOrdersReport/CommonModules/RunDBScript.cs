@@ -55,6 +55,8 @@ namespace SalesOrdersReport.CommonModules
                 CreateOrderTables();
                 CreateInvoiceTables();
                 CreateTransactionTables();
+                CreateInventoryTables();
+                CreatePurchaseOrderInvoiceTables();
             }
             catch (Exception ex)
             {
@@ -358,36 +360,63 @@ namespace SalesOrdersReport.CommonModules
                 List<String> TableColumns = new List<String>();
 
                 #region Create ProductStockHistory Table
-                TableColumns.Clear();
                 TableColumns.Add("HistoryEntryID, int unsigned NOT NULL AUTO_INCREMENT");
                 TableColumns.Add("ProductInvID, smallint unsigned NOT NULL");
-                TableColumns.Add("Type, varchar(10) DEFAULT Not NULL");
-                TableColumns.Add("OrderedQty, float DEFAULT 0");
-                TableColumns.Add("ReceivedQty, float DEFAULT 0");
-                TableColumns.Add("NetQty, float DEFAULT 0");
+                TableColumns.Add("Type, varchar(10) DEFAULT NULL");
+                TableColumns.Add("OrderedQty, float DEFAULT NULL");
+                TableColumns.Add("ReceivedQty, float DEFAULT NULL");
+                TableColumns.Add("NetQty, float DEFAULT NULL");
                 TableColumns.Add("PODate, datetime DEFAULT NULL");
-                TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+                TableColumns.Add("UpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
                 TableColumns.Add("PRIMARY KEY, HistoryEntryID");
                 ObjMySQLHelper.CreateTable("ProductStockHistory", TableColumns);
-                #endregion
-
-                #region Create PurchaseOrders Table
-                TableColumns.Clear();
-                TableColumns.Add("HistoryEntryID, int unsigned NOT NULL AUTO_INCREMENT");
-                TableColumns.Add("ProductInvID, smallint unsigned NOT NULL");
-                TableColumns.Add("Type, varchar(10) DEFAULT Not NULL");
-                TableColumns.Add("OrderedQty, float DEFAULT 0");
-                TableColumns.Add("ReceivedQty, float DEFAULT 0");
-                TableColumns.Add("NetQty, float DEFAULT 0");
-                TableColumns.Add("PODate, datetime DEFAULT NULL");
-                TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-                TableColumns.Add("PRIMARY KEY, ProductInvID");
-                ObjMySQLHelper.CreateTable("PurchaseOrders", TableColumns);
                 #endregion
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.CreateInventoryTables()", ex);
+            }
+        }
+
+        public void CreatePurchaseOrderInvoiceTables()
+        {
+            try
+            {
+                #region Create PurchaseOrders Table
+                List<String> TableColumns = new List<String>
+                {
+                    "PurchaseOrderID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
+                    "PurchaseOrderNumber, varchar(20) NOT NULL",
+                    "PurchaseOrderDate, datetime NOT NULL",
+                    "VendorID, smallint(5) unsigned NULL",
+                    "POItemCount, smallint(5) DEFAULT NULL",
+                    "EstimateOrderAmount, float DEFAULT NULL",
+                    "PurchaseOrderStatus, varchar(20) DEFAULT NULL",      //Placed/Completed/Cancelled/Void
+                    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                    "LastUpdatedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+                    "DateDelivered, datetime NULL",
+                    "DateInvoiceCreated, datetime NULL",
+                    "PRIMARY KEY, PurchaseOrderID"
+                };
+                ObjMySQLHelper.CreateTable("PurchaseOrders", TableColumns);
+
+                TableColumns = new List<String>
+                {
+                    "PurchaseOrderItemID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
+                    "PurchaseOrderID, smallint(5) unsigned NOT NULL",
+                    "ProductInvID, smallint(5) NOT NULL",
+                    "OrderedQty, float DEFAULT 0",
+                    "ReceivedQty, float DEFAULT 0",
+                    "Price, float DEFAULT NULL",
+                    "POItemStatus, varchar(20) DEFAULT NULL",
+                    "PRIMARY KEY, PurchaseOrderItemID"
+                };
+                ObjMySQLHelper.CreateTable("PurchaseOrderItems", TableColumns);
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.CreatePurchaseOrderInvoiceTables()", ex);
             }
         }
 
@@ -503,7 +532,7 @@ namespace SalesOrdersReport.CommonModules
                     "Active, tinyint(4) NOT NULL DEFAULT '1'",
                     "PRIMARY KEY, AccountID"
                 };
-                ObjMySQLHelper.CreateTable("AccountsMaster", TableColumns);
+                ObjMySQLHelper.CreateTable("ACCOUNTSMASTER", TableColumns);
 
                 //TableColumns = new List<String>
                 //{
@@ -549,7 +578,7 @@ namespace SalesOrdersReport.CommonModules
                     "Active, tinyint(4) NOT NULL DEFAULT '1'", 
                     "PRIMARY KEY, PaymentID"
                 };
-                ObjMySQLHelper.CreateTable("Payments", TableColumns);
+                ObjMySQLHelper.CreateTable("PAYMENTS", TableColumns);
 
                 TableColumns = new List<String>
                 {
@@ -563,7 +592,7 @@ namespace SalesOrdersReport.CommonModules
                     "UserID, smallint unsigned NULL",
                     "PRIMARY KEY, ExpenseID"
                 };
-                ObjMySQLHelper.CreateTable("Expenses", TableColumns);
+                ObjMySQLHelper.CreateTable("EXPENSES", TableColumns);
 
 
                 TableColumns = new List<String>

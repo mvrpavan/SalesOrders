@@ -680,6 +680,40 @@ namespace SalesOrdersReport.Models
             }
         }
 
+        public void UpdateProductInventoryDataFromInvoice(List<InvoiceItemDetails> ListInvoiceItems, DateTime InvoiceDate)
+        {
+            try
+            {
+                //Insert one record for each InvoiceItem in ProductStockHistory table
+                for (int i = 0; i < ListInvoiceItems.Count; i++)
+                {
+                    if (ListInvoiceItems[i].InvoiceItemStatus != INVOICEITEMSTATUS.Invoiced) continue;
+
+                    ProductDetails ObjProductDetails = GetProductDetails(ListInvoiceItems[i].ProductID);
+                    Int32 ProductInvID = ObjProductDetails.ProductInvID;
+                    ProductInventoryDetails ObjProductInventoryDetails = GetProductInventoryDetails(ProductInvID);
+                    Double OrderedQty = ObjProductInventoryDetails.ComputeInventory(ListInvoiceItems[i].OrderQty, ObjProductDetails.Units, ObjProductDetails.UnitsOfMeasurement);
+                    Double ReceivedQty = -1 * ObjProductInventoryDetails.ComputeInventory(ListInvoiceItems[i].SaleQty, ObjProductDetails.Units, ObjProductDetails.UnitsOfMeasurement);
+                    Double NetQty = ObjProductInventoryDetails.Inventory + ReceivedQty;
+
+                    ObjMySQLHelper.InsertIntoTable("ProductStockHistory",
+                        new List<String>() { "ProductInvID", "Type", "OrderedQty", "ReceivedQty", "NetQty", "PODate", "UpdateDate" },
+                        new List<String>() { ProductInvID.ToString(), "Sale", OrderedQty.ToString(), ReceivedQty.ToString(), NetQty.ToString(),
+                            MySQLHelper.GetDateStringForDB(InvoiceDate), MySQLHelper.GetDateStringForDB(DateTime.Now)},
+                        new List<Types>() { Types.Number, Types.String, Types.Number, Types.Number, Types.Number, Types.String, Types.String });
+
+                    ObjMySQLHelper.UpdateTableDetails("ProductInventory", new List<String>() { "Inventory", "LastPODate" },
+                        new List<String>() { NetQty.ToString(), MySQLHelper.GetDateStringForDB(InvoiceDate) },
+                        new List<Types>() { Types.Number, Types.String }, $"ProductInvID = {ProductInvID}");
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdateProductInventoryDataFromInvoice(InvoiceItemDetails)", ex);
+                throw;
+            }
+        }
+
         public void LoadProductPastSalesFromStockHistoryFile(DataTable dtSalePurchaseHistory, DateTime AsOnDate, Int32 PeriodValue, TimePeriodUnits PeriodUnits)
         {
             try
@@ -1303,21 +1337,6 @@ namespace SalesOrdersReport.Models
                 CommonFunctions.ShowErrorDialog($"{this}.AddNewProductInventoryDetails()", ex);
                 return null;
             }
-        }
-
-        Boolean UpdateValue<T>(ref T CurrValue, T NewValue)
-        {
-            try
-            {
-                if (CurrValue.Equals(NewValue)) return false;
-                CurrValue = NewValue;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.UpdateValue()", ex);
-            }
-            return false;
         }
 
         ProductDetails UpdateProductDetails(ProductDetails tmpProductDetails, ProductInventoryDetails tmpProductInventoryDetails)

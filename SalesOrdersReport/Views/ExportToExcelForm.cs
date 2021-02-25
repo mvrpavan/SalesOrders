@@ -296,6 +296,10 @@ namespace SalesOrdersReport.Views
                                 MessageBox.Show(this, "No Invoices data available to export!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                                 ExportResult = 1;
                             }
+                            else if (Retval == 2)
+                            {
+                                ExportResult = 2;
+                            }
                             else
                             {
                                 MessageBox.Show(this, "Exporting Invoices data to Excel file failed!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
