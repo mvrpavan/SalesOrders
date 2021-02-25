@@ -754,7 +754,7 @@ namespace SalesOrdersReport.Views
                             ListTempLineDtls.Insert(~Index, ObjLineDetails);
                             LineID++;
                         }
-                        else ListTempLineDtls[Index] = ObjLineDetails;
+                        //else ListTempLineDtls[Index] = ObjLineDetails;
                     }
                     else ObjCustomerDetails.LineID = CommonFunctions.ObjCustomerMasterModel.GetLineID(ListExistingLineNamesinDB[AlreadyExistsIndex]);
 

@@ -1318,8 +1318,8 @@ namespace SalesOrdersReport.Models
                              $"{tmpProductInventoryDetails.Units}, '{tmpProductInventoryDetails.UnitsOfMeasurement}'," +
                              $"{tmpProductInventoryDetails.ReOrderStockLevel}, {tmpProductInventoryDetails.ReOrderStockQty})";
                     ObjMySQLHelper.ExecuteNonQuery(Query);
-                    Query = "Select * from ProductInventory Order by StockName";
-                    LoadProductInventory(ObjMySQLHelper.GetQueryResultInDataTable(Query));
+                    //Query = "Select * from ProductInventory Order by StockName";
+                    //LoadProductInventory(ObjMySQLHelper.GetQueryResultInDataTable(Query));
                 }
 
                 //Reload Product Inventory cache

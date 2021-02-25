@@ -133,7 +133,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<string> ListCustomerCol = new List<string>() { "CUSTOMERID,INT NOT NULL AUTO_INCREMENT", "CUSTOMERNAME,VARCHAR(100) NOT NULL", "ADDRESS,VARCHAR(100) NULL", "PHONENO, BIGINT(20) NULL DEFAULT NULL", "LINEID,INT NULL DEFAULT NULL", "PRICEGROUPID,INT NULL DEFAULT NULL", "DISCOUNTGROUPID,INT NULL DEFAULT NULL", "GSTIN,VARCHAR(20) NULL", "STATEID, VARCHAR(5) NULL DEFAULT NULL", "ADDEDDATE,DATETIME NULL", "LASTUPDATEDATE,DATETIME NULL", "ACTIVE,BIT NULL", "ORDERDAYS, VARCHAR(20) NOT NULL DEFAULT '1'", "PRIMARY KEY,CUSTOMERID" };
+                List<string> ListCustomerCol = new List<string>() { "CUSTOMERID,INT NOT NULL AUTO_INCREMENT", "CUSTOMERNAME,VARCHAR(100) NOT NULL", "ADDRESS,VARCHAR(1000) NULL", "PHONENO, BIGINT(20) NULL DEFAULT NULL", "LINEID,INT NULL DEFAULT NULL", "PRICEGROUPID,INT NULL DEFAULT NULL", "DISCOUNTGROUPID,INT NULL DEFAULT NULL", "GSTIN,VARCHAR(20) NULL", "STATEID, VARCHAR(5) NULL DEFAULT NULL", "ADDEDDATE,DATETIME NULL", "LASTUPDATEDATE,DATETIME NULL", "ACTIVE,BIT NULL", "ORDERDAYS, VARCHAR(20) NOT NULL DEFAULT '1'", "PRIMARY KEY,CUSTOMERID" };
                 ObjMySQLHelper.CreateTable("CUSTOMERMASTER", ListCustomerCol);
                 List<string> ListColumnNamesWthDataType = new List<string> { "LASTUPDATEDATE,DATETIME", "ADDEDDATE,DATETIME" }, ListColumnValues = new List<string>() { DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"), DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") };
                //CommonFunctions.ObjCustomerMasterModel.CreateNewCustomer("customer0", "Line0", "DisGrp1", "PriceGrp1", true, ListColumnNamesWthDataType, ListColumnValues);
@@ -508,6 +508,7 @@ namespace SalesOrdersReport.CommonModules
                     "SGST, float DEFAULT 0",
                     "IGST, float DEFAULT 0",
                     "NetTotal, float DEFAULT 0",
+                    "InvoiceItemStatus, varchar(20) DEFAULT NULL",
                     "PRIMARY KEY, InvoiceItemID"
                 };
                 ObjMySQLHelper.CreateTable("InvoiceItems", TableColumns);
@@ -637,7 +638,7 @@ namespace SalesOrdersReport.CommonModules
                 {
                     "VendorID, SmallInt unsigned NOT NULL AUTO_INCREMENT",
                     "VendorName, Varchar(50) NOT NULL",
-                    "Address, Varchar(200) NULL",
+                    "Address, Varchar(1000) NULL",
                     "PhoneNo, Varchar(20) NULL",
                     "GSTIN, Varchar(20) NULL",
                     "StateID, SmallInt unsigned not NULL",
