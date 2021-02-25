@@ -46,7 +46,7 @@ namespace SalesOrdersReport.Models
         string TempQueryStr = " a.*, b.CUSTOMERID, c.CUSTOMERNAME,d.INVOICENUMBER,e.USERNAME FROM PAYMENTS a "
                            + " Inner Join ACCOUNTSMASTER b on a.ACCOUNTID = b.ACCOUNTID "
                             + " Inner Join CUSTOMERMASTER c on b.CUSTOMERID = c.CUSTOMERID "
-                            + " Inner Join INVOICES d on a.INVOICEID = d.INVOICEID "
+                            + " Inner Join Invoices d on a.INVOICEID = d.INVOICEID "
                             + " Inner Join USERMASTER e on a.USERID = e.USERID ";
         public PaymentsModel()
         {

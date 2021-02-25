@@ -661,8 +661,7 @@ namespace SalesOrdersReport.Views
                     ListColumnValues.Add("Created");
                 }
                 string WhereCondition = "INVOICENUMBER = '" + cmbxCreatePaymentNumber.SelectedItem.ToString() + "'";
-                Int32 ReturnVal = CommonFunctions.ObjUserMasterModel.UpdateAnyTableDetails("INVOICES", ListColumnNames, ListColumnValues, WhereCondition);
-
+                Int32 ReturnVal = CommonFunctions.ObjUserMasterModel.UpdateAnyTableDetails("Invoices", ListColumnNames, ListColumnValues, WhereCondition);
             }
             catch (Exception ex)
             {

@@ -121,8 +121,8 @@ namespace SalesOrdersReport.Views
                     bgWorkerImportExcel.WorkerReportsProgress = true;
                     bgWorkerImportExcel.RunWorkerAsync();
 #endif
-                    txtImportFrmExclFilePath.Text = "";
-                    btnImportFrmExclUploadFile.Enabled = false;
+                    //txtImportFrmExclFilePath.Text = "";
+                    //btnImportFrmExclUploadFile.Enabled = false;
                 }
             }
             catch (Exception ex)
@@ -243,6 +243,9 @@ namespace SalesOrdersReport.Views
                     default:
                         break;
                 }
+
+                txtImportFrmExclFilePath.Text = "";
+                btnImportFrmExclUploadFile.Enabled = false;
             }
             catch (Exception ex)
             {
