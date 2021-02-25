@@ -61,6 +61,7 @@
             this.btnViewEditExpense = new System.Windows.Forms.Button();
             this.btnCreateExpense = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnImportFromExcel = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewPayments)).BeginInit();
@@ -92,6 +93,7 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.btnImportFromExcel);
             this.panel1.Controls.Add(this.groupBox3);
             this.panel1.Controls.Add(this.comboBox2);
             this.panel1.Controls.Add(this.btnSearchPayment);
@@ -501,6 +503,23 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Payments";
             // 
+            // btnImportFromExcel
+            // 
+            this.btnImportFromExcel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnImportFromExcel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnImportFromExcel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnImportFromExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImportFromExcel.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnImportFromExcel.Image = global::SalesOrdersReport.Properties.Resources.import_icon;
+            this.btnImportFromExcel.Location = new System.Drawing.Point(539, 3);
+            this.btnImportFromExcel.Name = "btnImportFromExcel";
+            this.btnImportFromExcel.Size = new System.Drawing.Size(83, 73);
+            this.btnImportFromExcel.TabIndex = 12;
+            this.btnImportFromExcel.Text = "Import from Excel";
+            this.btnImportFromExcel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnImportFromExcel.UseVisualStyleBackColor = false;
+            this.btnImportFromExcel.Click += new System.EventHandler(this.btnImportFromExcel_Click);
+            // 
             // PaymentsExpensesMainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -570,5 +589,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSearchPayment;
         private System.Windows.Forms.Button btnSearchExpense;
+        private System.Windows.Forms.Button btnImportFromExcel;
     }
 }

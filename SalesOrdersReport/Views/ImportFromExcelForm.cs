@@ -8,7 +8,7 @@ namespace SalesOrdersReport.Views
 {
     public enum ImportDataTypes
     {
-        Products, Customers
+        Products, Customers , Payments
     };
 
     public delegate Int32 ImportDataFromFileDel(String FilePath, Object ObjDetails);
@@ -54,6 +54,14 @@ namespace SalesOrdersReport.Views
                         chkListBoxDataToImport.Enabled = false;
                         OFDImportExcelFileDialog.Filter = "Comma separated Files (*.csv)|*.csv|Text Files(*.txt)|*.txt";
                         OFDImportExcelFileDialog.Title = "Choose File to Import Customers data from";
+                        break;
+                    case ImportDataTypes.Payments:
+                        this.Text = "Import Payments from Excel";
+                        btnImportFrmExclUploadFile.Text = "Import Payments";
+                        chkListBoxDataToImport.Items.Add("Payments Details", true);
+                        chkListBoxDataToImport.Enabled = false;
+                        OFDImportExcelFileDialog.Filter = "Excel Files(*.xlsx;*.xls)|*.xlsx;*.xls|All Files(*.*)|*.*";
+                        OFDImportExcelFileDialog.Title = "Choose File to Import Payments data from";
                         break;
                     default:
                         break;
@@ -180,6 +188,20 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case ImportDataTypes.Customers:
+                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null);
+                        if (Retval == 0)
+                        {
+                            MessageBox.Show(this, "Importing Customers data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                            ImportResult = 0;
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, "Importing Customers data from File to Database failed!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                            ImportResult = -1;
+                        }
+                        //MessageBox.Show("Importing Customer File to DB Successful!!!");
+                        break;
+                    case ImportDataTypes.Payments:
                         Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null);
                         if (Retval == 0)
                         {

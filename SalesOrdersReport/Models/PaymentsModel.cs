@@ -19,7 +19,7 @@ namespace SalesOrdersReport.Models
         public int PaymentId = -1, InvoiceID = -1, QuotationID = -1, AccountID = -1, PaymentModeID = -1, CustomerID = -1, UserID = -1;
         public string InvoiceNumber = "", QuotationNumber = "";
         public string CustomerName = "";
-        public DateTime PaidOn , LastUpdateDate;
+        public DateTime PaidOn, LastUpdateDate, CreationDate;
         public String PaymentMode = "", Description = "", PaymentAgainst = "";
         public string StaffName = "";
         public double Amount = 0.0;
@@ -81,6 +81,22 @@ namespace SalesOrdersReport.Models
             {
                 if (ListPaymentModes == null || ListPaymentModes.Count == 0) return null;
                 Int32 Index = ListPaymentModes.FindIndex(e => e.PaymentModeID == PaymentModeID);
+                if (Index < 0) return null;
+
+                return ListPaymentModes[Index];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetPaymentModeDetails(PaymentModeID)", ex);
+                return null;
+            }
+        }
+        public PaymentModeDetails GetPaymentMode(string PaymentMode)
+        {
+            try
+            {
+                if (ListPaymentModes == null || ListPaymentModes.Count == 0) return null;
+                Int32 Index = ListPaymentModes.FindIndex(e => e.PaymentMode == PaymentMode);
                 if (Index < 0) return null;
 
                 return ListPaymentModes[Index];
@@ -194,7 +210,8 @@ namespace SalesOrdersReport.Models
                     if (ObjPayModeDtls != null) ObjPaymentDetails.PaymentMode = ObjPayModeDtls.PaymentMode;
                     ObjPaymentDetails.Description = dr["DESCRIPTION"].ToString();
                     ObjPaymentDetails.AccountID = int.Parse(dr["ACCOUNTID"].ToString());
-                    ObjPaymentDetails.PaidOn = DateTime.Parse(dr["CREATIONDATE"].ToString());
+                    ObjPaymentDetails.PaidOn = DateTime.Parse(dr["PAYMENTDATE"].ToString());
+                    ObjPaymentDetails.CreationDate = DateTime.Parse(dr["CREATIONDATE"].ToString());
                     ObjPaymentDetails.LastUpdateDate = DateTime.Parse(dr["LASTUPDATEDATE"].ToString());
                     //ObjPaymentDetails.StaffName = CommonFunctions.ObjUserMasterModel.GetUserName(int.Parse(dr["USERID"].ToString()));
                     ObjPaymentDetails.StaffName = dr["USERNAME"].ToString();
@@ -203,7 +220,6 @@ namespace SalesOrdersReport.Models
                     //ObjPaymentDetails.InvoiceDate = DateTime.Parse(dr["INVOICEDATE"].ToString());
                     ObjPaymentDetails.InvoiceNumber = dr["INVOICENUMBER"].ToString();
                     ObjPaymentDetails.CustomerName= dr["CUSTOMERNAME"].ToString();
-                    ObjPaymentDetails.StaffName= dr["USERNAME"].ToString();
                     ObjPaymentDetails.UserID = int.Parse(dr["USERID"].ToString());
                     ListPaymentDetails.Add(ObjPaymentDetails);
                 }

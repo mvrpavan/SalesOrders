@@ -110,7 +110,7 @@ namespace SalesOrdersReport.Models
         }
 
         public DataTable LoadInvoiceDetails(DateTime FromDate, DateTime ToDate, INVOICESTATUS InvoiceStatus = INVOICESTATUS.Created,
-                                    String SearchField = null, String SearchFieldValue = null)
+                                    String SearchField = null, String SearchFieldValue = null, string WhereCondition = null)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace SalesOrdersReport.Models
                 {
                     WhereClause += $" and a.InvoiceStatus = '{InvoiceStatus}'";
                 }
-
+                if (WhereCondition != null) WhereClause += WhereCondition;
                 if (!String.IsNullOrEmpty(SearchField) && !String.IsNullOrEmpty(SearchFieldValue.Trim()))
                 {
                     switch (SearchField.ToUpper())
@@ -269,11 +269,11 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public List<InvoiceDetails> GetInvoiceDetailsForCustomer(Int32 CustomerID)
+        public List<InvoiceDetails> GetInvoiceDetailsForCustomer(Int32 CustomerID, string WhereCondition = null)
         {
             try
             {
-                if (ListInvoices.Count == 0) LoadInvoiceDetails(DateTime.MinValue, DateTime.MinValue, INVOICESTATUS.Created, "CustomerID", CustomerID.ToString());
+                if (ListInvoices.Count == 0) LoadInvoiceDetails(DateTime.MinValue, DateTime.MinValue, INVOICESTATUS.All, "CustomerID", CustomerID.ToString(), WhereCondition);
                 if (ListInvoices.Count == 0) return null;
 
                 List<InvoiceDetails> ListInvoicesForCustomer = ListInvoices.FindAll(e => e.CustomerID == CustomerID);
@@ -952,11 +952,11 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public Int32 GetInvoiceIDFromNum(string InvoiceNum)
+        public Int32 GetInvoiceIDFromNum(string InvoiceNum, string WhereCondition = null)
         {
             try
             {
-                if (ListInvoices.Count == 0) LoadInvoiceDetails(DateTime.MinValue, DateTime.MinValue, INVOICESTATUS.Created, "INVOICE NUMBER", InvoiceNum.ToString());
+                if (ListInvoices.Count == 0) LoadInvoiceDetails(DateTime.MinValue, DateTime.MinValue, INVOICESTATUS.All, "INVOICE NUMBER", InvoiceNum.ToString(), WhereCondition);
                 int Index = ListInvoices.FindIndex(e => e.InvoiceNumber == InvoiceNum);
                 return Index;
             }

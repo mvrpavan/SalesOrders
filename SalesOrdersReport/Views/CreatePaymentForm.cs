@@ -14,7 +14,7 @@ namespace SalesOrdersReport.Views
 {
     public partial class CreatePaymentForm : Form
     {
-        UpdateUsingObjectOnCloseDel UpdatePaymentsOnClose = null;
+        UpdateOnCloseDel UpdatePaymentsOnClose = null;
         PaymentsModel ObjPaymentsModel;
         InvoicesModel ObjInvoicesModel;
         AccountsMasterModel ObjAccountsMasterModel;
@@ -30,7 +30,7 @@ namespace SalesOrdersReport.Views
         MySQLHelper ObjMySQLHelper;
         DateTime FromDate, Todate;
 
-        public CreatePaymentForm(UpdateUsingObjectOnCloseDel UpdatePaymentOnClose,DateTime FromDate,DateTime Todate,bool CreateForm = true)
+        public CreatePaymentForm(UpdateOnCloseDel UpdatePaymentOnClose,DateTime FromDate,DateTime Todate,bool CreateForm = true)
         {
             InitializeComponent();
             ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
@@ -174,6 +174,11 @@ namespace SalesOrdersReport.Views
                 ListColumnNames.Add("PAYMENTDATE");
                 ListTypes.Add(Types.String);
 
+                ListColumnValues.Add("1");
+                ListColumnNames.Add("ACTIVE");
+                ListTypes.Add(Types.Number);
+
+
                 ListColumnValues.Add(txtbxCreatePaymentAmount.Text);
                 ListColumnNames.Add("PAYMENTAMOUNT");
                 ListTypes.Add(Types.Number);
@@ -207,6 +212,7 @@ namespace SalesOrdersReport.Views
 
 
                 int ResultVal = ObjMySQLHelper.InsertIntoTable("PAYMENTS", ListColumnNames, ListColumnValues, ListTypes);
+                if (cmbxCreatePaymentPaymentAgainst.SelectedItem.ToString().ToUpper() == "INVOICE") ObjInvoicesModel.MarkInvoicesAsPaid(new List<int>() { ListInvoiceDtls[CurrInvoiceCacheIndex].InvoiceID });
                 if (ResultVal <= 0) MessageBox.Show("Wasnt able to create the payment", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 else if (ResultVal == 2)
                 {
@@ -461,13 +467,13 @@ namespace SalesOrdersReport.Views
                 ListColumnNames.Add("NEWBALANCEAMOUNT");
                 ListTypes.Add(Types.Number);
 
-                ListColumnValues.Add(txtCreatePaymentOB.Text == string.Empty ? "0" : txtCreatePaymentOB.Text);
+                ListColumnValues.Add(txtCreatePaymentOB.Text == string.Empty ? "0" : txtCreatePaymentOB.Text);//&&&&&
                 ListColumnNames.Add("BALANCEAMOUNT");
                 ListTypes.Add(Types.Number);
 
                 int ResultVal = ObjMySQLHelper.InsertIntoTable("CUSTOMERACCOUNTHISTORY", ListColumnNames, ListColumnValues,ListTypes);
                 
-                if (ResultVal <= 0) MessageBox.Show("Wasnt able to create the customer", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ResultVal <= 0) MessageBox.Show("Wasnt able to create the CustomerAccHistory", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 else if (ResultVal == 2)
                 {
                     MessageBox.Show("err.", "Error");
@@ -530,6 +536,7 @@ namespace SalesOrdersReport.Views
                             txtCreatePaymentCancelAmt.Text = ObjCustomerAccountHistoryDetails.CancelAmount.ToString();
                             txtCreatePaymentNetSaleAmt.Text = ObjCustomerAccountHistoryDetails.NetSaleAmount.ToString();
                             txtCreatePaymentSaleAmount.Text = ObjCustomerAccountHistoryDetails.SaleAmount.ToString();
+                            txtCreatePaymentOB.Text = ObjCustomerAccountHistoryDetails.BalanceAmount.ToString();
                         }
                         txtCreatePaymentDesc.Text = ObjPaymentDtls.Description;
                         txtbxCreatePaymentAmount.Text = ObjPaymentDtls.Amount.ToString();
@@ -550,7 +557,8 @@ namespace SalesOrdersReport.Views
             {
                 if (cmbxCreatePaymentPaymentAgainst.SelectedItem.ToString().ToUpper() == "INVOICE")
                 {
-                    ListInvoiceDtls = ObjInvoicesModel.GetInvoiceDetailsForCustomer(ObjCustomerDetails.CustomerID);
+                    string WhereCondition = " and InvoiceStatus = '" + INVOICESTATUS.Created + "' or InvoiceStatus = '" + INVOICESTATUS.Delivered + "'";
+                    ListInvoiceDtls = ObjInvoicesModel.GetInvoiceDetailsForCustomer(ObjCustomerDetails.CustomerID, WhereCondition);
                     List<string> ListInvoiceNum = new List<string>() { "Select Invoice#" };
                     if (ListInvoiceDtls != null) ListInvoiceNum.AddRange(ListInvoiceDtls.Select(x => x.InvoiceNumber).ToList());
                     cmbxCreatePaymentNumber.DataSource = ListInvoiceNum;
