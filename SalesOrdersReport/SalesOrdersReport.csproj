@@ -254,6 +254,12 @@
     <Compile Include="Views\ImportFromExcelForm.Designer.cs">
       <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\BillsMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\BillsMainForm.Designer.cs">
+      <DependentUpon>BillsMainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\PurchaseInvoicesMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -516,6 +522,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ImportFromExcelForm.resx">
       <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\BillsMainForm.resx">
+      <DependentUpon>BillsMainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\PurchaseInvoicesMainForm.resx">
       <DependentUpon>PurchaseInvoicesMainForm.cs</DependentUpon>

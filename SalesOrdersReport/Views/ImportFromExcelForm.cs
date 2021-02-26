@@ -11,7 +11,7 @@ namespace SalesOrdersReport.Views
         Products, Customers , Payments
     };
 
-    public delegate Int32 ImportDataFromFileDel(String FilePath, Object ObjDetails);
+    public delegate Int32 ImportDataFromFileDel(String FilePath, Object ObjDetails, ReportProgressDel ReportProgress);
 
     public partial class ImportFromExcelForm : Form
     {
@@ -25,7 +25,6 @@ namespace SalesOrdersReport.Views
             {
                 InitializeComponent();
                 this.UpdateOnClose = UpdateOnClose;
-                this.FormClosed += ImportFromExcelForm_FormClosed;
                 this.ImportDataType = ImportDataType;
                 this.ImportDataFromFile = ImportDataFromFile;
 
@@ -43,6 +42,7 @@ namespace SalesOrdersReport.Views
                         chkListBoxDataToImport.Items.Add("Category Details", false);
                         chkListBoxDataToImport.Items.Add("Product Inventory", false);
                         chkListBoxDataToImport.Items.Add("HSN Code (Tax Details)", false);
+                        chkListBoxDataToImport.Items.Add("Vendor Details", false);
                         btnImportFrmExclUploadFile.Text = "Import Products";
                         OFDImportExcelFileDialog.Filter = "Excel Files(*.xlsx;*.xls)|*.xlsx;*.xls|All Files(*.*)|*.*";
                         OFDImportExcelFileDialog.Title = "Choose File to Import Products data from";
@@ -118,6 +118,7 @@ namespace SalesOrdersReport.Views
                     bgWorkerImportExcel_DoWork(null, null);
                     bgWorkerImportExcel_RunWorkerCompleted(null, null);
 #else
+                    ReportProgress = bgWorkerImportExcel.ReportProgress;
                     bgWorkerImportExcel.WorkerReportsProgress = true;
                     bgWorkerImportExcel.RunWorkerAsync();
 #endif
@@ -131,26 +132,11 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void ImportFromExcelForm_FormClosed(object sender, FormClosedEventArgs e)
+        ReportProgressDel ReportProgress = null;
+        private void ReportProgressFunc(Int32 ProgressState)
         {
-            try
-            {
-                //switch (ImportDataType)
-                //{
-                //    case IMPORTDATATYPES.PRODUCTS:
-                //        UpdateOnClose(Mode: 3);
-                //        break;
-                //    case IMPORTDATATYPES.CUSTOMERS:
-                //        UpdateOnClose(Mode: 2);
-                //        break;
-                //    default:
-                //        break;
-                //}
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.ImportFromExcelForm_FormClosed()", ex);
-            }
+            if (ReportProgress == null) return;
+            ReportProgress(ProgressState);
         }
 
         Int32 ImportResult = 0;
@@ -170,7 +156,7 @@ namespace SalesOrdersReport.Views
                             ArrOptionsSelected[i] = chkListBoxDataToImport.GetItemChecked(i);
                         }
 
-                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, ArrOptionsSelected);
+                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, ArrOptionsSelected, ReportProgress);
                         if (Retval == 0)
                         {
                             MessageBox.Show(this, "Importing Products data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
@@ -188,7 +174,7 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case ImportDataTypes.Customers:
-                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null);
+                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgress);
                         if (Retval == 0)
                         {
                             MessageBox.Show(this, "Importing Customers data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
@@ -202,7 +188,7 @@ namespace SalesOrdersReport.Views
                         //MessageBox.Show("Importing Customer File to DB Successful!!!");
                         break;
                     case ImportDataTypes.Payments:
-                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null);
+                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgress);
                         if (Retval == 0)
                         {
                             MessageBox.Show(this, "Importing Customers data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
@@ -223,6 +209,11 @@ namespace SalesOrdersReport.Views
             {
                 CommonFunctions.ShowErrorDialog($"{this}.bgWorkerImportExcel_DoWork()", ex);
             }
+        }
+
+        private void bgWorkerImportExcel_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            CommonFunctions.UpdateProgressBar(e.ProgressPercentage);
         }
 
         private void bgWorkerImportExcel_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

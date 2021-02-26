@@ -188,7 +188,7 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private Int32 ImportProductsData(String ExcelFilePath, Object ObjDetails)
+        private Int32 ImportProductsData(String ExcelFilePath, Object ObjDetails, ReportProgressDel ReportProgress)
         {
             try
             {
@@ -200,8 +200,9 @@ namespace SalesOrdersReport.Views
                                     "Validation Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
+                ReportProgress(10);
 
-                Int32 Retval = ObjProductMaster.ProcessProductsDataFromExcelFile(out String ProcessStatus, out Int32 ExistingProductsCount);
+                Int32 Retval = ObjProductMaster.ProcessProductsDataFromExcelFile(out String ProcessStatus, out Int32 ExistingProductsCount, out Int32 ExistingProductsInventoryCount);
 
                 if (Retval == 0)
                 {
@@ -209,11 +210,17 @@ namespace SalesOrdersReport.Views
                                     "Process Status", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 
                     if (result == DialogResult.No) return 1;
-                    else if (ExistingProductsCount > 0)
+                    if (ExistingProductsCount > 0)
                     {
                         result = MessageBox.Show(this, $"Do you want to update data for existing Products?",
                                         "Process Status", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                         if (result == DialogResult.No) ExistingProductsCount = 0;
+                    }
+                    if (ExistingProductsInventoryCount > 0)
+                    {
+                        result = MessageBox.Show(this, $"Do you want to update data for existing Products Inventory?",
+                                        "Process Status", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                        if (result == DialogResult.No) ExistingProductsInventoryCount = 0;
                     }
                 }
                 else if (Retval == 1)
@@ -229,13 +236,15 @@ namespace SalesOrdersReport.Views
                                     "Process Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
+                ReportProgress(25);
 
-                Retval = ObjProductMaster.ImportProductsDataToDatabase(out String ImportStatus, ExistingProductsCount);
+                Retval = ObjProductMaster.ImportProductsDataToDatabase(out String ImportStatus, ExistingProductsCount, ExistingProductsInventoryCount, ReportProgress);
 
                 if (Retval == 0)
                 {
                     MessageBox.Show(this, $"Imported Products data from Excel File. Following is the import status:\n{ImportStatus}",
                                     "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    ReportProgress(100);
                     return 0;
                 }
                 else

@@ -85,8 +85,10 @@ namespace SalesOrdersReport
                 {
                     ListVendorDetails.Insert(~VendorIndex, ObjVendorDetails);
 
-                    PriceGroupDetails priceGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetPriceGrpDetails(ObjVendorDetails.PriceGroupID);
-                    Models.DiscountGroupDetails1 discountGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetDiscountGrpDetails(ObjVendorDetails.DiscountGroupID);
+                    PriceGroupDetails priceGroupDetails = null;
+                    Models.DiscountGroupDetails1 discountGroupDetails = null;
+                    if (ObjVendorDetails.PriceGroupID > 0) priceGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetPriceGrpDetails(ObjVendorDetails.PriceGroupID);
+                    if (ObjVendorDetails.DiscountGroupID > 0) discountGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetDiscountGrpDetails(ObjVendorDetails.DiscountGroupID);
 
                     ObjVendorDetails.PriceGroupIndex = ObjVendorDetails.DiscountGroupIndex = -1;
                     if (priceGroupDetails != null) ObjVendorDetails.PriceGroupIndex = CommonFunctions.ObjCustomerMasterModel.GetAllDiscountGrp().FindIndex(e => e.Equals(priceGroupDetails.PriceGrpName));
@@ -176,6 +178,37 @@ namespace SalesOrdersReport
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("VendorMaster.GetVendorList()", ex);
+            }
+            return null;
+        }
+
+        public VendorDetails CreateNewVendor(VendorDetails ObjVendorDetails)
+        {
+            try
+            {
+                VendorDetails tmpVendorDetails = GetVendorDetails(ObjVendorDetails.VendorName);
+                if (tmpVendorDetails != null)
+                {
+                    return tmpVendorDetails;
+                }
+
+                //Insert new Vendor to VendorMaster
+                Int32 RetVal = ObjMySQLHelper.InsertIntoTable("VendorMaster",
+                                                        new List<string>() { "VendorName", "Address", "PhoneNo", "GSTIN", "StateID", "Active" },
+                                                        new List<string>() { ObjVendorDetails.VendorName, ObjVendorDetails.Address, ObjVendorDetails.PhoneNo,
+                                                            ObjVendorDetails.GSTIN, ObjVendorDetails.StateID.ToString(), (ObjVendorDetails.Active ? "1" : "0") },
+                                                        new List<Types>() { Types.String, Types.String, Types.String, Types.String, Types.Number, Types.Number });
+
+                if (RetVal <= 0) return null;
+                Int32 VendorID = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select VendorID from VendorMaster Where VendorName= '{ObjVendorDetails.VendorName}';").ToString());
+                ObjVendorDetails.VendorID = VendorID;
+                AddVendorToCache(ObjVendorDetails);
+
+                return GetVendorDetails(ObjVendorDetails.VendorName);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("VendorMaster.CreateNewVendor()", ex);
             }
             return null;
         }

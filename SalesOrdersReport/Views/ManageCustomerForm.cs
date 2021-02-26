@@ -667,7 +667,7 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private Int32 ReadNProcessCustomerFile(String FilePathToImport, Object ObjDetails)
+        private Int32 ReadNProcessCustomerFile(String FilePathToImport, Object ObjDetails, ReportProgressDel ReportProgress)
         {
             try
             {

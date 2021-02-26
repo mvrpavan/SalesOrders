@@ -135,7 +135,7 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private Int32 ImportPaymentsData(String ExcelFilePath, Object ObjDetails)
+        private Int32 ImportPaymentsData(String ExcelFilePath, Object ObjDetails, ReportProgressDel ReportProgress)
         {
             try
             {

@@ -69,6 +69,7 @@
             // bgWorkerImportExcel
             // 
             this.bgWorkerImportExcel.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkerImportExcel_DoWork);
+            this.bgWorkerImportExcel.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgWorkerImportExcel_ProgressChanged);
             this.bgWorkerImportExcel.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkerImportExcel_RunWorkerCompleted);
             // 
             // chkListBoxDataToImport

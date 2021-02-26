@@ -14,7 +14,7 @@ using SalesOrdersReport.Views;
 
 namespace SalesOrdersReport.CommonModules
 {
-    delegate void ReportProgressDel(Int32 ProgressState);
+    public delegate void ReportProgressDel(Int32 ProgressState);
     public delegate void UpdateUsingObjectOnCloseDel(Int32 Mode, Object ObjAddUpdated = null);
     public delegate void UpdateOnCloseDel(Int32 Mode);
 

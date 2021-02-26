@@ -1477,15 +1477,17 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        String[] ArrSheetNamesToImport = new String[] { "Products", "Categories", "Inventory", "HSNCodes" };
-        String[][] ArrSheetColumns = new String[4][]
+        String[] ArrSheetNamesToImport = new String[] { "Products", "Categories", "Inventory", "HSNCodes", "Vendors" };
+        String[][] ArrSheetColumns = new String[5][]
         {
                     new String[] { "ProductName", "Description", "Category", "PurchasePrice", "WholesalePrice", "RetailPrice", "MaxRetailPrice", "Units", "UnitsOfMeasurement", "SortName", "HSNCode", "StockName", "VendorName", "Active" },
                     new String[] { "CategoryName", "Description" },
                     new String[] { "StockName", "Inventory", "Units", "UnitsOfMeasurement", "ReOrderStockLevel", "ReOrderStockQty" },
                     new String[] { "HSNCode", "CGST", "SGST", "IGST" },
+                    new String[] { "VendorName", "Address", "PhoneNo", "GSTIN", "State", "Active" },
         };
-        DataTable dtProductsToImport, dtProductsToUpdate, dtProductCategoriesToImport, dtProductInventoryToImport, dtHSNCodesToImport;
+        DataTable dtProductsToImport, dtProductCategoriesToImport, dtProductInventoryToImport, dtHSNCodesToImport, dtVendorsToImport;
+        DataTable dtProductsToUpdate, dtProductInventoryToUpdate;
         Boolean[] ArrDataToImport = null;
 
         public String ValidateExcelFileToImport(String ExcelFilePathToImport, Boolean[] ArrDataToImport)
@@ -1563,6 +1565,7 @@ namespace SalesOrdersReport.Models
                         else if (i == 1) dtProductCategoriesToImport = dtTable;
                         else if (i == 2) dtProductInventoryToImport = dtTable;
                         else if (i == 3) dtHSNCodesToImport = dtTable;
+                        else if (i == 4) dtVendorsToImport = dtTable;
                     }
                 }
 
@@ -1581,13 +1584,13 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public Int32 ProcessProductsDataFromExcelFile(out String ProcessStatus, out Int32 ExistingProductsCount)
+        public Int32 ProcessProductsDataFromExcelFile(out String ProcessStatus, out Int32 ExistingProductsCount, out Int32 ExistingProductsInventoryCount)
         {
-            ProcessStatus = ""; ExistingProductsCount = 0;
+            ProcessStatus = ""; ExistingProductsCount = 0; ExistingProductsInventoryCount = 0;
             try
             {
                 Int32 ExistingProductCount = 0, ExistingProductCategoryCount = 0, ExistingProductInventoryCount = 0, ExistingHSNCount = 0;
-                Int32 TotalRecordCount = 0;
+                Int32 TotalRecordCount = 0, ExistingVendorCount = 0;
                 
                 //Check Products
                 if (ArrDataToImport[0])
@@ -1633,15 +1636,22 @@ namespace SalesOrdersReport.Models
                 //Check Product Inventory
                 if (ArrDataToImport[2])
                 {
+                    dtProductInventoryToUpdate = new DataTable();
+                    foreach (DataColumn item in dtProductInventoryToImport.Columns)
+                    {
+                        dtProductInventoryToUpdate.Columns.Add(new DataColumn(item.ColumnName, item.DataType));
+                    }
                     foreach (DataRow item in dtProductInventoryToImport.Rows)
                     {
                         ProductInventoryDetails tmpProductInventoryDetails = GetStockProductDetails(item["StockName"].ToString());
                         if (tmpProductInventoryDetails != null)
                         {
                             ExistingProductInventoryCount++;
+                            dtProductInventoryToUpdate.Rows.Add(item.ItemArray.ToArray());
                             item.Delete();
                         }
                     }
+                    ExistingProductsInventoryCount = ExistingProductInventoryCount;
                     dtProductInventoryToImport.AcceptChanges();
                     ProcessStatus += $"{(!String.IsNullOrEmpty(ProcessStatus) ? "\n" : "")}Inventory:: New:{dtProductInventoryToImport.Rows.Count} Existing:{ExistingProductInventoryCount}";
                     TotalRecordCount += dtProductInventoryToImport.Rows.Count;
@@ -1664,6 +1674,23 @@ namespace SalesOrdersReport.Models
                     TotalRecordCount += dtHSNCodesToImport.Rows.Count;
                 }
 
+                //Check Vendors
+                if (ArrDataToImport[4])
+                {
+                    foreach (DataRow item in dtVendorsToImport.Rows)
+                    {
+                        VendorDetails tmpVendorDetails = CommonFunctions.ObjVendorMaster.GetVendorDetails(item["VendorName"].ToString());
+                        if (tmpVendorDetails != null)
+                        {
+                            ExistingVendorCount++;
+                            item.Delete();
+                        }
+                    }
+                    dtVendorsToImport.AcceptChanges();
+                    ProcessStatus += $"{(!String.IsNullOrEmpty(ProcessStatus) ? "\n" : "")}Vendors:: New:{dtVendorsToImport.Rows.Count} Existing:{ExistingVendorCount}";
+                    TotalRecordCount += dtVendorsToImport.Rows.Count;
+                }
+
                 if ((TotalRecordCount + ExistingProductsCount) > 0) return 0;
                 else return 1;
             }
@@ -1675,14 +1702,36 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public Int32 ImportProductsDataToDatabase(out String ImportStatus, Int32 ExistingProductsCount)
+        public Int32 ImportProductsDataToDatabase(out String ImportStatus, Int32 ExistingProductsCount, Int32 ExistingProductsInventoryCount, ReportProgressDel ReportProgress)
         {
             ImportStatus = "";
             try
             {
                 if (dtProductsToImport == null && dtProductCategoriesToImport == null && dtProductInventoryToImport == null && dtHSNCodesToImport == null) return -1;
 
-                Int32 ErrorHSNCodesCount = 0, ErrorInventoryCount = 0, ErrorCategoriesCount = 0, ErrorProductsCount = 0;
+                Int32 ErrorVendorsCount = 0, ErrorHSNCodesCount = 0, ErrorInventoryCount = 0, ErrorCategoriesCount = 0, ErrorProductsCount = 0;
+                Int32 ReportProgressCount = ArrDataToImport.Count(e => e == true), CurrReportProgressCount = 0;
+                //Import Vendors
+                if (ArrDataToImport[4])
+                {
+                    foreach (DataRow item in dtVendorsToImport.Rows)
+                    {
+                        VendorDetails tmpVendorDetails = new VendorDetails()
+                        {
+                            VendorName = item["VendorName"].ToString(),
+                            Address = item["Address"].ToString(),
+                            PhoneNo = item["PhoneNo"].ToString(),
+                            GSTIN = item["GSTIN"].ToString(),
+                            StateID = CommonFunctions.ObjCustomerMasterModel.GetStateID(item["State"].ToString()),
+                            Active = Boolean.Parse(item["Active"].ToString())
+                        };
+
+                        if (CommonFunctions.ObjVendorMaster.CreateNewVendor(tmpVendorDetails) == null) ErrorVendorsCount++;
+                    }
+
+                    ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}Vendors:: Imported:{dtVendorsToImport.Rows.Count - ErrorVendorsCount} Error:{ErrorVendorsCount}";
+                    CurrReportProgressCount++; ReportProgress((Int32)(100 * 1.0 * CurrReportProgressCount / ReportProgressCount));
+                }
 
                 //Import HSN Codes
                 if (ArrDataToImport[3])
@@ -1701,11 +1750,35 @@ namespace SalesOrdersReport.Models
                     }
 
                     ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}HSNCodes:: Imported:{dtHSNCodesToImport.Rows.Count - ErrorHSNCodesCount} Error:{ErrorHSNCodesCount}";
+                    CurrReportProgressCount++; ReportProgress((Int32)(100 * 1.0 * CurrReportProgressCount / ReportProgressCount));
                 }
 
                 //Import Inventory
                 if (ArrDataToImport[2])
                 {
+                    Int32 ErrorProductsInventoryUpdateCount = 0;
+                    if (ExistingProductsInventoryCount == 0) dtProductInventoryToImport.AcceptChanges();
+                    else
+                    {
+                        foreach (DataRow item in dtProductInventoryToUpdate.Rows)
+                        {
+                            ProductInventoryDetails tmpProductInventoryDetails = GetStockProductDetails(item["StockName"].ToString());
+                            if (tmpProductInventoryDetails == null)
+                            {
+                                ErrorProductsInventoryUpdateCount++;
+                                continue;
+                            }
+                            tmpProductInventoryDetails = tmpProductInventoryDetails.Clone();
+                            tmpProductInventoryDetails.Inventory = Double.Parse(item["Inventory"].ToString());
+                            tmpProductInventoryDetails.Units = Double.Parse(item["Units"].ToString());
+                            tmpProductInventoryDetails.UnitsOfMeasurement = item["UnitsOfMeasurement"].ToString();
+                            tmpProductInventoryDetails.ReOrderStockLevel = Double.Parse(item["ReOrderStockLevel"].ToString());
+                            tmpProductInventoryDetails.ReOrderStockQty = Double.Parse(item["ReOrderStockQty"].ToString());
+
+                            UpdateProductInventoryDetails(tmpProductInventoryDetails);
+                        }
+                    }
+
                     foreach (DataRow item in dtProductInventoryToImport.Rows)
                     {
                         ProductInventoryDetails tmpProductInventoryDetails = new ProductInventoryDetails()
@@ -1721,7 +1794,8 @@ namespace SalesOrdersReport.Models
                         if (AddNewProductInventoryDetails(tmpProductInventoryDetails) == null) ErrorInventoryCount++;
                     }
 
-                    ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}Inventory:: Imported:{dtProductInventoryToImport.Rows.Count - ErrorInventoryCount} Error:{ErrorInventoryCount}";
+                    ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}Inventory:: Imported:{dtProductInventoryToImport.Rows.Count - ErrorInventoryCount} Updated:{ExistingProductsInventoryCount - ErrorProductsInventoryUpdateCount} Error:{ErrorInventoryCount + ErrorProductsInventoryUpdateCount}";
+                    CurrReportProgressCount++; ReportProgress((Int32)(100 * 1.0 * CurrReportProgressCount / ReportProgressCount));
                 }
 
                 //Import Categories
@@ -1736,6 +1810,7 @@ namespace SalesOrdersReport.Models
                     }
 
                     ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}Inventory:: Imported:{dtProductCategoriesToImport.Rows.Count - ErrorCategoriesCount} Error:{ErrorCategoriesCount}";
+                    CurrReportProgressCount++; ReportProgress((Int32)(100 * 1.0 * CurrReportProgressCount / ReportProgressCount));
                 }
 
                 //Import Products
@@ -1789,6 +1864,7 @@ namespace SalesOrdersReport.Models
                     }
 
                     ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}Products:: Imported:{dtProductsToImport.Rows.Count - ErrorProductsCount} Updated:{ExistingProductsCount - ErrorProductsUpdateCount} Error:{ErrorProductsCount + ErrorProductsUpdateCount}";
+                    CurrReportProgressCount++; ReportProgress((Int32)(100 * 1.0 * CurrReportProgressCount / ReportProgressCount));
                 }
 
                 return 0;
@@ -1802,6 +1878,7 @@ namespace SalesOrdersReport.Models
             {
                 ArrDataToImport = null;
                 dtProductsToImport = dtProductsToUpdate = dtProductCategoriesToImport = dtProductInventoryToImport = dtHSNCodesToImport = null;
+                dtVendorsToImport = dtProductInventoryToUpdate = null;
             }
         }
 
