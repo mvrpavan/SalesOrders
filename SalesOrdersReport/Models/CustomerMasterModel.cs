@@ -379,11 +379,17 @@ namespace SalesOrdersReport.Models
                     return 2;
                 }
                 Query = "INSERT INTO LINEMASTER (LINENAME,DESCRIPTION) VALUES (@linename, @description);";
-                ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Clear();
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@linename", MySqlDbType.VarChar).Value = LineName;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@description", MySqlDbType.VarChar).Value = Description;
-                return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery(); 
+                List<string> ListColumnNameParamStr = new List<string>(), ListColumnValues = new List<string>(), ListColumnDataType = new List<string>();
+                ListColumnNameParamStr.Add("@linename");
+                ListColumnValues.Add(LineName);
+                ListColumnDataType.Add("VARCHAR");
+
+                ListColumnNameParamStr.Add("@description");
+                ListColumnValues.Add(Description);
+                ListColumnDataType.Add("VARCHAR");
+
+
+                return ObjMySQLHelper.BuildNExceuteQueryWithParams(Query, ListColumnNameParamStr, ListColumnDataType, ListColumnValues);
             }
             catch (Exception ex)
             {
@@ -516,22 +522,18 @@ namespace SalesOrdersReport.Models
             }
             return "MONDAY";
         }
-        public Int32 CreateNewCustomer(string CustomerName, string LineName, string DisGrpName, string PriceGrpName, bool Active, List<string> ListColumnNamesWthDataType = null, List<string> ListColumnValues = null)
+        
+        public Int32 CreateNewCustomer(string CustomerName, bool Active, List<string> ListColumnNamesWthDataType = null, List<string> ListColumnValues = null)
         {
             try
             {
                 string Query = "SELECT CUSTOMERNAME FROM CUSTOMERMASTER WHERE LOWER(CUSTOMERNAME) = LOWER('" + CustomerName + "');";
-                ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                object ObjCustomerName = ObjMySQLHelper.ObjDbCommand.ExecuteScalar();
-
-                string tmpCustomerName = ObjCustomerName == null ? "" : ObjCustomerName.ToString();
+                object ObjCustomerName = ObjMySQLHelper.ExecuteScalar(Query);
+                string tmpCustomerName = ((ObjCustomerName == null) ? "" : ObjCustomerName.ToString());
                 if (tmpCustomerName != string.Empty)
                 {
                     return 2;
                 }
-                int tmpLineID = GetLineID(LineName);
-                int tmpDisGrpID = GetDisGrpID(DisGrpName);
-                int tmpPriceGrpID = GetPriceGrpID(PriceGrpName);
                 List<string> ListColumnNameParamStr = new List<string>(), ListColumnNames = new List<string>(), ListColumnDataType = new List<string>();
                 if (ListColumnNamesWthDataType == null) ListColumnNamesWthDataType = new List<string>();
                 if (ListColumnValues == null) ListColumnValues = new List<string>();
@@ -552,27 +554,26 @@ namespace SalesOrdersReport.Models
 
                 }
 
-                Query = "INSERT INTO CUSTOMERMASTER (CUSTOMERNAME,LINEID,DISCOUNTGROUPID,PRICEGROUPID,ACTIVE"
+                Query = "INSERT INTO CUSTOMERMASTER (CUSTOMERNAME,ACTIVE"
                     + string.Join(",", ListColumnNames)
                     + ")"
-                    + "VALUES (@customername, @lineid, @discountgrpid,@pricegrpid,@active"
+                    + "VALUES (@customername,@active"
                     + string.Join(",", ListColumnNameParamStr)
                     + ")"
                     ;
                 Query += ";";
-                ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Clear();
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@customername", MySqlDbType.VarChar).Value = CustomerName;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@lineid", MySqlDbType.Int16).Value = tmpLineID;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@discountgrpid", MySqlDbType.Int16).Value = tmpDisGrpID;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@pricegrpid", MySqlDbType.Int16).Value = tmpPriceGrpID;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@active", MySqlDbType.Bit).Value = Active;
 
-                for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
-                {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
-                }
-                return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
+                ListColumnNameParamStr.Add("@customername");
+                ListColumnValues.Add(CustomerName);
+                ListColumnDataType.Add("VARCHAR");
+
+                ListColumnNameParamStr.Add("@active");
+                ListColumnValues.Add(Active == true ? "1" : "0");
+                ListColumnDataType.Add("BIT");
+
+
+                return ObjMySQLHelper.BuildNExceuteQueryWithParams(Query, ListColumnNameParamStr, ListColumnDataType, ListColumnValues);
+
             }
             catch (Exception ex)
             {
@@ -588,7 +589,7 @@ namespace SalesOrdersReport.Models
                 Query += ";";
                 object ObjDiscountGrpID = ObjMySQLHelper.ExecuteScalar(Query);
 
-                int tmpDiscountGrpID = ObjDiscountGrpID == null ? -1 : (int)ObjDiscountGrpID;
+                int tmpDiscountGrpID = ((ObjDiscountGrpID == null) ? -1 : (int)ObjDiscountGrpID);
                 if (tmpDiscountGrpID != -1)
                 {
                     return 2;
@@ -622,17 +623,19 @@ namespace SalesOrdersReport.Models
                     + ")"
                     ;
                 Query += ";";
-                ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Clear();
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@discountgroupname", MySqlDbType.VarChar).Value = DiscountGroupName;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@description", MySqlDbType.VarChar).Value = Description;
 
-                for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
-                {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
-                }
+                
+                ListColumnNameParamStr.Add("@discountgroupname");
+                ListColumnValues.Add(DiscountGroupName);
+                ListColumnDataType.Add("VARCHAR");
 
-                return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
+                ListColumnNameParamStr.Add("@description");
+                ListColumnValues.Add(Description);
+                ListColumnDataType.Add("VARCHAR");
+
+
+                return ObjMySQLHelper.BuildNExceuteQueryWithParams(Query, ListColumnNameParamStr, ListColumnDataType, ListColumnValues);
+
             }
             catch (Exception ex)
             {
@@ -648,7 +651,7 @@ namespace SalesOrdersReport.Models
                 Query += ";";
                 object ObjPriceGrpID = ObjMySQLHelper.ExecuteScalar(Query);
 
-                int tmpPriceGrpID = ObjPriceGrpID == null ? -1 : (int)ObjPriceGrpID;
+                int tmpPriceGrpID = ((ObjPriceGrpID == null) ? -1 : (int)ObjPriceGrpID);
                 if (tmpPriceGrpID != -1)
                 {
                     return 2;
@@ -682,17 +685,17 @@ namespace SalesOrdersReport.Models
                     + ")"
                     ;
                 Query += ";";
-                ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Clear();
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@pricegroupname", MySqlDbType.VarChar).Value = PriceGroupName;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@description", MySqlDbType.VarChar).Value = Description;
 
-                for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
-                {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
-                }
+                ListColumnNameParamStr.Add("@pricegroupname");
+                ListColumnValues.Add(PriceGroupName);
+                ListColumnDataType.Add("VARCHAR");
 
-                return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
+                ListColumnNameParamStr.Add("@description");
+                ListColumnValues.Add(Description);
+                ListColumnDataType.Add("VARCHAR");
+
+
+                return ObjMySQLHelper.BuildNExceuteQueryWithParams(Query, ListColumnNameParamStr, ListColumnDataType, ListColumnValues);
             }
             catch (Exception ex)
             {
@@ -784,7 +787,7 @@ namespace SalesOrdersReport.Models
                     DataRow dr = dtStateMaster.Rows[i];
 
                     StateDetails ObjStateDetails = new StateDetails();
-                    ObjStateDetails.StateID = dr["STATEID"] == null ? -1 : Int32.Parse(dr["STATEID"].ToString());
+                    ObjStateDetails.StateID = ((dr["STATEID"] == null) ? -1 : Int32.Parse(dr["STATEID"].ToString()));
                     ObjStateDetails.State = dr["STATE"].ToString().Trim();
                     ObjStateDetails.StateCode = dr["STATECODE"].ToString().Trim();
                     AddStateDetailsToCache(ObjStateDetails);
@@ -910,7 +913,7 @@ namespace SalesOrdersReport.Models
                     ObjCustomerDetails.Address = dtRow["ADDRESS"].ToString();
                     ObjCustomerDetails.GSTIN = dtRow["GSTIN"].ToString();
                     ObjCustomerDetails.PhoneNo = ((dtRow["PHONENO"] == null) || dtRow["PHONENO"].ToString().Trim() == "") ? 0 : Int64.Parse(dtRow["PHONENO"].ToString().Trim());
-                    ObjCustomerDetails.Active = bool.Parse(dtRow["ACTIVE"].ToString().Trim() == "1" ? "true" : "false");
+                    ObjCustomerDetails.Active = (dtRow["ACTIVE"].ToString().Trim() == "1") ? true : false;
                     ObjCustomerDetails.StateID = ((dtRow["STATEID"] == null) || dtRow["STATEID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["STATEID"].ToString().Trim());
                     ObjCustomerDetails.OrderDaysAssigned = dtRow["ORDERDAYS"].ToString();
                     ObjCustomerDetails.LastUpdateDate = ((dtRow["LASTUPDATEDATE"] == null) || dtRow["LASTUPDATEDATE"].ToString().Trim() == "") ? DateTime.MinValue : DateTime.Parse(dtRow["LASTUPDATEDATE"].ToString());

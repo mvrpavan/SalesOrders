@@ -25,7 +25,8 @@ namespace SalesOrdersReport
             try
             {
                 txtCreateDisGrpName.Clear();
-                txtCreateDisGrpName.Clear();
+                txtCreateDisGrpDesc.Clear();
+                txtCreateDGDiscountVal.Clear();
                 txtCreateDisGrpName.Focus();
                 lblCreateDisGrpValidateMsg.Visible = false;
                 

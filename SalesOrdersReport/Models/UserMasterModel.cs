@@ -45,7 +45,7 @@ namespace SalesOrdersReport
                 UsrName.Value = txtUserName;
                 MySQLCommand.Parameters.Add(UsrName);
                 MySqlDataReader MySQLReader = MySQLCommand.ExecuteReader();
-
+                
                 if (MySQLReader.Read() == true)
                 {
                     string dbPassword = Convert.ToString(MySQLReader["PASSWORD"]);
@@ -436,6 +436,8 @@ namespace SalesOrdersReport
                 {
                     return 2;
                 }
+              
+
                 List<string> ListColumnNameParamStr = new List<string>(), ListColumnNames = new List<string>(), ListColumnDataType = new List<string>();
                 if (ListColumnNamesWthDataType == null) ListColumnNamesWthDataType = new List<string>();
                 if (ListColumnValues == null) ListColumnValues = new List<string>();
@@ -465,16 +467,11 @@ namespace SalesOrdersReport
                     + ")"
                     ;
                 Query += ";";
-                ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Clear();
                 ObjMySQLHelper.ObjDbCommand.Parameters.Add("@storename", MySqlDbType.VarChar).Value = StoreName;
-
-                for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
-                {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
-                }
-
-                return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
+                ListColumnNameParamStr.Add("@storename");
+                ListColumnValues.Add(StoreName);
+                ListColumnDataType.Add("VARCHAR");
+                return ObjMySQLHelper.BuildNExceuteQueryWithParams(Query, ListColumnNameParamStr, ListColumnDataType, ListColumnValues);
             }
             catch (Exception ex)
             {
@@ -855,8 +852,7 @@ namespace SalesOrdersReport
                 string HashedPassword = CommonFunctions.GetHashedPassword(Password, UserGuid);
                 int tmpRoleID = GetRoleID(RoleName);
                 string Query = "SELECT USERNAME FROM USERMASTER WHERE LOWER(USERNAME) = LOWER('" + UserName + "');";
-                ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                object ObjUserName = ObjMySQLHelper.ObjDbCommand.ExecuteScalar();
+                object ObjUserName = ObjMySQLHelper.ExecuteScalar(Query);
 
                 string tmpUserName = ObjUserName == null ? "" : ObjUserName.ToString();
                 if (tmpUserName != string.Empty)
@@ -892,20 +888,33 @@ namespace SalesOrdersReport
                     + ")"
                     ;
                 Query += ";";
-                ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Clear();
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@username", MySqlDbType.VarChar).Value = UserName;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@password", MySqlDbType.VarChar).Value = HashedPassword;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@fullname", MySqlDbType.VarChar).Value = FullName;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@roleid", MySqlDbType.Int16).Value = tmpRoleID;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@active", MySqlDbType.Bit).Value = Active;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@userguid", MySqlDbType.VarChar).Value = UserGuid.ToString();
-                for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
-                {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
-                }
 
-                return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery();
+
+                ListColumnNameParamStr.Add("@username");
+                ListColumnValues.Add(UserName);
+                ListColumnDataType.Add("VARCHAR");
+
+                ListColumnNameParamStr.Add("@password");
+                ListColumnValues.Add(HashedPassword);
+                ListColumnDataType.Add("VARCHAR");
+
+                ListColumnNameParamStr.Add("@fullname");
+                ListColumnValues.Add(FullName);
+                ListColumnDataType.Add("VARCHAR");
+
+                ListColumnNameParamStr.Add("@roleid");
+                ListColumnValues.Add(tmpRoleID.ToString());
+                ListColumnDataType.Add("INT");
+
+                ListColumnNameParamStr.Add("@active");
+                ListColumnValues.Add(Active == true ? "1" : "0");
+                ListColumnDataType.Add("BIT");
+
+                ListColumnNameParamStr.Add("@userguid");
+                ListColumnValues.Add(UserGuid.ToString());
+                ListColumnDataType.Add("VARCHAR");
+
+                return ObjMySQLHelper.BuildNExceuteQueryWithParams(Query, ListColumnNameParamStr, ListColumnDataType, ListColumnValues);
             }
             catch (Exception ex)
             {
@@ -957,17 +966,16 @@ namespace SalesOrdersReport
                     + ")"
                     ;
                 Query += ";";
-                ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Clear();
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@rolename", MySqlDbType.VarChar).Value = RoleName;
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@description", MySqlDbType.VarChar).Value = Description;
 
-                for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
-                {
-                    ObjMySQLHelper.ObjDbCommand.Parameters.Add(ListColumnNameParamStr[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColumnDataType[i])).Value = ListColumnValues[i];
-                }
+                ListColumnNameParamStr.Add("@rolename");
+                ListColumnValues.Add(RoleName);
+                ListColumnDataType.Add("VARCHAR");
 
-                return ObjMySQLHelper.ObjDbCommand.ExecuteNonQuery(); 
+                ListColumnNameParamStr.Add("@description");
+                ListColumnValues.Add(Description);
+                ListColumnDataType.Add("VARCHAR");
+
+                return ObjMySQLHelper.BuildNExceuteQueryWithParams(Query, ListColumnNameParamStr, ListColumnDataType, ListColumnValues); 
             }
             catch (Exception ex)
             {

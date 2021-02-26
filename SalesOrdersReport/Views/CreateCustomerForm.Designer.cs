@@ -435,7 +435,7 @@ namespace SalesOrdersReport
             this.Name = "CreateCustomerForm";
             this.ShowIcon = false;
             this.Text = "Create Customer Form";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CreateCustomerForm_FormClosed);
+
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.flpCreateCustOrderDays.ResumeLayout(false);

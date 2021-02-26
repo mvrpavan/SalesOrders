@@ -17,23 +17,31 @@ namespace SalesOrdersReport
         UpdateOnCloseDel UpdateCustomerOnClose = null;
         public CreateCustomerForm(UpdateOnCloseDel UpdateCustomerOnClose)
         {
-            InitializeComponent();
-            txtCreateCustomerName.Focus();
-            //cmbxCreateCustSelectState.Items.Clear();
-            FillStates();//&&&&& check everytime needs to be filled or one time
-            cmbxCreateCustSelectState.SelectedIndex = 0;
-            FillDiscGrp();
-            cmbxCreateCustSelectDiscGrp.SelectedIndex = 0;
-            FillPriceGrp();
-            cmbxCreateCustSelectPriceGrp.SelectedIndex = 0;
-            FillLines();
-            cmbxCreateCustSelectLine.SelectedIndex = 0;
+            try
+            {
 
-            chbxMonday.Checked = true;
 
-          
-            this.UpdateCustomerOnClose = UpdateCustomerOnClose;
-            this.FormClosed += CreateCustomerForm_FormClosed;
+                InitializeComponent();
+                txtCreateCustomerName.Focus();
+                FillStates();
+                cmbxCreateCustSelectState.SelectedIndex = 0;
+                FillDiscGrp();
+                cmbxCreateCustSelectDiscGrp.SelectedIndex = 0;
+                FillPriceGrp();
+                cmbxCreateCustSelectPriceGrp.SelectedIndex = 0;
+                FillLines();
+                cmbxCreateCustSelectLine.SelectedIndex = 0;
+                rdbtnCustActiveYes.Checked = true;
+
+                chbxMonday.Checked = true;
+                this.UpdateCustomerOnClose = UpdateCustomerOnClose;
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CreateCustomerForm()", ex);
+                throw ex;
+            }
         }
         private void FillStates()
         {
@@ -118,13 +126,6 @@ namespace SalesOrdersReport
                 cmbxCreateCustSelectDiscGrp.SelectedIndex = 0;
                 cmbxCreateCustSelectPriceGrp.SelectedIndex = 0;
                 txtCreateCustomerName.Focus();
-                //chbxMonday.Checked = false;
-                //chbxTuesday.Checked = false;
-                //chbxWednesday.Checked = false;
-                //chbxThursday.Checked = false;
-                //chbxFriday.Checked = false;
-                //chbxSaturday.Checked = false;
-                //chbxSunday.Checked = false;
                 foreach (Control itemControl in flpCreateCustOrderDays.Controls)
                 {
                     CheckBox chbxControl = (CheckBox)itemControl;
@@ -226,7 +227,7 @@ namespace SalesOrdersReport
                 ListColumnNamesWithDataType.Add("ADDEDDATE,DATETIME");
                 
 
-                int ResultVal = CommonFunctions.ObjCustomerMasterModel.CreateNewCustomer(txtCreateCustomerName.Text,cmbxCreateCustSelectLine.SelectedItem.ToString(),cmbxCreateCustSelectDiscGrp.SelectedItem.ToString(),cmbxCreateCustSelectPriceGrp.SelectedItem.ToString(), rdbtnCustActiveYes.Checked, ListColumnNamesWithDataType, ListColumnValues);
+                int ResultVal = CommonFunctions.ObjCustomerMasterModel.CreateNewCustomer(txtCreateCustomerName.Text, rdbtnCustActiveYes.Checked, ListColumnNamesWithDataType, ListColumnValues);
                 if (ResultVal <= 0) MessageBox.Show("Wasnt able to create the customer", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 else if (ResultVal == 2)
                 {
@@ -235,7 +236,7 @@ namespace SalesOrdersReport
                 else
                 {
                     MessageBox.Show("Added New Customer :: " + txtCreateCustomerName.Text + " successfully", "Added Customer");
-                    UpdateCustomerOnClose(Mode: 1);
+                    if (UpdateCustomerOnClose != null) UpdateCustomerOnClose(Mode: 1);
                     btnReset.PerformClick();
                 }
 
@@ -296,29 +297,5 @@ namespace SalesOrdersReport
                 throw ex;
             }
         }
-        private void CreateCustomerForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                UpdateCustomerOnClose(Mode: 1);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CreateCustomerForm.CreateCustomerForm_FormClosed()", ex);
-            }
-        }
-
-        //private void btnImportFromExcel_Click(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        CommonFunctions.ShowDialog(new ImportFromExcelForm(UpdateCustomerOnClose), this);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        CommonFunctions.ShowErrorDialog("CreateCustomerForm.btnImportFromExcel_Click()", ex);
-        //        throw ex;
-        //    }
-        //}
     }
 }

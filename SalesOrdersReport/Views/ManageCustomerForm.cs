@@ -229,7 +229,7 @@ namespace SalesOrdersReport.Views
                     // {
                     AddCheckBoxToDGV();
                     //}
-                    EnableDisableControls(true);
+                    //EnableDisableControls(true);
                 }
                 else
                 {
@@ -239,7 +239,7 @@ namespace SalesOrdersReport.Views
 
                     dgvCustomerCache.DataSource = new BindingSource { DataSource = dataTable };
                     dgvCustomerCache.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    EnableDisableControls(false);
+                    //EnableDisableControls(false);
                 }
             }
             catch (Exception ex)
@@ -254,23 +254,20 @@ namespace SalesOrdersReport.Views
             {
                 if (Enable)
                 {
-                    //btnCreateDiscountGrp.Enabled = true;
-                    //btnEditDiscountGrp.Enabled = true;
-                    //btnCreatePriceGrp.Enabled = true;
-                    //btnEditPriceGrp.Enabled = true;
-                    //btnRedirectCreateLine.Enabled = true;
-                    //btnEditLine.Enabled = true;
+                    btnCreateDiscountGrp.Enabled = true;
+                    btnEditDiscountGrp.Enabled = true;
+                    btnCreatePriceGrp.Enabled = true;
+                    btnEditPriceGrp.Enabled = true;
+                    btnRedirectCreateLine.Enabled = true;
+                    btnEditLine.Enabled = true;
                     btnRedirectEditCustomer.Enabled = true;
                     btnRedirectDeleteCustomer.Enabled = true;
                 }
                 else
                 {
-                    //btnCreateDiscountGrp.Enabled = false;
-                    //btnEditDiscountGrp.Enabled = false;
-                    //btnCreatePriceGrp.Enabled = false;
-                    //btnEditPriceGrp.Enabled = false;
-                    //btnRedirectCreateLine.Enabled = false;
-                    //btnEditLine.Enabled = false;
+                    btnEditDiscountGrp.Enabled = false;
+                    btnEditPriceGrp.Enabled = false;
+                    btnEditLine.Enabled = false;
                     btnRedirectEditCustomer.Enabled = false;
                     btnRedirectDeleteCustomer.Enabled = false;
                 }

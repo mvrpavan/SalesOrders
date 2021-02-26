@@ -172,7 +172,9 @@ namespace SalesOrdersReport
                     ListColumnValues.Add("0");
                 }
                 else ListColumnValues.Add("1");
-
+                int RoleID = CommonFunctions.ObjUserMasterModel.GetRoleID(cmbxSelectRoleID.SelectedItem.ToString());
+                ListColumnValues.Add((RoleID == -1) ? "NULL" : RoleID.ToString());
+                ListColumnNames.Add("ROLEID");
                 ListColumnValues.Add(DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"));
                 ListColumnNames.Add("LASTUPDATEDATE");
                 //if (cmbxSelectStore.Text != "Select Store")

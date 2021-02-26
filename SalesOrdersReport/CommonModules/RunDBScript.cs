@@ -223,6 +223,19 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_12", "DeleteInvoice");
                 CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_13", "DeleteProducts");
                 CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_14", "CancelOrder");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_15", "EditInvoice");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_16", "DeleteOrder");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_17", "EditOrder");
+
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_18", "CreateCustomer");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_19", "EditCustomer");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_20", "DeleteCustomer");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_21", "CreateLine");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_22", "CreatePriceGroup");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_23", "CreateDiscountGroup");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_24", "EditLine");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_25", "EditPriceGroup");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_26", "EditDiscountGroup");
             }
             catch (Exception ex)
             {
@@ -245,7 +258,28 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageUsersForm", "btnRedirectDeleteUser", true, "P_5");
                 CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageUsersForm", "btnCreateStore", true, "P_6");
                 CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageUsersForm", "btnEditStore", true, "P_7");
-                
+
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("OrdersMainForm", "btnCreateOrder", true, "P_8");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ProductsMainForm", "btnAddProduct", true, "P_9");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ProductsMainForm", "btnEditProduct", true, "P_10");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("InvoicesMainForm", "btnCreateInvOrd", true, "P_11");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("InvoicesMainForm", "btnDeleteInvoice", true, "P_12");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ProductsMainForm", "btnDeleteProduct", true, "P_13");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("OrdersMainForm", "btnDeleteOrder", true, "P_14");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("InvoicesMainForm", "btnViewEditInvoice", true, "P_15");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("OrdersMainForm", "btnDeleteOrder", true, "P_16");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("OrdersMainForm", "btnViewEditOrder", true, "P_17");
+
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnRedirectCreateCustomer", true, "P_18");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnRedirectEditCustomer", true, "P_19");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnRedirectDeleteCustomer", true, "P_20");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnRedirectCreateLine", true, "P_21");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnCreatePriceGrp", true, "P_22");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnCreateDiscountGrp", true, "P_23");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnEditLine", true, "P_24");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnEditPriceGrp", true, "P_25");
+                CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnEditDiscountGrp", true, "P_26");
+
             }
             catch (Exception ex)
             {

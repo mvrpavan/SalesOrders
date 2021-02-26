@@ -229,7 +229,7 @@ namespace SalesOrdersReport.Views
                     // {
                     AddCheckBoxToDGV();
                     //}
-                    EnableDisableControls(true);
+                    //EnableDisableControls(true);
                 }
                 else
                 {
@@ -239,7 +239,7 @@ namespace SalesOrdersReport.Views
 
                     dgvCustomerCache.DataSource = new BindingSource { DataSource = dataTable };
                     dgvCustomerCache.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    EnableDisableControls(false);
+                    //EnableDisableControls(false);
                 }
             }
             catch (Exception ex)

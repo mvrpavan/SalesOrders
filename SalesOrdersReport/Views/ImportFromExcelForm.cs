@@ -229,7 +229,7 @@ namespace SalesOrdersReport.Views
                         UpdateOnClose(Mode: 1);
                         break;
                     case ImportDataTypes.Customers:
-                        UpdateOnClose(Mode: 2);
+                        UpdateOnClose(Mode: 1);
                         break;
                     default:
                         break;

@@ -111,6 +111,26 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
+        public Int32 BuildNExceuteQueryWithParams(string Query,List<string> ListColumnNames,List<string> ListColDataTypes, List<string> ListColumnValues)
+        {
+            try
+            {
+               ObjDbCommand.CommandText = Query;
+               ObjDbCommand.Parameters.Clear();
+                for (int i = 0; i < ListColumnNames.Count; i++)
+                {
+                   ObjDbCommand.Parameters.Add(ListColumnNames[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColDataTypes[i])).Value = ListColumnValues[i];
+                }
+
+                return ObjDbCommand.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.BuildQueryParams()", ex);
+                throw;
+            }
+        }
         public Boolean CheckTableExists(String TableName)
         {
             try
