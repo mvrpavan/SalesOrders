@@ -8,20 +8,20 @@ Insert into PRICEGROUPMASTER (PriceGroupName, Description, PriceColumn, Discount
 Insert into ProductCategoryMaster (CategoryName, Description, Active) Values('Default', 'Default Category', 1);
 
 --TaxMaster
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1006', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1102', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1904', 0, 0, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1513', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('904', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('909', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('910', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('2001', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1515', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('2501', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1101', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1702', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1902', 2.5, 2.5, 0);
-Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('201', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1006', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1102', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1904', 0, 0, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1513', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('904', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('909', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('910', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('2001', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1515', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('2501', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1101', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1702', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('1902', 2.5, 2.5, 0);
+-- Insert into TaxMaster (HSNCode, CGST, SGST, IGST) Values('201', 2.5, 2.5, 0);
 
 --PaymentModeMaster
 Insert into PaymentModeMaster (PaymentMode, Description) Values('Cash', 'Cash Payment');

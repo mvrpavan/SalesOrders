@@ -538,6 +538,11 @@ namespace SalesOrdersReport.CommonModules
             return dateTime.ToString("yyyy-MM-dd");
         }
 
+        public static String GetDateTimeStringForDB(DateTime dateTime)
+        {
+            return dateTime.ToString("yyyy-MM-dd HH:mm:ss");
+        }
+
         public void ExecuteScriptFile(String ScriptFilePath)
         {
             try

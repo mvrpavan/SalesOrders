@@ -425,7 +425,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreateExpenseForm(), this.Parent.FindForm());
+                CommonFunctions.ShowDialog(new CreateExpenseForm(), this);
             }
             catch (Exception ex)
             {
@@ -449,7 +449,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreateExpenseForm(), this.Parent.FindForm());
+                CommonFunctions.ShowDialog(new CreateExpenseForm(), this);
             }
             catch (Exception ex)
             {

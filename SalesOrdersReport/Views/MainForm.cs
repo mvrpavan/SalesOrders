@@ -682,5 +682,17 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog($"{this}.purchaseInvoicesToolStripMenuItem_Click()", ex);
             }
         }
+
+        private void POSbillingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowChildForm(new POSBillsMainForm());
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.POSbillingToolStripMenuItem_Click()", ex);
+            }
+        }
     }
 }

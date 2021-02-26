@@ -235,6 +235,7 @@ namespace SalesOrdersReport.Views
                         break;
                 }
 
+                CommonFunctions.ResetProgressBar();
                 txtImportFrmExclFilePath.Text = "";
                 btnImportFrmExclUploadFile.Enabled = false;
             }

@@ -76,8 +76,9 @@ namespace SalesOrdersReport.Models
         DataTable dtAllInvoices;
         List<InvoiceDetails> ListInvoices;
         MySQLHelper ObjMySQLHelper;
-        const String InvoiceNumberPrefix = "INV";
+        const String InvoiceNumberPrefix = "INV", BillNumberPrefix = "BILL";
         ProductMasterModel ObjProductMasterModel;
+        Boolean IsBill = false;
 
         public void Initialize()
         {
@@ -109,6 +110,22 @@ namespace SalesOrdersReport.Models
             }
         }
 
+        public String GenerateNewBillNumber()
+        {
+            try
+            {
+                String MaxInvoiceNumber = ObjMySQLHelper.GetIDValue("Bills");
+                if (String.IsNullOrEmpty(MaxInvoiceNumber)) MaxInvoiceNumber = "0";
+                IsBill = true;
+                return CommonFunctions.GenerateNextID(BillNumberPrefix, MaxInvoiceNumber);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GenerateNewBillNumber()", ex);
+                throw;
+            }
+        }
+
         public DataTable LoadInvoiceDetails(DateTime FromDate, DateTime ToDate, INVOICESTATUS InvoiceStatus = INVOICESTATUS.Created,
                                     String SearchField = null, String SearchFieldValue = null, string WhereCondition = null)
         {
@@ -123,7 +140,7 @@ namespace SalesOrdersReport.Models
                 String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)} from Invoices a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID", WhereClause = $" Where 1 = 1";
                 if (FromDate > DateTime.MinValue && ToDate > DateTime.MinValue)
                 {
-                    WhereClause += $" and a.InvoiceDate between '{MySQLHelper.GetDateStringForDB(FromDate)}' and '{MySQLHelper.GetDateStringForDB(ToDate)}'";
+                    WhereClause += $" and DATE(a.InvoiceDate) between '{MySQLHelper.GetDateStringForDB(FromDate)}' and '{MySQLHelper.GetDateStringForDB(ToDate)}'";
                 }
                 if (InvoiceStatus != INVOICESTATUS.All)
                 {
@@ -358,7 +375,8 @@ namespace SalesOrdersReport.Models
 
                 NewInvoiceDetails.CustomerName = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CustomerID).CustomerName;
                 NewInvoiceDetails.OrderID = InsertInvoiceDetails(NewInvoiceDetails);
-                ObjMySQLHelper.UpdateIDValue("Invoices", InvoiceNumber);
+                if (IsBill) ObjMySQLHelper.UpdateIDValue("Bills", InvoiceNumber);
+                else ObjMySQLHelper.UpdateIDValue("Invoices", InvoiceNumber);
 
                 Object[] ArrItems = new Object[] {
                     NewInvoiceDetails.InvoiceID,
@@ -392,15 +410,17 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                String Query = "Insert into Invoices(InvoiceNumber, InvoiceDate, CreationDate, LastUpdatedDate, CustomerID, OrderID, InvoiceItemCount, NetInvoiceAmount, InvoiceStatus) Values (";
-                Query += $"'{ObjInvoiceDetails.InvoiceNumber}', '{MySQLHelper.GetDateStringForDB(ObjInvoiceDetails.InvoiceDate)}', '{MySQLHelper.GetDateStringForDB(ObjInvoiceDetails.CreationDate)}',";
-                Query += $"'{MySQLHelper.GetDateStringForDB(ObjInvoiceDetails.LastUpdatedDate)}', {ObjInvoiceDetails.CustomerID}, {ObjInvoiceDetails.OrderID}, {ObjInvoiceDetails.InvoiceItemCount}, " +
-                         $"{ObjInvoiceDetails.NetInvoiceAmount}, '{ObjInvoiceDetails.InvoiceStatus}'";
+                String Query = "Insert into Invoices(InvoiceNumber, InvoiceDate, CustomerID, OrderID, InvoiceItemCount, NetInvoiceAmount, " +
+                                "InvoiceStatus, CreationDate, LastUpdatedDate) Values (";
+                Query += $"'{ObjInvoiceDetails.InvoiceNumber}', '{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.InvoiceDate)}',";
+                Query += $"{ObjInvoiceDetails.CustomerID}, {ObjInvoiceDetails.OrderID}, {ObjInvoiceDetails.InvoiceItemCount}, " +
+                         $"{ObjInvoiceDetails.NetInvoiceAmount}, '{ObjInvoiceDetails.InvoiceStatus}', " +
+                         $"'{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.CreationDate)}', '{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.LastUpdatedDate)}'";
                 Query += ")";
                 ObjMySQLHelper.ExecuteNonQuery(Query);
 
                 Int32 InvoiceID = -1;
-                Query = $"Select Max(InvoiceID) from Invoices where CustomerID = {ObjInvoiceDetails.CustomerID} and InvoiceDate = '{MySQLHelper.GetDateStringForDB(ObjInvoiceDetails.InvoiceDate)}'";
+                Query = $"Select Max(InvoiceID) from Invoices where CustomerID = {ObjInvoiceDetails.CustomerID} and InvoiceDate = '{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.InvoiceDate)}'";
                 foreach (var item in ObjMySQLHelper.ExecuteQuery(Query)) InvoiceID = Int32.Parse(item[0].ToString());
 
                 InsertInvoiceItems(ObjInvoiceDetails.ListInvoiceItems, InvoiceID);
@@ -958,7 +978,8 @@ namespace SalesOrdersReport.Models
             {
                 if (ListInvoices.Count == 0) LoadInvoiceDetails(DateTime.MinValue, DateTime.MinValue, INVOICESTATUS.All, "INVOICE NUMBER", InvoiceNum.ToString(), WhereCondition);
                 int Index = ListInvoices.FindIndex(e => e.InvoiceNumber == InvoiceNum);
-                return Index;
+                if (Index < 0) return -1;
+                else return ListInvoices[Index].InvoiceID;
             }
             catch (Exception ex)
             {

@@ -15,7 +15,10 @@ namespace SalesOrdersReport
     public partial class CreateCustomerForm : Form
     {
         UpdateOnCloseDel UpdateCustomerOnClose = null;
-        public CreateCustomerForm(UpdateOnCloseDel UpdateCustomerOnClose)
+		UpdateUsingObjectOnCloseDel UpdateObjectOnClose = null;
+        Boolean IsRetailCustomer = false;
+
+        public CreateCustomerForm(UpdateOnCloseDel UpdateCustomerOnClose, UpdateUsingObjectOnCloseDel UpdateObjectOnClose = null, Boolean IsRetailCustomer = false)
         {
             try
             {
@@ -36,6 +39,16 @@ namespace SalesOrdersReport
                 chbxMonday.Checked = true;
                 this.UpdateCustomerOnClose = UpdateCustomerOnClose;
 
+	            this.UpdateObjectOnClose = UpdateObjectOnClose;
+	            this.IsRetailCustomer = IsRetailCustomer;
+	
+	            if (IsRetailCustomer)
+	            {
+	                cmbxCreateCustSelectState.SelectedIndex = cmbxCreateCustSelectState.FindStringExact("Karnataka");
+	                cmbxCreateCustSelectPriceGrp.SelectedIndex = cmbxCreateCustSelectPriceGrp.FindStringExact("Retail Price");
+	                //cmbxCreateCustSelectDiscGrp.SelectedIndex = cmbxCreateCustSelectDiscGrp.FindStringExact("Retail Discount");
+	                rdbtnCustActiveYes.Checked = true;
+				}
             }
             catch (Exception ex)
             {
@@ -132,6 +145,14 @@ namespace SalesOrdersReport
                     chbxControl.Checked = false;
                 }
                 chbxMonday.Checked = true;
+
+                if (IsRetailCustomer)
+                {
+                    cmbxCreateCustSelectState.SelectedIndex = cmbxCreateCustSelectState.FindStringExact("Karnataka");
+                    cmbxCreateCustSelectPriceGrp.SelectedIndex = cmbxCreateCustSelectPriceGrp.FindStringExact("Retail Price");
+                    //cmbxCreateCustSelectDiscGrp.SelectedIndex = cmbxCreateCustSelectDiscGrp.FindStringExact("Retail Discount");
+                    rdbtnCustActiveYes.Checked = true;
+                }
             }
             catch (Exception ex)
             {

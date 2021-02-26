@@ -40,6 +40,7 @@ namespace SalesOrdersReport.Views
                 cmbBoxInvoiceStatus.Items.Clear();
                 cmbBoxInvoiceStatus.Items.Add(AllInvoicestatus);
                 cmbBoxInvoiceStatus.Items.Add(INVOICESTATUS.Created.ToString());
+                cmbBoxInvoiceStatus.Items.Add(INVOICESTATUS.Delivered.ToString());
                 cmbBoxInvoiceStatus.Items.Add(INVOICESTATUS.Paid.ToString());
                 cmbBoxInvoiceStatus.Items.Add(INVOICESTATUS.Cancelled.ToString());
                 cmbBoxInvoiceStatus.SelectedIndex = 1;
@@ -177,7 +178,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(-1, false, true, UpdateInvoicesOnClose), this.Parent.FindForm());
+                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(-1, false, true, UpdateInvoicesOnClose), this);
             }
             catch (Exception ex)
             {

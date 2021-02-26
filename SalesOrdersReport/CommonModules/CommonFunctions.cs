@@ -90,10 +90,17 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                if (CurrentForm != null)
-                    MessageBox.Show(CurrentForm, "Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+                if (Method.Contains("MySQLHelper"))
+                {
+                    MessageBox.Show(CurrentForm, "Following Error Occured in " + Method + ":\n" + ex.StackTrace, "Exception occured", MessageBoxButtons.OK);
+                }
                 else
-                    MessageBox.Show("Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+                {
+                    if (CurrentForm != null)
+                        MessageBox.Show(CurrentForm, "Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+                    else
+                        MessageBox.Show("Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+                }
             }
             catch (Exception)
             {
