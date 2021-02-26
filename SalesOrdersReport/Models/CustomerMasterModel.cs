@@ -571,6 +571,9 @@ namespace SalesOrdersReport.Models
                 ListColumnValues.Add(Active == true ? "1" : "0");
                 ListColumnDataType.Add("BIT");
 
+                //Create new Customer Account in AccountsMaster
+                AccountDetails tmpAccountDetails = new AccountDetails() { Active = true, BalanceAmount = 0, CreationDate = DateTime.Now, LastUpdatedDate = DateTime.Now };
+                CommonFunctions.ObjAccountsMasterModel.CreateNewCustomerAccount(ref tmpAccountDetails);
 
                 return ObjMySQLHelper.BuildNExceuteQueryWithParams(Query, ListColumnNameParamStr, ListColumnDataType, ListColumnValues);
 

@@ -79,6 +79,7 @@ namespace SalesOrdersReport.Views
 
                 lblLoadingStatus.Text = "Loading Customer tables...";
                 CommonFunctions.ObjCustomerMasterModel.LoadAllCustomerMasterTables();
+                CommonFunctions.ObjAccountsMasterModel.LoadAccountDetails();
                 lblLoadingStatus.Text = "Loading Customer tables...completed";
                 ReportProgressFunc(50);
 

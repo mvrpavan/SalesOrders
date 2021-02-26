@@ -251,5 +251,96 @@ namespace SalesOrdersReport.Models
                 CommonFunctions.ShowErrorDialog($"{this}.LoadPaymentModes()", ex);
             }
         }
+
+        public Int32 CreateNewPaymentDetails(ref PaymentDetails ObjPaymentDetails, ref CustomerAccountHistoryDetails ObjCustomerAccountHistoryDetails)
+        {
+            try
+            {
+                InvoicesModel ObjInvoicesModel = new InvoicesModel();
+                ObjInvoicesModel.Initialize();
+
+                List<string> ListColumnValues = new List<string>(), ListTempColValues = new List<string>();
+                List<string> ListColumnNames = new List<string>(), ListTempColNames = new List<string>();
+                List<Types> ListTypes = new List<Types>();
+
+                ListColumnValues.Add(ObjPaymentDetails.AccountID.ToString());
+                ListColumnNames.Add("ACCOUNTID");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjPaymentDetails.PaymentModeID.ToString());
+                ListColumnNames.Add("PAYMENTMODEID");
+                ListTypes.Add(Types.Number);
+
+                if (ObjPaymentDetails.InvoiceID <= 0) ObjPaymentDetails.InvoiceID = -1;
+                ListColumnValues.Add(ObjPaymentDetails.InvoiceID.ToString());
+                ListColumnNames.Add("INVOICEID");
+                ListTypes.Add(Types.Number);
+
+                if (ObjPaymentDetails.QuotationID <= 0) ObjPaymentDetails.QuotationID = -1;
+                ListColumnValues.Add(ObjPaymentDetails.QuotationID.ToString());
+                ListColumnNames.Add("QUOTATIONID");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(MySQLHelper.GetDateTimeStringForDB(ObjPaymentDetails.PaidOn));
+                ListColumnNames.Add("PAYMENTDATE");
+                ListTypes.Add(Types.String);
+
+                ListColumnValues.Add("1");
+                ListColumnNames.Add("ACTIVE");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjPaymentDetails.Amount.ToString());
+                ListColumnNames.Add("PAYMENTAMOUNT");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjPaymentDetails.UserID.ToString());
+                ListColumnNames.Add("USERID");
+                ListTypes.Add(Types.Number);
+
+                if (ObjPaymentDetails.Description.Trim() != string.Empty)
+                {
+                    ListColumnValues.Add(ObjPaymentDetails.Description.Trim());
+                    ListColumnNames.Add("DESCRIPTION");
+                    ListTypes.Add(Types.String);
+                }
+
+                string Now = MySQLHelper.GetDateTimeStringForDB(DateTime.Now);
+                ListColumnValues.Add(Now);
+                ListColumnNames.Add("LASTUPDATEDATE");
+                ListTypes.Add(Types.String);
+
+                ListColumnValues.Add(Now);
+                ListColumnNames.Add("CREATIONDATE");
+                ListTypes.Add(Types.String);
+
+                int ResultVal = ObjMySQLHelper.InsertIntoTable("PAYMENTS", ListColumnNames, ListColumnValues, ListTypes);
+                ObjPaymentDetails.PaymentId = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select Max(PaymentID) PaymentID from PAYMENTS Where ACCOUNTID = {ObjPaymentDetails.AccountID}" +
+                                            $" and INVOICEID = {ObjPaymentDetails.InvoiceID} and QUOTATIONID = {ObjPaymentDetails.QuotationID};").ToString());
+
+                if (ObjPaymentDetails.InvoiceID > 0) ObjInvoicesModel.MarkInvoicesAsPaid(new List<int>() { ObjPaymentDetails.InvoiceID });
+                if (ResultVal <= 0) return -1;
+
+                ObjCustomerAccountHistoryDetails.PaymentID = ObjPaymentDetails.PaymentId;
+                CustomerAccountHistoryModel ObjAccountHistoryModel = new CustomerAccountHistoryModel();
+                ObjCustomerAccountHistoryDetails = ObjAccountHistoryModel.CreateNewCustomerAccountHistoryEntry(ObjCustomerAccountHistoryDetails);
+                if (ObjCustomerAccountHistoryDetails == null) return -2;
+
+                ListTempColValues.Add(ObjCustomerAccountHistoryDetails.NewBalanceAmount.ToString());
+                ListTempColNames.Add("BALANCEAMOUNT");
+
+                ListTempColValues.Add(Now);
+                ListTempColNames.Add("LASTUPDATEDDATE");
+
+                string WhereCondition = "ACCOUNTID = '" + ObjPaymentDetails.AccountID.ToString() + "'";
+                ResultVal = ObjMySQLHelper.UpdateTableDetails("ACCOUNTSMASTER", ListTempColNames, ListTempColValues, new List<Types>() { Types.Number, Types.String }, WhereCondition);
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.CreateNewPaymentDetails()", ex);
+                return -1;
+            }
+        }
     }
 }

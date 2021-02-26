@@ -482,7 +482,8 @@ namespace SalesOrdersReport.Views
                 {
                     case 1: //Print Invoice
                         {
-                            CreatePOSBillForm.PrintBill("BILL00005");
+                            Int32 InvoiceID = Int32.Parse(dtGridViewBills.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
+                            InvoicesModel.PrintBill(InvoiceID);
                             //ReportType EnumReportType = ReportType.INVOICE;
                             //Boolean PrintOldBalance = false;
                             //Boolean CreateSummary = false;

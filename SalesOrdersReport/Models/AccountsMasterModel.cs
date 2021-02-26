@@ -74,5 +74,32 @@ namespace SalesOrdersReport.Models
                 CommonFunctions.ShowErrorDialog($"{this}.LoadAccountDetails()", ex);
             }
         }
+
+        public Int32 CreateNewCustomerAccount(ref AccountDetails ObjAccountDetails)
+        {
+            try
+            {
+                AccountDetails tmpAccountDetails = GetAccDtlsFromCustID(ObjAccountDetails.CustomerID);
+                if (tmpAccountDetails != null) return -2;
+
+                Int32 RetVal = ObjMySQLHelper.InsertIntoTable("ACCOUNTSMASTER", 
+                                                new List<string>() { "CustomerID", "Active", "BalanceAmount", "CreationDate", "LastUpdatedDate" },
+                                                new List<string>() { ObjAccountDetails.CustomerID.ToString(), ObjAccountDetails.Active ? "1" : "0",
+                                                ObjAccountDetails.BalanceAmount.ToString(), MySQLHelper.GetDateTimeStringForDB(ObjAccountDetails.CreationDate),
+                                                MySQLHelper.GetDateTimeStringForDB(ObjAccountDetails.LastUpdatedDate) },
+                                                new List<Types>() { Types.Number, Types.Number, Types.Number, Types.String, Types.String });
+                if (RetVal <= 0) return -3;
+
+                ObjAccountDetails.AccountID = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select AccountID from ACCOUNTSMASTER Where CustomerID = {ObjAccountDetails.AccountID} and Active = 1;").ToString());
+                ListAccountDetails.Add(ObjAccountDetails);
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.CreateNewCustomerAccount()", ex);
+                return -1;
+            }
+        }
     }
 }

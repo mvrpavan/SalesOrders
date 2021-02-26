@@ -987,5 +987,74 @@ namespace SalesOrdersReport.Models
                 return -1;
             }
         }
+
+        public static void PrintBill(String BillNumber)
+        {
+            try
+            {
+                InvoicesModel ObjInvoicesModel = new InvoicesModel();
+                ObjInvoicesModel.Initialize();
+
+                PrintBase ObjPrintBase = new ThermalPaperBillPrinter(288);
+
+                Int32 InvoiceID = ObjInvoicesModel.GetInvoiceIDFromNum(BillNumber);
+                PrintBill(InvoiceID);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"CreatePOSBillForm.btnPrintBill_Click()", ex);
+            }
+        }
+
+        public static void PrintBill(Int32 InvoiceID)
+        {
+            try
+            {
+                InvoicesModel ObjInvoicesModel = new InvoicesModel();
+                ObjInvoicesModel.Initialize();
+
+                PrintBase ObjPrintBase = new ThermalPaperBillPrinter(288);
+
+                InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
+                CustomerDetails ObjCustomerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(ObjInvoiceDetails.CustomerID);
+
+                PrintDetails ObjPrintDetails = new PrintDetails()
+                {
+                    CustomerName = ObjCustomerDetails.CustomerName,
+                    CustomerPhone = ObjCustomerDetails.PhoneNo.ToString(),
+                    DateValue = ObjInvoiceDetails.InvoiceDate,
+                    InvoiceNumber = ObjInvoiceDetails.InvoiceNumber,
+                    GrossAmount = ObjInvoiceDetails.NetInvoiceAmount,
+                    TotalTaxAmount = ObjInvoiceDetails.NetInvoiceAmount,
+                    NetAmount = ObjInvoiceDetails.NetInvoiceAmount,
+                    StaffName = MySQLHelper.GetMySqlHelperObj().CurrentUser,
+                    Header1 = "Ceren Super Store",
+                    Header2 = "Customer Bill",
+                    ListSubHeaderLines = new List<string>() { "GSTIN Number", "Address Line1", "Address Line2" },
+                    ListFooterLines = new List<string>() { "Thank you", "Visit Again" }
+                };
+
+                for (int i = 0; i < ObjInvoiceDetails.ListInvoiceItems.Count; i++)
+                {
+                    InvoiceItemDetails item = ObjInvoiceDetails.ListInvoiceItems[i];
+                    ObjPrintDetails.ListPrintItemDetails.Add(new PrintItemDetails()
+                    {
+                        ItemName = item.ProductName,
+                        ItemMRP = CommonFunctions.ObjProductMaster.GetPriceForProduct(item.ProductName, 2),
+                        ItemRate = item.Price,
+                        SaleQty = item.SaleQty,
+                        Tax = 0,
+                        Amount = item.Price * item.SaleQty,
+                        HSNCode = CommonFunctions.ObjProductMaster.GetProductDetails(item.ProductID).HSNCode
+                    });
+                }
+
+                ObjPrintBase.Print(ObjPrintDetails);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"CreatePOSBillForm.btnPrintBill_Click()", ex);
+            }
+        }
     }
 }

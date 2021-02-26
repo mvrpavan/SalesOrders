@@ -38,6 +38,7 @@ namespace SalesOrdersReport.Views
         UpdateUsingObjectOnCloseDel UpdateObjectOnClose;
         List<InvoiceDetails> ListCustomerInvoices;
         Dictionary<Int64, CustomerDetails> DictPhoneNumberCustomerDetails = new Dictionary<Int64, CustomerDetails>();
+        PaymentsModel ObjPaymentsModel = new PaymentsModel();
 
         public CreatePOSBillForm(Int32 InvoiceID, UpdateUsingObjectOnCloseDel UpdateObjectOnClose)
         {
@@ -49,6 +50,7 @@ namespace SalesOrdersReport.Views
                 ObjInvoicesModel = new InvoicesModel();
                 ObjInvoicesModel.Initialize();
                 CurrentInvoiceID = InvoiceID;
+                ObjPaymentsModel.LoadPaymentModes();
 
                 if (InvoiceID < 0)
                 {
@@ -189,7 +191,7 @@ namespace SalesOrdersReport.Views
             ReportProgress(ProgressState);
         }
 
-        private void btnCreateInvOrd_Click(object sender, EventArgs e)
+        private void btnCreateBill_Click(object sender, EventArgs e)
         {
             try
             {
@@ -201,7 +203,7 @@ namespace SalesOrdersReport.Views
                 //Create Invoice sheet for this Customer order
                 if (dtGridViewInvOrdProdList.Rows.Count == 0)
                 {
-                    MessageBox.Show(this, "There are no Items in the Invoice.\nPlease add atleast one Item to the Invoice.", "Create Sales Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(this, "There are no Items in the Bill.\nPlease add atleast one Item to the Bill.", "Create Bill", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                     return;
                 }
 
@@ -217,11 +219,11 @@ namespace SalesOrdersReport.Views
 
                 if (!IsValid)
                 {
-                    MessageBox.Show(this, "There are no Items with Quantity more than 0.\nPlease add atleast one Item with valid Quantity.", "Create Sales Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(this, "There are no Items with Quantity more than 0.\nPlease add atleast one Item with valid Quantity.", "Create Bill", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                     return;
                 }
 
-                DialogResult diagResult = MessageBox.Show(this, "Confirm to Create Customer Invoice", "Create/Update Invoice", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                DialogResult diagResult = MessageBox.Show(this, "Confirm to Create Customer Bill", "Create Bill", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 if (diagResult == DialogResult.No) return;
 
                 CurrOrderInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems.Clear();
@@ -262,8 +264,8 @@ namespace SalesOrdersReport.Views
 
                 picBoxLoading.Visible = true;
                 BackgroundTask = 3;
-                if (InvoiceModified) lblStatus.Text = "Updating Customer Invoice, please wait...";
-                else lblStatus.Text = "Creating Customer Invoice, please wait...";
+                if (InvoiceModified) lblStatus.Text = "Updating Customer Bill, please wait...";
+                else lblStatus.Text = "Creating Customer Bill, please wait...";
 #if DEBUG
                 backgroundWorker1_DoWork(null, null);
                 backgroundWorker1_RunWorkerCompleted(null, null);
@@ -275,15 +277,15 @@ namespace SalesOrdersReport.Views
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"{this}.btnCreateInvOrd_Click()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.btnCreateBill_Click()", ex);
             }
         }
         
+        InvoiceDetails AddUpdatedInvoiceDetails = null;
         void UpdateSalesInvoice()
         {
             try
             {
-                InvoiceDetails AddUpdatedInvoiceDetails = null;
                 if (CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceID < 0)
                 {
                     AddUpdatedInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(CurrCustomerDetails.CustomerID, CurrOrderInvoiceDetails.CurrInvoiceDetails.OrderID, DateTime.Now, CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceNumber, CurrOrderInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems);
@@ -492,15 +494,56 @@ namespace SalesOrdersReport.Views
                             MessageBox.Show(this, "Loaded Invoice data for selected Customer", "Customer Invoice", MessageBoxButtons.OK);
                         }
                         break;
-                    case 3:     //Update Seller Order for Current Seller or Create Sales Invoice
+                    case 3:     //Update or Create Bill
+                        MessageBox.Show(this, "Created Customer Bill successfully", "Create Bill", MessageBoxButtons.OK);
+                        DialogResult dialogResult = MessageBox.Show(this, "Is this Bill Paid?", "Create Bill", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            //Create Payment entry
+                            PaymentDetails tmpPaymentDetails = new PaymentDetails() {
+                                CustomerID = AddUpdatedInvoiceDetails.CustomerID,
+                                AccountID = CommonFunctions.ObjAccountsMasterModel.GetAccDtlsFromCustID(AddUpdatedInvoiceDetails.CustomerID).AccountID,
+                                Description = "POS Payment",
+                                InvoiceID = AddUpdatedInvoiceDetails.InvoiceID,
+                                InvoiceNumber = AddUpdatedInvoiceDetails.InvoiceNumber,
+                                PaidOn = AddUpdatedInvoiceDetails.InvoiceDate,
+                                Amount = AddUpdatedInvoiceDetails.NetInvoiceAmount,
+                                UserID = CommonFunctions.ObjUserMasterModel.GetUserID(MySQLHelper.GetMySqlHelperObj().CurrentUser),
+                                PaymentModeID = ObjPaymentsModel.GetPaymentMode("Cash").PaymentModeID,
+                                CreationDate = DateTime.Now,
+                                LastUpdateDate = DateTime.Now
+                            };
+
+                            CustomerAccountHistoryDetails tmpCustomerAccountHistoryDetails = new CustomerAccountHistoryDetails() {
+                                AccountID = tmpPaymentDetails.AccountID,
+                                SaleAmount = AddUpdatedInvoiceDetails.ListInvoiceItems.Sum(s => s.SaleQty * s.Price),
+                                DiscountAmount = 0,
+                                CancelAmount = 0,
+                                RefundAmount = 0,
+                                BalanceAmount = 0,
+                                NewBalanceAmount = 0,
+                                AmountReceived  = AddUpdatedInvoiceDetails.NetInvoiceAmount,
+                                NetSaleAmount = AddUpdatedInvoiceDetails.NetInvoiceAmount,
+                                TotalTaxAmount = 0
+                            };
+
+                            ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails, ref tmpCustomerAccountHistoryDetails);
+                        }
+
+                        dialogResult = MessageBox.Show(this, "Would you like to print the Bill?", "Create Bill", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            InvoicesModel.PrintBill(AddUpdatedInvoiceDetails.InvoiceID);
+                        }
+
                         cmbBoxCustomers.SelectedIndex = -1;
                         cmbBoxPhoneNumbers.SelectedIndex = -1;
                         cmbBoxCustomers.Focus();
                         ResetControls();
                         picBoxLoading.Visible = false;
                         EnableItemsPanel(false);
-                        MessageBox.Show(this, "Created Customer Invoice successfully", "Sales Invoice", MessageBoxButtons.OK);
-                        lblStatus.Text = "Choose a Customer to create Sales Invoice";
+                        MessageBox.Show(this, "Created Customer Bill successfully", "Sales Bill", MessageBoxButtons.OK);
+                        lblStatus.Text = "Choose a Customer to create Bill";
                         cmbBoxBillNumber.Items.Clear();
                         txtBoxInvOrdNumber.Text = "";
 
@@ -1273,64 +1316,11 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                PrintBill("BILL00005");
+                InvoicesModel.PrintBill("BILL00005");
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.btnPrintBill_Click()", ex);
-            }
-        }
-
-        public static void PrintBill(String BillNumber)
-        {
-            try
-            {
-                InvoicesModel ObjInvoicesModel = new InvoicesModel();
-                ObjInvoicesModel.Initialize();
-
-                PrintBase ObjPrintBase = new ThermalPaperBillPrinter(288);
-
-                //String BillNumber = "BILL00005"; // txtBoxInvOrdNumber.Text;
-                Int32 InvoiceID = ObjInvoicesModel.GetInvoiceIDFromNum(BillNumber);
-                InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
-                CustomerDetails ObjCustomerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(ObjInvoiceDetails.CustomerID);
-
-                PrintDetails ObjPrintDetails = new PrintDetails()
-                {
-                    CustomerName = ObjCustomerDetails.CustomerName,
-                    CustomerPhone = ObjCustomerDetails.PhoneNo.ToString(),
-                    DateValue = ObjInvoiceDetails.InvoiceDate,
-                    InvoiceNumber = ObjInvoiceDetails.InvoiceNumber,
-                    GrossAmount = ObjInvoiceDetails.NetInvoiceAmount,
-                    TotalTaxAmount = ObjInvoiceDetails.NetInvoiceAmount,
-                    NetAmount = ObjInvoiceDetails.NetInvoiceAmount,
-                    StaffName = MySQLHelper.GetMySqlHelperObj().CurrentUser,
-                    Header1 = "Ceren Super Store",
-                    Header2 = "Customer Bill",
-                    ListSubHeaderLines = new List<string>() { "GSTIN Number", "Address Line1", "Address Line2" },
-                    ListFooterLines = new List<string>() { "Thank you", "Visit Again" }
-                };
-
-                for (int i = 0; i < ObjInvoiceDetails.ListInvoiceItems.Count; i++)
-                {
-                    InvoiceItemDetails item = ObjInvoiceDetails.ListInvoiceItems[i];
-                    ObjPrintDetails.ListPrintItemDetails.Add(new PrintItemDetails()
-                    {
-                        ItemName = item.ProductName,
-                        ItemMRP = CommonFunctions.ObjProductMaster.GetPriceForProduct(item.ProductName, 2),
-                        ItemRate = item.Price,
-                        SaleQty = item.SaleQty,
-                        Tax = 0,
-                        Amount = item.Price * item.SaleQty,
-                        HSNCode = CommonFunctions.ObjProductMaster.GetProductDetails(item.ProductID).HSNCode
-                    });
-                }
-
-                ObjPrintBase.Print(ObjPrintDetails);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"CreatePOSBillForm.btnPrintBill_Click()", ex);
             }
         }
     }

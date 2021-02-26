@@ -619,7 +619,7 @@
             this.btnCreateInvOrd.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
             this.btnCreateInvOrd.UseCompatibleTextRendering = true;
             this.btnCreateInvOrd.UseVisualStyleBackColor = false;
-            this.btnCreateInvOrd.Click += new System.EventHandler(this.btnCreateInvOrd_Click);
+            this.btnCreateInvOrd.Click += new System.EventHandler(this.btnCreateBill_Click);
             // 
             // splitContainer1
             // 

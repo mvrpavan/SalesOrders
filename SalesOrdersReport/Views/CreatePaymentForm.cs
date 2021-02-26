@@ -68,8 +68,7 @@ namespace SalesOrdersReport.Views
                 cmbBoxPaymentModes.AutoCompleteSource = AutoCompleteSource.ListItems;
                 ObjInvoicesModel = new InvoicesModel();
                 ObjInvoicesModel.Initialize();
-                ObjAccountsMasterModel = new AccountsMasterModel();
-                ObjAccountsMasterModel.LoadAccountDetails();
+                ObjAccountsMasterModel = CommonFunctions.ObjAccountsMasterModel;
                 ObjAccountHistoryModel = new CustomerAccountHistoryModel();
                 ObjAccountHistoryModel.LoadAccountHistoryModel();
                 ListOfAllCustomers.AddRange(ObjCustomerMasterModel.GetCustomerList());

@@ -32,8 +32,7 @@ namespace SalesOrdersReport.Views
                 ObjInvoicesModel = new InvoicesModel();
                 ObjInvoicesModel.Initialize();
 
-                ObjAccountsMasterModel = new AccountsMasterModel();
-                ObjAccountsMasterModel.LoadAccountDetails();
+                ObjAccountsMasterModel = CommonFunctions.ObjAccountsMasterModel;
 
                 dTimePickerFromPayments.Value = DateTime.Today.AddDays(-30);
                 dTimePickerToPayments.Value = DateTime.Today;

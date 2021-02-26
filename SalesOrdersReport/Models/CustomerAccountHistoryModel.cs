@@ -10,7 +10,7 @@ namespace SalesOrdersReport.Models
 {
     class CustomerAccountHistoryDetails : IComparer<CustomerAccountHistoryDetails>
     {
-        public string AccountID = "";
+        public Int32 AccountID = -1;
         public int HistEntryId = -1, PaymentID = -1;
         public Double SaleAmount = 0.0;
         public Double CancelAmount = 0.0;
@@ -83,7 +83,7 @@ namespace SalesOrdersReport.Models
                     CustomerAccountHistoryDetails ObjCustomerAccountHistoryDetails = new CustomerAccountHistoryDetails();
                     ObjCustomerAccountHistoryDetails.HistEntryId = ((dr["HISTORYENTRYID"] == null) || dr["HISTORYENTRYID"].ToString().Trim() == "") ? -1 : int.Parse(dr["HISTORYENTRYID"].ToString().Trim());
                     ObjCustomerAccountHistoryDetails.PaymentID = int.Parse(dr["PAYMENTID"].ToString().Trim());
-                    ObjCustomerAccountHistoryDetails.AccountID = dr["ACCOUNTID"].ToString();
+                    ObjCustomerAccountHistoryDetails.AccountID = int.Parse(dr["ACCOUNTID"].ToString());
 
                     ObjCustomerAccountHistoryDetails.SaleAmount = double.Parse(dr["SALEAMOUNT"].ToString());
                     ObjCustomerAccountHistoryDetails.CancelAmount = double.Parse(dr["CANCELAMOUNT"].ToString());
@@ -102,6 +102,78 @@ namespace SalesOrdersReport.Models
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.LoadAccountHistoryModel()", ex);
+            }
+        }
+
+        public CustomerAccountHistoryDetails CreateNewCustomerAccountHistoryEntry(CustomerAccountHistoryDetails ObjCustomerAccountHistoryDetails)
+        {
+            try
+            {
+                List<string> ListColumnValues = new List<string>(), ListTempColValues = new List<string>();
+                List<string> ListColumnNames = new List<string>(), ListTempColNames = new List<string>();
+                List<Types> ListTypes = new List<Types>();
+
+                ListColumnValues.Add(ObjCustomerAccountHistoryDetails.AccountID.ToString());
+                ListColumnNames.Add("ACCOUNTID");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjCustomerAccountHistoryDetails.PaymentID.ToString());
+                ListColumnNames.Add("PAYMENTID");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjCustomerAccountHistoryDetails.SaleAmount.ToString());
+                ListColumnNames.Add("SALEAMOUNT");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjCustomerAccountHistoryDetails.CancelAmount.ToString());
+                ListColumnNames.Add("CANCELAMOUNT");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjCustomerAccountHistoryDetails.RefundAmount.ToString());
+                ListColumnNames.Add("RETURNAMOUNT");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjCustomerAccountHistoryDetails.DiscountAmount.ToString());
+                ListColumnNames.Add("DISCOUNTAMOUNT");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjCustomerAccountHistoryDetails.TotalTaxAmount.ToString());
+                ListColumnNames.Add("TOTALTAX");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjCustomerAccountHistoryDetails.NetSaleAmount.ToString());
+                ListColumnNames.Add("NETSALEAMOUNT");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjCustomerAccountHistoryDetails.AmountReceived.ToString());
+                ListColumnNames.Add("AMOUNTRECEIVED");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjCustomerAccountHistoryDetails.NewBalanceAmount.ToString());
+                ListColumnNames.Add("NEWBALANCEAMOUNT");
+                ListTypes.Add(Types.Number);
+
+                ListColumnValues.Add(ObjCustomerAccountHistoryDetails.BalanceAmount.ToString());
+                ListColumnNames.Add("BALANCEAMOUNT");
+                ListTypes.Add(Types.Number);
+
+                int ResultVal = ObjMySQLHelper.InsertIntoTable("CUSTOMERACCOUNTHISTORY", ListColumnNames, ListColumnValues, ListTypes);
+                if (ResultVal <= 0) return null;
+
+                Int32 HistoryEntryID = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select HISTORYENTRYID from CUSTOMERACCOUNTHISTORY " +
+                                            $"Where PaymentID = {ObjCustomerAccountHistoryDetails.PaymentID} " +
+                                            $"and ACCOUNTID = {ObjCustomerAccountHistoryDetails.AccountID}").ToString());
+                ObjCustomerAccountHistoryDetails.HistEntryId = HistoryEntryID;
+
+                Int32 Index = ListCustomerAccountHistoryDetails.BinarySearch(ObjCustomerAccountHistoryDetails);
+                if (Index < 0) ListCustomerAccountHistoryDetails.Insert(~Index, ObjCustomerAccountHistoryDetails);
+
+                return ObjCustomerAccountHistoryDetails;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.CreateNewCustomerAccountHistoryEntry()", ex);
+                return null;
             }
         }
     }
