@@ -441,6 +441,7 @@ namespace SalesOrdersReport
                 List<string> ListColumnNameParamStr = new List<string>(), ListColumnNames = new List<string>(), ListColumnDataType = new List<string>();
                 if (ListColumnNamesWthDataType == null) ListColumnNamesWthDataType = new List<string>();
                 if (ListColumnValues == null) ListColumnValues = new List<string>();
+
                 for (int i = 0; i < ListColumnNamesWthDataType.Count; i++)
                 {
                     string[] col = ListColumnNamesWthDataType[i].Split(',');
@@ -467,7 +468,6 @@ namespace SalesOrdersReport
                     + ")"
                     ;
                 Query += ";";
-                ObjMySQLHelper.ObjDbCommand.Parameters.Add("@storename", MySqlDbType.VarChar).Value = StoreName;
                 ListColumnNameParamStr.Add("@storename");
                 ListColumnValues.Add(StoreName);
                 ListColumnDataType.Add("VARCHAR");
