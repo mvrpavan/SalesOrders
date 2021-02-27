@@ -37,10 +37,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-
-   
-
-        public void AddCustomerToCache(CustomerDetails ObjCustomerDetails, List<PriceGroupDetails> ListPriceGroups)
+        /*public void AddCustomerToCache(CustomerDetails ObjCustomerDetails, List<PriceGroupDetails> ListPriceGroups)
         {
             try
             {
@@ -58,7 +55,8 @@ namespace SalesOrdersReport.Models
             {
                 CommonFunctions.ShowErrorDialog("CustomerMasterModel.AddCustomerToCache()", ex);
             }
-        }
+        }*/
+
         public List<string> GetAllPriceGrp()
         {
             try
@@ -200,6 +198,22 @@ namespace SalesOrdersReport.Models
                 CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetDiscountGrpDetails()", ex);
             }
             return null;
+        }
+
+        public CustomerDetails GetCustomerDetailsByPhoneNo(String PhoneNumber)
+        {
+            try
+            {
+                Int32 Index = ListCustomerDetails.FindIndex(e => e.PhoneNo.ToString().Equals(PhoneNumber));
+                if (Index < 0) return null;
+
+                return ListCustomerDetails[Index];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetCustomerDetailsByPhoneNo()", ex);
+                return null;
+            }
         }
 
         public DiscountGroupDetails1 GetDiscountGrpDetails(Int32 DiscountGroupID)
@@ -405,7 +419,7 @@ namespace SalesOrdersReport.Models
                 ObjPriceGrpDetails.PriceGrpName = PriceGrpName;
                 if (ListPriceGroupDetails.Count == 0)
                 {
-                    CommonFunctions.ObjCustomerMasterModel.LoadPriceGroupMaster(ObjMySQLHelper.GetQueryResultInDataTable("SELECT * FROM PRICEGROUPMASTER;"));
+                    CommonFunctions.ObjCustomerMasterModel.LoadPriceGroupMaster(ObjMySQLHelper.GetQueryResultInDataTable("SELECT * FROM PRICEGROUPMASTER Order by PriceGroupID;"));
                 }
                 int Index = ListPriceGroupDetails.BinarySearch(ObjPriceGrpDetails, ObjPriceGrpDetails);
                 if (Index < 0 && PriceGrpName!= "Select Price Group") MessageBox.Show("Error!! Price Group Name Not Found", "Error");
@@ -733,7 +747,7 @@ namespace SalesOrdersReport.Models
                 DataTable dtDiscountGroupMaster = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 LoadDiscountGroupMaster(dtDiscountGroupMaster);
 
-                Query = "SELECT * FROM PRICEGROUPMASTER;";
+                Query = "SELECT * FROM PRICEGROUPMASTER Order by PriceGroupID;";
                 DataTable dtPriceGroupMaster = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 LoadPriceGroupMaster(dtPriceGroupMaster);
 
@@ -903,11 +917,12 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                Int32 Index = ListPriceGroupDetails.BinarySearch(ObjPriceGroupDetails, ObjPriceGroupDetails);
+                ListPriceGroupDetails.Add(ObjPriceGroupDetails);
+                /*Int32 Index = ListPriceGroupDetails.BinarySearch(ObjPriceGroupDetails, ObjPriceGroupDetails);
                 if (Index < 0)
                 {
                     ListPriceGroupDetails.Insert(~Index, ObjPriceGroupDetails);
-                }
+                }*/
             }
             catch (Exception ex)
             {

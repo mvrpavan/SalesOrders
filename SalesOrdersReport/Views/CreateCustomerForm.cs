@@ -188,6 +188,14 @@ namespace SalesOrdersReport
                 {
                     lblCommonErrorMsg.Visible = false;
                 }
+
+                CustomerDetails customerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetailsByPhoneNo(txtCreateCustPhone.Text);
+                if (customerDetails != null)
+                {
+                    MessageBox.Show(this, "Customer with same Phone number already exists.\nCannot create another Customer with same Phone number.", "Create Customer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 List<string> ListColumnValues = new List<string>();
                 List<string> ListColumnNamesWithDataType = new List<string>();
                 if (txtCustAddress.Text.Trim() != string.Empty)
@@ -260,8 +268,15 @@ namespace SalesOrdersReport
                     MessageBox.Show("Added New Customer :: " + txtCreateCustomerName.Text + " successfully", "Added Customer");
                     if (UpdateCustomerOnClose != null) UpdateCustomerOnClose(Mode: 1);
                     CustomerDetails tmpCustomerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(txtCreateCustomerName.Text);
-                    if (UpdateObjectOnClose != null) UpdateObjectOnClose(1, tmpCustomerDetails);
-                    btnReset.PerformClick();
+                    if (UpdateObjectOnClose != null)
+                    {
+                        UpdateObjectOnClose(1, tmpCustomerDetails);
+                        this.Close();
+                    }
+                    else
+                    {
+                        btnReset.PerformClick();
+                    }
                 }
 
             }

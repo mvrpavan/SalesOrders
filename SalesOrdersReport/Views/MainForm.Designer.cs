@@ -70,7 +70,6 @@ namespace SalesOrdersReport.Views
             this.updatePurchasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cntxtMenuStripUserProfile = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripOrderMasterPath = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -393,7 +392,6 @@ namespace SalesOrdersReport.Views
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
             this.toolStripOrderMasterPath,
             this.toolStripStatusLabel,
             this.toolStripProgressBar,
@@ -405,13 +403,6 @@ namespace SalesOrdersReport.Views
             this.statusStrip.Text = "Status Strip";
             this.statusStrip.SizeChanged += new System.EventHandler(this.statusStrip_SizeChanged);
             // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(67, 17);
-            this.toolStripStatusLabel1.Text = "Master File:";
-            // 
             // toolStripOrderMasterPath
             // 
             this.toolStripOrderMasterPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
@@ -422,7 +413,7 @@ namespace SalesOrdersReport.Views
             // toolStripStatusLabel
             // 
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(905, 17);
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(941, 17);
             this.toolStripStatusLabel.Spring = true;
             this.toolStripStatusLabel.Text = "Status";
             this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -542,7 +533,6 @@ namespace SalesOrdersReport.Views
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripProgress;
         private System.Windows.Forms.ContextMenuStrip cntxtMenuStripUserProfile;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripOrderMasterPath;
         private System.Windows.Forms.ToolStripMenuItem updatePurchasesToolStripMenuItem;
         private System.Windows.Forms.PictureBox picBoxBackgroundLogo;

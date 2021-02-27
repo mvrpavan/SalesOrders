@@ -28,7 +28,7 @@ namespace SalesOrdersReport.Models
         public DateTime InvoiceDate, CreationDate, LastUpdatedDate;
         public Int32 CustomerID, OrderID;
         public String CustomerName;
-        public Double NetInvoiceAmount;
+        public Double GrossInvoiceAmount, DiscountAmount, NetInvoiceAmount;
         public INVOICESTATUS InvoiceStatus;
         public List<InvoiceItemDetails> ListInvoiceItems;
         public Int32 InvoiceItemCount = 0;
@@ -132,9 +132,9 @@ namespace SalesOrdersReport.Models
             try
             {
                 String[] ArrDtColumns1 = new string[] { "InvoiceID", "CustomerID", "OrderID", "InvoiceNumber", "InvoiceDate" };
-                String[] ArrDtColumns2 = new string[] { "InvoiceItemCount", "NetInvoiceAmount", "InvoiceStatus", "CreationDate", "LastUpdatedDate" };
+                String[] ArrDtColumns2 = new string[] { "InvoiceItemCount", "GrossInvoiceAmount", "DiscountAmount", "NetInvoiceAmount", "InvoiceStatus", "CreationDate", "LastUpdatedDate" };
 
-                String[] ArrColumns = new string[] { "InvoiceID", "CustomerID", "OrderID", "Invoice Number", "Invoice Date", "Customer Name", "Invoice Item Count", "Net Invoice Amount",
+                String[] ArrColumns = new string[] { "InvoiceID", "CustomerID", "OrderID", "Invoice Number", "Invoice Date", "Customer Name", "Invoice Item Count", "Gross Invoice Amount", "Discount Amount", "Net Invoice Amount",
                                                     "Invoice Status", "Creation Date", "Last Updated Date" };
 
                 String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)} from Invoices a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID", WhereClause = $" Where 1 = 1";
@@ -196,6 +196,8 @@ namespace SalesOrdersReport.Models
                         CustomerName = dtRow["CustomerName"].ToString(),
                         OrderID = Int32.Parse(dtRow["OrderID"].ToString()),
                         InvoiceItemCount = Int32.Parse(dtRow["InvoiceItemCount"].ToString()),
+                        GrossInvoiceAmount = Double.Parse(dtRow["GrossInvoiceAmount"].ToString()),
+                        DiscountAmount = Double.Parse(dtRow["DiscountAmount"].ToString()),
                         NetInvoiceAmount = Double.Parse(dtRow["NetInvoiceAmount"].ToString()),
                         InvoiceStatus = (INVOICESTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.INVOICESTATUS"), dtRow["InvoiceStatus"].ToString()),
                         CreationDate = DateTime.Parse(dtRow["CreationDate"].ToString()),
@@ -213,7 +215,7 @@ namespace SalesOrdersReport.Models
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"{this}.LoadOrderDetails()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.LoadInvoiceDetails()", ex);
                 throw;
             }
         }
@@ -355,7 +357,8 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public InvoiceDetails CreateNewInvoiceForCustomer(Int32 CustomerID, Int32 OrderID, DateTime InvoiceDate, String InvoiceNumber, List<InvoiceItemDetails> ListInvoiceItems)
+        public InvoiceDetails CreateNewInvoiceForCustomer(Int32 CustomerID, Int32 OrderID, DateTime InvoiceDate, String InvoiceNumber, 
+                                                    List<InvoiceItemDetails> ListInvoiceItems, Double Discount)
         {
             try
             {
@@ -364,7 +367,9 @@ namespace SalesOrdersReport.Models
                     InvoiceDate = InvoiceDate,
                     InvoiceNumber = InvoiceNumber,
                     InvoiceStatus = INVOICESTATUS.Created,
-                    NetInvoiceAmount = ListInvoiceItems.Sum(e => e.Price * e.SaleQty),
+                    GrossInvoiceAmount = ListInvoiceItems.Sum(e => e.Price * e.SaleQty),
+                    DiscountAmount = Discount,
+                    NetInvoiceAmount = ListInvoiceItems.Sum(e => e.Price * e.SaleQty) - Discount,
                     LastUpdatedDate = DateTime.Now,
                     CustomerID = CustomerID,
                     OrderID = OrderID,
@@ -386,6 +391,8 @@ namespace SalesOrdersReport.Models
                     new MySql.Data.Types.MySqlDateTime(NewInvoiceDetails.InvoiceDate),
                     NewInvoiceDetails.CustomerName,
                     NewInvoiceDetails.InvoiceItemCount,
+                    NewInvoiceDetails.GrossInvoiceAmount,
+                    NewInvoiceDetails.DiscountAmount,
                     NewInvoiceDetails.NetInvoiceAmount,
                     NewInvoiceDetails.InvoiceStatus,
                     new MySql.Data.Types.MySqlDateTime(NewInvoiceDetails.CreationDate),
@@ -410,10 +417,11 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                String Query = "Insert into Invoices(InvoiceNumber, InvoiceDate, CustomerID, OrderID, InvoiceItemCount, NetInvoiceAmount, " +
-                                "InvoiceStatus, CreationDate, LastUpdatedDate) Values (";
+                String Query = "Insert into Invoices(InvoiceNumber, InvoiceDate, CustomerID, OrderID, InvoiceItemCount, GrossInvoiceAmount, " +
+                                "DiscountAmount, NetInvoiceAmount, InvoiceStatus, CreationDate, LastUpdatedDate) Values (";
                 Query += $"'{ObjInvoiceDetails.InvoiceNumber}', '{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.InvoiceDate)}',";
                 Query += $"{ObjInvoiceDetails.CustomerID}, {ObjInvoiceDetails.OrderID}, {ObjInvoiceDetails.InvoiceItemCount}, " +
+                         $"{ObjInvoiceDetails.GrossInvoiceAmount}, {ObjInvoiceDetails.DiscountAmount}, " +
                          $"{ObjInvoiceDetails.NetInvoiceAmount}, '{ObjInvoiceDetails.InvoiceStatus}', " +
                          $"'{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.CreationDate)}', '{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.LastUpdatedDate)}'";
                 Query += ")";
@@ -441,6 +449,13 @@ namespace SalesOrdersReport.Models
                 String Query = "";
                 foreach (var item in ListInvoiceItems)
                 {
+                    Double[] TaxRates = ObjProductMasterModel.GetTaxRatesForProduct(item.ProductName);
+                    item.TaxableValue = item.SaleQty * item.Price / ((100.0 + TaxRates.Sum()) / 100.0);
+                    item.CGST = item.TaxableValue * TaxRates[0] / 100.0;
+                    item.SGST = item.TaxableValue * TaxRates[1] / 100.0;
+                    item.IGST = item.TaxableValue * TaxRates[2] / 100.0;
+                    item.NetTotal = item.TaxableValue + (item.TaxableValue * TaxRates.Sum() / 100.0);
+
                     Query = "Insert into InvoiceItems(InvoiceID, ProductID, OrderQty, SaleQty, Price, " +
                             "TaxableValue, CGST, SGST, IGST, NetTotal, InvoiceItemStatus) Values (";
                     Query += $"{InvoiceID}, {item.ProductID}, {item.OrderQty}, {item.SaleQty}, {item.Price}, " +
@@ -532,6 +547,20 @@ namespace SalesOrdersReport.Models
             {
                 CommonFunctions.ShowErrorDialog($"{this}.UpdateInvoiceDetails()", ex);
                 throw;
+            }
+        }
+
+        private void UpdateInvoiceStatus(Int32 InvoiceID, INVOICESTATUS NewInvoiceStatus)
+        {
+            try
+            {
+                ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceStatus" },
+                            new List<String>() { NewInvoiceStatus.ToString() },
+                            new List<Types>() { Types.String }, $"InvoiceID = {InvoiceID}");
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdateInvoiceStatus()", ex);
             }
         }
 
@@ -907,7 +936,7 @@ namespace SalesOrdersReport.Models
                 for (int i = 0; i < ListInvoiceDetails.Count; i++)
                 {
                     ListInvoiceDetails[i].InvoiceStatus = INVOICESTATUS.Paid;
-                    UpdateInvoiceDetails(ListInvoiceDetails[i]);
+                    UpdateInvoiceStatus(ListInvoiceDetails[i].InvoiceID, ListInvoiceDetails[i].InvoiceStatus);
                 }
 
                 return 0;
@@ -919,7 +948,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public Int32 MarkInvoicesAsDelivered(List<Int32> ListInvoiceIDsToUpdate, Boolean UpdateInvoiceStatus = true)
+        public Int32 MarkInvoicesAsDelivered(List<Int32> ListInvoiceIDsToUpdate, Boolean IsUpdateInvoiceStatus = true)
         {
             try
             {
@@ -953,13 +982,14 @@ namespace SalesOrdersReport.Models
 
                 ObjProductMasterModel.UpdateProductInventoryDataFromInvoice(ListAllInvoiceItems, MinInvoiceDate);
 
-                if (UpdateInvoiceStatus)
+                if (IsUpdateInvoiceStatus)
                 {
                     //Update InvoiceStatus as Delivered
                     for (int i = 0; i < ListInvoiceDetails.Count; i++)
                     {
                         ListInvoiceDetails[i].InvoiceStatus = INVOICESTATUS.Delivered;
-                        ListInvoiceDetails[i] = UpdateInvoiceDetails(ListInvoiceDetails[i]);
+                        UpdateInvoiceStatus(ListInvoiceDetails[i].InvoiceID, ListInvoiceDetails[i].InvoiceStatus);
+                        FillInvoiceItemDetails(ListInvoiceDetails[i]);
                     }
                 }
 
@@ -1024,8 +1054,9 @@ namespace SalesOrdersReport.Models
                     CustomerPhone = ObjCustomerDetails.PhoneNo.ToString(),
                     DateValue = ObjInvoiceDetails.InvoiceDate,
                     InvoiceNumber = ObjInvoiceDetails.InvoiceNumber,
-                    GrossAmount = ObjInvoiceDetails.NetInvoiceAmount,
-                    TotalTaxAmount = ObjInvoiceDetails.NetInvoiceAmount,
+                    GrossAmount = ObjInvoiceDetails.GrossInvoiceAmount,
+                    DiscountAmount = ObjInvoiceDetails.DiscountAmount,
+                    TotalTaxAmount = 0,
                     NetAmount = ObjInvoiceDetails.NetInvoiceAmount,
                     StaffName = MySQLHelper.GetMySqlHelperObj().CurrentUser,
                     Header1 = "Kachatathapa Kerala Super Store",

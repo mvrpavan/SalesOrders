@@ -64,6 +64,7 @@ namespace SalesOrdersReport.Views
             try
             {
                 lblShortcuts.Text = "";
+                lblShortcuts.Text += "F1:POS Bills    ";
                 lblShortcuts.Text += "F2:Orders    ";
                 lblShortcuts.Text += "F3:Invoices    ";
                 lblShortcuts.Text += "F4:Products    ";
@@ -71,12 +72,13 @@ namespace SalesOrdersReport.Views
                 lblShortcuts.Text += "F6:Payments & Expenses    ";
                 //lblShortcuts.Text += "F7:Vendors    ";
 
+                POSbillingToolStripMenuItem.ShortcutKeys = Keys.F1;
                 ordersToolStripMenuItem.ShortcutKeys = Keys.F2;
                 invoicesToolStripMenuItem.ShortcutKeys = Keys.F3;
                 productMenu.ShortcutKeys = Keys.F4;
                 customerToolStripMenuItem.ShortcutKeys = Keys.F5;
                 PaymentsExpensesToolStripMenuItem.ShortcutKeys = Keys.F6;
-                vendorHistoryToolStripMenuItem.ShortcutKeys = Keys.F7;
+                //vendorHistoryToolStripMenuItem.ShortcutKeys = Keys.F7;
             }
             catch (Exception ex)
             {

@@ -52,15 +52,24 @@ namespace SalesOrdersReport.Views
                 ReportProgressFunc(0);
 
                 lblLoadingStatus.Text = "Establishing Database connection...";
-                CommonFunctions.CreateDBConnection();
+                while (CommonFunctions.CreateDBConnection() == false)
+                {
+                    DialogResult dialogResult = MessageBox.Show(this, "Unable to Connect to Database. Please check Internet connection and retry.\nDo you want to re-connect to database?", "Connectivity issue", MessageBoxButtons.RetryCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    if (dialogResult == DialogResult.Cancel)
+                    {
+                        Application.Exit();
+                    }
+                }
                 lblLoadingStatus.Text = "Establishing Database connection...completed";
 
                 if (!MySQLHelper.GetMySqlHelperObj().CheckTableExists("USERMASTER"))
                 {
+                    lblLoadingStatus.Text = "Creating required tables...";
                     RunDBScript ObjRunDBScript = new RunDBScript();
                     ObjRunDBScript.CreateMasterTables();
                     ObjRunDBScript.CreateRunningTables();
                     ObjRunDBScript.ExecuteOneTimeExecutionScript();
+                    lblLoadingStatus.Text = "Creating required tables...completed";
                 }
 
                 //{

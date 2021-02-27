@@ -85,6 +85,13 @@ namespace SalesOrdersReport.Models
                 g.DrawString("Items:" + ObjPrintDetails.ListPrintItemDetails.Count, ItemParticularsHeader, Brushes.Black, StartX + 40, StartY + CurrOffset);
                 g.DrawString("Qty:" + ObjPrintDetails.ListPrintItemDetails.Sum(e => e.SaleQty), ItemParticularsHeader, Brushes.Black, StartX + 100, StartY + CurrOffset);
                 g.DrawString("Amt:", ItemParticularsHeader, Brushes.Black, StartX + 180, StartY + CurrOffset);
+                g.DrawString((ObjPrintDetails.GrossAmount + ObjPrintDetails.TotalTaxAmount).ToString("F"), ItemParticularsHeader, Brushes.Black, new RectangleF(StartX + 190, StartY + CurrOffset, 55, 10), stringFormat);
+                CurrOffset += Offset; g.DrawLine(new Pen(Brushes.Black), StartX, StartY + CurrOffset, PaperWidthInPixel - StartX, StartY + CurrOffset);
+                CurrOffset += 2;
+                g.DrawString("Discount:", ItemParticularsHeader, Brushes.Black, StartX + 170, StartY + CurrOffset);
+                g.DrawString(ObjPrintDetails.DiscountAmount.ToString("F"), ItemParticularsHeader, Brushes.Black, new RectangleF(StartX + 190, StartY + CurrOffset, 55, 10), stringFormat);
+                CurrOffset += Offset;
+                g.DrawString("Net Total:", ItemParticularsHeader, Brushes.Black, StartX + 170, StartY + CurrOffset);
                 g.DrawString(ObjPrintDetails.NetAmount.ToString("F"), ItemParticularsHeader, Brushes.Black, new RectangleF(StartX + 190, StartY + CurrOffset, 55, 10), stringFormat);
                 CurrOffset += Offset; g.DrawLine(new Pen(Brushes.Black), StartX, StartY + CurrOffset, PaperWidthInPixel - StartX, StartY + CurrOffset);
                 CurrOffset += 2;
@@ -93,7 +100,7 @@ namespace SalesOrdersReport.Models
                 for (int i = 0; i < ObjPrintDetails.ListFooterLines.Count; i++)
                 {
                     Length = ObjPrintDetails.ListFooterLines[i].Length;
-                    X = PaperCenterX - (Length * FooterFontWidthInPixel / 3);
+                    X = PaperCenterX - (Length * FooterFontWidthInPixel / 4);
                     g.DrawString(ObjPrintDetails.ListFooterLines[i], FooterFont, Brushes.Black, X, StartY + CurrOffset);
                     CurrOffset += Offset - 2;
                 }

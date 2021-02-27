@@ -14,6 +14,12 @@ namespace SalesOrdersReport.Views
             CommonFunctions.CurrentForm = this;
             InitializeComponent();
             txtUserName.Focus();
+            this.Shown += LoginForm_Shown;
+        }
+
+        private void LoginForm_Shown(object sender, EventArgs e)
+        {
+            txtUserName.Focus();
         }
 
         private void btnLogin_Click(object sender, EventArgs e)

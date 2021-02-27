@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreatePOSBillForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.lblSelectName = new System.Windows.Forms.Label();
             this.cmbBoxCustomers = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -57,7 +57,6 @@
             this.picBoxLoading = new System.Windows.Forms.PictureBox();
             this.btnAddCustomer = new System.Windows.Forms.Button();
             this.cmbBoxBillNumber = new System.Windows.Forms.ComboBox();
-            this.btnPrintBill = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.cmbBoxPhoneNumbers = new System.Windows.Forms.ComboBox();
             this.btnClose = new System.Windows.Forms.Button();
@@ -89,7 +88,6 @@
             this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.OrdQtyCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column14 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.panelOrderControls = new System.Windows.Forms.Panel();
@@ -121,7 +119,6 @@
             this.cmbBoxCustomers.Name = "cmbBoxCustomers";
             this.cmbBoxCustomers.Size = new System.Drawing.Size(212, 21);
             this.cmbBoxCustomers.TabIndex = 1;
-            this.cmbBoxCustomers.SelectedIndexChanged += new System.EventHandler(this.cmbBoxCustomers_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -366,21 +363,6 @@
             this.cmbBoxBillNumber.TabIndex = 1;
             this.cmbBoxBillNumber.SelectedIndexChanged += new System.EventHandler(this.cmbBoxBillNumber_SelectedIndexChanged);
             // 
-            // btnPrintBill
-            // 
-            this.btnPrintBill.FlatAppearance.BorderSize = 0;
-            this.btnPrintBill.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPrintBill.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPrintBill.Image = global::SalesOrdersReport.Properties.Resources.Iconshow_Hardware_Printer;
-            this.btnPrintBill.Location = new System.Drawing.Point(937, 80);
-            this.btnPrintBill.Name = "btnPrintBill";
-            this.btnPrintBill.Size = new System.Drawing.Size(111, 41);
-            this.btnPrintBill.TabIndex = 16;
-            this.btnPrintBill.Text = "Print Bill";
-            this.btnPrintBill.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnPrintBill.UseVisualStyleBackColor = true;
-            this.btnPrintBill.Click += new System.EventHandler(this.btnPrintBill_Click);
-            // 
             // label11
             // 
             this.label11.Location = new System.Drawing.Point(61, 72);
@@ -397,7 +379,6 @@
             this.cmbBoxPhoneNumbers.Name = "cmbBoxPhoneNumbers";
             this.cmbBoxPhoneNumbers.Size = new System.Drawing.Size(212, 21);
             this.cmbBoxPhoneNumbers.TabIndex = 1;
-            this.cmbBoxPhoneNumbers.SelectedIndexChanged += new System.EventHandler(this.cmbBoxPhoneNumbers_SelectedIndexChanged);
             // 
             // btnClose
             // 
@@ -666,15 +647,15 @@
             this.PriceCol,
             this.QuantityCol,
             this.SelectCol});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dtGridViewProdListForSelection.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dtGridViewProdListForSelection.DefaultCellStyle = dataGridViewCellStyle3;
             this.dtGridViewProdListForSelection.Location = new System.Drawing.Point(3, 3);
             this.dtGridViewProdListForSelection.MultiSelect = false;
             this.dtGridViewProdListForSelection.Name = "dtGridViewProdListForSelection";
@@ -744,18 +725,17 @@
             this.Column8,
             this.Column10,
             this.Column11,
-            this.OrdQtyCol,
             this.Column12,
             this.Column14});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dtGridViewInvOrdProdList.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dtGridViewInvOrdProdList.DefaultCellStyle = dataGridViewCellStyle4;
             this.dtGridViewInvOrdProdList.Location = new System.Drawing.Point(3, 6);
             this.dtGridViewInvOrdProdList.MultiSelect = false;
             this.dtGridViewInvOrdProdList.Name = "dtGridViewInvOrdProdList";
@@ -794,14 +774,6 @@
             this.Column11.ReadOnly = true;
             this.Column11.Width = 58;
             // 
-            // OrdQtyCol
-            // 
-            this.OrdQtyCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.OrdQtyCol.HeaderText = "Order Quantity";
-            this.OrdQtyCol.MinimumWidth = 100;
-            this.OrdQtyCol.Name = "OrdQtyCol";
-            this.OrdQtyCol.Width = 102;
-            // 
             // Column12
             // 
             this.Column12.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
@@ -838,7 +810,6 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1079, 601);
-            this.Controls.Add(this.btnPrintBill);
             this.Controls.Add(this.btnAddCustomer);
             this.Controls.Add(this.picBoxLoading);
             this.Controls.Add(this.lblStatus);
@@ -901,7 +872,6 @@
         private System.Windows.Forms.PictureBox picBoxLoading;
         private System.Windows.Forms.Button btnAddCustomer;
         private System.Windows.Forms.ComboBox cmbBoxBillNumber;
-        private System.Windows.Forms.Button btnPrintBill;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox cmbBoxPhoneNumbers;
         private System.Windows.Forms.Button btnClose;
@@ -937,12 +907,11 @@
         private System.Windows.Forms.Button btnItemDiscount;
         private System.Windows.Forms.Button btnRemItem;
         private System.Windows.Forms.DataGridView dtGridViewInvOrdProdList;
+        private System.Windows.Forms.Panel panelOrderControls;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
-        private System.Windows.Forms.DataGridViewTextBoxColumn OrdQtyCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column14;
-        private System.Windows.Forms.Panel panelOrderControls;
     }
 }

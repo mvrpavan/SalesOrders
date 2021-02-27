@@ -238,7 +238,17 @@ namespace SalesOrdersReport.Models
                 ObjOrderDetails.OrderStatus = ORDERSTATUS.Completed;
                 UpdateOrderDetails(ObjOrderDetails);
 
-                InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(ObjOrderDetails.CustomerID, ObjOrderDetails.OrderID, DateTime.Now, ObjInvoicesModel.GenerateNewInvoiceNumber(), ListInvoiceItems);
+                Double DiscountPerc = 0, DiscountValue = 0;
+                DiscountGroupDetails1 CustomerDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjOrderDetails.CustomerName);
+                if (CustomerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
+                    DiscountPerc = CustomerDiscountGroup.Discount;
+                else if (CustomerDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
+                    DiscountValue = CustomerDiscountGroup.Discount;
+
+                Double Discount = DiscountValue;
+                if (DiscountPerc > 0) Discount = ObjOrderDetails.EstimateOrderAmount* DiscountPerc;
+                
+                InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(ObjOrderDetails.CustomerID, ObjOrderDetails.OrderID, DateTime.Now, ObjInvoicesModel.GenerateNewInvoiceNumber(), ListInvoiceItems, Discount);
 
                 if (ObjInvoiceDetails != null) return 0;
                 else return -1;

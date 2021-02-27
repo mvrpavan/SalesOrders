@@ -18,7 +18,7 @@ namespace SalesOrdersReport.Views
         CustomerDetails CurrCustomerDetails;
         DiscountGroupDetails1 CurrCustomerDiscountGroup;
         CustomerOrderInvoiceDetails CurrOrderInvoiceDetails;
-        Int32 CategoryColIndex = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4, OrdQtyColIndex = 3, SaleQtyColIndex = 4, ItemSelectionSelectColIndex = 5;
+        Int32 CategoryColIndex = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4, SaleQtyColIndex = 3, ItemSelectionSelectColIndex = 4;
         Int32 PaddingSpace = 6;
         Char PaddingChar = CommonFunctions.PaddingChar, CurrencyChar = CommonFunctions.CurrencyChar;
         Int32 BackgroundTask = -1;
@@ -112,6 +112,9 @@ namespace SalesOrdersReport.Views
                 cmbBoxPhoneNumbers.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 cmbBoxPhoneNumbers.AutoCompleteSource = AutoCompleteSource.ListItems;
                 cmbBoxPhoneNumbers.SelectedIndex = -1;
+
+                cmbBoxCustomers.SelectedIndexChanged += cmbBoxCustomers_SelectedIndexChanged;
+                cmbBoxPhoneNumbers.SelectedIndexChanged += cmbBoxPhoneNumbers_SelectedIndexChanged;
 
                 //Populate cmbBoxProdCat with Item Categories and cmbBoxProduct with Items
                 List<String> ListItemCategories = new List<String>();
@@ -239,7 +242,7 @@ namespace SalesOrdersReport.Views
                     {
                         ProductID = tmpProductDetails.ProductID,
                         ProductName = ItemName,
-                        OrderQty = Double.Parse(item.Cells[OrdQtyColIndex].Value.ToString()),
+                        OrderQty = Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString()),
                         SaleQty = Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString()),
                         Price = Double.Parse(item.Cells[PriceColIndex].Value.ToString()),
                         InvoiceItemStatus = INVOICEITEMSTATUS.Invoiced
@@ -288,7 +291,10 @@ namespace SalesOrdersReport.Views
             {
                 if (CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceID < 0)
                 {
-                    AddUpdatedInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(CurrCustomerDetails.CustomerID, CurrOrderInvoiceDetails.CurrInvoiceDetails.OrderID, DateTime.Now, CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceNumber, CurrOrderInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems);
+                    AddUpdatedInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(CurrCustomerDetails.CustomerID, 
+                                            CurrOrderInvoiceDetails.CurrInvoiceDetails.OrderID, DateTime.Now, 
+                                            CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceNumber, 
+                                            CurrOrderInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems, Double.Parse(lblDiscount.Text.Replace(CurrencyChar, ' ').Trim()));
                     UpdateObjectOnClose(1, AddUpdatedInvoiceDetails);
                 }
                 else
@@ -431,8 +437,7 @@ namespace SalesOrdersReport.Views
                         row[CategoryColIndex] = ObjProductMasterModel.GetProductDetails(item.ProductID).CategoryName;
                         row[ItemColIndex] = item.ProductName;
                         row[PriceColIndex] = item.Price.ToString("F");
-                        row[OrdQtyColIndex] = item.OrderQty;
-                        row[SaleQtyColIndex] = item.OrderQty;
+                        row[SaleQtyColIndex] = item.SaleQty;
                         row[ItemSelectionSelectColIndex] = false;
 
                         Int32 Index = dtGridViewInvOrdProdList.Rows.Add(row);
@@ -488,11 +493,12 @@ namespace SalesOrdersReport.Views
                     case 2:     //Load Order/Invoice for Current Customer
                         EnableItemsPanel(true);
                         picBoxLoading.Visible = false;
-                        cmbBoxCustomers.Focus();
-                        if (CurrentInvoiceID < 0)
-                        {
-                            MessageBox.Show(this, "Loaded Invoice data for selected Customer", "Customer Invoice", MessageBoxButtons.OK);
-                        }
+                        cmbBoxProdCat.Focus();
+                        cmbBoxProdCat.SelectedIndex = 0;
+                        //if (CurrentInvoiceID < 0)
+                        //{
+                        //    MessageBox.Show(this, "Loaded Invoice data for selected Customer", "Customer Invoice", MessageBoxButtons.OK);
+                        //}
                         break;
                     case 3:     //Update or Create Bill
                         MessageBox.Show(this, "Created Customer Bill successfully", "Create Bill", MessageBoxButtons.OK);
@@ -517,7 +523,7 @@ namespace SalesOrdersReport.Views
                             CustomerAccountHistoryDetails tmpCustomerAccountHistoryDetails = new CustomerAccountHistoryDetails() {
                                 AccountID = tmpPaymentDetails.AccountID,
                                 SaleAmount = AddUpdatedInvoiceDetails.ListInvoiceItems.Sum(s => s.SaleQty * s.Price),
-                                DiscountAmount = 0,
+                                DiscountAmount = AddUpdatedInvoiceDetails.DiscountAmount,
                                 CancelAmount = 0,
                                 RefundAmount = 0,
                                 BalanceAmount = 0,
@@ -601,7 +607,7 @@ namespace SalesOrdersReport.Views
                 for (int i = 0; i < tmpListProducts.Count; i++)
                 {
                     Double Price = CommonFunctions.ObjProductMaster.GetPriceForProduct(tmpListProducts[i].ItemName, CurrCustomerDetails.PriceGroupIndex);
-                    Price = Price * ((CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(tmpListProducts[i].ItemName).Sum() + 100) / 100);
+                    //Price = Price * ((CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(tmpListProducts[i].ItemName).Sum() + 100) / 100);
 
                     Object[] row = { tmpListProducts[i].CategoryName, tmpListProducts[i].ItemName,
                                      Price.ToString("F"), 0, false};
@@ -667,7 +673,6 @@ namespace SalesOrdersReport.Views
                     row[ItemColIndex] = ListSelectedRows[j].Cells[ItemColIndex].Value;
                     row[PriceColIndex] = ListSelectedRows[j].Cells[PriceColIndex].Value;
                     row[ItemSelectionSelectColIndex] = false;
-                    row[OrdQtyColIndex] = ListSelectedRows[j].Cells[QtyColIndex].Value;
                     row[SaleQtyColIndex] = ListSelectedRows[j].Cells[QtyColIndex].Value;
                     ListSelectedRows[j].Cells[SelectColIndex].Value = false;
                     ListSelectedRows[j].Cells[QtyColIndex].Value = 0;
@@ -1040,6 +1045,32 @@ namespace SalesOrdersReport.Views
                             DictPhoneNumberCustomerDetails.Add(tmpCustomerDetails.PhoneNo, tmpCustomerDetails);
                             ListCustomerPhoneNumbers.Add(tmpCustomerDetails.PhoneNo);
                         }
+
+                        cmbBoxCustomers.SelectedIndexChanged -= cmbBoxCustomers_SelectedIndexChanged;
+                        cmbBoxPhoneNumbers.SelectedIndexChanged -= cmbBoxPhoneNumbers_SelectedIndexChanged;
+                        //cmbBoxCustomers.AutoCompleteCustomSource.AddRange(ListCustomerNames.ToArray());
+                        //cmbBoxPhoneNumbers.AutoCompleteCustomSource.AddRange(ListCustomerPhoneNumbers.Select(e => e.ToString()).ToArray());
+                        cmbBoxCustomers.AutoCompleteMode = AutoCompleteMode.None;
+                        cmbBoxCustomers.AutoCompleteSource = AutoCompleteSource.None;
+                        cmbBoxCustomers.DataSource = null;
+                        cmbBoxCustomers.Items.Clear();
+                        cmbBoxCustomers.Items.AddRange(ListCustomerNames.Select(e => e.ToString()).ToArray());
+                        cmbBoxCustomers.DataSource = ListCustomerNames;
+                        cmbBoxCustomers.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                        cmbBoxCustomers.AutoCompleteSource = AutoCompleteSource.ListItems;
+
+                        cmbBoxPhoneNumbers.AutoCompleteMode = AutoCompleteMode.None;
+                        cmbBoxPhoneNumbers.AutoCompleteSource = AutoCompleteSource.None;
+                        cmbBoxPhoneNumbers.DataSource = null;
+                        cmbBoxPhoneNumbers.Items.Clear();
+                        cmbBoxPhoneNumbers.Items.AddRange(ListCustomerPhoneNumbers.Select(e => e.ToString()).ToArray());
+                        cmbBoxPhoneNumbers.DataSource = ListCustomerPhoneNumbers;
+                        cmbBoxPhoneNumbers.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                        cmbBoxPhoneNumbers.AutoCompleteSource = AutoCompleteSource.ListItems;
+
+                        cmbBoxCustomers.SelectedIndexChanged += cmbBoxCustomers_SelectedIndexChanged;
+                        cmbBoxPhoneNumbers.SelectedIndexChanged += cmbBoxPhoneNumbers_SelectedIndexChanged;
+                        cmbBoxCustomers.SelectedIndex = ListCustomerNames.FindIndex(e => e == tmpCustomerDetails.CustomerName);
                         cmbBoxPhoneNumbers.SelectedIndex = ListCustomerPhoneNumbers.FindIndex(e => e == tmpCustomerDetails.PhoneNo);
                         break;
                     default:
@@ -1056,7 +1087,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                if ((e.ColumnIndex != OrdQtyColIndex && e.ColumnIndex != SaleQtyColIndex && e.ColumnIndex != PriceColIndex) || e.RowIndex < 0) return;
+                if ((e.ColumnIndex != SaleQtyColIndex && e.ColumnIndex != PriceColIndex) || e.RowIndex < 0) return;
 
                 DataGridViewCell cell = dtGridViewInvOrdProdList.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 cell.ErrorText = null;
@@ -1093,33 +1124,6 @@ namespace SalesOrdersReport.Views
                     }
                 }
 
-                if (e.ColumnIndex == OrdQtyColIndex)
-                {
-                    String CellText = cell.Value.ToString();
-                    Double result;
-                    Boolean IsValid = true;
-                    String[] Tokens = null;
-                    if (CellText.Contains("+") || CellText.Contains("-"))
-                        Tokens = CellText.Split(new Char[] { '+', '-' });
-                    else
-                        Tokens = new String[] { CellText };
-
-                    for (int i = 0; i < Tokens.Length; i++)
-                    {
-                        if (String.IsNullOrEmpty(Tokens[i].Trim()) || !Double.TryParse(Tokens[i], out result))
-                        {
-                            IsValid = false;
-                            break;
-                        }
-                    }
-
-                    if (!IsValid)
-                    {
-                        cell.ErrorText = "Must be a valid Order Quantity";
-                        return;
-                    }
-                }
-
                 dtGridViewInvOrdProdList.CommitEdit(DataGridViewDataErrorContexts.Commit);
                 UpdateSummaryDetails();
             }
@@ -1135,8 +1139,7 @@ namespace SalesOrdersReport.Views
             {
                 for (int i = 0; i < dtGridViewInvOrdProdList.Rows.Count; i++)
                 {
-                    if (!String.IsNullOrEmpty(dtGridViewInvOrdProdList.Rows[i].Cells[OrdQtyColIndex].ErrorText)
-                        || !String.IsNullOrEmpty(dtGridViewInvOrdProdList.Rows[i].Cells[SaleQtyColIndex].ErrorText)) return false;
+                    if (!String.IsNullOrEmpty(dtGridViewInvOrdProdList.Rows[i].Cells[SaleQtyColIndex].ErrorText)) return false;
                 }
                 return true;
             }
@@ -1309,18 +1312,6 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.dtGridViewProdListForSelection_CellValueChanged()", ex);
-            }
-        }
-
-        private void btnPrintBill_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                InvoicesModel.PrintBill("BILL00005");
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.btnPrintBill_Click()", ex);
             }
         }
     }

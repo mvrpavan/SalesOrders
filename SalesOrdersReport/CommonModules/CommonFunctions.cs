@@ -708,8 +708,8 @@ namespace SalesOrdersReport.CommonModules
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("CommonFunctions.CreateDBConnection()", ex);
-                throw ex;
+                //CommonFunctions.ShowErrorDialog("CommonFunctions.CreateDBConnection()", ex);
+                return false;
             }
         }
 

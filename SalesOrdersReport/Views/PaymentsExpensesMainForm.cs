@@ -39,6 +39,8 @@ namespace SalesOrdersReport.Views
 
                 LoadPaymentsGridView();
                 LoadExpensesGridView();
+
+                groupBoxExpenses.Visible = false;
             }
             catch (Exception ex)
             {

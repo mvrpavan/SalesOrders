@@ -22,7 +22,7 @@ namespace SalesOrdersReport.Models
         public List<String> ListSubHeaderLines = new List<string>();
         public DateTime DateValue;
         public List<PrintItemDetails> ListPrintItemDetails = new List<PrintItemDetails>();
-        public Double GrossAmount, TotalTaxAmount, NetAmount;
+        public Double GrossAmount, DiscountAmount, TotalTaxAmount, NetAmount;
         public List<String> ListFooterLines = new List<string>();
     }
 

@@ -473,7 +473,9 @@ namespace SalesOrdersReport.Views
                 OrderDetails AddUpdatedOrderDetails = null;
                 if (CurrOrderInvoiceDetails.CurrOrderDetails.OrderID < 0)
                 {
-                    AddUpdatedOrderDetails = ObjOrdersModel.CreateNewOrderForCustomer(CurrCustomerDetails.CustomerID, dtTmPckrInvOrdDate.Value, CurrOrderInvoiceDetails.CurrOrderDetails.OrderNumber, CurrOrderInvoiceDetails.CurrOrderDetails.ListOrderItems);
+                    AddUpdatedOrderDetails = ObjOrdersModel.CreateNewOrderForCustomer(CurrCustomerDetails.CustomerID, 
+                                            dtTmPckrInvOrdDate.Value, CurrOrderInvoiceDetails.CurrOrderDetails.OrderNumber, 
+                                            CurrOrderInvoiceDetails.CurrOrderDetails.ListOrderItems);
                     UpdateObjectOnClose(1, AddUpdatedOrderDetails);
                 }
                 else
@@ -495,7 +497,7 @@ namespace SalesOrdersReport.Views
                 InvoiceDetails AddUpdatedInvoiceDetails = null;
                 if (CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceID < 0)
                 {
-                    AddUpdatedInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(CurrCustomerDetails.CustomerID, CurrOrderInvoiceDetails.CurrInvoiceDetails.OrderID, dtTmPckrInvOrdDate.Value, CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceNumber, CurrOrderInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems);
+                    AddUpdatedInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(CurrCustomerDetails.CustomerID, CurrOrderInvoiceDetails.CurrInvoiceDetails.OrderID, dtTmPckrInvOrdDate.Value, CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceNumber, CurrOrderInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems, Double.Parse(lblDiscount.Text));
                     UpdateObjectOnClose(1, AddUpdatedInvoiceDetails);
                 }
                 else

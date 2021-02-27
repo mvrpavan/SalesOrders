@@ -45,6 +45,9 @@ namespace SalesOrdersReport.Views
                 cmbBoxBillStatus.SelectedIndex = 1;
 
                 btnViewEditBill.Enabled = false;
+                btnCancelBill.Enabled = false;
+                btnExportBill.Enabled = false;
+                btnSearchBill.Enabled = false;
 
                 LoadGridView();
             }
@@ -315,7 +318,7 @@ namespace SalesOrdersReport.Views
                 if (ObjInvoiceDetails.ListInvoiceItems == null || ObjInvoiceDetails.ListInvoiceItems.Count == 0) return;
 
                 DataTable dtInvoiceProducts = new DataTable();
-                String[] ArrColumns = new String[] { "ProductID", "Product Name", "Sale Qty", "MRP", "Price",
+                String[] ArrColumns = new String[] { "ProductID", "Product Name", "Sale Qty", "Price",
                                                     "Gross Total", "Tax", "Net Total", "Item Status" };
                 Type[] ArrColumnTypes = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeDouble,
                                                     CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble,
@@ -333,7 +336,6 @@ namespace SalesOrdersReport.Views
                     {
                         tmpInvoiceItem.ProductID,
                         tmpInvoiceItem.ProductName,
-                        tmpInvoiceItem.OrderQty,
                         tmpInvoiceItem.SaleQty,
                         tmpInvoiceItem.Price,
                         tmpInvoiceItem.TaxableValue,
