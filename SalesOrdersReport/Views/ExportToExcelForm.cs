@@ -322,6 +322,7 @@ namespace SalesOrdersReport.Views
             try
             {
                 CommonFunctions.ToggleEnabledPropertyOfAllControls(this);
+                CommonFunctions.ResetProgressBar();
                 if (ExportResult != 0) return;
 
                 switch (ExportDataType)

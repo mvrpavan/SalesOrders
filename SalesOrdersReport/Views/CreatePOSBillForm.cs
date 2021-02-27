@@ -155,6 +155,11 @@ namespace SalesOrdersReport.Views
                     cmbBoxBillNumber.Items.Add("<New>");
                     cmbBoxBillNumber.Items.AddRange(ListCustomerInvoices.Select(s => s.InvoiceNumber).ToArray());
                     cmbBoxBillNumber.SelectedIndex = ListCustomerInvoices.FindIndex(s => s.InvoiceID == CurrentInvoiceID) + 1;
+
+                    if (ObjInvoiceDetails.InvoiceStatus == INVOICESTATUS.Delivered || ObjInvoiceDetails.InvoiceStatus == INVOICESTATUS.Paid)
+                    {
+                        EnableItemsPanel(false);
+                    }
                 }
             }
             catch (Exception ex)

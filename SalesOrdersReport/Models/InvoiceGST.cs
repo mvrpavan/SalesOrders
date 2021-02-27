@@ -178,12 +178,13 @@ namespace SalesOrdersReport.Models
                     else
                         xlRange.Formula = "=" + xlRangeTotal.Address[false, false];
 
+                    TaxDetails[] ArrTaxDetails = new TaxDetails[] { CurrProd.CGSTDetails, CurrProd.SGSTDetails, CurrProd.IGSTDetails };
                     xlRange = xlWorkSheet.Cells[ItemDetailsStartRow + i, DictColNumbers[ItemTaxableValueCol]];
                     xlRange.NumberFormat = "#,##0.00";
                     Excel.Range xlRangeDiscount = xlWorkSheet.Cells[ItemDetailsStartRow + i, DictColNumbers[ItemDiscCol]];
+                    //xlRange.Formula = "=(" + xlRangeTotal.Address[false, false] + "-" + xlRangeDiscount.Address[false, false] + $")/{1 + ArrTaxDetails.Sum(e => e.TaxRate)}";
                     xlRange.Formula = "=(" + xlRangeTotal.Address[false, false] + "-" + xlRangeDiscount.Address[false, false] + ")";
 
-                    TaxDetails[] ArrTaxDetails = new TaxDetails[] { CurrProd.CGSTDetails, CurrProd.SGSTDetails, CurrProd.IGSTDetails };
                     for (int j = 0; j < ArrTaxesHeader.Length; j += 2)
                     {
                         xlRange = xlWorkSheet.Cells[ItemDetailsStartRow + i, DictColNumbers[ArrTaxesHeader[j]]];

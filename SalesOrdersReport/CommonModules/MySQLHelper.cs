@@ -77,7 +77,7 @@ namespace SalesOrdersReport.CommonModules
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.OpenConnection()", ex);
+                //CommonFunctions.ShowErrorDialog("MySQLHelper.OpenConnection()", ex);
                 throw ex;
             }
         }

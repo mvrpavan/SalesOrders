@@ -44,9 +44,6 @@ namespace SalesOrdersReport.Views
                 cmbBoxBillStatus.Items.Add(INVOICESTATUS.Cancelled.ToString());
                 cmbBoxBillStatus.SelectedIndex = 1;
 
-                btnViewEditBill.Enabled = false;
-                btnCancelBill.Enabled = false;
-                btnExportBill.Enabled = false;
                 btnSearchBill.Enabled = false;
 
                 LoadGridView();
@@ -174,11 +171,11 @@ namespace SalesOrdersReport.Views
                     return;
                 }
 
-                if (!dtGridViewBills.SelectedRows[0].Cells["Invoice Status"].Value.ToString().Equals(INVOICESTATUS.Created.ToString()))
-                {
-                    MessageBox.Show(this, "Unable to view a Delivered/Paid Invoice.", "View Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+                //if (!dtGridViewBills.SelectedRows[0].Cells["Invoice Status"].Value.ToString().Equals(INVOICESTATUS.Created.ToString()))
+                //{
+                //    MessageBox.Show(this, "Unable to view a Delivered/Paid Invoice.", "View Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //    return;
+                //}
 
                 Int32 InvoiceID = Int32.Parse(dtGridViewBills.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
 
@@ -239,19 +236,19 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void btnDeleteBill_Click(object sender, EventArgs e)
+        private void btnCancelBill_Click(object sender, EventArgs e)
         {
             try
             {
                 if (dtGridViewBills.SelectedRows.Count == 0)
                 {
-                    MessageBox.Show(this, "Please select an Invoice to Cancel", "Cancel Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(this, "Please select an Bill to Cancel", "Cancel Bill", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
                 if (!dtGridViewBills.SelectedRows[0].Cells["Invoice Status"].Value.ToString().Equals(INVOICESTATUS.Created.ToString()))
                 {
-                    MessageBox.Show(this, "Unable to cancel a Delivered/Paid Invoice.", "View Invoice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(this, "Unable to cancel a Delivered/Paid Bill.", "Cancel Bill", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
@@ -263,7 +260,7 @@ namespace SalesOrdersReport.Views
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"{this}.btnDeleteBill_Click()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.btnCancelBill_Click()", ex);
             }
         }
 
@@ -322,7 +319,7 @@ namespace SalesOrdersReport.Views
                                                     "Gross Total", "Tax", "Net Total", "Item Status" };
                 Type[] ArrColumnTypes = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeDouble,
                                                     CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble,
-                                                    CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeString };
+                                                    CommonFunctions.TypeDouble, CommonFunctions.TypeString };
 
                 for (int i = 0; i < ArrColumns.Length; i++)
                 {
@@ -426,7 +423,7 @@ namespace SalesOrdersReport.Views
 
                 if ((ExportOption & 2) > 0 && dtGridViewBills.SelectedRows.Count == 0)
                 {
-                    MessageBox.Show(this, "No Invoice was selected. Please select an Invoice.", "Export Invoice", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(this, "No Bill was selected. Please select a Bill.", "Export Bills", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
 
@@ -444,20 +441,22 @@ namespace SalesOrdersReport.Views
                     if ((PendingInvoicesCount > 0 && (CompletedInvoiceCount > 0 || CancelledInvoiceCount > 0))
                         || (CompletedInvoiceCount > 0 && CancelledInvoiceCount > 0))
                     {
-                        MessageBox.Show(this, "Unable to export Invoices with multiple Invoice Status. Please filter Invoices with same status.", "Export Invoice", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        MessageBox.Show(this, "Unable to export Bills with multiple Bill Status. Please filter Bills with same status.", "Export Bill", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return 2;
                     }
                 }
 
                 BackgroundTask = 3;
-#if DEBUG
+//#if DEBUG
+                ReportProgress = CommonFunctions.UpdateProgressBar;
                 backgroundWorkerBills_DoWork(null, null);
                 backgroundWorkerBills_RunWorkerCompleted(null, null);
-#else
-                ReportProgress = backgroundWorkerBills.ReportProgress;
-                backgroundWorkerBills.RunWorkerAsync();
-                backgroundWorkerBills.WorkerReportsProgress = true;
-#endif
+                //backgroundWorkerBills.WorkerReportsProgress = true;
+//#else
+//                ReportProgress = backgroundWorkerBills.ReportProgress;
+//                backgroundWorkerBills.RunWorkerAsync();
+//                backgroundWorkerBills.WorkerReportsProgress = true;
+//#endif
                 return 0;
             }
             catch (Exception ex)
@@ -534,7 +533,7 @@ namespace SalesOrdersReport.Views
                                         ((InvoiceDetails)ListInvoicesToExport[0]).InvoiceDate, ObjInvoicesModel, ListInvoicesToExport, ExportFolderPath,
                                         CreateSummary, PrintOldBalance, ReportProgressFunc);
 
-                            MessageBox.Show(this, $"Exported Invoices file is created successfully at:{ExportedFilePath}", "Export Invoices", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(this, $"Exported Bills file is created successfully at:{ExportedFilePath}", "Export Bills", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         break;
                     default:

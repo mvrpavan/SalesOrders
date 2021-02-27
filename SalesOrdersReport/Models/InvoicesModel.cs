@@ -274,7 +274,8 @@ namespace SalesOrdersReport.Models
                         CGST = Double.Parse(item["CGST"].ToString()),
                         SGST = Double.Parse(item["SGST"].ToString()),
                         IGST = Double.Parse(item["IGST"].ToString()),
-                        NetTotal = Double.Parse(item["NetTotal"].ToString())
+                        NetTotal = Double.Parse(item["NetTotal"].ToString()),
+                        InvoiceItemStatus = (INVOICEITEMSTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.INVOICEITEMSTATUS"), item["InvoiceItemStatus"].ToString())
                     };
                     tmpInvoiceItem.ProductName = ObjProductMasterModel.GetProductDetails(tmpInvoiceItem.ProductID).ItemName;
 
@@ -691,12 +692,12 @@ namespace SalesOrdersReport.Models
                 String InvoiceIDs = String.Join(",", ListInvoiceDetails.Select(e => e.InvoiceID));
 
                 String Query = "Select row_number() over () 'Sl#', a.* from (Select d.LineName Line, b.InvoiceNumber 'Invoice#', " +
-                                "c.CustomerName, Sum(a.SaleQty * a.Price) Sale, Sum(null) Cancel, Sum(null) 'Return', Sum(a.Discount) Discount, " +
-                                "Sum(a.CGST + a.SGST + a.IGST) 'Total Tax', Sum((a.SaleQty * a.Price) - a.Discount + (a.CGST + a.SGST + a.IGST)) 'Net Sale', " +
+                                "c.CustomerName, Sum(a.SaleQty * a.Price) -  Sum(a.CGST + a.SGST + a.IGST) Sale, Sum(null) Cancel, Sum(null) 'Return', Avg(b.DiscountAmount) Discount, " +
+                                "Sum(a.CGST + a.SGST + a.IGST) 'Total Tax', Sum(a.SaleQty * a.Price) - Avg(b.DiscountAmount) 'Net Sale', " +
                                 "Sum(0) OB, Sum(null) Cash";
                 Query += " from InvoiceItems a Inner join Invoices b on a.InvoiceID = b.InvoiceID";
                 Query += " Inner Join CUSTOMERMASTER c on b.CustomerID = c.CustomerID";
-                Query += " Inner Join LINEMASTER d on c.LineID = d.LineID";
+                Query += " Left Outer Join LINEMASTER d on c.LineID = d.LineID";
                 Query += $" Where a.InvoiceID in ({InvoiceIDs}) and a.InvoiceItemStatus = 'Invoiced' Group by d.LineName, b.InvoiceNumber, c.CustomerName " +
                             "Order by b.InvoiceNumber) a;";
                 DataTable dtCustomerSummary = ObjMySQLHelper.GetQueryResultInDataTable(Query);

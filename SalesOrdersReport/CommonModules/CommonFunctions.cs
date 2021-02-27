@@ -1072,7 +1072,7 @@ namespace SalesOrdersReport.CommonModules
 
                 String SaveFilePath = "";
                 String OutputFolder = ExportFolderPath;
-                String SelectedDateTimeString = OrdInvQuotDate.ToString("dd-MM-yyyy");
+                String SelectedDateTimeString = DateTime.Now.ToString("yyyyMMddHHmmss"); // OrdInvQuotDate.ToString("dd-MM-yyyy");
                 switch (EnumReportType)
                 {
                     case ReportType.ORDER:

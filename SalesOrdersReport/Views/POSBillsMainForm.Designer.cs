@@ -356,7 +356,7 @@
             this.btnCancelBill.Text = "Cancel Bill";
             this.btnCancelBill.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnCancelBill.UseVisualStyleBackColor = false;
-            this.btnCancelBill.Click += new System.EventHandler(this.btnDeleteBill_Click);
+            this.btnCancelBill.Click += new System.EventHandler(this.btnCancelBill_Click);
             // 
             // BillsMainForm
             // 
