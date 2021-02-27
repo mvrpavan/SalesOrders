@@ -154,6 +154,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                LineName = LineName.Trim();
                 LineDetails ObjLineDetails = new LineDetails();
                 ObjLineDetails.LineName = LineName;
                 int Index = ListLineDetails.BinarySearch(ObjLineDetails, ObjLineDetails);
@@ -187,6 +188,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                DiscountGrpName = DiscountGrpName.Trim();
                 DiscountGroupDetails1 ObjDiscountGroupDetails = new DiscountGroupDetails1();
                 ObjDiscountGroupDetails.DiscountGrpName = DiscountGrpName;
                 int Index = ListDiscountGroupDetails.BinarySearch(ObjDiscountGroupDetails, ObjDiscountGroupDetails);
@@ -204,6 +206,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                PhoneNumber = PhoneNumber.Trim();
                 Int32 Index = ListCustomerDetails.FindIndex(e => e.PhoneNo.ToString().Equals(PhoneNumber));
                 if (Index < 0) return null;
 
@@ -234,6 +237,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                PriceGrpName = PriceGrpName.Trim();
                 PriceGroupDetails ObjPriceGroupDetails = new PriceGroupDetails();
                 ObjPriceGroupDetails.PriceGrpName = PriceGrpName;
                 int Index = ListPriceGroupDetails.BinarySearch(ObjPriceGroupDetails, ObjPriceGroupDetails);
@@ -265,6 +269,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                CustomerName = CustomerName.Trim();
                 CustomerDetails ObjCustomerDetails = new CustomerDetails();
                 ObjCustomerDetails.CustomerName = CustomerName.Trim();
 
@@ -298,6 +303,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                CustomerName = CustomerName.Trim();
                 DiscountGroupDetails1 ObjDiscountGroupDetails = GetCustomerDiscount(CustomerName);
                 if (ObjDiscountGroupDetails == null) return -1;
 
@@ -314,6 +320,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                CustomerName = CustomerName.Trim();
                 CustomerDetails ObjCustomerDetails = GetCustomerDetails(CustomerName);
                 if (ObjCustomerDetails == null) return null;
                 Int32 DiscountGroupIndex = ObjCustomerDetails.DiscountGroupIndex;
@@ -332,6 +339,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                CustomerName = CustomerName.Trim();
                 CustomerDetails ObjCustomerDetails = GetCustomerDetails(CustomerName);
                 if (ObjCustomerDetails == null) return;
                 Int32 DiscountGroupIndex = ObjCustomerDetails.DiscountGroupIndex;
@@ -383,6 +391,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                LineName = LineName.Trim();
                 String Query = "SELECT LINEID FROM LINEMASTER WHERE LOWER(LINENAME) = LOWER('" + LineName + "')";
                 Query += ";";
                 object ObjLineID = ObjMySQLHelper.ExecuteScalar(Query);
@@ -415,6 +424,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                PriceGrpName = PriceGrpName.Trim();
                 PriceGroupDetails ObjPriceGrpDetails = new PriceGroupDetails();
                 ObjPriceGrpDetails.PriceGrpName = PriceGrpName;
                 if (ListPriceGroupDetails.Count == 0)
@@ -435,6 +445,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                DiscGrpName = DiscGrpName.Trim();
                 DiscountGroupDetails1 ObjDiscGrpDetails = new DiscountGroupDetails1();
                 ObjDiscGrpDetails.DiscountGrpName = DiscGrpName;
                 if (ListDiscountGroupDetails.Count == 0)
@@ -455,6 +466,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                LineName = LineName.Trim();
                 LineDetails ObjLineDetails = new LineDetails();
                 ObjLineDetails.LineName = LineName;
                 if (ListLineDetails.Count == 0)
@@ -475,6 +487,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                StateName = StateName.Trim();
                 StateDetails ObjStateDetails = new StateDetails();
                 ObjStateDetails.State = StateName;
                 if (ListStateDetails.Count == 0)
@@ -541,6 +554,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                CustomerName = CustomerName.Trim();
                 string Query = "SELECT CUSTOMERNAME FROM CUSTOMERMASTER WHERE LOWER(CUSTOMERNAME) = LOWER('" + CustomerName + "');";
                 object ObjCustomerName = ObjMySQLHelper.ExecuteScalar(Query);
                 string tmpCustomerName = ((ObjCustomerName == null) ? "" : ObjCustomerName.ToString());
@@ -615,6 +629,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                DiscountGroupName = DiscountGroupName.Trim();
                 String Query = "SELECT DISCOUNTGROUPID FROM DISCOUNTGROUPMASTER WHERE LOWER(DISCOUNTGROUPNAME) = LOWER('" + DiscountGroupName + "')";
                 Query += ";";
                 object ObjDiscountGrpID = ObjMySQLHelper.ExecuteScalar(Query);
@@ -677,6 +692,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                PriceGroupName = PriceGroupName.Trim();
                 String Query = "SELECT PRICEGROUPID FROM PRICEGROUPMASTER WHERE LOWER(PRICEGROUPNAME) = LOWER('" + PriceGroupName + "')";
                 Query += ";";
                 object ObjPriceGrpID = ObjMySQLHelper.ExecuteScalar(Query);
