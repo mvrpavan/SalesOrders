@@ -17,12 +17,19 @@ namespace SalesOrdersReport
         MySQLHelper tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
         public EditLineForm(UpdateOnCloseDel UpdateCustomerOnClose)
         {
-            InitializeComponent();
-            FillLines();
-            cmbxSelectLine.Focus();
-            cmbxSelectLine.SelectedIndex = 0;
-            this.UpdateCustomerOnClose = UpdateCustomerOnClose;
-            this.FormClosed += EditLineForm_FormClosed;
+            try
+            {
+                InitializeComponent();
+                FillLines();
+                cmbxSelectLine.Focus();
+                cmbxSelectLine.SelectedIndex = 0;
+                this.UpdateCustomerOnClose = UpdateCustomerOnClose;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("EditLinesForm.EditLineForm()", ex);
+                throw ex;
+            }
         }
 
         private void FillLines()
@@ -60,42 +67,18 @@ namespace SalesOrdersReport
             }
         }
 
-        private void EditLineForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                UpdateCustomerOnClose(Mode: 1);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("EditLineForm.EditLineForm_FormClosed()", ex);
-            }
-        }
 
         private void btnEditLine_Click(object sender, EventArgs e)
         {
             try
             {
-                //if (txtEditLineName.Text.Trim() == string.Empty)
-                //{
-                //    lblValidErrMsg.Visible = true;
-                //    lblValidErrMsg.Text = "Line Name Cant be empty!";
-                //    txtEditLineName.Focus();
-                //    return;
-                //}
                 if (cmbxSelectLine.SelectedIndex == 0)
                 {
                     lblValidErrMsg.Visible = true;
                     lblValidErrMsg.Text = "Choose a Line Name to Edit!";
                     return;
                 }
-                //if (txtEditLineDesc.Text.Trim() == string.Empty)
-                //{
-                //    lblValidErrMsg.Visible = true;
-                //    lblValidErrMsg.Text = "Description Cant be empty!";
-                //    txtEditLineDesc.Focus();
-                //    return;
-                //}
+  
                 List<string> ListColumnValues = new List<string>();
                 List<string> ListColumnNames = new List<string>();
 

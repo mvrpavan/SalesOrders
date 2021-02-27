@@ -273,7 +273,7 @@
             this.Name = "CreateDiscountGroupForm";
             this.ShowIcon = false;
             this.Text = "Create Discount Group Form";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CreateDiscountGrpForm_FormClosed);
+
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.panel1.ResumeLayout(false);

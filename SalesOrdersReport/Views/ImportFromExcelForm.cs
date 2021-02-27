@@ -213,7 +213,16 @@ namespace SalesOrdersReport.Views
 
         private void bgWorkerImportExcel_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            CommonFunctions.UpdateProgressBar(e.ProgressPercentage);
+            try
+            {
+
+                CommonFunctions.UpdateProgressBar(e.ProgressPercentage);
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.bgWorkerImportExcel_DoWork()", ex);
+            }
         }
 
         private void bgWorkerImportExcel_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -247,7 +256,15 @@ namespace SalesOrdersReport.Views
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            try
+            {
+                this.Close();
+            }
+
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnCancel_Click()", ex);
+            }
         }
     }
 }

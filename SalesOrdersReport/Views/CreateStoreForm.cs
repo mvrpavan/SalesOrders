@@ -19,10 +19,17 @@ namespace SalesOrdersReport
         UpdateOnCloseDel UpdateOnClose = null;
         public CreateStoreForm(UpdateOnCloseDel UpdateOnClose)
         {
-            InitializeComponent();
-            txtCreateStoreName.Focus();
-            this.UpdateOnClose = UpdateOnClose;
-            this.FormClosed += CreateStoreForm_FormClosed;
+            try
+            {
+                InitializeComponent();
+                txtCreateStoreName.Focus();
+                this.UpdateOnClose = UpdateOnClose;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CreateStoreForm.CreateStoreForm()", ex);
+                throw ex;
+            }
         }
 
 
@@ -96,9 +103,7 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("CreateStoreForm.btnCreateStore_Click()", ex);
                 throw;
             }
-
         }
-
 
 
         private bool CheckForValidPhone()
@@ -122,17 +127,6 @@ namespace SalesOrdersReport
             {
                 CommonFunctions.ShowErrorDialog("CreateStoreForm.CheckForValidPhone()", ex);
                 throw;
-            }
-        }
-        private void CreateStoreForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                //UpdateOnClose(Mode: 1);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CreateStoreForm.CreateStoreForm_FormClosed()", ex);
             }
         }
     }

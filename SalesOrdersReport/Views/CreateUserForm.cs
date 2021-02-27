@@ -19,6 +19,8 @@ namespace SalesOrdersReport
         UpdateOnCloseDel UpdateOnClose = null;
         public CreateUserForm(UpdateOnCloseDel UpdateOnClose)
         {
+            try
+            { 
             InitializeComponent();
             txtCreateUserName.Focus();
             cmbxSelectRoleID.Items.Clear();
@@ -27,7 +29,12 @@ namespace SalesOrdersReport
             FillStores();
             cmbxSelectStore.SelectedIndex = 0;
             this.UpdateOnClose = UpdateOnClose;
-            this.FormClosed += CreateUserForm_FormClosed;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CreateUserForm.CreateUserForm()", ex);
+                throw ex;
+            }
         }
         private void FillRoles()
         {
@@ -95,7 +102,6 @@ namespace SalesOrdersReport
             {
                 if (txtCreateUserName.Text.Trim() == string.Empty || txtCreatePassword.Text.Trim() == string.Empty)
                 {
-                    //MessageBox.Show("User Name Or Password Cannot be empty ");
                     lblCommonErrorMsg.Visible = true;
                     lblCommonErrorMsg.Text = "User Name Or Password Cannot be empty!";
                     return;
@@ -268,17 +274,6 @@ namespace SalesOrdersReport
             {
                 CommonFunctions.ShowErrorDialog("CreateUserForm.cmbxSelectStore_Click()", ex);
                 throw ex;
-            }
-        }
-        private void CreateUserForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                //UpdateOnClose(Mode: 1);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CreateUserForm.CreateUserForm_FormClosed()", ex);
             }
         }
 

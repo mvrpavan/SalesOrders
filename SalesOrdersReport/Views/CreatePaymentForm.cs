@@ -30,28 +30,35 @@ namespace SalesOrdersReport.Views
         MySQLHelper ObjMySQLHelper;
         DateTime FromDate, Todate;
 
-        public CreatePaymentForm(UpdateOnCloseDel UpdatePaymentOnClose,DateTime FromDate,DateTime Todate,bool CreateForm = true)
+        public CreatePaymentForm(UpdateOnCloseDel UpdatePaymentOnClose, DateTime FromDate, DateTime Todate, bool CreateForm = true)
         {
-            InitializeComponent();
-            ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
-            string FormTitle = "";
-            if (CreateForm)
+            try
             {
-                FormTitle = "Create Payment";
-                btnCreateUpdatePayment.Text = "Create Payment";
-                chckActive.Visible = false;
+                InitializeComponent();
+                ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+                string FormTitle = "";
+                if (CreateForm)
+                {
+                    FormTitle = "Create Payment";
+                    btnCreateUpdatePayment.Text = "Create Payment";
+                    chckActive.Visible = false;
+                }
+                else
+                {
+                    FormTitle = "Update Payment";
+                    btnCreateUpdatePayment.Text = "Update Payment";
+                    chckActive.Visible = true;
+                }
+                this.Text = FormTitle;
+                this.UpdatePaymentsOnClose = UpdatePaymentOnClose;
+                this.FromDate = FromDate;
+                this.Todate = Todate;
+                txtbxCreatePaymentAmount.Text = "0";
             }
-            else
+            catch (Exception ex)
             {
-                FormTitle = "Update Payment";
-                btnCreateUpdatePayment.Text = "Update Payment";
-                chckActive.Visible = true;
+                CommonFunctions.ShowErrorDialog($"{this}.CreatePaymentForm()", ex);
             }
-            this.Text = FormTitle;
-            this.UpdatePaymentsOnClose = UpdatePaymentOnClose;
-            this.FromDate = FromDate;
-            this.Todate = Todate;
-            txtbxCreatePaymentAmount.Text = "0";
         }
 
         private void CreatePaymentForm_Load(object sender, EventArgs e)
@@ -92,51 +99,44 @@ namespace SalesOrdersReport.Views
 
         private void btnAddUpdate_Click(object sender, EventArgs e)
         {
-            //"PAYMENTID, BIGINT UNSIGNED NOT NULL AUTO_INCREMENT",
-            //        "PAYMENTDATE, DATETIME NOT NULL",
-            //        "INVOICEID, BIGINT UNSIGNED NULL",
-            //        "QUOTATIONID, BIGINT UNSIGNED NULL",
-            //        "ACCOUNTID, MEDIUMINT UNSIGNED NOT NULL",
-            //        "PAYMENTMODEID, SMALLINT UNSIGNED NOT NULL",
-            //        "PAYMENTAMOUNT, FLOAT DEFAULT 0",
-            //        "DESCRIPTION, VARCHAR(100) NULL",
-            //        "CREATIONDATE, DATETIME NOT NULL",
-            //        "LASTUPDATEDATE, DATETIME NOT NULL",
-            //        "USERID, SMALLINT UNSIGNED NULL",
-            //        "PRIMARY KEY, PAYMENTID"
+            try
+            {
 
-
-
-            if (cmbxCreatePaymentCustomerNames.SelectedIndex == 0)
-            {
-                lblValidateErrMsg.Visible = true;
-                lblValidateErrMsg.Text = "Pls Select a Customer!";
-                return;
+                if (cmbxCreatePaymentCustomerNames.SelectedIndex == 0)
+                {
+                    lblValidateErrMsg.Visible = true;
+                    lblValidateErrMsg.Text = "Pls Select a Customer!";
+                    return;
+                }
+                if (cmbxCreatePaymentNumber.SelectedIndex == 0 || cmbxCreatePaymentNumber.SelectedIndex < 0)
+                {
+                    lblValidateErrMsg.Visible = true;
+                    lblValidateErrMsg.Text = "Pls Select Number!";
+                    return;
+                }
+                if (cmbxcreatePaymentStaffName.SelectedIndex == 0)
+                {
+                    lblValidateErrMsg.Visible = true;
+                    lblValidateErrMsg.Text = "Pls Select a Staff!";
+                    return;
+                }
+                if (txtbxCreatePaymentAmount.Text.Trim() == string.Empty)
+                {
+                    lblValidateErrMsg.Visible = true;
+                    lblValidateErrMsg.Text = "Pls Enter Amount!";
+                    return;
+                }
+                if (lblValidateErrMsg.Visible == true)
+                {
+                    lblValidateErrMsg.Visible = false;
+                }
+                if (this.Text == "Create Payment") CreatePaymentTable();
+                else EditPaymentTable();
             }
-            if (cmbxCreatePaymentNumber.SelectedIndex == 0 || cmbxCreatePaymentNumber.SelectedIndex<0)
+            catch (Exception ex)
             {
-                lblValidateErrMsg.Visible = true;
-                lblValidateErrMsg.Text = "Pls Select Number!";
-                return;
+                CommonFunctions.ShowErrorDialog($"{this}.btnAddUpdate_Click()", ex);
             }
-            if (cmbxcreatePaymentStaffName.SelectedIndex == 0)
-            {
-                lblValidateErrMsg.Visible = true;
-                lblValidateErrMsg.Text = "Pls Select a Staff!";
-                return;
-            }
-            if (txtbxCreatePaymentAmount.Text.Trim() == string.Empty)
-            {
-                lblValidateErrMsg.Visible = true;
-                lblValidateErrMsg.Text = "Pls Enter Amount!";
-                return;
-            }
-            if (lblValidateErrMsg.Visible == true)
-            {
-                lblValidateErrMsg.Visible = false;
-            }
-            if (this.Text == "Create Payment") CreatePaymentTable();
-            else EditPaymentTable();
 
         }
 
@@ -334,19 +334,6 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                //"HISTORYENTRYID, BIGINT UNSIGNED NOT NULL AUTO_INCREMENT",
-                //    "ACCOUNTID, MEDIUMINT UNSIGNED NOT NULL",
-                //    "PAYMENTID, BIGINT UNSIGNED NOT NULL",
-                //    "SALEAMOUNT, FLOAT DEFAULT 0",
-                //    "CANCELAMOUNT, FLOAT DEFAULT 0",
-                //    "RETURNAMOUNT, FLOAT DEFAULT 0",
-                //    "DISCOUNTAMOUNT, FLOAT DEFAULT 0",
-                //    "TOTALTAX, FLOAT DEFAULT 0",
-                //    "NETSALEAMOUNT, FLOAT DEFAULT 0",
-                //    "BALANCEAMOUNT, FLOAT DEFAULT 0",
-                //    "AMOUNTRECEIVED, FLOAT DEFAULT 0",
-                //    "NEWBALANCEAMOUNT, FLOAT DEFAULT 0",
-                //    "PRIMARY KEY, HISTORYENTRYID"
 
                 int PaymentId = ObjPaymentsModel.GetPaymentDetailsFromAccID(ObjAccountDetails.AccountID).PaymentId;
                 List<string> ListColumnValues = new List<string>(), ListTempColValues = new List<string>();
@@ -408,24 +395,11 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                //"HISTORYENTRYID, BIGINT UNSIGNED NOT NULL AUTO_INCREMENT",
-                //    "ACCOUNTID, MEDIUMINT UNSIGNED NOT NULL",
-                //    "PAYMENTID, BIGINT UNSIGNED NOT NULL",
-                //    "SALEAMOUNT, FLOAT DEFAULT 0",
-                //    "CANCELAMOUNT, FLOAT DEFAULT 0",
-                //    "RETURNAMOUNT, FLOAT DEFAULT 0",
-                //    "DISCOUNTAMOUNT, FLOAT DEFAULT 0",
-                //    "TOTALTAX, FLOAT DEFAULT 0",
-                //    "NETSALEAMOUNT, FLOAT DEFAULT 0",
-                //    "BALANCEAMOUNT, FLOAT DEFAULT 0",
-                //    "AMOUNTRECEIVED, FLOAT DEFAULT 0",
-                //    "NEWBALANCEAMOUNT, FLOAT DEFAULT 0",
-                //    "PRIMARY KEY, HISTORYENTRYID"
 
                 int PaymentId = CommonFunctions.ObjCustomerMasterModel.GetLatestColValFromTable("PAYMENTID", "PAYMENTS");
                 List<string> ListColumnValues = new List<string>(), ListTempColValues = new List<string>();
                 List<string> ListColumnNames = new List<string>(), ListTempColNames = new List<string>();
-                List<Types> ListTypes=new List<Types>();
+                List<Types> ListTypes = new List<Types>();
                 ListColumnValues.Add(ObjAccountDetails.AccountID.ToString());
                 ListColumnNames.Add("ACCOUNTID");
                 ListTypes.Add(Types.Number);
@@ -434,7 +408,7 @@ namespace SalesOrdersReport.Views
                 ListColumnNames.Add("PAYMENTID");
                 ListTypes.Add(Types.Number);
 
-                ListColumnValues.Add(txtCreatePaymentSaleAmount.Text==string.Empty?"0": txtCreatePaymentSaleAmount.Text);
+                ListColumnValues.Add(txtCreatePaymentSaleAmount.Text == string.Empty ? "0" : txtCreatePaymentSaleAmount.Text);
                 ListColumnNames.Add("SALEAMOUNT");
                 ListTypes.Add(Types.Number);
 
@@ -470,8 +444,8 @@ namespace SalesOrdersReport.Views
                 ListColumnNames.Add("BALANCEAMOUNT");
                 ListTypes.Add(Types.Number);
 
-                int ResultVal = ObjMySQLHelper.InsertIntoTable("CUSTOMERACCOUNTHISTORY", ListColumnNames, ListColumnValues,ListTypes);
-                
+                int ResultVal = ObjMySQLHelper.InsertIntoTable("CUSTOMERACCOUNTHISTORY", ListColumnNames, ListColumnValues, ListTypes);
+
                 if (ResultVal <= 0) MessageBox.Show("Wasnt able to create the CustomerAccHistory", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 else if (ResultVal == 2)
                 {
@@ -491,22 +465,36 @@ namespace SalesOrdersReport.Views
         }
         private void btnReset_Click(object sender, EventArgs e)
         {
-            cmbxcreatePaymentStaffName.SelectedIndex = 0;
-            cmbxCreatePaymentNumber.SelectedItem = 0;
-            cmbxCreatePaymentPaymentAgainst.SelectedIndex = 0;
-            cmbBoxPaymentModes.SelectedIndex = 0;
-            cmbxCreatePaymentCustomerNames.SelectedIndex = 0;
-            txtCreatePaymentDesc.Text = "";
-            txtbxCreatePaymentAmount.Text = "0";
-            txtCreatePaymentRefundAmt.Text = txtCreatePaymentDiscAmt.Text = txtCreatePaymentTotalTax.Text = txtCreatePaymentCancelAmt.Text = "0";
-            txtCreatePaymentInvoiceNum.Text = "";
-            txtCreatePaymentInvoiceDate.Text = "";
-            txtCreatePaymentInvoiceItems.Text = "";
+            try
+            {
+                cmbxcreatePaymentStaffName.SelectedIndex = 0;
+                cmbxCreatePaymentNumber.SelectedItem = 0;
+                cmbxCreatePaymentPaymentAgainst.SelectedIndex = 0;
+                cmbBoxPaymentModes.SelectedIndex = 0;
+                cmbxCreatePaymentCustomerNames.SelectedIndex = 0;
+                txtCreatePaymentDesc.Text = "";
+                txtbxCreatePaymentAmount.Text = "0";
+                txtCreatePaymentRefundAmt.Text = txtCreatePaymentDiscAmt.Text = txtCreatePaymentTotalTax.Text = txtCreatePaymentCancelAmt.Text = "0";
+                txtCreatePaymentInvoiceNum.Text = "";
+                txtCreatePaymentInvoiceDate.Text = "";
+                txtCreatePaymentInvoiceItems.Text = "";
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnReset_Click()", ex);
+            }
         }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+            try
+            {
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnClose_Click()", ex);
+            }
         }
 
         private void cmbxCreatePaymentCustomerNames_SelectedIndexChanged(object sender, EventArgs e)
@@ -524,7 +512,7 @@ namespace SalesOrdersReport.Views
                     if (this.Text == "Update Payment")
                     {
                         PaymentDetails ObjPaymentDtls = new PaymentDetails();
-                        
+
                         if (ObjAccountDetails != null)
                         {
                             ObjPaymentDtls = ObjPaymentsModel.GetPaymentDetailsFromAccID(ObjAccountDetails.AccountID);
@@ -627,10 +615,10 @@ namespace SalesOrdersReport.Views
                     CurrInvoiceCacheIndex = ListInvoiceDtls.FindIndex(x => x.InvoiceNumber == txtCreatePaymentInvoiceNum.Text);
                     txtCreatePaymentInvoiceDate.Text = ListInvoiceDtls[CurrInvoiceCacheIndex].InvoiceDate.ToString();
                     txtCreatePaymentInvoiceItems.Text = ListInvoiceDtls[CurrInvoiceCacheIndex].InvoiceItemCount.ToString();
-                   // txtCreatePaymentNetSaleAmt.Text = ListInvoiceDtls[CurrInvoiceCacheIndex].NetInvoiceAmount.ToString();
+                    // txtCreatePaymentNetSaleAmt.Text = ListInvoiceDtls[CurrInvoiceCacheIndex].NetInvoiceAmount.ToString();
                     txtCreatePaymentRefundAmt.Text = txtCreatePaymentDiscAmt.Text = txtCreatePaymentTotalTax.Text = txtCreatePaymentCancelAmt.Text = "0";
                     //Net Sale Amount = Sale Amount - Cancel Amount - Return Amount - Discount + Tax Amount
-                    txtCreatePaymentNetSaleAmt.Text = (Double.Parse(txtCreatePaymentSaleAmount.Text.Trim()==string.Empty?"0": txtCreatePaymentSaleAmount.Text.Trim())
+                    txtCreatePaymentNetSaleAmt.Text = (Double.Parse(txtCreatePaymentSaleAmount.Text.Trim() == string.Empty ? "0" : txtCreatePaymentSaleAmount.Text.Trim())
                         - Double.Parse(txtCreatePaymentCancelAmt.Text.Trim() == string.Empty ? "0" : txtCreatePaymentCancelAmt.Text.Trim())
                         - Double.Parse(txtCreatePaymentRefundAmt.Text.Trim() == string.Empty ? "0" : txtCreatePaymentRefundAmt.Text.Trim())
                         - Double.Parse(txtCreatePaymentDiscAmt.Text.Trim() == string.Empty ? "0" : txtCreatePaymentDiscAmt.Text.Trim())
@@ -673,7 +661,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                UpdatePaymentsOnClose(Mode:1);
+                UpdatePaymentsOnClose(Mode: 1);
             }
             catch (Exception ex)
             {

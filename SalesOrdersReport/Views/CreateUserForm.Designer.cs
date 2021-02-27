@@ -340,7 +340,6 @@ namespace SalesOrdersReport
             this.Name = "CreateUserForm";
             this.ShowIcon = false;
             this.Text = "Create User Form";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CreateUserForm_FormClosed);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

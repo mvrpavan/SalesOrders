@@ -77,7 +77,7 @@ namespace SalesOrdersReport.CommonModules
             }
             catch (Exception ex)
             {
-                //CommonFunctions.ShowErrorDialog("MySQLHelper.OpenConnection()", ex);
+                CommonFunctions.ShowErrorDialog("MySQLHelper.OpenConnection()", ex);
                 throw ex;
             }
         }
@@ -111,15 +111,15 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public Int32 BuildNExceuteQueryWithParams(string Query,List<string> ListColumnNames,List<string> ListColDataTypes, List<string> ListColumnValues)
+        public Int32 BuildNExceuteQueryWithParams(string Query, List<string> ListColumnNames, List<string> ListColDataTypes, List<string> ListColumnValues)
         {
             try
             {
-               ObjDbCommand.CommandText = Query;
-               ObjDbCommand.Parameters.Clear();
+                ObjDbCommand.CommandText = Query;
+                ObjDbCommand.Parameters.Clear();
                 for (int i = 0; i < ListColumnNames.Count; i++)
                 {
-                   ObjDbCommand.Parameters.Add(ListColumnNames[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColDataTypes[i])).Value = ListColumnValues[i];
+                    ObjDbCommand.Parameters.Add(ListColumnNames[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColDataTypes[i])).Value = ListColumnValues[i];
                 }
 
                 return ObjDbCommand.ExecuteNonQuery();
@@ -358,7 +358,7 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-		public object ExecuteScalar(String Query)
+        public object ExecuteScalar(String Query)
         {
             try
             {
@@ -535,12 +535,28 @@ namespace SalesOrdersReport.CommonModules
 
         public static String GetDateStringForDB(DateTime dateTime)
         {
-            return dateTime.ToString("yyyy-MM-dd");
+            try
+            {
+                return dateTime.ToString("yyyy-MM-dd");
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.GetDateStringForDB()", ex);
+                throw ex;
+            }
         }
 
         public static String GetDateTimeStringForDB(DateTime dateTime)
         {
-            return dateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            try
+            {
+                return dateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.GetDateTimeStringForDB()", ex);
+                throw ex;
+            }
         }
 
         public void ExecuteScriptFile(String ScriptFilePath)

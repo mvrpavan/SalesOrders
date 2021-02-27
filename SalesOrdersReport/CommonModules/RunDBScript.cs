@@ -86,7 +86,6 @@ namespace SalesOrdersReport.CommonModules
             {
                 List<string> ListLineCol = new List<string>() { "LINEID,INT NOT NULL AUTO_INCREMENT", "LINENAME,VARCHAR(50)", "DESCRIPTION,VARCHAR(50)", "PRIMARY KEY,LINEID" };
                 ObjMySQLHelper.CreateTable("LINEMASTER", ListLineCol);
-                //CommonFunctions.ObjCustomerMasterModel.CreateNewLine("Line0", "Super Line");
             }
             catch (Exception ex)
             {
@@ -116,7 +115,6 @@ namespace SalesOrdersReport.CommonModules
             try
             {
                 List<string> ListPriceGrpCol = new List<string>() { "PRICEGROUPID,INT NOT NULL AUTO_INCREMENT", "PRICEGROUPNAME,VARCHAR(100) NOT NULL", "DESCRIPTION,VARCHAR(50)", "PRICEGROUPCOLUMNNAME, VARCHAR(30) DEFAULT  'Purchase Price'", "DISCOUNT,DECIMAL(4,2) DEFAULT 0", "ISDEFAULT,BIT DEFAULT NULL", "DISCOUNTTYPE,VARCHAR(10) DEFAULT 'ABSOLUTE'", "PRIMARY KEY,PRICEGROUPID" };
-               
                 ObjMySQLHelper.CreateTable("PRICEGROUPMASTER", ListPriceGrpCol);
                 ////List<string> ListColumnNamesWthDataType = new List<string> { "DISCOUNT,DECIMAL(4,2)", "DEFAULT,TINYTEXT", "DISCOUNTTYPE,VARCHAR", }, ListColumnValues = new List<string>() { "0", "YES", "ABSOLUTE" };
                 ////CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp", ListColumnNamesWthDataType, ListColumnValues);
@@ -165,7 +163,6 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {           
-
                 List<string> ListRoleCol = new List<string>() { "ROLEID,INT NOT NULL AUTO_INCREMENT", "ROLENAME,VARCHAR(50)", "DESCRIPTION,VARCHAR(50)", "PRIMARY KEY,ROLEID" };
                 ObjMySQLHelper.CreateTable("ROLEMASTER", ListRoleCol);
                 CommonFunctions.ObjUserMasterModel.AlterTblColBasedOnMultipleRowsFrmAnotherTbl("PRIVILEGEMASTER", "ROLEMASTER", "PRIVILEGEID");

@@ -188,7 +188,6 @@ namespace SalesOrdersReport
             this.Name = "CreateStoreForm";
             this.ShowIcon = false;
             this.Text = "Create Store Form";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CreateStoreForm_FormClosed);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

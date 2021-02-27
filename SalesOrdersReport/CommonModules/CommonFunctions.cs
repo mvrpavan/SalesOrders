@@ -504,7 +504,15 @@ namespace SalesOrdersReport.CommonModules
 
         public static string GetColorHexCode(Color color)
         {
-            return ColorTranslator.ToHtml(color).Replace("#", "");
+            try
+            {
+                return ColorTranslator.ToHtml(color).Replace("#", "");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.GetExcelColumnNameForColumnNumber()", ex);
+                return "";
+            }
         }
 
         public static void ResetProgressBar(Int32 ProgressState = 0, Int32 Maximum = 100, Int32 Step = 1, String Status = "")

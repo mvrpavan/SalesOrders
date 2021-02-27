@@ -17,12 +17,19 @@ namespace SalesOrdersReport
         MySQLHelper tmpMySQLHelper = null;
         public EditDiscountGroupForm(UpdateOnCloseDel UpdateCustomerOnClose)
         {
-            InitializeComponent();
-            FillDiscGrp();
-            cmbxSelectDisGroupName.SelectedIndex = 0;
-            cmbxSelectDisGroupName.Focus();
-            this.UpdateCustomerOnClose = UpdateCustomerOnClose;
-            this.FormClosed += EditDiscountGrpForm_FormClosed;
+            try
+            {
+                InitializeComponent();
+                FillDiscGrp();
+                cmbxSelectDisGroupName.SelectedIndex = 0;
+                cmbxSelectDisGroupName.Focus();
+                this.UpdateCustomerOnClose = UpdateCustomerOnClose;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("EditDiscountGroupForm.EditDiscountGroupForm()", ex);
+                throw ex;
+            }
         }
 
         private void FillDiscGrp()
@@ -60,10 +67,6 @@ namespace SalesOrdersReport
             }
         }
 
-        private void EditDiscountGrpForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            UpdateCustomerOnClose(Mode: 1);
-        }
 
         private void btnEditDiscountGrp_Click(object sender, EventArgs e)
         {
@@ -72,17 +75,10 @@ namespace SalesOrdersReport
 
                 if (cmbxSelectDisGroupName.SelectedIndex == 0)
                 {
-                    //MessageBox.Show("User Name Or Password Cannot be empty ");
                     lblValidErrMsg.Visible = true;
                     lblValidErrMsg.Text = "Choose a Discount Group Name to Edit!";
                     return;
                 }
-                //if (txtEditDisGrpDesc.Text.Trim() == string.Empty)
-                //{
-                //    lblValidErrMsg.Visible = true;
-                //    lblValidErrMsg.Text = "Description Name cant be empty! ";
-                //    return;
-                //}
                 if (radioBtnEditDGDefaultNo.Checked == false && radioBtnEditDGDefaultYes.Checked == false)
                 {
                     lblValidErrMsg.Visible = true;

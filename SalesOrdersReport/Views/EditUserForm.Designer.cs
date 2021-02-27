@@ -213,7 +213,6 @@ namespace SalesOrdersReport
             this.cmbxSelectStore.Name = "cmbxSelectStore";
             this.cmbxSelectStore.Size = new System.Drawing.Size(121, 21);
             this.cmbxSelectStore.TabIndex = 4;
-            this.cmbxSelectStore.SelectedIndexChanged += new System.EventHandler(this.cmbxSelectStore_SelectedIndexChanged);
             this.cmbxSelectStore.Click += new System.EventHandler(this.cmbxSelectStore_Click);
             // 
             // lblEditStoreName
@@ -225,7 +224,6 @@ namespace SalesOrdersReport
             this.lblEditStoreName.Size = new System.Drawing.Size(32, 13);
             this.lblEditStoreName.TabIndex = 18;
             this.lblEditStoreName.Text = "Store";
-            this.lblEditStoreName.Click += new System.EventHandler(this.lblEditStoreName_Click);
             // 
             // txtEmailID
             // 

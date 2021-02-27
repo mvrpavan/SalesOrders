@@ -252,7 +252,7 @@
             this.Name = "EditDiscountGroupForm";
             this.ShowIcon = false;
             this.Text = "Edit Discount Group Form";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.EditDiscountGrpForm_FormClosed);
+
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.panel1.ResumeLayout(false);

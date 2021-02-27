@@ -15,10 +15,17 @@ namespace SalesOrdersReport
         UpdateOnCloseDel UpdateCustomerOnClose = null;
         public CreateDiscountGroupForm(UpdateOnCloseDel UpdateCustomerOnClose)
         {
-            InitializeComponent();
-            txtCreateDisGrpName.Focus();
-            this.UpdateCustomerOnClose = UpdateCustomerOnClose;
-            this.FormClosed += CreateDiscountGrpForm_FormClosed;
+            try
+            {
+                InitializeComponent();
+                txtCreateDisGrpName.Focus();
+                this.UpdateCustomerOnClose = UpdateCustomerOnClose;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CreateRole.CreateDiscountGroupForm()", ex);
+                throw ex;
+            }
         }
         private void btnReset_Click(object sender, EventArgs e)
         {
@@ -103,9 +110,9 @@ namespace SalesOrdersReport
                     btnReset.PerformClick();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                CommonFunctions.ShowErrorDialog("CreateRole.btnCreateDiscountGrp_Click()", ex);
                 throw;
             }
         }
@@ -127,34 +134,7 @@ namespace SalesOrdersReport
                 {
                     lblCreateDisGrpValidateMsg.Visible = false;
                 }
-                //if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
-                //    (e.KeyChar != '.'))
-                //{
-                //    e.Handled = true;
-                //}
-
-                //// only allow one decimal point
-                //if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
-                //{
-                //    e.Handled = true;
-                //}
-
-
-
-                //// allows 0-9, backspace, and decimal
-                //if (((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8 && e.KeyChar != 46))
-                //{
-                //    e.Handled = true;
-                //    return;
-                //}
-
-                //// checks to make sure only 1 decimal is allowed
-                //if (e.KeyChar == 46)
-                //{
-                //    if ((sender as TextBox).Text.IndexOf(e.KeyChar) != -1)
-                //        e.Handled = true;
-                //}
-
+               
                 return isValid;
             }
             catch (Exception ex)
@@ -163,11 +143,6 @@ namespace SalesOrdersReport
                 throw ex;
             }
 
-        }
-
-        private void CreateDiscountGrpForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            UpdateCustomerOnClose(Mode: 1);
         }
     }
 }

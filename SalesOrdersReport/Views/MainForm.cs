@@ -32,7 +32,7 @@ namespace SalesOrdersReport.Views
             }
 #endif
             this.Text = CommonFunctions.ObjApplicationSettings.MainFormTitleText;
-           
+
             toolStripOrderMasterPath.Text = "";
             CommonFunctions.ToolStripProgressBarMainForm = this.toolStripProgressBar;
             CommonFunctions.ToolStripProgressBarMainFormStatus = this.toolStripProgress;
@@ -459,7 +459,7 @@ namespace SalesOrdersReport.Views
                 //cntxtMenuStripUserProfile.Items.Clear();
                 ////cntxtMenuStripUserProfile.Items.Add("Change Password");
                 //cntxtMenuStripUserProfile.Items.Add("Profile");
-               // cntxtMenuStripUserProfile.Items.Add("Log Out");
+                // cntxtMenuStripUserProfile.Items.Add("Log Out");
 
                 //cntxtMenuStripUserProfile.Show(btnUserProfile, new Point(0, btnUserProfile.Height));
                 //cntxtMenuStripUserProfile.ItemClicked += new ToolStripItemClickedEventHandler(cntxtMenuStripUserProfile_ItemClicked);// cntxtMenuStripUserProfile_ItemClicked(null, cntxtMenuStripUserProfile;//new System.EventHandler(this.cntxtMenuStripUserProfile_ItemClicked);
@@ -505,28 +505,38 @@ namespace SalesOrdersReport.Views
 
         private void btnUserProfile_Paint(object sender, PaintEventArgs e)
         {
-            System.Drawing.Drawing2D.GraphicsPath buttonPath =
-           new System.Drawing.Drawing2D.GraphicsPath();
+            try
+            {
 
-            //// Set a new rectangle to the same size as the button's 
-            //// ClientRectangle property.
-            //System.Drawing.Rectangle newRectangle = btnUserProfile.ClientRectangle;
 
-            //// Decrease the size of the rectangle.
-            //newRectangle.Inflate(-10, -10);
+                System.Drawing.Drawing2D.GraphicsPath buttonPath =
+               new System.Drawing.Drawing2D.GraphicsPath();
 
-            //// Draw the button's border.
-            //e.Graphics.DrawEllipse(System.Drawing.Pens.Black, newRectangle);
+                //// Set a new rectangle to the same size as the button's 
+                //// ClientRectangle property.
+                //System.Drawing.Rectangle newRectangle = btnUserProfile.ClientRectangle;
 
-            //// Increase the size of the rectangle to include the border.
-            //newRectangle.Inflate(1, 1);
+                //// Decrease the size of the rectangle.
+                //newRectangle.Inflate(-10, -10);
 
-            //// Create a circle within the new rectangle.
-            //buttonPath.AddEllipse(newRectangle);
+                //// Draw the button's border.
+                //e.Graphics.DrawEllipse(System.Drawing.Pens.Black, newRectangle);
 
-            //// Set the button's Region property to the newly created 
-            //// circle region.
-            //btnUserProfile.Region = new System.Drawing.Region(buttonPath);
+                //// Increase the size of the rectangle to include the border.
+                //newRectangle.Inflate(1, 1);
+
+                //// Create a circle within the new rectangle.
+                //buttonPath.AddEllipse(newRectangle);
+
+                //// Set the button's Region property to the newly created 
+                //// circle region.
+                //btnUserProfile.Region = new System.Drawing.Region(buttonPath);
+            }
+
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnUserProfile_Paint()", ex);
+            }
         }
 
         public void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -536,26 +546,28 @@ namespace SalesOrdersReport.Views
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            this.UserProfileToolStripMenuItem.Text = tmpMySQLHelper.CurrentUser;
-            //this.UserProfileToolStripMenuItem.Text = tmpMySQLHelper.CurrentUser = "Nisha";
-
-             List<string> ListAssignesPrivilegeNames = CommonFunctions.ObjUserMasterModel.GetOnlyAssignedPrivilegeNamesForAnUser(tmpMySQLHelper.CurrentUser);
-            //&&&&&& checkonce
-            //string strControlVal = "manageUsersToolStripMenuItem"; //"SalesToolStripMenuItem" or "invoiceToolStripMenuItem" 
-
-            foreach (ToolStripMenuItem item in administrationToolStripMenuItem.DropDownItems)
+            try
             {
-                //if (strControlVal == item.Name)
-                //{
-                //    item.Visible = false;
-                //}
+
+                this.UserProfileToolStripMenuItem.Text = tmpMySQLHelper.CurrentUser;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.MainForm_Load()", ex);
             }
         }
 
         private void manageCustomertoolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ManageCustomerForm ObjManageCustomerForm = new ManageCustomerForm();
-            ShowChildForm(ObjManageCustomerForm);
+            try
+            {
+                ManageCustomerForm ObjManageCustomerForm = new ManageCustomerForm();
+                ShowChildForm(ObjManageCustomerForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.manageCustomertoolStripMenuItem_Click()", ex);
+            }
         }
 
         private void ordersToolStripMenuItem_Click(object sender, EventArgs e)

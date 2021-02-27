@@ -25,9 +25,6 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                //CreateUserForm ObjCreateUserForm = new CreateUserForm(this);
-                //ObjCreateUserForm.Show();
-                //CommonFunctions.ShowDialog(ObjCreateUserForm,this);
                 CommonFunctions.ShowDialog(new CreateCustomerForm(UpdateCustomerOnClose), this);
             }
             catch (Exception ex)
@@ -82,17 +79,11 @@ namespace SalesOrdersReport.Views
                     }
                 }
 
-                //if (CurrentRow.Cells["CUSTOMERNAME"].Value.ToString().ToUpper() != "ADMIN")
-                //{
+
                 if (Convert.ToBoolean(CurrentRow.Cells["ACTIVE"].Value) == true)
                     ObjEditCustomerForm.rdbtnEditCustActiveYes.Checked = true;
                 else ObjEditCustomerForm.rdbtnEditCustActiveNo.Checked = true;
-                //}
-                //else
-                //{
-                //    ObjEditCustomerForm.rdbtnEditCustActiveYes.Checked = true;
-                //    ObjEditCustomerForm.rdbtnEditCustActiveNo.Enabled = false;
-                //}
+
                 ObjEditCustomerForm.txtEditCustPhone.Text = CurrentRow.Cells["PHONENO"].Value.ToString();
                 if (ObjEditCustomerForm.txtEditCustPhone.Text == "0") ObjEditCustomerForm.txtEditCustPhone.Text = "";
 
@@ -168,7 +159,7 @@ namespace SalesOrdersReport.Views
             try
             {
                 //EnableOrDisableBtnBasedOnUserPrivilege();
-                this.BindCustomerGrid(false);//&&&&& should be true
+                this.BindCustomerGrid(false);
                 dgvCustomerCache.AutoResizeColumns();
                 dgvCustomerCache.AutoResizeRows();
                 dgvCustomerCache.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
@@ -221,14 +212,10 @@ namespace SalesOrdersReport.Views
             {
                 dgvCustomerCache.DataSource = null;
                 dgvCustomerCache.Refresh();
-                //dgvUserCache.DataSource = CommonFunctions.ObjUserMasterModel.FillMangeUserCacheGrid();
                 Int32 ReturnVal = LoadCustomerDetailsDataGridView(ReloadFromDB);
                 if (ReturnVal > 0)
                 {
-                    // if (!dgvUserCache.Controls.Contains(headerCheckBox))
-                    // {
                     AddCheckBoxToDGV();
-                    //}
                     //EnableDisableControls(true);
                 }
                 else
@@ -546,9 +533,6 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                // CreateRoleForm ObjCreateRoleForm = new CreateRoleForm(this);
-                // CommonFunctions.ShowDialog(ObjCreateRoleForm, this);
-                // ObjCreateRoleForm.Show();
                 CommonFunctions.ShowDialog(new CreateLineForm(UpdateCustomerOnClose), this);
             }
             catch (Exception ex)
@@ -565,18 +549,10 @@ namespace SalesOrdersReport.Views
                 {
                     case 1:     //Add Product
                         BindCustomerGrid(true);
-                        //LoadUserDetailsDataGridView(true);
-                        //if (!dgvUserCache.Controls.Contains(headerCheckBox))
-                        //{
-                        //    AddCheckBoxToDGV();
-                        //}
                         break;
                     case 2:
                         CommonFunctions.ObjUserMasterModel.LoadAllUserMasterTables();
                         break;
-                    //case 3:     //Reload Product Category from DB
-                    //    LoadProductCategoryDataGridView(true);
-                    //    break;
                     default:
                         break;
                 }
@@ -768,7 +744,6 @@ namespace SalesOrdersReport.Views
                             LineID++;
                             // }
                         }
-                        else ListTempLineDtls[Index] = ObjLineDetails;
                     }
                     else ObjCustomerDetails.LineID = CommonFunctions.ObjCustomerMasterModel.GetLineID(ListExistingLineNamesinDB[AlreadyExistsIndex]);
 
@@ -793,7 +768,6 @@ namespace SalesOrdersReport.Views
                             DGID++;
                             //}
                         }
-                        else ListTempDGDtls[Index] = ObjDiscountGroupDetails;
                     }
                     else ObjCustomerDetails.DiscountGroupID = CommonFunctions.ObjCustomerMasterModel.GetDisGrpID(ListExistingDiscGrpNamesinDB[AlreadyExistsIndex]);
                     AlreadyExistsIndex = ListExistingPriceGrpNamesinDB.FindIndex(e => e.Equals(ObjCustomerDetails.PriceGroupName, StringComparison.InvariantCultureIgnoreCase));
@@ -818,7 +792,6 @@ namespace SalesOrdersReport.Views
                             PGID++;
                             //}
                         }
-                        else ListTempPGDtls[Index] = ObjPriceGroupDetails;
                     }
                     else ObjCustomerDetails.PriceGroupID = CommonFunctions.ObjCustomerMasterModel.GetPriceGrpID(ListExistingPriceGrpNamesinDB[AlreadyExistsIndex]);
                     //ObjCustomerDetails.LineID = ((arr["LINEID"] == null) || arr["LINEID"].ToString().Trim() == "") ? -1 : int.Parse(arr["LINEID"].ToString().Trim());
@@ -846,7 +819,6 @@ namespace SalesOrdersReport.Views
                             CustID++;
                             //}
                         }
-                        else ListTempCustDtls[Index] = ObjCustomerDetails;
                     }
                 }
                 srReadSelectedFile.Close();

@@ -11,15 +11,29 @@ namespace SalesOrdersReport.Views
     {
         public LoginForm()
         {
-            CommonFunctions.CurrentForm = this;
-            InitializeComponent();
-            txtUserName.Focus();
-            this.Shown += LoginForm_Shown;
+            try
+            {
+                CommonFunctions.CurrentForm = this;
+                InitializeComponent();
+                txtUserName.Focus();
+                this.Shown += LoginForm_Shown;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("LoginForm.LoginForm()", ex);
+            }
         }
 
         private void LoginForm_Shown(object sender, EventArgs e)
         {
-            txtUserName.Focus();
+            try
+            {
+                txtUserName.Focus();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("LoginForm.LoginForm_Shown()", ex);
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -59,7 +73,7 @@ namespace SalesOrdersReport.Views
                 }
                 else
                 {
-                    if (ReturnVal == -2) MessageBox.Show("User InActive! Pls Contact Admin", "InActive User",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (ReturnVal == -2) MessageBox.Show("User InActive! Pls Contact Admin", "InActive User", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     else MessageBox.Show("Login Failed...Try again !", "Login Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtUserName.Clear();
                     txtPassword.Clear();
@@ -87,7 +101,14 @@ namespace SalesOrdersReport.Views
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
-            txtUserName.Focus();
+            try
+            {
+                txtUserName.Focus();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("LoginForm.LoginForm_Load()", ex);
+            }
         }
     }
 }

@@ -41,7 +41,15 @@ namespace SalesOrdersReport.Models
 
         public CustomerDetails Clone()
         {
-            return (CustomerDetails)this.MemberwiseClone();
+            try
+            {
+                return (CustomerDetails)this.MemberwiseClone();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.Clone()", ex);
+                throw;
+            }
         }
     }
 
@@ -98,10 +106,6 @@ namespace SalesOrdersReport.Models
         {
             return x.LineName.ToUpper().CompareTo(y.LineName.ToUpper());
         }
-        //        ID
-        //LineName
-        //Description
-
     }
     class StateDetails : IComparer<StateDetails>
     {
@@ -113,45 +117,4 @@ namespace SalesOrdersReport.Models
         }
 
     }
-    //class PriceGroupDetails : IComparer<PriceGroupDetails>
-    //{
-    //    public int PriceGroupID = -1;
-    //    public string PriceGroupName = "", PriceGroupDescription = "";
-    //    public List<string> ListPriceGroupColumn = new List<string>();
-    //    public float Discount = 0.0f;
-    //    public bool Default = false;
-    //    public string DiscountType = "Percent";
-    //    public int Compare(PriceGroupDetails x, PriceGroupDetails y)
-    //    {
-    //        return x.PriceGroupName.ToUpper().CompareTo(y.PriceGroupName.ToUpper());
-    //    }
-    //    //      PriceGroupID
-
-    //    //PriceGroupName
-    //    //  Description
-
-    //    //  PriceColumn
-    //    //  Discount
-
-    //    //  DiscountType
-    //    //  Default
-    //}
-    //class DiscountGroupDetails : IComparer<DiscountGroupDetails>
-    //{
-    //    public int DiscountGroupID = -1;
-    //    public string DiscountGroupName = "", DiscountGroupDescription = "";
-    //    public float Discount = 0.0f;
-    //    public bool Default = false;
-    //    public string DiscountType = "Percent";
-    //    public int Compare(DiscountGroupDetails x, DiscountGroupDetails y)
-    //    {
-    //        return x.DiscountGroupName.ToUpper().CompareTo(y.DiscountGroupName.ToUpper());
-    //    }
-    //    //    ID
-    //    //DiscountGroupName
-    //    //Discount
-    //    //DiscountType
-    //    //Default
-    //    //Description
-    //}
 }

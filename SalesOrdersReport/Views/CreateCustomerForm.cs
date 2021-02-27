@@ -23,8 +23,6 @@ namespace SalesOrdersReport
         {
             try
             {
-
-
                 InitializeComponent();
                 txtCreateCustomerName.Focus();
                 FillStates();
@@ -171,13 +169,6 @@ namespace SalesOrdersReport
                     lblCommonErrorMsg.Text = "Customer Name Cant be empty!";
                     return;
                 }
-
-                //if (cmbxCreateCustSelectLine.SelectedIndex == 0)
-                //{
-                //    lblCommonErrorMsg.Visible = true;
-                //    lblCommonErrorMsg.Text = "Select a Line for the Customer!! ";
-                //    return;
-                //}
                 if (rdbtnCustActiveYes.Checked == false && rdbtnCustActiveNo.Checked == false)
                 {
                     lblCommonErrorMsg.Visible = true;

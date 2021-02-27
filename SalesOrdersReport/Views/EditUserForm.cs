@@ -17,16 +17,24 @@ namespace SalesOrdersReport
         UpdateOnCloseDel UpdateOnClose = null;
         public EditUserForm(UpdateOnCloseDel UpdateOnClose)
         {
-            InitializeComponent();
-            txtFullName.Focus();
-            cmbxSelectRoleID.Items.Clear();
-            FillRoles();
-            cmbxSelectRoleID.SelectedIndex = 0;
-            FillStores();
-            cmbxSelectStore.SelectedIndex = 0;
-            this.UpdateOnClose = UpdateOnClose;
-            this.FormClosed += EditUserForm_FormClosed;
-            tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+            try
+            {
+                InitializeComponent();
+                txtFullName.Focus();
+                cmbxSelectRoleID.Items.Clear();
+                FillRoles();
+                cmbxSelectRoleID.SelectedIndex = 0;
+                FillStores();
+                cmbxSelectStore.SelectedIndex = 0;
+                this.UpdateOnClose = UpdateOnClose;
+                this.FormClosed += EditUserForm_FormClosed;
+                tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("EditUserForm.EditUserForm()", ex);
+                throw;
+            }
         }
         private void FillRoles()
         {
@@ -37,7 +45,6 @@ namespace SalesOrdersReport
                 cmbxSelectRoleID.Items.Add("Select Role");
                 foreach (var item in ListRoles)
                 {
-                    //cmbxSelectRoleID.Items.Add(item.Cast<object>());
                     cmbxSelectRoleID.Items.Add(item);
                 }
             }
@@ -57,7 +64,6 @@ namespace SalesOrdersReport
                 cmbxSelectStore.Items.Add("Select Store");
                 foreach (var item in ListStores)
                 {
-                    //cmbxSelectRoleID.Items.Add(item.Cast<object>());
                     cmbxSelectStore.Items.Add(item);
                 }
             }
@@ -69,25 +75,6 @@ namespace SalesOrdersReport
             }
         }
 
-        //private void FillStatus()
-        //{
-        //    try
-        //    {
-        //        MySQLHelper tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
-        //        List<string> ListStatus = tmpMySQLHelper.GetAllStatus();
-        //        cmbxSelectStatus.Items.Add("Select Status");
-        //        foreach (var item in ListStatus)
-        //        {
-        //            //cmbxSelectRoleID.Items.Add(item.Cast<object>());
-        //            cmbxSelectStatus.Items.Add(item);
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
         private void btnReset_Click(object sender, EventArgs e)
         {
             try
@@ -98,7 +85,6 @@ namespace SalesOrdersReport
                 cmbxSelectRoleID.SelectedIndex = 0;
                 cmbxSelectStore.SelectedIndex = 0;
                 lblCommonErrorMsg.Visible = false;               
-                //txtAddress.Clear();
             }
 
             catch (Exception ex)
@@ -111,21 +97,13 @@ namespace SalesOrdersReport
         {
             try
             {
-
                 if (cmbxSelectRoleID.Text == "Select Role")
                 {
-                    //MessageBox.Show("Select a Role for the User!! ");
                     lblCommonErrorMsg.Visible = true;
                     lblCommonErrorMsg.Text = "Select a Role for the User!! ";
                     return;
                 }
-                //if (cmbxSelectStore.Text == "Select Store")    
-                //{
-                //    //MessageBox.Show("Select a Role for the User!! ");
-                //    lblCommonErrorMsg.Visible = true;
-                //    lblCommonErrorMsg.Text = "Select a Store for the User!! ";
-                //    return;
-                //}
+
                 if (txtFullName.Text.Trim() == string.Empty)
                 {
                     lblCommonErrorMsg.Visible = true;
@@ -154,17 +132,12 @@ namespace SalesOrdersReport
                 List<string> ListColumnNames = new List<string>();
                 ListColumnValues.Add(txtFullName.Text);
                 ListColumnNames.Add("FULLNAME");
-                //if (txtEmailID.Text.Trim()!=string.Empty)
-                //{
+
                 ListColumnValues.Add(txtEmailID.Text);
                 ListColumnNames.Add("EMAILID");
-                //}
-                //if (txtPhone.Text.Trim() != string.Empty)
-                //{
+
                 ListColumnNames.Add("PHONENO");
-                ////ListColumnValues.Add("'" + txtPhone.Text + "'");
                 ListColumnValues.Add(txtPhone.Text.Trim() == string.Empty ? "NULL" : txtPhone.Text.Trim());
-                //}
                 ListColumnNames.Add("ACTIVE");
 
                 if (rdbtnActiveNo.Checked == true)
@@ -177,23 +150,16 @@ namespace SalesOrdersReport
                 ListColumnNames.Add("ROLEID");
                 ListColumnValues.Add(DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"));
                 ListColumnNames.Add("LASTUPDATEDATE");
-                //if (cmbxSelectStore.Text != "Select Store")
-                //{
+
                 ListColumnNames.Add("STOREID");
                 int storeID = CommonFunctions.ObjUserMasterModel.GetStoreID(cmbxSelectStore.SelectedItem.ToString());
                 ListColumnValues.Add(storeID == -1 ? "NULL" : storeID.ToString());
-                //}
-
-
+ 
                 string WhereCondition = "USERNAME = '" + txtUserName.Text + "'";
                 tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
                 int ResultVal = CommonFunctions.ObjUserMasterModel.UpdateAnyTableDetails("USERMASTER", ListColumnNames, ListColumnValues, WhereCondition);
-                //tmpMySQLHelper.EditNewUser(txtEditUserName.Text, txtEditPassword.Text, txtFullName.Text, (chkbxActiveYes.Checked == true ? "YES" : "NO"), cmbxSelectRoleID.Text, ListColumnNamesWithDataType, ListColumnValues);
+                
                 if (ResultVal < 0) MessageBox.Show("Wasnt able to Edit the user", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //else if (ResultVal == 2)
-                //{
-                //    MessageBox.Show("User Name already exists! Pls Provide Another User Name.");
-                //}
                 else
                 {
                     MessageBox.Show("Updated User Details :: " + txtUserName.Text + " successfully", "Update User Details");
@@ -210,28 +176,6 @@ namespace SalesOrdersReport
             }
         }
 
-
-
-        //private void txtEmailID_Leave(object sender, EventArgs e)
-        //{
-        //    bool IsValid = false;
-        //    if (txtEmailID.Text == "") IsValid = true;
-        //    else IsValid = CommonFunctions.ValidateEmail(txtEmailID.Text);
-        //    if (!IsValid)
-        //    {
-        //        lblEditEmailIdValidMsg.Visible = true;
-        //        lblEditEmailIdValidMsg.Text = "Invalid EmailID!";
-        //        txtEmailID.Focus();
-        //        btnEditUser.Enabled = false;
-        //    }
-        //    else
-        //    {
-        //        lblEditEmailIdValidMsg.Visible = false;
-        //        btnEditUser.Enabled = true;
-        //        return;
-        //    }
-        //}
-
         private bool CheckForValidEmailID()
         {
             try
@@ -244,8 +188,6 @@ namespace SalesOrdersReport
                     lblCommonErrorMsg.Visible = true;
                     lblCommonErrorMsg.Text = "Invalid EmailID!";
                     txtEmailID.Focus();
-                    //return;
-                    // btnEditUser.Enabled = false;
                 }
                 else
                 {
@@ -262,25 +204,6 @@ namespace SalesOrdersReport
             }
         }
 
-        //private void txtPhone_Leave(object sender, EventArgs e)
-        //{
-        //    bool IsValid = false;
-        //    if (txtPhone.Text == "") IsValid = true;
-        //    else IsValid = CommonFunctions.ValidatePhoneNo(txtPhone.Text);
-        //    if (!IsValid)
-        //    {
-        //        lblEditPhoneValidMsg.Visible = true;
-        //        lblEditPhoneValidMsg.Text = "Enter Valid Phone No!"; ;
-        //        txtPhone.Focus();
-        //        btnEditUser.Enabled = false;
-        //    }
-        //    else
-        //    {
-        //        lblEditPhoneValidMsg.Visible = false;
-        //        btnEditUser.Enabled = true;
-        //        return;
-        //    }
-        //}
         private bool CheckForValidPhoneNo()
         {
             try
@@ -293,13 +216,10 @@ namespace SalesOrdersReport
                     lblCommonErrorMsg.Visible = true;
                     lblCommonErrorMsg.Text = "Enter Valid Phone No!"; ;
                     txtPhone.Focus();
-                    // btnEditUser.Enabled = false;
                 }
                 else
                 {
                     lblCommonErrorMsg.Visible = false;
-                    //btnEditUser.Enabled = true;
-                    //return;
                 }
                 return IsValid;
             }
@@ -350,14 +270,5 @@ namespace SalesOrdersReport
             }
         }
 
-        private void cmbxSelectStore_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblEditStoreName_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

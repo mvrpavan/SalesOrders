@@ -122,7 +122,6 @@
             this.Name = "EditLineForm";
             this.ShowIcon = false;
             this.Text = "Edit Line Form";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.EditLineForm_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

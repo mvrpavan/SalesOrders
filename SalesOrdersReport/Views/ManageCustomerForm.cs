@@ -19,15 +19,20 @@ namespace SalesOrdersReport.Views
         CheckBox headerCheckBox = new CheckBox();
         public ManageCustomerForm()
         {
+            try
+            {
             InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ManagerCustomerForm.ManageCustomerForm()", ex);
+                throw ex;
+            }
         }
         private void btnRedirectCreateCustomer_Click(object sender, EventArgs e)
         {
             try
             {
-                //CreateUserForm ObjCreateUserForm = new CreateUserForm(this);
-                //ObjCreateUserForm.Show();
-                //CommonFunctions.ShowDialog(ObjCreateUserForm,this);
                 CommonFunctions.ShowDialog(new CreateCustomerForm(UpdateCustomerOnClose), this);
             }
             catch (Exception ex)
@@ -82,17 +87,10 @@ namespace SalesOrdersReport.Views
                     }
                 }
 
-                //if (CurrentRow.Cells["CUSTOMERNAME"].Value.ToString().ToUpper() != "ADMIN")
-                //{
                 if (Convert.ToBoolean(CurrentRow.Cells["ACTIVE"].Value) == true)
                     ObjEditCustomerForm.rdbtnEditCustActiveYes.Checked = true;
                 else ObjEditCustomerForm.rdbtnEditCustActiveNo.Checked = true;
-                //}
-                //else
-                //{
-                //    ObjEditCustomerForm.rdbtnEditCustActiveYes.Checked = true;
-                //    ObjEditCustomerForm.rdbtnEditCustActiveNo.Enabled = false;
-                //}
+
                 ObjEditCustomerForm.txtEditCustPhone.Text = CurrentRow.Cells["PHONENO"].Value.ToString();
                 if (ObjEditCustomerForm.txtEditCustPhone.Text == "0") ObjEditCustomerForm.txtEditCustPhone.Text = "";
 
@@ -168,7 +166,7 @@ namespace SalesOrdersReport.Views
             try
             {
                 //EnableOrDisableBtnBasedOnUserPrivilege();
-                this.BindCustomerGrid(false);//&&&&& should be true
+                this.BindCustomerGrid(false);
                 dgvCustomerCache.AutoResizeColumns();
                 dgvCustomerCache.AutoResizeRows();
                 dgvCustomerCache.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
@@ -543,9 +541,6 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                // CreateRoleForm ObjCreateRoleForm = new CreateRoleForm(this);
-                // CommonFunctions.ShowDialog(ObjCreateRoleForm, this);
-                // ObjCreateRoleForm.Show();
                 CommonFunctions.ShowDialog(new CreateLineForm(UpdateCustomerOnClose), this);
             }
             catch (Exception ex)
@@ -560,20 +555,12 @@ namespace SalesOrdersReport.Views
             {
                 switch (Mode)
                 {
-                    case 1:     //Add Product
+                    case 1:     
                         BindCustomerGrid(true);
-                        //LoadUserDetailsDataGridView(true);
-                        //if (!dgvUserCache.Controls.Contains(headerCheckBox))
-                        //{
-                        //    AddCheckBoxToDGV();
-                        //}
                         break;
                     case 2:
                         CommonFunctions.ObjCustomerMasterModel.LoadAllCustomerMasterTables();
                         break;
-                    //case 3:     //Reload Product Category from DB
-                    //    LoadProductCategoryDataGridView(true);
-                    //    break;
                     default:
                         break;
                 }
@@ -751,7 +738,6 @@ namespace SalesOrdersReport.Views
                             ListTempLineDtls.Insert(~Index, ObjLineDetails);
                             LineID++;
                         }
-                        //else ListTempLineDtls[Index] = ObjLineDetails;
                     }
                     else ObjCustomerDetails.LineID = CommonFunctions.ObjCustomerMasterModel.GetLineID(ListExistingLineNamesinDB[AlreadyExistsIndex]);
 

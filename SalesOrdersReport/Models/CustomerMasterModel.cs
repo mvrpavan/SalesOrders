@@ -140,14 +140,12 @@ namespace SalesOrdersReport.Models
                 List<string> ListOfStates = new List<string>();
                 ListOfStates.AddRange(ListStateDetails.Select(e => e.State).ToList());
 
-                //List<string> ListOfStates1 = new List<string>() { "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttarakhand", "Uttar Pradesh", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli", "Daman and Diu", "Delhi", "Lakshadweep", "Puducherry" };
-
                 return ListOfStates;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetAllStatesOfIndia()", ex);
+                return null;
             }
         }
         public LineDetails GetLineDetails(string LineName)

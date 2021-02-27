@@ -32,10 +32,6 @@ namespace SalesOrdersReport.Models
         //public double ReturnAmount = 0.0;
         //public double DiscountAmount = 0.0;
         //public double TotalTax = 0.0;
-
-        //&&&&& binary search?
-
-
     }
     class PaymentsModel
     {
@@ -157,7 +153,6 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                //FromDate.ToString("yyyy-MM-dd H:mm:ss")
                 String Query = "";
                 if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) Query = "SELECT "+ TempQueryStr + " WHERE (a.CREATIONDATE >='" + FromDate.ToString("yyyy-MM-dd H:mm:ss");
                 else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) Query = "SELECT " + TempQueryStr + " WHERE (a.CREATIONDATE <='" + ToDate.ToString("yyyy-MM-dd H:mm:ss");
