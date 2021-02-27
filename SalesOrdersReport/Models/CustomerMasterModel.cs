@@ -573,8 +573,15 @@ namespace SalesOrdersReport.Models
 
                 Int32 RetVal = ObjMySQLHelper.BuildNExceuteQueryWithParams(Query, ListColumnNameParamStr, ListColumnDataType, ListColumnValues);
                 if (RetVal < 0) return -1;
-
                 Int32 CustomerID = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select CustomerID from CUSTOMERMASTER Where CustomerName = '{CustomerName}';").ToString());
+
+                DataTable Dt = ObjMySQLHelper.GetQueryResultInDataTable($"Select * from CUSTOMERMASTER Where CustomerName = '{CustomerName}';");
+
+                for (int i = 0; i < Dt.Rows.Count; i++)
+                {
+                    CustomerDetails ObjCustomerDetails = CreateCustomerObjFromDataRow(Dt.Rows[i]);
+                    AddCustomerDataToCache(ObjCustomerDetails);
+                }
 
                 //Create new Customer Account in AccountsMaster
                 AccountDetails tmpAccountDetails = new AccountDetails() { CustomerID = CustomerID, Active = true, BalanceAmount = 0, CreationDate = DateTime.Now, LastUpdatedDate = DateTime.Now };
@@ -915,38 +922,50 @@ namespace SalesOrdersReport.Models
                 ListCustomerDetails.Clear();
                 for (int i = 0; i < dtCustomerMaster.Rows.Count; i++)
                 {
-                    DataRow dtRow = dtCustomerMaster.Rows[i];
-                    CustomerDetails ObjCustomerDetails = new CustomerDetails();
-                    ObjCustomerDetails.CustomerID = int.Parse(dtRow["CUSTOMERID"].ToString().Trim());
-                    ObjCustomerDetails.CustomerName = dtRow["CUSTOMERNAME"].ToString();
-                    ObjCustomerDetails.Address = dtRow["ADDRESS"].ToString();
-                    ObjCustomerDetails.GSTIN = dtRow["GSTIN"].ToString();
-                    ObjCustomerDetails.PhoneNo = ((dtRow["PHONENO"] == null) || dtRow["PHONENO"].ToString().Trim() == "") ? 0 : Int64.Parse(dtRow["PHONENO"].ToString().Trim());
-                    ObjCustomerDetails.Active = (dtRow["ACTIVE"].ToString().Trim() == "1") ? true : false;
-                    ObjCustomerDetails.StateID = ((dtRow["STATEID"] == null) || dtRow["STATEID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["STATEID"].ToString().Trim());
-                    ObjCustomerDetails.OrderDaysAssigned = dtRow["ORDERDAYS"].ToString();
-                    ObjCustomerDetails.LastUpdateDate = ((dtRow["LASTUPDATEDATE"] == null) || dtRow["LASTUPDATEDATE"].ToString().Trim() == "") ? DateTime.MinValue : DateTime.Parse(dtRow["LASTUPDATEDATE"].ToString());
-                    ObjCustomerDetails.AddedDate = ((dtRow["ADDEDDATE"] == null) || dtRow["ADDEDDATE"].ToString().Trim() == "") ? DateTime.MinValue : DateTime.Parse(dtRow["ADDEDDATE"].ToString());
-
-                    ObjCustomerDetails.LineID = ((dtRow["LINEID"] == null) || dtRow["LINEID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["LINEID"].ToString().Trim());
-                    ObjCustomerDetails.DiscountGroupID = ((dtRow["DISCOUNTGROUPID"] == null) || dtRow["DISCOUNTGROUPID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["DISCOUNTGROUPID"].ToString().Trim());
-                    ObjCustomerDetails.PriceGroupID = ((dtRow["PRICEGROUPID"] == null) || dtRow["PRICEGROUPID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["PRICEGROUPID"].ToString().Trim());
-                    if (ObjCustomerDetails.LineID != -1) ObjCustomerDetails.LineName = ListLineDetails.Where(e => e.LineID.Equals(ObjCustomerDetails.LineID)).FirstOrDefault().LineName;
-                    if (ObjCustomerDetails.DiscountGroupID != -1) ObjCustomerDetails.DiscountGroupName = ListDiscountGroupDetails.Where(e => e.DiscountGrpID.Equals(ObjCustomerDetails.DiscountGroupID)).FirstOrDefault().DiscountGrpName;
-                    if (ObjCustomerDetails.PriceGroupID != -1)
-                    {
-                        ObjCustomerDetails.PriceGroupName = ListPriceGroupDetails.Where(e => e.PriceGroupID.Equals(ObjCustomerDetails.PriceGroupID)).FirstOrDefault().PriceGrpName;
-                        ObjCustomerDetails.PriceGroupIndex = ListPriceGroupDetails.FindIndex(e => e.PriceGroupID.Equals(ObjCustomerDetails.PriceGroupID));
-                    }
-                    if (ObjCustomerDetails.StateID != -1) ObjCustomerDetails.State = ListStateDetails.Where(e => e.StateID.Equals(ObjCustomerDetails.StateID)).FirstOrDefault().State;
-
-
+                    CustomerDetails ObjCustomerDetails = CreateCustomerObjFromDataRow(dtCustomerMaster.Rows[i]);
                     AddCustomerDataToCache(ObjCustomerDetails);
                 }
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("CustomerMasterModel.LoadCustomerMaster()", ex);
+            }
+        }
+
+       public CustomerDetails CreateCustomerObjFromDataRow(DataRow dtRow)
+        {
+            try
+            {
+                CustomerDetails ObjCustomerDetails = new CustomerDetails();
+                ObjCustomerDetails.CustomerID = int.Parse(dtRow["CUSTOMERID"].ToString().Trim());
+                ObjCustomerDetails.CustomerName = dtRow["CUSTOMERNAME"].ToString();
+                ObjCustomerDetails.Address = dtRow["ADDRESS"].ToString();
+                ObjCustomerDetails.GSTIN = dtRow["GSTIN"].ToString();
+                ObjCustomerDetails.PhoneNo = ((dtRow["PHONENO"] == null) || dtRow["PHONENO"].ToString().Trim() == "") ? 0 : Int64.Parse(dtRow["PHONENO"].ToString().Trim());
+                ObjCustomerDetails.Active = (dtRow["ACTIVE"].ToString().Trim() == "1") ? true : false;
+                ObjCustomerDetails.StateID = ((dtRow["STATEID"] == null) || dtRow["STATEID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["STATEID"].ToString().Trim());
+                ObjCustomerDetails.OrderDaysAssigned = dtRow["ORDERDAYS"].ToString();
+                ObjCustomerDetails.LastUpdateDate = ((dtRow["LASTUPDATEDATE"] == null) || dtRow["LASTUPDATEDATE"].ToString().Trim() == "") ? DateTime.MinValue : DateTime.Parse(dtRow["LASTUPDATEDATE"].ToString());
+                ObjCustomerDetails.AddedDate = ((dtRow["ADDEDDATE"] == null) || dtRow["ADDEDDATE"].ToString().Trim() == "") ? DateTime.MinValue : DateTime.Parse(dtRow["ADDEDDATE"].ToString());
+
+                ObjCustomerDetails.LineID = ((dtRow["LINEID"] == null) || dtRow["LINEID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["LINEID"].ToString().Trim());
+                ObjCustomerDetails.DiscountGroupID = ((dtRow["DISCOUNTGROUPID"] == null) || dtRow["DISCOUNTGROUPID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["DISCOUNTGROUPID"].ToString().Trim());
+                ObjCustomerDetails.PriceGroupID = ((dtRow["PRICEGROUPID"] == null) || dtRow["PRICEGROUPID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["PRICEGROUPID"].ToString().Trim());
+                if (ObjCustomerDetails.LineID != -1) ObjCustomerDetails.LineName = ListLineDetails.Where(e => e.LineID.Equals(ObjCustomerDetails.LineID)).FirstOrDefault().LineName;
+                if (ObjCustomerDetails.DiscountGroupID != -1) ObjCustomerDetails.DiscountGroupName = ListDiscountGroupDetails.Where(e => e.DiscountGrpID.Equals(ObjCustomerDetails.DiscountGroupID)).FirstOrDefault().DiscountGrpName;
+                if (ObjCustomerDetails.PriceGroupID != -1)
+                {
+                    ObjCustomerDetails.PriceGroupName = ListPriceGroupDetails.Where(e => e.PriceGroupID.Equals(ObjCustomerDetails.PriceGroupID)).FirstOrDefault().PriceGrpName;
+                    ObjCustomerDetails.PriceGroupIndex = ListPriceGroupDetails.FindIndex(e => e.PriceGroupID.Equals(ObjCustomerDetails.PriceGroupID));
+                }
+                if (ObjCustomerDetails.StateID != -1) ObjCustomerDetails.State = ListStateDetails.Where(e => e.StateID.Equals(ObjCustomerDetails.StateID)).FirstOrDefault().State;
+
+                return ObjCustomerDetails;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.CreateCustomerObjFromDataRow()", ex);
+                return null;
             }
         }
         public void AddCustomerDataToCache(CustomerDetails ObjCustomerDetails)

@@ -58,7 +58,7 @@ namespace SalesOrdersReport.Views
                 string[] OrderDays = new string[OrderDaysCode.Length];
                 for (int i = 0; i < OrderDaysCode.Length; i++)
                 {
-                    if (OrderDaysCode[i] != string.Empty) OrderDays[i] = CommonFunctions.ObjCustomerMasterModel.GetOrderDaysFromCode(int.Parse(OrderDaysCode[i]));
+                    if (OrderDaysCode[i] != string.Empty) OrderDays[i] = CommonFunctions.ObjCustomerMasterModel.GetOrderDaysFromCode(int.Parse(OrderDaysCode[i].Replace('"',' ').Trim()));
                     else OrderDays[i] = "";
                 }
                 for (int i = 0; i < OrderDays.Length; i++)
@@ -569,7 +569,7 @@ namespace SalesOrdersReport.Views
                         //}
                         break;
                     case 2:
-                        CommonFunctions.ObjUserMasterModel.LoadAllUserMasterTables();
+                        CommonFunctions.ObjCustomerMasterModel.LoadAllCustomerMasterTables();
                         break;
                     //case 3:     //Reload Product Category from DB
                     //    LoadProductCategoryDataGridView(true);
@@ -733,7 +733,7 @@ namespace SalesOrdersReport.Views
                     ObjCustomerDetails.PhoneNo = ((arr[PhoneIndex] == null) || arr[PhoneIndex].Trim() == "") ? 0 : Int64.Parse(arr[PhoneIndex].Trim());
                     if (arr[ActiveIndex].Trim() != "") ObjCustomerDetails.Active = bool.Parse(arr[ActiveIndex].Trim());
                     ObjCustomerDetails.State = ((arr[StateIndex] == null) || arr[StateIndex].Trim() == "") ? "" : arr[StateIndex].Trim();
-                    ObjCustomerDetails.OrderDaysAssigned = arr[OrderDaysIndex].Trim();
+                    ObjCustomerDetails.OrderDaysAssigned = arr[OrderDaysIndex].Replace('"',' ').Trim();
                     ObjCustomerDetails.LineName = ((arr[LineNameIndex] == null) || arr[LineNameIndex].Trim() == "") ? "" : arr[LineNameIndex].Trim();
                     ObjCustomerDetails.DiscountGroupName = ((arr[DiscountGroupNameIndex] == null) || arr[DiscountGroupNameIndex].Trim() == "") ? "" : arr[DiscountGroupNameIndex].Trim();
                     ObjCustomerDetails.PriceGroupName = ((arr[PriceGroupNameIndex] == null) || arr[PriceGroupNameIndex].Trim() == "") ? "" : arr[PriceGroupNameIndex].Trim();

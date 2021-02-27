@@ -466,7 +466,7 @@ namespace SalesOrdersReport.Views
                 ListColumnNames.Add("NEWBALANCEAMOUNT");
                 ListTypes.Add(Types.Number);
 
-                ListColumnValues.Add(txtCreatePaymentOB.Text == string.Empty ? "0" : txtCreatePaymentOB.Text);//&&&&&
+                ListColumnValues.Add(txtCreatePaymentOB.Text == string.Empty ? "0" : txtCreatePaymentOB.Text);
                 ListColumnNames.Add("BALANCEAMOUNT");
                 ListTypes.Add(Types.Number);
 
