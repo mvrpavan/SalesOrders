@@ -271,12 +271,12 @@ namespace SalesOrdersReport.Models
                 ListColumnNames.Add("PAYMENTMODEID");
                 ListTypes.Add(Types.Number);
 
-                if (ObjPaymentDetails.InvoiceID <= 0) ObjPaymentDetails.InvoiceID = -1;
+                if (ObjPaymentDetails.InvoiceID <= 0) ObjPaymentDetails.InvoiceID = 0;
                 ListColumnValues.Add(ObjPaymentDetails.InvoiceID.ToString());
                 ListColumnNames.Add("INVOICEID");
                 ListTypes.Add(Types.Number);
 
-                if (ObjPaymentDetails.QuotationID <= 0) ObjPaymentDetails.QuotationID = -1;
+                if (ObjPaymentDetails.QuotationID <= 0) ObjPaymentDetails.QuotationID = 0;
                 ListColumnValues.Add(ObjPaymentDetails.QuotationID.ToString());
                 ListColumnNames.Add("QUOTATIONID");
                 ListTypes.Add(Types.Number);

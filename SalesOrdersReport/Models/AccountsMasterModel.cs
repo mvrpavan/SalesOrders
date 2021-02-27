@@ -90,7 +90,7 @@ namespace SalesOrdersReport.Models
                                                 new List<Types>() { Types.Number, Types.Number, Types.Number, Types.String, Types.String });
                 if (RetVal <= 0) return -3;
 
-                ObjAccountDetails.AccountID = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select AccountID from ACCOUNTSMASTER Where CustomerID = {ObjAccountDetails.AccountID} and Active = 1;").ToString());
+                ObjAccountDetails.AccountID = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select AccountID from ACCOUNTSMASTER Where CustomerID = {ObjAccountDetails.CustomerID} and Active = 1;").ToString());
                 ListAccountDetails.Add(ObjAccountDetails);
 
                 return 0;

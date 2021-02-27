@@ -66,7 +66,8 @@ namespace SalesOrdersReport.Models
             try
             {
                 this.ObjPrintDetails = ObjPrintDetails;
-                ShowPrintPreview();
+                ObjPrintDocument.DefaultPageSettings.PaperSize = new PaperSize("", (Int32)PaperWidth, 600);
+                ObjPrintDocument.Print();
             }
             catch (Exception ex)
             {

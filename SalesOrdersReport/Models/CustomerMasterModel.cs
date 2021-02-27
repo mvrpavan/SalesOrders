@@ -571,12 +571,17 @@ namespace SalesOrdersReport.Models
                 ListColumnValues.Add(Active == true ? "1" : "0");
                 ListColumnDataType.Add("BIT");
 
+                Int32 RetVal = ObjMySQLHelper.BuildNExceuteQueryWithParams(Query, ListColumnNameParamStr, ListColumnDataType, ListColumnValues);
+                if (RetVal < 0) return -1;
+
+                Int32 CustomerID = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select CustomerID from CUSTOMERMASTER Where CustomerName = '{CustomerName}';").ToString());
+
                 //Create new Customer Account in AccountsMaster
-                AccountDetails tmpAccountDetails = new AccountDetails() { Active = true, BalanceAmount = 0, CreationDate = DateTime.Now, LastUpdatedDate = DateTime.Now };
-                CommonFunctions.ObjAccountsMasterModel.CreateNewCustomerAccount(ref tmpAccountDetails);
+                AccountDetails tmpAccountDetails = new AccountDetails() { CustomerID = CustomerID, Active = true, BalanceAmount = 0, CreationDate = DateTime.Now, LastUpdatedDate = DateTime.Now };
+                Int32 RetVal1 = CommonFunctions.ObjAccountsMasterModel.CreateNewCustomerAccount(ref tmpAccountDetails);
+                if (RetVal1 < 0) return -1;
 
-                return ObjMySQLHelper.BuildNExceuteQueryWithParams(Query, ListColumnNameParamStr, ListColumnDataType, ListColumnValues);
-
+                return RetVal;
             }
             catch (Exception ex)
             {
@@ -584,6 +589,7 @@ namespace SalesOrdersReport.Models
                 throw ex;
             }
         }
+
         public Int32 CreateNewDiscountGrp(string DiscountGroupName, string Description, List<string> ListColumnNamesWthDataType = null, List<string> ListColumnValues = null)
         {
             try

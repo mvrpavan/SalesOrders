@@ -1,4 +1,5 @@
 ﻿using SalesOrdersReport.CommonModules;
+using SalesOrdersReport.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -258,6 +259,8 @@ namespace SalesOrdersReport
                 {
                     MessageBox.Show("Added New Customer :: " + txtCreateCustomerName.Text + " successfully", "Added Customer");
                     if (UpdateCustomerOnClose != null) UpdateCustomerOnClose(Mode: 1);
+                    CustomerDetails tmpCustomerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(txtCreateCustomerName.Text);
+                    if (UpdateObjectOnClose != null) UpdateObjectOnClose(1, tmpCustomerDetails);
                     btnReset.PerformClick();
                 }
 

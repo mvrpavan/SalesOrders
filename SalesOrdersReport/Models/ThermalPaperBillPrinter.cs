@@ -25,13 +25,13 @@ namespace SalesOrdersReport.Models
 
                 //Print Header1
                 Int32 Length = ObjPrintDetails.Header1.Length;
-                float X = PaperCenterX - (Length * HeaderFontWidthInPixel / 3);
+                float X = PaperCenterX - (Length * HeaderFontWidthInPixel / 4);
                 g.DrawString(ObjPrintDetails.Header1, HeaderFont, Brushes.Black, X, StartY);
                 CurrOffset += Offset + 2;
                 for (int i = 0; i < ObjPrintDetails.ListSubHeaderLines.Count; i++)
                 {
                     Length = ObjPrintDetails.ListSubHeaderLines[i].Length;
-                    X = PaperCenterX - (Length * SubHeaderFontWidthInPixel / 3);
+                    X = PaperCenterX - (Length * SubHeaderFontWidthInPixel / 4);
                     g.DrawString(ObjPrintDetails.ListSubHeaderLines[i], SubHeaderFont, Brushes.Black, X, StartY + CurrOffset);
                     CurrOffset += Offset - 2;
                 }
@@ -40,7 +40,7 @@ namespace SalesOrdersReport.Models
 
                 //Print Header2
                 Length = ObjPrintDetails.Header2.Length;
-                X = PaperCenterX - (Length * HeaderFontWidthInPixel / 3);
+                X = PaperCenterX - (Length * HeaderFontWidthInPixel / 4);
                 g.DrawString(ObjPrintDetails.Header2, HeaderFont, Brushes.Black, X, StartY + CurrOffset);
                 CurrOffset += Offset; g.DrawLine(new Pen(Brushes.Black), StartX, StartY + CurrOffset, PaperWidthInPixel - StartX, StartY + CurrOffset);
                 CurrOffset += 2;
@@ -58,7 +58,7 @@ namespace SalesOrdersReport.Models
                 CurrOffset += Offset; g.DrawLine(new Pen(Brushes.Black), StartX, StartY + CurrOffset, PaperWidthInPixel - StartX, StartY + CurrOffset);
                 CurrOffset += 2;
                 g.DrawString("HSN", ItemParticularsHeader, Brushes.Black, StartX, StartY + CurrOffset);
-                g.DrawString("Item Desc", ItemParticularsHeader, Brushes.Black, StartX + 20, StartY + CurrOffset);
+                g.DrawString("Item Desc", ItemParticularsHeader, Brushes.Black, StartX + 25, StartY + CurrOffset);
                 g.DrawString("Qty", ItemParticularsHeader, Brushes.Black, StartX + 110, StartY + CurrOffset);
                 g.DrawString("MRP", ItemParticularsHeader, Brushes.Black, StartX + 140, StartY + CurrOffset);
                 g.DrawString("Rate", ItemParticularsHeader, Brushes.Black, StartX + 180, StartY + CurrOffset);
@@ -71,7 +71,7 @@ namespace SalesOrdersReport.Models
                 {
                     PrintItemDetails item = ObjPrintDetails.ListPrintItemDetails[i];
                     g.DrawString(item.HSNCode, ItemParticularsFont, Brushes.Black, StartX, StartY + CurrOffset);
-                    g.DrawString(item.ItemName, ItemParticularsFont, Brushes.Black, StartX + 20, StartY + CurrOffset);
+                    g.DrawString(item.ItemName.Substring(0, Math.Min(item.ItemName.Length, 22)), ItemParticularsFont, Brushes.Black, StartX + 25, StartY + CurrOffset);
                     g.DrawString(item.SaleQty.ToString(), ItemParticularsFont, Brushes.Black, StartX + 110, StartY + CurrOffset);
                     g.DrawString(item.ItemMRP.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 130, StartY + CurrOffset, 35, 10), stringFormat);
                     g.DrawString(item.ItemRate.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 170, StartY + CurrOffset, 35, 10), stringFormat);

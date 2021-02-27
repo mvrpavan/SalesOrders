@@ -374,7 +374,7 @@ namespace SalesOrdersReport.Models
                 };
 
                 NewInvoiceDetails.CustomerName = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CustomerID).CustomerName;
-                NewInvoiceDetails.OrderID = InsertInvoiceDetails(NewInvoiceDetails);
+                NewInvoiceDetails.InvoiceID = InsertInvoiceDetails(NewInvoiceDetails);
                 if (IsBill) ObjMySQLHelper.UpdateIDValue("Bills", InvoiceNumber);
                 else ObjMySQLHelper.UpdateIDValue("Invoices", InvoiceNumber);
 
@@ -1028,10 +1028,10 @@ namespace SalesOrdersReport.Models
                     TotalTaxAmount = ObjInvoiceDetails.NetInvoiceAmount,
                     NetAmount = ObjInvoiceDetails.NetInvoiceAmount,
                     StaffName = MySQLHelper.GetMySqlHelperObj().CurrentUser,
-                    Header1 = "Ceren Super Store",
+                    Header1 = "Kachatathapa Kerala Super Store",
                     Header2 = "Customer Bill",
-                    ListSubHeaderLines = new List<string>() { "GSTIN Number", "Address Line1", "Address Line2" },
-                    ListFooterLines = new List<string>() { "Thank you", "Visit Again" }
+                    ListSubHeaderLines = new List<string>() { "Veerannapalaya", "Mobile: 8147354960" },
+                    ListFooterLines = new List<string>() { "Thank you and Visit again" }
                 };
 
                 for (int i = 0; i < ObjInvoiceDetails.ListInvoiceItems.Count; i++)
