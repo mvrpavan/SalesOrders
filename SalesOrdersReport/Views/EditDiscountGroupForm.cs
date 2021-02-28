@@ -155,7 +155,7 @@ namespace SalesOrdersReport
                 if (comboBox.SelectedIndex != 0)
                 {
                     string DiscountName = (string)comboBox.SelectedItem;
-                    DiscountGroupDetails1 ObjDiscountGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetDiscountGrpDetails(DiscountName);
+                    DiscountGroupDetails ObjDiscountGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetDiscountGrpDetails(DiscountName);
                     txtEditDisGrpDesc.Text = ObjDiscountGroupDetails.Description;
                     txtEditDiscountVal.Text = ObjDiscountGroupDetails.Discount.ToString();
                     if (ObjDiscountGroupDetails.DiscountType == DiscountTypes.ABSOLUTE) radioBtnEditDGDisTypeAbs.Checked = true;

@@ -239,7 +239,7 @@ namespace SalesOrdersReport.Models
                 UpdateOrderDetails(ObjOrderDetails);
 
                 Double DiscountPerc = 0, DiscountValue = 0;
-                DiscountGroupDetails1 CustomerDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjOrderDetails.CustomerName);
+                DiscountGroupDetails CustomerDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjOrderDetails.CustomerName);
                 if (CustomerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
                     DiscountPerc = CustomerDiscountGroup.Discount;
                 else if (CustomerDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
@@ -538,7 +538,7 @@ namespace SalesOrdersReport.Models
 
                 SLNo = 0;
                 CustomerDetails ObjCurrentSeller = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(ObjOrderDetails.CustomerName);
-                DiscountGroupDetails1 ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
+                DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
                 Double DiscountPerc = 0, DiscountValue = 0;
                 if (ObjDiscountGroup.DiscountType == DiscountTypes.PERCENT)
                     DiscountPerc = ObjDiscountGroup.Discount;
@@ -610,7 +610,7 @@ namespace SalesOrdersReport.Models
 
                 #region Discount
                 //Override Discount and rollback after creating Quotation
-                DiscountGroupDetails1 OrigDiscountGroup = ObjDiscountGroup.Clone();
+                DiscountGroupDetails OrigDiscountGroup = ObjDiscountGroup.Clone();
                 if (DiscountPerc > 0)
                 {
                     ObjDiscountGroup.DiscountType = DiscountTypes.PERCENT;

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using SalesOrdersReport.CommonModules;
+using SalesOrdersReport.Models;
 
 namespace SalesOrdersReport.Views
 {
@@ -31,26 +32,26 @@ namespace SalesOrdersReport.Views
             dateTimePO.Value = DateTime.Now;
             txtBoxVendorOrderSheet.Text = txtBoxOutputFolder.Text + @"\VendorOrder_" + dateTimePO.Value.ToString("dd-MM-yyyy") + ".xlsx";
 
-            FillLineFromOrderMaster();
+            //FillLineFromOrderMaster();
         }
 
-        private void FillLineFromOrderMaster()
-        {
-            try
-            {
-                chkListBoxLine.Items.Clear();
-                for (int i = 0; i < CommonFunctions.ListVendorLines.Count; i++)
-                {
-                    chkListBoxLine.Items.Add(CommonFunctions.ListVendorLines[i], true);
-                }
+        //private void FillLineFromOrderMaster()
+        //{
+        //    try
+        //    {
+        //        chkListBoxLine.Items.Clear();
+        //        for (int i = 0; i < CommonFunctions.ListVendorLines.Count; i++)
+        //        {
+        //            chkListBoxLine.Items.Add(CommonFunctions.ListVendorLines[i], true);
+        //        }
 
-                PrevAllLinesCheckState = CheckState.Checked;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("VendorPurchaseOrderForm.FillLineFromOrderMaster()", ex);
-            }
-        }
+        //        PrevAllLinesCheckState = CheckState.Checked;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CommonFunctions.ShowErrorDialog("VendorPurchaseOrderForm.FillLineFromOrderMaster()", ex);
+        //    }
+        //}
 
         ReportProgressDel ReportProgress = null;
 

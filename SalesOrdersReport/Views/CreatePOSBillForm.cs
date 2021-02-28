@@ -16,7 +16,7 @@ namespace SalesOrdersReport.Views
         List<String> ListCustomerNames;
         List<Int64> ListCustomerPhoneNumbers;
         CustomerDetails CurrCustomerDetails;
-        DiscountGroupDetails1 CurrCustomerDiscountGroup;
+        DiscountGroupDetails CurrCustomerDiscountGroup;
         CustomerOrderInvoiceDetails CurrOrderInvoiceDetails;
         Int32 CategoryColIndex = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4, SaleQtyColIndex = 3, ItemSelectionSelectColIndex = 4;
         Int32 PaddingSpace = 6;
@@ -55,13 +55,13 @@ namespace SalesOrdersReport.Views
                 if (InvoiceID < 0)
                 {
                     FormTitle = "Create New Bill";
-                    btnCreateInvOrd.Text = "Create Bill";
+                    btnCreateBill.Text = "Create Bill";
                     txtBoxInvOrdNumber.Text = this.ObjInvoicesModel.GenerateNewBillNumber();
                 }
                 else
                 {
                     FormTitle = "View/Edit Bill";
-                    btnCreateInvOrd.Text = "Update Bill";
+                    btnCreateBill.Text = "Update Bill";
                 }
 
                 OrderInvoice = "Bill";
@@ -199,6 +199,7 @@ namespace SalesOrdersReport.Views
             ReportProgress(ProgressState);
         }
 
+        Boolean IsSaveBillClicked = false;
         private void btnCreateBill_Click(object sender, EventArgs e)
         {
             try
@@ -272,6 +273,7 @@ namespace SalesOrdersReport.Views
 
                 picBoxLoading.Visible = true;
                 BackgroundTask = 3;
+                if (IsSaveBillClicked) BackgroundTask = 4;
                 if (InvoiceModified) lblStatus.Text = "Updating Customer Bill, please wait...";
                 else lblStatus.Text = "Creating Customer Bill, please wait...";
 #if DEBUG
@@ -425,7 +427,7 @@ namespace SalesOrdersReport.Views
                     CurrOrderInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems = new List<InvoiceItemDetails>();
 
                     FormTitle = "Create New Bill";
-                    btnCreateInvOrd.Text = "Create Bill";
+                    btnCreateBill.Text = "Create Bill";
                 }
                 else
                 {
@@ -449,7 +451,7 @@ namespace SalesOrdersReport.Views
                         DictItemsSelected.Add(item.ProductName, dtGridViewInvOrdProdList.Rows[Index]);
                     }
                     FormTitle = "Update Bill";
-                    btnCreateInvOrd.Text = "Update Bill";
+                    btnCreateBill.Text = "Update Bill";
                 }
                 lblStatus.Text = "Add/Delete/Modify Items to Bill";
 
@@ -467,10 +469,13 @@ namespace SalesOrdersReport.Views
             {
                 switch (BackgroundTask)
                 {
-                    case 2:     //Load Customer Invoice details
+                    case 2:     //Load Bill details
                         LoadBillForCustomer();
                         break;
-                    case 3:     //Update Customer Invoice details
+                    case 3:     //Update Bill details
+                        UpdateSalesInvoice();
+                        break;
+                    case 4:     //Save Bill details
                         UpdateSalesInvoice();
                         break;
                     default:
@@ -561,6 +566,23 @@ namespace SalesOrdersReport.Views
                         CurrOrderInvoiceDetails = null;
                         CurrCustomerDetails = null;
                         CurrCustomerDiscountGroup = null;
+                        break;
+                    case 4:     //Create Bill
+                        cmbBoxCustomers.SelectedIndex = -1;
+                        cmbBoxPhoneNumbers.SelectedIndex = -1;
+                        cmbBoxCustomers.Focus();
+                        ResetControls();
+                        picBoxLoading.Visible = false;
+                        EnableItemsPanel(false);
+                        MessageBox.Show(this, "Created Customer Bill successfully", "Sales Bill", MessageBoxButtons.OK);
+                        lblStatus.Text = "Choose a Customer to create Bill";
+                        cmbBoxBillNumber.Items.Clear();
+                        txtBoxInvOrdNumber.Text = "";
+
+                        CurrOrderInvoiceDetails = null;
+                        CurrCustomerDetails = null;
+                        CurrCustomerDiscountGroup = null;
+                        IsSaveBillClicked = false;
                         break;
                     default:
                         break;
@@ -1317,6 +1339,19 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.dtGridViewProdListForSelection_CellValueChanged()", ex);
+            }
+        }
+
+        private void btnSaveBill_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                IsSaveBillClicked = true;
+                btnCreateBill.PerformClick();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnSaveBill_Click()", ex);
             }
         }
     }

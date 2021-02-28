@@ -67,7 +67,6 @@ namespace SalesOrdersReport.Views
                 if (ReturnVal == 0)
                 {
                     CommonFunctions.CurrentUserName = MySQLHelper.GetMySqlHelperObj().CurrentUser;
-                    //CommonFunctions.CurrentUserName = tmpIntegDBHelper.CurrentUser = "admin";
                     this.Close();
                     DialogResult = DialogResult.OK;
                 }

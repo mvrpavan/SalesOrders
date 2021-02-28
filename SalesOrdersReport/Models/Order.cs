@@ -150,7 +150,7 @@ namespace SalesOrdersReport.Models
                 xlRange.Value = "Discount";
                 xlRange.Font.Bold = true;
 
-                DiscountGroupDetails1 ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjSellerDetails.CustomerName);
+                DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjSellerDetails.CustomerName);
 
                 xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + DiscountRowOffset, TotalColNum];
                 Excel.Range xlSalesTotal1 = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum];

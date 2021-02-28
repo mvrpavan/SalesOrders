@@ -658,12 +658,13 @@ namespace SalesOrdersReport.Views
                 List<CustomerDetails> ListTempCustDtls = new List<CustomerDetails>();
                 List<LineDetails> ListTempLineDtls = new List<LineDetails>();
                 List<PriceGroupDetails> ListTempPGDtls = new List<PriceGroupDetails>();
-                List<DiscountGroupDetails1> ListTempDGDtls = new List<DiscountGroupDetails1>();
+                List<DiscountGroupDetails> ListTempDGDtls = new List<DiscountGroupDetails>();
 
-                int LastLineIDFromDB = CommonFunctions.ObjCustomerMasterModel.GetLatestColValFromTable("LINEID", "LINEMASTER");
-                int LastPGIDFromDB = CommonFunctions.ObjCustomerMasterModel.GetLatestColValFromTable("PRICEGROUPID", "PRICEGROUPMASTER");
-                int LastDGIDFromDB = CommonFunctions.ObjCustomerMasterModel.GetLatestColValFromTable("DISCOUNTGROUPID", "DISCOUNTGROUPMASTER");
-                int LastCustIDFromDB = CommonFunctions.ObjCustomerMasterModel.GetLatestColValFromTable("CUSTOMERID", "CUSTOMERMASTER");
+                MySQLHelper ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+                int LastLineIDFromDB = ObjMySQLHelper.GetLatestColValFromTable("LINEID", "LINEMASTER");
+                int LastPGIDFromDB = ObjMySQLHelper.GetLatestColValFromTable("PRICEGROUPID", "PRICEGROUPMASTER");
+                int LastDGIDFromDB = ObjMySQLHelper.GetLatestColValFromTable("DISCOUNTGROUPID", "DISCOUNTGROUPMASTER");
+                int LastCustIDFromDB = ObjMySQLHelper.GetLatestColValFromTable("CUSTOMERID", "CUSTOMERMASTER");
                 List<string> ListExistingLineNamesinDB = CommonFunctions.ObjCustomerMasterModel.GetAllLineNames();
                 List<string> ListExistingDiscGrpNamesinDB = CommonFunctions.ObjCustomerMasterModel.GetAllDiscGrp();
                 List<string> ListExistingPriceGrpNamesinDB = CommonFunctions.ObjCustomerMasterModel.GetAllPriceGrp();
@@ -744,7 +745,7 @@ namespace SalesOrdersReport.Views
                     AlreadyExistsIndex = ListExistingDiscGrpNamesinDB.FindIndex(e => e.Equals(ObjCustomerDetails.DiscountGroupName, StringComparison.InvariantCultureIgnoreCase));
                     if (AlreadyExistsIndex < 0)
                     {
-                        DiscountGroupDetails1 ObjDiscountGroupDetails = new DiscountGroupDetails1();
+                        DiscountGroupDetails ObjDiscountGroupDetails = new DiscountGroupDetails();
                         ObjDiscountGroupDetails.DiscountGrpName = ObjCustomerDetails.DiscountGroupName;
                         Index = ListTempDGDtls.BinarySearch(ObjDiscountGroupDetails, ObjDiscountGroupDetails);
                         if (Index < 0)

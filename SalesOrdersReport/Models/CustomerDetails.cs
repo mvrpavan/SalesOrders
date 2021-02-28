@@ -53,7 +53,7 @@ namespace SalesOrdersReport.Models
         }
     }
 
-    class DiscountGroupDetails1 : IComparer<DiscountGroupDetails1>
+    class DiscountGroupDetails : IComparer<DiscountGroupDetails>
     {
         public int DiscountGrpID = -1;
         public String DiscountGrpName = "", Description = "";
@@ -61,7 +61,7 @@ namespace SalesOrdersReport.Models
         public DiscountTypes DiscountType;
         public Boolean IsDefault;
 
-        public int Compare(DiscountGroupDetails1 x, DiscountGroupDetails1 y)
+        public int Compare(DiscountGroupDetails x, DiscountGroupDetails y)
         {
             return x.DiscountGrpName.ToUpper().CompareTo(y.DiscountGrpName.ToUpper());
         }
@@ -85,11 +85,11 @@ namespace SalesOrdersReport.Models
             return 0;
         }
 
-        public DiscountGroupDetails1 Clone()
+        public DiscountGroupDetails Clone()
         {
             try
             {
-                return (DiscountGroupDetails1)this.MemberwiseClone();
+                return (DiscountGroupDetails)this.MemberwiseClone();
             }
             catch (Exception ex)
             {

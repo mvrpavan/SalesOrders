@@ -33,6 +33,7 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("UserMasterModel.Initialize()", ex);
             }
         }
+
         public Int32 LoginCheck(string txtUserName, string txtPassword, MySqlConnection myConnection)
         {
             try
@@ -85,6 +86,7 @@ namespace SalesOrdersReport
                 throw ex;
             }
         }
+
         public bool ValidateOldPassword(string OldPwdStr)
         {
             try

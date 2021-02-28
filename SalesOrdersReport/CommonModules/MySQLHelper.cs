@@ -88,7 +88,6 @@ namespace SalesOrdersReport.CommonModules
             {
                 if (ObjDbConnection.State == ConnectionState.Closed || ObjDbConnection.State == ConnectionState.Broken)
                 {
-                    CloseConnection();
                     OpenConnection(DBServer, DBName, DBUsername, DBPassword);
                 }
             }
@@ -115,6 +114,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                CheckAndReconnectToDB();
                 ObjDbCommand.CommandText = Query;
                 ObjDbCommand.Parameters.Clear();
                 for (int i = 0; i < ListColumnNames.Count; i++)
@@ -123,7 +123,6 @@ namespace SalesOrdersReport.CommonModules
                 }
 
                 return ObjDbCommand.ExecuteNonQuery();
-
             }
             catch (Exception ex)
             {
@@ -682,6 +681,26 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ShowErrorDialog("MySQLHelper.GetMySqlDbType()", ex);
                 return MySqlDbType.VarChar;
             }
+        }
+
+        public Int32 GetLatestColValFromTable(string ColName, string TableName)
+        {
+            try
+            {
+                CheckAndReconnectToDB();
+
+                String Query = "SELECT MAX(" + ColName + ") FROM " + TableName;
+                Query += ";";
+                ObjDbCommand.CommandText = Query;
+                Object Val = ObjDbCommand.ExecuteScalar();
+
+                return (Val == null) || (Val.ToString() == string.Empty) ? -1 : int.Parse(Val.ToString());
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.GetLatestColValFromTable()", ex);
+            }
+            return 0;
         }
     }
 }

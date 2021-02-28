@@ -411,7 +411,6 @@
     <Compile Include="Models\ProductLine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\SellerDetails.cs" />
     <Compile Include="Views\SellerHistoryReportForm.cs">
       <SubType>Form</SubType>
     </Compile>

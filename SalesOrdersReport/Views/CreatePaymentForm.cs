@@ -396,7 +396,7 @@ namespace SalesOrdersReport.Views
             try
             {
 
-                int PaymentId = CommonFunctions.ObjCustomerMasterModel.GetLatestColValFromTable("PAYMENTID", "PAYMENTS");
+                int PaymentId = ObjMySQLHelper.GetLatestColValFromTable("PAYMENTID", "PAYMENTS");
                 List<string> ListColumnValues = new List<string>(), ListTempColValues = new List<string>();
                 List<string> ListColumnNames = new List<string>(), ListTempColNames = new List<string>();
                 List<Types> ListTypes = new List<Types>();

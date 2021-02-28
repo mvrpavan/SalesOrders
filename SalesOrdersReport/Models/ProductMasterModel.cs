@@ -369,8 +369,8 @@ namespace SalesOrdersReport.Models
                     ObjProductInventoryDetails.UnitsOfMeasurement = dr["UnitsOfMeasurement"].ToString();
                     ObjProductInventoryDetails.ReOrderStockLevel = Double.Parse(dr["ReOrderStockLevel"].ToString());
                     ObjProductInventoryDetails.ReOrderStockQty = Double.Parse(dr["ReOrderStockQty"].ToString());
-                    //ObjProductInventoryDetails.LastPODate = DateTime.Parse(dr["LastPODate"].ToString());
-                    //ObjProductInventoryDetails.LastUpdateDate = DateTime.Parse(dr["LastUpdateDate"].ToString());
+                    ObjProductInventoryDetails.LastPODate = ((dr["LastPODate"] == DBNull.Value) ? DateTime.MinValue : DateTime.Parse(dr["LastPODate"].ToString()));
+                    ObjProductInventoryDetails.LastUpdateDate = ((dr["LastUpdateDate"] == DBNull.Value) ? DateTime.MinValue : DateTime.Parse(dr["LastUpdateDate"].ToString()));
 
                     AddProductInventoryDetails(ObjProductInventoryDetails);
                 }

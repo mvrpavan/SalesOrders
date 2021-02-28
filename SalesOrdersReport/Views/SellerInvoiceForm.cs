@@ -40,7 +40,7 @@ namespace SalesOrdersReport.Views
                 dateTimeInvoice.Value = DateTime.Now;
                 txtBoxOtherFile.Text = txtBoxOutputFolder.Text + @"\SalesOrder_" + dateTimeInvoice.Value.ToString("dd-MM-yyyy") + ".xlsx";
 
-                FillLineFromOrderMaster();
+                //FillLineFromOrderMaster();
             }
             catch (Exception ex)
             {
@@ -71,23 +71,23 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void FillLineFromOrderMaster()
-        {
-            try
-            {
-                chkListBoxLine.Items.Clear();
-                for (int i = 0; i < CommonFunctions.ListCustomerLines.Count; i++)
-                {
-                    chkListBoxLine.Items.Add(CommonFunctions.ListCustomerLines[i], true);
-                }
+        //private void FillLineFromOrderMaster()
+        //{
+        //    try
+        //    {
+        //        chkListBoxLine.Items.Clear();
+        //        for (int i = 0; i < CommonFunctions.ListCustomerLines.Count; i++)
+        //        {
+        //            chkListBoxLine.Items.Add(CommonFunctions.ListCustomerLines[i], true);
+        //        }
 
-                PrevAllLinesCheckState = CheckState.Checked;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("FillLineFromOrderMaster", ex);
-            }
-        }
+        //        PrevAllLinesCheckState = CheckState.Checked;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CommonFunctions.ShowErrorDialog("FillLineFromOrderMaster", ex);
+        //    }
+        //}
 
         public void UpdateSelectedSellersList()
         {
@@ -336,7 +336,7 @@ namespace SalesOrdersReport.Views
                     SLNo = 0;
                     InvoiceNumber++;
                     CustomerDetails ObjCurrentSeller = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(drSellers[ListSellerIndexes[i]]["SellerName"].ToString());
-                    DiscountGroupDetails1 ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
+                    DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
 
                     Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
                     ObjInvoice.SerialNumber = InvoiceNumber.ToString();

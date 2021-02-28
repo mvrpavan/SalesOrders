@@ -20,7 +20,7 @@ namespace SalesOrdersReport.Views
         List<ProductDetails> ListAllProducts, ListProducts;
         List<String> ListSellerNames;
         CustomerDetails CurrSellerDetails;
-        DiscountGroupDetails1 CurrSellerDiscountGroup;
+        DiscountGroupDetails CurrSellerDiscountGroup;
         CustomerOrderInvoiceDetails CurrSellerOrderDetails;
         Dictionary<String, Int32> DictItemToColIndexes, DictSellerToRowIndexes;
         List<CustomerOrderInvoiceDetails> ListSellerOrderDetails;
@@ -2071,7 +2071,7 @@ namespace SalesOrdersReport.Views
 
                 SLNo = 0;
                 CustomerDetails ObjCurrentSeller = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxSellerCustomer.SelectedValue.ToString());
-                DiscountGroupDetails1 ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
+                DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
 
                 Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
                 ObjInvoice.SerialNumber = (IsDummyBill ? "Dummy" : InvoiceNumber.ToString());
@@ -2195,7 +2195,7 @@ namespace SalesOrdersReport.Views
                 else if (EnumReportType == ReportType.QUOTATION)
                 {
                     //Override Discount and rollback after creating Quotation
-                    DiscountGroupDetails1 OrigDiscountGroup = ObjDiscountGroup.Clone();
+                    DiscountGroupDetails OrigDiscountGroup = ObjDiscountGroup.Clone();
                     if (DiscountPerc > 0)
                     {
                         ObjDiscountGroup.DiscountType = DiscountTypes.PERCENT;

@@ -22,7 +22,7 @@ namespace SalesOrdersReport.CommonModules
     {
         public static List<ProductLine> ListProductLines;
         public static Int32 SelectedProductLineIndex;
-        public static List<String> ListCustomerLines, ListVendorLines, ListSelectedCustomer, ListSelectedVendors;//&&&&& listCustomerlines
+        public static List<String> ListSelectedCustomer, ListSelectedVendors;
         public static String AppDataFolder;
         public static String MasterFilePath;
         public static ToolStripProgressBar ToolStripProgressBarMainForm;
@@ -714,7 +714,7 @@ namespace SalesOrdersReport.CommonModules
                     return true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //CommonFunctions.ShowErrorDialog("CommonFunctions.CreateDBConnection()", ex);
                 return false;
@@ -1210,6 +1210,17 @@ namespace SalesOrdersReport.CommonModules
             {
                 CommonFunctions.ShowErrorDialog($"CommonFunctions.GetWorksheetNameToAppend()", ex);
                 throw ex;
+            }
+        }
+
+        public static void WriteToLogFile(String Message)
+        {
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"CommonFunctions.WriteToLogFile()", ex);
             }
         }
     }

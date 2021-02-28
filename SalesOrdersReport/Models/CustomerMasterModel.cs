@@ -15,7 +15,7 @@ namespace SalesOrdersReport.Models
         List<CustomerDetails> ListCustomerDetails;
         List<LineDetails> ListLineDetails;
         List<PriceGroupDetails> ListPriceGroupDetails;
-        List<DiscountGroupDetails1> ListDiscountGroupDetails;
+        List<DiscountGroupDetails> ListDiscountGroupDetails;
         List<StateDetails> ListStateDetails;
         Int32 DefaultDiscountGroupIndex;
 
@@ -27,7 +27,7 @@ namespace SalesOrdersReport.Models
                 ListCustomerDetails = new List<CustomerDetails>();
                 ListLineDetails = new List<LineDetails>();
                 ListPriceGroupDetails = new List<PriceGroupDetails>();
-                ListDiscountGroupDetails = new List<DiscountGroupDetails1>();
+                ListDiscountGroupDetails = new List<DiscountGroupDetails>();
                 ListStateDetails = new List<StateDetails>();
                 ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
             }
@@ -36,26 +36,6 @@ namespace SalesOrdersReport.Models
                 CommonFunctions.ShowErrorDialog("CustomerMasterModel.Initialize()", ex);
             }
         }
-
-        /*public void AddCustomerToCache(CustomerDetails ObjCustomerDetails, List<PriceGroupDetails> ListPriceGroups)
-        {
-            try
-            {
-                Int32 CustomerIndex = ListCustomerDetails.BinarySearch(ObjCustomerDetails, ObjCustomerDetails);
-                if (CustomerIndex < 0)
-                {
-                    ListCustomerDetails.Insert(~CustomerIndex, ObjCustomerDetails);
-
-                    ObjCustomerDetails.LineID = CommonFunctions.ListCustomerLines.FindIndex(e => e.Equals(ObjCustomerDetails.LineName, StringComparison.InvariantCultureIgnoreCase));
-                    ObjCustomerDetails.PriceGroupID = ListPriceGroups.FindIndex(e => e.PriceGrpName.Equals(ObjCustomerDetails.PriceGroupName, StringComparison.InvariantCultureIgnoreCase));
-                    ObjCustomerDetails.DiscountGroupID = ListDiscountGroupDetails.FindIndex(e => e.DiscountGrpName.Equals(ObjCustomerDetails.DiscountGroupName, StringComparison.InvariantCultureIgnoreCase));
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CustomerMasterModel.AddCustomerToCache()", ex);
-            }
-        }*/
 
         public List<string> GetAllPriceGrp()
         {
@@ -182,12 +162,12 @@ namespace SalesOrdersReport.Models
                 throw ex;
             }
         }
-        public DiscountGroupDetails1 GetDiscountGrpDetails(string DiscountGrpName)
+        public DiscountGroupDetails GetDiscountGrpDetails(string DiscountGrpName)
         {
             try
             {
                 DiscountGrpName = DiscountGrpName.Trim();
-                DiscountGroupDetails1 ObjDiscountGroupDetails = new DiscountGroupDetails1();
+                DiscountGroupDetails ObjDiscountGroupDetails = new DiscountGroupDetails();
                 ObjDiscountGroupDetails.DiscountGrpName = DiscountGrpName;
                 int Index = ListDiscountGroupDetails.BinarySearch(ObjDiscountGroupDetails, ObjDiscountGroupDetails);
 
@@ -217,7 +197,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public DiscountGroupDetails1 GetDiscountGrpDetails(Int32 DiscountGroupID)
+        public DiscountGroupDetails GetDiscountGrpDetails(Int32 DiscountGroupID)
         {
             try
             {
@@ -302,7 +282,7 @@ namespace SalesOrdersReport.Models
             try
             {
                 CustomerName = CustomerName.Trim();
-                DiscountGroupDetails1 ObjDiscountGroupDetails = GetCustomerDiscount(CustomerName);
+                DiscountGroupDetails ObjDiscountGroupDetails = GetCustomerDiscount(CustomerName);
                 if (ObjDiscountGroupDetails == null) return -1;
 
                 return ObjDiscountGroupDetails.GetDiscountAmount(Amount);
@@ -314,7 +294,7 @@ namespace SalesOrdersReport.Models
             return -1;
         }
 
-        public DiscountGroupDetails1 GetCustomerDiscount(String CustomerName)
+        public DiscountGroupDetails GetCustomerDiscount(String CustomerName)
         {
             try
             {
@@ -333,7 +313,7 @@ namespace SalesOrdersReport.Models
             return null;
         }
 
-        public void SetCustomerDiscount(String CustomerName, DiscountGroupDetails1 DiscountGroup)
+        public void SetCustomerDiscount(String CustomerName, DiscountGroupDetails DiscountGroup)
         {
             try
             {
@@ -444,7 +424,7 @@ namespace SalesOrdersReport.Models
             try
             {
                 DiscGrpName = DiscGrpName.Trim();
-                DiscountGroupDetails1 ObjDiscGrpDetails = new DiscountGroupDetails1();
+                DiscountGroupDetails ObjDiscGrpDetails = new DiscountGroupDetails();
                 ObjDiscGrpDetails.DiscountGrpName = DiscGrpName;
                 if (ListDiscountGroupDetails.Count == 0)
                 {
@@ -868,7 +848,7 @@ namespace SalesOrdersReport.Models
                 {
                     DataRow dr = dtDiscountGroupMaster.Rows[i];
 
-                    DiscountGroupDetails1 ObjDiscountGroupDetails = new DiscountGroupDetails1();
+                    DiscountGroupDetails ObjDiscountGroupDetails = new DiscountGroupDetails();
                     ObjDiscountGroupDetails.DiscountGrpID = ((dr["DISCOUNTGROUPID"] == null) || dr["DISCOUNTGROUPID"].ToString().Trim() == "") ? -1 : int.Parse(dr["DISCOUNTGROUPID"].ToString().Trim());
                     ObjDiscountGroupDetails.DiscountGrpName = dr["DISCOUNTGROUPNAME"].ToString().Trim();
                     ObjDiscountGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(dr["DISCOUNTTYPE"].ToString().Trim());
@@ -885,7 +865,7 @@ namespace SalesOrdersReport.Models
             }
         }
         //Already in discount,vendor etc class
-        public void AddDiscountGroupToCache(DiscountGroupDetails1 ObjDiscountGroupDetails)
+        public void AddDiscountGroupToCache(DiscountGroupDetails ObjDiscountGroupDetails)
         {
             try
             {
@@ -961,7 +941,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-       public CustomerDetails CreateCustomerObjFromDataRow(DataRow dtRow)
+        public CustomerDetails CreateCustomerObjFromDataRow(DataRow dtRow)
         {
             try
             {
@@ -981,7 +961,11 @@ namespace SalesOrdersReport.Models
                 ObjCustomerDetails.DiscountGroupID = ((dtRow["DISCOUNTGROUPID"] == null) || dtRow["DISCOUNTGROUPID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["DISCOUNTGROUPID"].ToString().Trim());
                 ObjCustomerDetails.PriceGroupID = ((dtRow["PRICEGROUPID"] == null) || dtRow["PRICEGROUPID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["PRICEGROUPID"].ToString().Trim());
                 if (ObjCustomerDetails.LineID != -1) ObjCustomerDetails.LineName = ListLineDetails.Where(e => e.LineID.Equals(ObjCustomerDetails.LineID)).FirstOrDefault().LineName;
-                if (ObjCustomerDetails.DiscountGroupID != -1) ObjCustomerDetails.DiscountGroupName = ListDiscountGroupDetails.Where(e => e.DiscountGrpID.Equals(ObjCustomerDetails.DiscountGroupID)).FirstOrDefault().DiscountGrpName;
+                if (ObjCustomerDetails.DiscountGroupID != -1)
+                {
+                    ObjCustomerDetails.DiscountGroupName = ListDiscountGroupDetails.Where(e => e.DiscountGrpID.Equals(ObjCustomerDetails.DiscountGroupID)).FirstOrDefault().DiscountGrpName;
+                    ObjCustomerDetails.DiscountGroupIndex = ListDiscountGroupDetails.FindIndex(e => e.DiscountGrpID.Equals(ObjCustomerDetails.DiscountGroupID));
+                }
                 if (ObjCustomerDetails.PriceGroupID != -1)
                 {
                     ObjCustomerDetails.PriceGroupName = ListPriceGroupDetails.Where(e => e.PriceGroupID.Equals(ObjCustomerDetails.PriceGroupID)).FirstOrDefault().PriceGrpName;
@@ -997,6 +981,7 @@ namespace SalesOrdersReport.Models
                 return null;
             }
         }
+
         public void AddCustomerDataToCache(CustomerDetails ObjCustomerDetails)
         {
             try
@@ -1011,24 +996,6 @@ namespace SalesOrdersReport.Models
             {
                 CommonFunctions.ShowErrorDialog("CustomerMasterModel.AddCustomerDataToCache()", ex);
             }
-        }
-
-        public Int32 GetLatestColValFromTable(string ColName,string TableName)
-        {
-            try
-            {
-                String Query = "SELECT MAX("+ ColName+") FROM "+ TableName;
-                Query += ";";
-                ObjMySQLHelper.ObjDbCommand.CommandText = Query;
-                Object Val = ObjMySQLHelper.ObjDbCommand.ExecuteScalar();
-
-                return (Val == null) || (Val.ToString()==string.Empty) ? -1 : int.Parse(Val.ToString());
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetLatestColValFromTable()", ex);
-            }
-            return 0;
         }
 
         public void FillLineDBFromCache(List<LineDetails> ListLineDtls=null)
@@ -1069,11 +1036,11 @@ namespace SalesOrdersReport.Models
                 CommonFunctions.ShowErrorDialog("CustomerMasterModel.FillPriceGroupDBFromCache()", ex);
             }
         }
-        public void FillDiscountGroupDBFromCache(List<DiscountGroupDetails1> ListDiscountGrpDtls = null)
+        public void FillDiscountGroupDBFromCache(List<DiscountGroupDetails> ListDiscountGrpDtls = null)
         {
             try
             {
-                List<DiscountGroupDetails1> listtemp = ListDiscountGrpDtls;
+                List<DiscountGroupDetails> listtemp = ListDiscountGrpDtls;
                 if (ListDiscountGrpDtls == null) listtemp = ListDiscountGroupDetails;
                 string Query = "";
                 for (int i = 0; i < listtemp.Count; i++)

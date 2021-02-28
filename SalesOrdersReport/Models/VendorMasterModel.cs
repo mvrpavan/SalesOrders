@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Models
 {
     class VendorDetails : IComparer<VendorDetails>
     {
@@ -86,7 +86,7 @@ namespace SalesOrdersReport
                     ListVendorDetails.Insert(~VendorIndex, ObjVendorDetails);
 
                     PriceGroupDetails priceGroupDetails = null;
-                    Models.DiscountGroupDetails1 discountGroupDetails = null;
+                    Models.DiscountGroupDetails discountGroupDetails = null;
                     if (ObjVendorDetails.PriceGroupID > 0) priceGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetPriceGrpDetails(ObjVendorDetails.PriceGroupID);
                     if (ObjVendorDetails.DiscountGroupID > 0) discountGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetDiscountGrpDetails(ObjVendorDetails.DiscountGroupID);
 

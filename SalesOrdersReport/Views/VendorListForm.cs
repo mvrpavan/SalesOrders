@@ -26,7 +26,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                FillListBoxLineFilter();
+                //FillListBoxLineFilter();
             }
             catch (Exception ex)
             {
@@ -86,22 +86,22 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void FillListBoxLineFilter()
-        {
-            try
-            {
-                cmbBoxLineFilter.Items.Clear();
-                for (int i = 0; i < CommonFunctions.ListVendorLines.Count; i++)
-                {
-                    cmbBoxLineFilter.Items.Add(CommonFunctions.ListVendorLines[i]);
-                }
-                cmbBoxLineFilter.SelectedIndex = 0;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("VendorListForm.FillListBoxLineFilter", ex);
-            }
-        }
+        //private void FillListBoxLineFilter()
+        //{
+        //    try
+        //    {
+        //        cmbBoxLineFilter.Items.Clear();
+        //        for (int i = 0; i < CommonFunctions.ListVendorLines.Count; i++)
+        //        {
+        //            cmbBoxLineFilter.Items.Add(CommonFunctions.ListVendorLines[i]);
+        //        }
+        //        cmbBoxLineFilter.SelectedIndex = 0;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CommonFunctions.ShowErrorDialog("VendorListForm.FillListBoxLineFilter", ex);
+        //    }
+        //}
 
         private void FillDataGridVendors()
         {

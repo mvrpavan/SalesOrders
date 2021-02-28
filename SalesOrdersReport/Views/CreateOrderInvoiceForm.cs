@@ -16,7 +16,7 @@ namespace SalesOrdersReport.Views
         List<ProductDetails> ListAllProducts, ListProducts;
         List<String> ListCustomerNames;
         CustomerDetails CurrCustomerDetails;
-        DiscountGroupDetails1 CurrCustomerDiscountGroup;
+        DiscountGroupDetails CurrCustomerDiscountGroup;
         CustomerOrderInvoiceDetails CurrOrderInvoiceDetails;
         Int32 CategoryColIndex = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4, OrdQtyColIndex = 3, SaleQtyColIndex = 4, ItemSelectionSelectColIndex = 5;
         Int32 PaddingSpace = 6;

@@ -15,7 +15,7 @@ namespace SalesOrdersReport.Models
         public Double SaleQuantity, Rate;
         public String UnitsOfMeasurement;
         public TaxDetails CGSTDetails, SGSTDetails, IGSTDetails;
-        public DiscountGroupDetails1 DiscountGroup;
+        public DiscountGroupDetails DiscountGroup;
     }
 
     class TaxDetails
