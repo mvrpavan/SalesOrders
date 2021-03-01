@@ -20,18 +20,25 @@ namespace SalesOrdersReport.Models
         public string PGDiscCountTypeColName = "PG_DiscountType", DGDiscCountTypeColName = "DG_DiscountType", SelectedPriceGrpColName = "PriceColumn";
         //CustomerName,LineName,PriceGroupName,DiscountGroupName,State,PG_Default,DG_Default,Active,Address,GSTIN,AddedDate,LastUpdateDate,Phone,OrderDays,PG_DiscountType,DG_DiscountType,PriceGroupColumnName
     }
-
+    class CustomerTypeDetails
+    {
+        public int CustomerTypeID = -1;
+        public string CustomerType = "";
+        public string CustomerTypeDescription = "";
+    }
     class CustomerDetails : IComparer<CustomerDetails>
     {
         public string CustomerName = "";
+        public string CustomerTypeName = "";
         public string LineName = "", PriceGroupName = "", DiscountGroupName = "", State = "", StateCode = "";
-        public int CustomerID = -1, LineID = -1, StateID = -1, PriceGroupID = -1, DiscountGroupID = -1;
+        public int CustomerID = -1, CustomerTypeID = -1, LineID = -1, StateID = -1, PriceGroupID = -1, DiscountGroupID = -1;
         public Int32 PriceGroupIndex, DiscountGroupIndex;
         public DateTime AddedDate = DateTime.MinValue, LastUpdateDate = DateTime.MinValue;
         public string Address = "";
         public bool Active = true;
         public string GSTIN = "";
-        public Int64 PhoneNo = 0;
+        //public Int64 PhoneNo = 0;
+        public string PhoneNo = "";
         public string OrderDaysAssigned = "";
 
         public int Compare(CustomerDetails x, CustomerDetails y)

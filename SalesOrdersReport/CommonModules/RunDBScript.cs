@@ -35,6 +35,7 @@ namespace SalesOrdersReport.CommonModules
                 CreateStateTable();
                 CreateLineTable();
                 CreateDiscountGrpTable();
+                CreateCustomerTypeTable();
                 CreateCustomerTable();
                 CreateIDValueMasterTable();
                 CreateUserTable();
@@ -126,12 +127,32 @@ namespace SalesOrdersReport.CommonModules
                 throw;
             }
         }
+        private void CreateCustomerTypeTable()
+        {
+            try
+            {
+                List<string> TableColumns = new List<String>
+                {
+                   "CUSTOMERTYPEID, SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT",
+                    "CUSTOMERTYPE, VARCHAR(20) NOT NULL",
+                    "DESCRIPTION, VARCHAR(100) NULL",
+                    "PRIMARY KEY, CUSTOMERTYPEID"
+
+                };
+                ObjMySQLHelper.CreateTable("CUSTOMERTYPEMASTER", TableColumns);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("RunDBScript.CreateCustomerTypeTable()", ex);
+                throw;
+            }
+        }
 
         private void CreateCustomerTable()
         {
             try
             {
-                List<string> ListCustomerCol = new List<string>() { "CUSTOMERID,INT NOT NULL AUTO_INCREMENT", "CUSTOMERNAME,VARCHAR(100) NOT NULL", "ADDRESS,VARCHAR(1000) NULL", "PHONENO, BIGINT(20) NULL DEFAULT NULL", "LINEID,INT NULL DEFAULT NULL", "PRICEGROUPID,INT NULL DEFAULT NULL", "DISCOUNTGROUPID,INT NULL DEFAULT NULL", "GSTIN,VARCHAR(20) NULL", "STATEID, VARCHAR(5) NULL DEFAULT NULL", "ADDEDDATE,DATETIME NULL", "LASTUPDATEDATE,DATETIME NULL", "ACTIVE,BIT NULL", "ORDERDAYS, VARCHAR(20) NOT NULL DEFAULT '1'", "PRIMARY KEY,CUSTOMERID" };
+                List<string> ListCustomerCol = new List<string>() { "CUSTOMERID,INT NOT NULL AUTO_INCREMENT", "CUSTOMERNAME,VARCHAR(100) NOT NULL", "ADDRESS,VARCHAR(1000) NULL", "PHONENO, VARCHAR(20) NULL DEFAULT NULL", "CUSTOMERTYPEID,SMALLINT(5) INT NOT NULL DEFAULT 1 ", "LINEID,INT NULL DEFAULT NULL", "PRICEGROUPID,INT NULL DEFAULT NULL", "DISCOUNTGROUPID,INT NULL DEFAULT NULL", "GSTIN,VARCHAR(20) NULL", "STATEID, VARCHAR(5) NULL DEFAULT NULL", "ADDEDDATE,DATETIME NULL", "LASTUPDATEDATE,DATETIME NULL", "ACTIVE,BIT NULL", "ORDERDAYS, VARCHAR(20) NOT NULL DEFAULT '1'", "PRIMARY KEY,CUSTOMERID" };
                 ObjMySQLHelper.CreateTable("CUSTOMERMASTER", ListCustomerCol);
                 List<string> ListColumnNamesWthDataType = new List<string> { "LASTUPDATEDATE,DATETIME", "ADDEDDATE,DATETIME" }, ListColumnValues = new List<string>() { DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"), DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") };
                //CommonFunctions.ObjCustomerMasterModel.CreateNewCustomer("customer0", "Line0", "DisGrp1", "PriceGrp1", true, ListColumnNamesWthDataType, ListColumnValues);
@@ -147,7 +168,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<string> ListUserCol = new List<string>() { "USERID,INT NOT NULL AUTO_INCREMENT", "USERNAME,VARCHAR(100) NOT NULL", "PASSWORD,VARCHAR(100) NOT NULL", "FULLNAME,VARCHAR(100) NOT NULL", "ROLEID,INT NOT NULL", "EMAILID,VARCHAR(50) NULL", "PHONENO, BIGINT NULL", "STOREID, INT NULL DEFAULT NULL", "LASTLOGIN,DATETIME NULL", "LASTPASSWORDCHANGED,DATETIME NULL", "LASTUPDATEDATE,DATETIME NULL", "CREATEDBY, INT NULL DEFAULT 0", "ACTIVE,BIT NULL", "USERGUID,CHAR(38) NULL", "PRIMARY KEY,USERID" };
+                List<string> ListUserCol = new List<string>() { "USERID,INT NOT NULL AUTO_INCREMENT", "USERNAME,VARCHAR(100) NOT NULL", "PASSWORD,VARCHAR(100) NOT NULL", "FULLNAME,VARCHAR(100) NOT NULL", "ROLEID,INT NOT NULL", "EMAILID,VARCHAR(50) NULL", "PHONENO, VARCHAR(20) NULL", "STOREID, INT NULL DEFAULT NULL", "LASTLOGIN,DATETIME NULL", "LASTPASSWORDCHANGED,DATETIME NULL", "LASTUPDATEDATE,DATETIME NULL", "CREATEDBY, INT NULL DEFAULT 0", "ACTIVE,BIT NULL", "USERGUID,CHAR(38) NULL", "PRIMARY KEY,USERID" };
                 ObjMySQLHelper.CreateTable("USERMASTER", ListUserCol);
 				List<string> ListColumnNamesWthDataType = new List<string> { "LASTLOGIN,DATETIME", "CREATEDBY,INT" }, ListColumnValues = new List<string>() { DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"), "0" };
                 CommonFunctions.ObjUserMasterModel.CreateNewUser("admin", "admin", "Administrator", true, "admin", ListColumnNamesWthDataType, ListColumnValues);
@@ -168,14 +189,38 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ObjUserMasterModel.AlterTblColBasedOnMultipleRowsFrmAnotherTbl("PRIVILEGEMASTER", "ROLEMASTER", "PRIVILEGEID");
                 List<string> ListColumnValues = new List<string>();
                 List<string> ListColumnNamesWithDataType = new List<string>();
-                List<string> ListTemp = CommonFunctions.ObjUserMasterModel.GetAllPrivilegeIDs();
-                for (int i = 0; i < ListTemp.Count; i++)
+                List<string> ListTempPrivID = CommonFunctions.ObjUserMasterModel.GetAllPrivilegeIDs();
+
+                for (int i = 0; i < ListTempPrivID.Count; i++)
                 {
                     ListColumnValues.Add("YES");
-                    ListColumnNamesWithDataType.Add(ListTemp[i] + ", TINYTEXT");
+                    ListColumnNamesWithDataType.Add(ListTempPrivID[i] + ", TINYTEXT");
                 }
 
                 CommonFunctions.ObjUserMasterModel.CreateNewRole("admin", "Super User", ListColumnNamesWithDataType, ListColumnValues);
+                List<string> ListTempPrivNames = CommonFunctions.ObjUserMasterModel.GetAllPrivilegeNames();
+
+                ListColumnValues = new List<string>();
+                ListColumnNamesWithDataType = new List<string>();
+                for (int i = 0; i < ListTempPrivNames.Count; i++)
+                {
+                    if (ListTempPrivNames[i].Contains("Order") || ListTempPrivNames[i].Contains("Invoice") || ListTempPrivNames[i].Contains("User")
+                        || ListTempPrivNames[i].Contains("Role"))
+                    {
+                        ListColumnValues.Add("NO");
+                        ListColumnNamesWithDataType.Add(ListTempPrivID[i] + ", TINYTEXT");
+                    }
+                    else
+                    {
+                        ListColumnValues.Add("YES");
+                        ListColumnNamesWithDataType.Add(ListTempPrivID[i] + ", TINYTEXT");
+                    }
+                }
+                CommonFunctions.ObjUserMasterModel.CreateNewRole("RetailUser", "Retail User", ListColumnNamesWithDataType, ListColumnValues);
+
+                //- Disable Orders, Invoices, Administration
+                //- Cannot Cancel anything(Bill, Payments etc)
+
             }
             catch (Exception ex)
             {
@@ -188,7 +233,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<string> ListStoreCol = new List<string>() { "STOREID,INT AUTO_INCREMENT NOT NULL", "STORENAME,VARCHAR(50) NOT NULL DEFAULT 1", "ADDRESS,VARCHAR(100) NULL", "PHONENO,BIGINT(20) NULL DEFAULT NULL", "STOREEXECUTIVE,VARCHAR(50) NULL", "PRIMARY KEY,STOREID" };
+                List<string> ListStoreCol = new List<string>() { "STOREID,INT AUTO_INCREMENT NOT NULL", "STORENAME,VARCHAR(50) NOT NULL DEFAULT 1", "ADDRESS,VARCHAR(100) NULL", "PHONENO,VARCHAR(20) NULL DEFAULT NULL", "STOREEXECUTIVE,VARCHAR(50) NULL", "PRIMARY KEY,STOREID" };
                 ObjMySQLHelper.CreateTable("STOREMASTER", ListStoreCol);
                // CommonFunctions.ObjUserMasterModel.CreateNewStore("Store1");
             }

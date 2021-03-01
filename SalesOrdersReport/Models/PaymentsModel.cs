@@ -18,7 +18,7 @@ namespace SalesOrdersReport.Models
     {
         public int PaymentId = -1, InvoiceID = -1, QuotationID = -1, AccountID = -1, PaymentModeID = -1, CustomerID = -1, UserID = -1;
         public string InvoiceNumber = "", QuotationNumber = "";
-        public string CustomerName = "";
+        public string CustomerName = "", CustPhoneNo = "";
         public DateTime PaidOn, LastUpdateDate, CreationDate;
         public String PaymentMode = "", Description = "", PaymentAgainst = "";
         public string StaffName = "";
@@ -39,7 +39,7 @@ namespace SalesOrdersReport.Models
         List<PaymentModeDetails> ListPaymentModes = new List<PaymentModeDetails>();
         List<PaymentDetails> ListPaymentDetails = new List<PaymentDetails>();
         MySQLHelper ObjMySQLHelper;
-        string TempQueryStr = " a.*, b.CUSTOMERID, c.CUSTOMERNAME,d.INVOICENUMBER,e.USERNAME FROM PAYMENTS a "
+        string TempQueryStr = " a.*, b.CUSTOMERID, c.CUSTOMERNAME,c.PHONENO,d.INVOICENUMBER,e.USERNAME FROM PAYMENTS a "
                            + " Inner Join ACCOUNTSMASTER b on a.ACCOUNTID = b.ACCOUNTID "
                             + " Inner Join CUSTOMERMASTER c on b.CUSTOMERID = c.CUSTOMERID "
                             + " Inner Join Invoices d on a.INVOICEID = d.INVOICEID "
@@ -154,10 +154,10 @@ namespace SalesOrdersReport.Models
             try
             {
                 String Query = "";
-                if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) Query = "SELECT "+ TempQueryStr + " WHERE (a.CREATIONDATE >='" + FromDate.ToString("yyyy-MM-dd H:mm:ss");
-                else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) Query = "SELECT " + TempQueryStr + " WHERE (a.CREATIONDATE <='" + ToDate.ToString("yyyy-MM-dd H:mm:ss");
-                else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) Query = "SELECT " + TempQueryStr + " WHERE (a.CREATIONDATE BETWEEN '" + FromDate.ToString("yyyy-MM-dd H:mm:ss") + "' AND '" + ToDate.ToString("yyyy-MM-dd H:mm:ss") + "')";
-                else Query = "SELECT "+ TempQueryStr ;
+                if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) Query = "SELECT " + TempQueryStr + " WHERE (a.CREATIONDATE >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "')";
+                else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) Query = "SELECT " + TempQueryStr + " WHERE (a.CREATIONDATE <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
+                else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) Query = "SELECT " + TempQueryStr + " WHERE (a.CREATIONDATE BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
+                else Query = "SELECT " + TempQueryStr;
 
                 DataTable dtPayments = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 LoadPaymentDetails(dtPayments);
@@ -210,6 +210,7 @@ namespace SalesOrdersReport.Models
                     ObjPaymentDetails.LastUpdateDate = DateTime.Parse(dr["LASTUPDATEDATE"].ToString());
                     //ObjPaymentDetails.StaffName = CommonFunctions.ObjUserMasterModel.GetUserName(int.Parse(dr["USERID"].ToString()));
                     ObjPaymentDetails.StaffName = dr["USERNAME"].ToString();
+                    ObjPaymentDetails.CustPhoneNo = dr["PHONENO"].ToString();
                     ObjPaymentDetails.Active = dr["ACTIVE"].ToString() == "1" ? true : false;
                     ObjPaymentDetails.InvoiceID = int.Parse(dr["INVOICEID"].ToString());
                     //ObjPaymentDetails.InvoiceDate = DateTime.Parse(dr["INVOICEDATE"].ToString());

@@ -17,6 +17,7 @@ namespace SalesOrdersReport.Models
         List<PriceGroupDetails> ListPriceGroupDetails;
         List<DiscountGroupDetails> ListDiscountGroupDetails;
         List<StateDetails> ListStateDetails;
+        List<CustomerTypeDetails> ListCustomerTypeDetails;
         Int32 DefaultDiscountGroupIndex;
 
         MySQLHelper ObjMySQLHelper = null;
@@ -29,6 +30,7 @@ namespace SalesOrdersReport.Models
                 ListPriceGroupDetails = new List<PriceGroupDetails>();
                 ListDiscountGroupDetails = new List<DiscountGroupDetails>();
                 ListStateDetails = new List<StateDetails>();
+                ListCustomerTypeDetails = new List<CustomerTypeDetails>();
                 ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
             }
             catch (Exception ex)
@@ -277,6 +279,78 @@ namespace SalesOrdersReport.Models
             return null;
         }
 
+        public CustomerTypeDetails GetCustomerTypeDtlsFromID(Int32 CustomerTypeID)
+        {
+            try
+            {
+                if (ListCustomerTypeDetails == null || ListCustomerTypeDetails.Count == 0) LoadCustomerTypeDtls();
+                Int32 Index = ListCustomerTypeDetails.FindIndex(e => e.CustomerTypeID == CustomerTypeID);
+                if (Index < 0) return null;
+                return ListCustomerTypeDetails[Index];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetCustomerTypeDtlsFromID", ex);
+                return null;
+            }
+        }
+        public CustomerTypeDetails GetCustomerTypeDtlsFromTypeName(string CustomerType)
+        {
+            try
+            {
+                if (ListCustomerTypeDetails == null || ListCustomerTypeDetails.Count == 0) LoadCustomerTypeDtls();
+                Int32 Index = ListCustomerTypeDetails.FindIndex(e => e.CustomerType == CustomerType);
+                if (Index < 0) return null;
+                return ListCustomerTypeDetails[Index];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetCustomerTypeDtlsFromID", ex);
+                return null;
+            }
+        }
+        public List<string> GetAllCustomerTypes()
+        {
+            try
+            {
+                if (ListCustomerTypeDetails == null || ListCustomerTypeDetails.Count == 0) LoadCustomerTypeDtls();
+                return ListCustomerTypeDetails.Select(e => e.CustomerType).ToList(); ;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetAllCustomerTypes", ex);
+                return null;
+            }
+        }
+        public List<CustomerDetails> GetCustomerDetailsFrmType(Int32 CustomerTypeID)
+        {
+            try
+            {
+                List<CustomerDetails> ListTempCustDtls = new List<CustomerDetails>();
+                ListTempCustDtls.AddRange(ListCustomerDetails.Where(e => e.CustomerTypeID == CustomerTypeID).ToList());
+                return ListTempCustDtls;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetCustomerDetailsFrmType", ex);
+            }
+            return null;
+        }
+        public CustomerDetails GetCustomerDetailsFromPhoneNo(string PhoneNo)
+        {
+            try
+            {
+                Int32 Index = ListCustomerDetails.FindIndex(e => e.PhoneNo == PhoneNo);
+                if (Index < 0) return null;
+                return ListCustomerDetails[Index];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetCustomerDetailsFromPhoneNo(CustomerID)", ex);
+            }
+            return null;
+        }
+
         public Double GetCustomerDiscount(String CustomerName, Double Amount)
         {
             try
@@ -340,6 +414,20 @@ namespace SalesOrdersReport.Models
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetCustomerList()", ex); 
+            }
+            return null;
+        }
+
+
+        public List<String> GetCustomerPhoneList()
+        {
+            try
+            {
+                return ListCustomerDetails.Select(e => e.PhoneNo).ToList();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetCustomerPhoneList()", ex);
             }
             return null;
         }
@@ -785,6 +873,28 @@ namespace SalesOrdersReport.Models
                 throw ex;
             }
         }
+        public void LoadCustomerTypeDtls()
+        {
+            try
+            {
+                ListCustomerTypeDetails = new List<CustomerTypeDetails>();
+
+                String Query = "SELECT CUSTOMERTYPEID, CUSTOMERTYPE, DESCRIPTION from CUSTOMERTYPEMASTER Order by CUSTOMERTYPEID;";
+                foreach (var item in ObjMySQLHelper.ExecuteQuery(Query))
+                {
+                    ListCustomerTypeDetails.Add(new CustomerTypeDetails()
+                    {
+                        CustomerTypeID = Int32.Parse(item[0]),
+                        CustomerType = item[1],
+                        CustomerTypeDescription = item[2]
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.LoadCustomerTypeDtls()", ex);
+            }
+        }
         public void AddLineDetailsToCache(LineDetails ObjLineDetails)
         {
             try
@@ -950,12 +1060,14 @@ namespace SalesOrdersReport.Models
                 ObjCustomerDetails.CustomerName = dtRow["CUSTOMERNAME"].ToString();
                 ObjCustomerDetails.Address = dtRow["ADDRESS"].ToString();
                 ObjCustomerDetails.GSTIN = dtRow["GSTIN"].ToString();
-                ObjCustomerDetails.PhoneNo = ((dtRow["PHONENO"] == null) || dtRow["PHONENO"].ToString().Trim() == "") ? 0 : Int64.Parse(dtRow["PHONENO"].ToString().Trim());
+                ObjCustomerDetails.PhoneNo = (dtRow["PHONENO"] == null) ? "" : dtRow["PHONENO"].ToString().Trim();
                 ObjCustomerDetails.Active = (dtRow["ACTIVE"].ToString().Trim() == "1") ? true : false;
                 ObjCustomerDetails.StateID = ((dtRow["STATEID"] == null) || dtRow["STATEID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["STATEID"].ToString().Trim());
                 ObjCustomerDetails.OrderDaysAssigned = dtRow["ORDERDAYS"].ToString();
                 ObjCustomerDetails.LastUpdateDate = ((dtRow["LASTUPDATEDATE"] == null) || dtRow["LASTUPDATEDATE"].ToString().Trim() == "") ? DateTime.MinValue : DateTime.Parse(dtRow["LASTUPDATEDATE"].ToString());
                 ObjCustomerDetails.AddedDate = ((dtRow["ADDEDDATE"] == null) || dtRow["ADDEDDATE"].ToString().Trim() == "") ? DateTime.MinValue : DateTime.Parse(dtRow["ADDEDDATE"].ToString());
+                ObjCustomerDetails.CustomerTypeID= ((dtRow["CUSTOMERTYPEID"] == null) || dtRow["CUSTOMERTYPEID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["CUSTOMERTYPEID"].ToString().Trim());
+                if (ObjCustomerDetails.CustomerTypeID != -1) ObjCustomerDetails.CustomerTypeName = GetCustomerTypeDtlsFromID(ObjCustomerDetails.CustomerTypeID).CustomerType;
 
                 ObjCustomerDetails.LineID = ((dtRow["LINEID"] == null) || dtRow["LINEID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["LINEID"].ToString().Trim());
                 ObjCustomerDetails.DiscountGroupID = ((dtRow["DISCOUNTGROUPID"] == null) || dtRow["DISCOUNTGROUPID"].ToString().Trim() == "") ? -1 : int.Parse(dtRow["DISCOUNTGROUPID"].ToString().Trim());
@@ -981,6 +1093,8 @@ namespace SalesOrdersReport.Models
                 return null;
             }
         }
+
+        
 
         public void AddCustomerDataToCache(CustomerDetails ObjCustomerDetails)
         {

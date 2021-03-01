@@ -299,7 +299,7 @@ namespace SalesOrdersReport.Views
                         ArrRowItems[5] = ObjCustomerDetails.CustomerName;
                         ArrRowItems[6] = ObjCustomerDetails.Address;
                         ArrRowItems[7] = ObjCustomerDetails.State;
-                        ArrRowItems[8] = ObjCustomerDetails.PhoneNo == 0 ? "" : ObjCustomerDetails.PhoneNo.ToString();
+                        ArrRowItems[8] =  ObjCustomerDetails.PhoneNo.ToString();
                         ArrRowItems[9] = ObjCustomerDetails.GSTIN;
                         ArrRowItems[10] = ObjCustomerDetails.OrderDaysAssigned;
                         ArrRowItems[11] = ObjCustomerDetails.LineName;

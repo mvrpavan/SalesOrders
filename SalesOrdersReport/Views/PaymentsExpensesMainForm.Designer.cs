@@ -30,6 +30,7 @@
         {
             this.btnCreatePayment = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnImportFromExcel = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.checkBoxApplyFilterPayment = new System.Windows.Forms.CheckBox();
             this.dTimePickerToPayments = new System.Windows.Forms.DateTimePicker();
@@ -61,7 +62,6 @@
             this.btnViewEditExpense = new System.Windows.Forms.Button();
             this.btnCreateExpense = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnImportFromExcel = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewPayments)).BeginInit();
@@ -106,6 +106,23 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1164, 84);
             this.panel1.TabIndex = 1;
+            // 
+            // btnImportFromExcel
+            // 
+            this.btnImportFromExcel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnImportFromExcel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnImportFromExcel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnImportFromExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImportFromExcel.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnImportFromExcel.Image = global::SalesOrdersReport.Properties.Resources.import_icon;
+            this.btnImportFromExcel.Location = new System.Drawing.Point(539, 3);
+            this.btnImportFromExcel.Name = "btnImportFromExcel";
+            this.btnImportFromExcel.Size = new System.Drawing.Size(83, 73);
+            this.btnImportFromExcel.TabIndex = 12;
+            this.btnImportFromExcel.Text = "Import from Excel";
+            this.btnImportFromExcel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnImportFromExcel.UseVisualStyleBackColor = false;
+            this.btnImportFromExcel.Click += new System.EventHandler(this.btnImportFromExcel_Click);
             // 
             // groupBox3
             // 
@@ -266,6 +283,7 @@
             this.dtGridViewPayments.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dtGridViewPayments.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
             this.dtGridViewPayments.Location = new System.Drawing.Point(12, 127);
+            this.dtGridViewPayments.MultiSelect = false;
             this.dtGridViewPayments.Name = "dtGridViewPayments";
             this.dtGridViewPayments.Size = new System.Drawing.Size(1164, 228);
             this.dtGridViewPayments.TabIndex = 2;
@@ -502,23 +520,6 @@
             this.label1.Size = new System.Drawing.Size(99, 25);
             this.label1.TabIndex = 4;
             this.label1.Text = "Payments";
-            // 
-            // btnImportFromExcel
-            // 
-            this.btnImportFromExcel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btnImportFromExcel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            this.btnImportFromExcel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.btnImportFromExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImportFromExcel.Font = new System.Drawing.Font("Calibri", 10F);
-            this.btnImportFromExcel.Image = global::SalesOrdersReport.Properties.Resources.import_icon;
-            this.btnImportFromExcel.Location = new System.Drawing.Point(539, 3);
-            this.btnImportFromExcel.Name = "btnImportFromExcel";
-            this.btnImportFromExcel.Size = new System.Drawing.Size(83, 73);
-            this.btnImportFromExcel.TabIndex = 12;
-            this.btnImportFromExcel.Text = "Import from Excel";
-            this.btnImportFromExcel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnImportFromExcel.UseVisualStyleBackColor = false;
-            this.btnImportFromExcel.Click += new System.EventHandler(this.btnImportFromExcel_Click);
             // 
             // PaymentsExpensesMainForm
             // 

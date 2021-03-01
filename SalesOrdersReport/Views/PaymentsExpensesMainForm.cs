@@ -34,10 +34,12 @@ namespace SalesOrdersReport.Views
 
                 ObjAccountsMasterModel = CommonFunctions.ObjAccountsMasterModel;
 
-                dTimePickerFromPayments.Value = DateTime.Today.AddDays(-30);
+                //dTimePickerFromPayments.Value = DateTime.Today.AddDays(-30);
+
+                dTimePickerFromPayments.Value = DateTime.Today;
                 dTimePickerToPayments.Value = DateTime.Today;
 
-                LoadPaymentsGridView();
+                LoadPaymentsGridView(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
                 LoadExpensesGridView();
 
                 groupBoxExpenses.Visible = false;
@@ -48,32 +50,31 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void LoadPaymentsGridView()
+        private void LoadPaymentsGridView(DateTime FromDate,DateTime ToDate)
         {
             try
             {
-                dtAllPayments = ObjPaymentsModel.GetPaytmentsDataTable(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
+                dtAllPayments = new DataTable();
+                dtAllPayments = ObjPaymentsModel.GetPaytmentsDataTable(FromDate, ToDate);
+                dtGridViewPayments.DataSource = null;
+                if (dtGridViewPayments.Columns.Count > 0) dtGridViewPayments.Columns.Clear();
                 if (dtAllPayments.Rows.Count == 0)
                 {
                     var dataTable = new DataTable();
                     dataTable.Columns.Add("Message", typeof(string));
                     dataTable.Rows.Add("No Payments Added/found in DB");
-
+                    if (dtGridViewPayments.Columns.Count > 0) dtGridViewPayments.Columns.Clear();
                     dtGridViewPayments.DataSource = new BindingSource { DataSource = dataTable };
                     dtGridViewPayments.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 }
                 else
                 {
-                    //dtGridViewPayments.DataSource = dtAllPayments;
-                    //dtGridViewPayments.Rows.Clear();
-                    //dtGridViewPayments.Columns.Clear();
-                    dtGridViewPayments.DataSource = null;
                     List<PaymentDetails> ListPaymentDtlsCache = ObjPaymentsModel.GetPaymentDtlsCache();
                     if (ListPaymentDtlsCache.Count > 0)
                     {
                         //PaymentID, PaymentDate, InvoiceID, QuotationID, AccountID, PaymentModeID, PaymentAmount, Description, CreationDate, LastUpdateDate, UserID
-                        String[] ArrColumnNames = new String[] { "PAYMENTID", "INVOICEID", "QUOTATIONID", "ACCOUNTID", "PAYMENTMODEID", "INVOICENUMBER", "CUSTOMERNAME", "PAYMENTDATE", "PAYMENTMODE", "PAYMENTAMOUNT", "DESCRIPTION", "CREATIONDATE", "LASTUPDATEDATE", "STAFFNAME", "ACTIVE" };
-                        String[] ArrColumnHeaders = new String[] { "Payment ID", "Invoice ID", "Quotation  ID", "AccountID", "PaymentMode ID", "InvoiceNumber", "Customer Name", "Payment Date", "Payment Mode", "Amount", "Description", "CreationDate", "LastUpdateDate", "Staff Name", "Active" };
+                        String[] ArrColumnNames = new String[] { "PAYMENTID", "INVOICEID", "QUOTATIONID", "ACCOUNTID", "PAYMENTMODEID", "INVOICENUMBER", "CUSTOMERNAME", "PHONEN0","PAYMENTDATE", "PAYMENTMODE", "PAYMENTAMOUNT", "DESCRIPTION", "CREATIONDATE", "LASTUPDATEDATE", "STAFFNAME", "ACTIVE" };
+                        String[] ArrColumnHeaders = new String[] { "Payment ID", "Invoice ID", "Quotation  ID", "AccountID", "PaymentMode ID", "InvoiceNumber", "Customer Name","PhoneNo", "Payment Date", "Payment Mode", "Amount", "Description", "CreationDate", "LastUpdateDate", "Staff Name", "Active" };
                         for (int i = 0; i < ArrColumnNames.Length; i++)
                         {
                             dtGridViewPayments.Columns.Add(ArrColumnNames[i], ArrColumnHeaders[i]);
@@ -83,7 +84,7 @@ namespace SalesOrdersReport.Views
                         }
                         foreach (PaymentDetails ObjPaymentDetails in ListPaymentDtlsCache)
                         {
-                            Object[] ArrRowItems = new Object[15];
+                            Object[] ArrRowItems = new Object[16];
                             ArrRowItems[0] = ObjPaymentDetails.PaymentId;
                             ArrRowItems[1] = ObjPaymentDetails.InvoiceID;
                             ArrRowItems[2] = ObjPaymentDetails.QuotationID;
@@ -91,15 +92,16 @@ namespace SalesOrdersReport.Views
                             ArrRowItems[4] = ObjPaymentDetails.PaymentModeID;
                             ArrRowItems[5] = ObjPaymentDetails.InvoiceNumber;
                             ArrRowItems[6] = ObjPaymentDetails.CustomerName;
-                            ArrRowItems[7] = ObjPaymentDetails.PaidOn;
+                            ArrRowItems[7] = ObjPaymentDetails.CustPhoneNo;
+                            ArrRowItems[8] = ObjPaymentDetails.PaidOn;
 
-                            ArrRowItems[8] = ObjPaymentDetails.PaymentMode;
-                            ArrRowItems[9] = ObjPaymentDetails.Amount;
-                            ArrRowItems[10] = ObjPaymentDetails.Description;
-                            ArrRowItems[11] = ObjPaymentDetails.PaidOn;
-                            ArrRowItems[12] = ObjPaymentDetails.LastUpdateDate;
-                            ArrRowItems[13] = ObjPaymentDetails.StaffName;
-                            ArrRowItems[14] = ObjPaymentDetails.Active;
+                            ArrRowItems[9] = ObjPaymentDetails.PaymentMode;
+                            ArrRowItems[10] = ObjPaymentDetails.Amount;
+                            ArrRowItems[11] = ObjPaymentDetails.Description;
+                            ArrRowItems[12] = ObjPaymentDetails.PaidOn;
+                            ArrRowItems[13] = ObjPaymentDetails.LastUpdateDate;
+                            ArrRowItems[14] = ObjPaymentDetails.StaffName;
+                            ArrRowItems[15] = ObjPaymentDetails.Active;
                             dtGridViewPayments.Rows.Add(ArrRowItems);
                         }
                     }
@@ -393,7 +395,7 @@ namespace SalesOrdersReport.Views
                 switch (Mode)
                 {
                     case 1:     //Add Payment
-                        LoadPaymentsGridView();
+                        LoadPaymentsGridView(dTimePickerToPayments.Value, dTimePickerToPayments.Value);
                         break;
                     case 2:
                         break;
@@ -438,7 +440,18 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreatePaymentForm(UpdatePaymentsOnClose, dTimePickerFromPayments.Value, dTimePickerToPayments.Value, false), this);
+                //if ()
+                //{
+                    //DataGridViewRow row = this.dtGridViewPayments.SelectedRows[0];
+                //string val = dtGridViewPayments.CurrentRow.Cells["PAYMENTID"].Value.ToString();
+                    //row.Cells["PAYMENTID"].Value
+                    // }
+                if(dtGridViewPayments.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Please Select a Payment Row To Edit!", "Error");
+                    return;
+                 }
+                CommonFunctions.ShowDialog(new CreatePaymentForm(UpdatePaymentsOnClose, dTimePickerFromPayments.Value, dTimePickerToPayments.Value, false, this.dtGridViewPayments.SelectedRows[0]), this);
             }
             catch (Exception ex)
             {
@@ -476,6 +489,7 @@ namespace SalesOrdersReport.Views
                 List<String> ListFindInFields = new List<String>()
                 {
                     "Customer Name",
+                    "Customer Phone",
                     "Invoice Number",
                     "Invoice Date",
                     "Payment Date",
@@ -495,13 +509,6 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                //      DataTable tblFiltered = dtAllPayments.AsEnumerable()
-                //.Where(row => row.Field<String>("Nachname") == username
-                //         && row.Field<String>("Ort") == location)
-                //.OrderByDescending(row => row.Field<String>("Nachname"))
-                //.CopyToDataTable();
-                //DataTable tblFiltered=  dtAllPayments.Select("WinCom like '%A%'").CopyToDataTable();
-                //return tblFiltered;
                 AssignFilterDataTableToGrid(ObjSearchDtls);
             }
             catch (Exception ex)
@@ -607,7 +614,8 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                LoadPaymentsGridView();
+                checkBoxApplyFilterPayment.Checked = false;
+                LoadPaymentsGridView(DateTime.MinValue, DateTime.MinValue);
             }
             catch (Exception ex)
             {
@@ -633,9 +641,10 @@ namespace SalesOrdersReport.Views
                 if (!checkBoxApplyFilterPayment.Checked)
                 {
                     dTimePickerFromPayments.Value = DateTime.Today;
-                    dTimePickerToPayments.Value = dTimePickerFromPayments.Value.AddDays(30);
+                    //dTimePickerToPayments.Value = dTimePickerFromPayments.Value.AddDays(30);
+                    dTimePickerToPayments.Value = dTimePickerFromPayments.Value;
                 }
-                LoadPaymentsGridView();
+                LoadPaymentsGridView(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
             }
             catch (Exception ex)
             {

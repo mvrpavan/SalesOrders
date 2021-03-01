@@ -29,8 +29,9 @@ namespace SalesOrdersReport.Views
         int CurrInvoiceCacheIndex = -1;
         MySQLHelper ObjMySQLHelper;
         DateTime FromDate, Todate;
+        PaymentDetails ObjPaymentDeatilsToBeEdited;
 
-        public CreatePaymentForm(UpdateOnCloseDel UpdatePaymentOnClose, DateTime FromDate, DateTime Todate, bool CreateForm = true)
+        public CreatePaymentForm(UpdateOnCloseDel UpdatePaymentOnClose, DateTime FromDate, DateTime Todate, bool CreateForm = true,DataGridViewRow SelectedDataRow=null)
         {
             try
             {
@@ -48,6 +49,9 @@ namespace SalesOrdersReport.Views
                     FormTitle = "Update Payment";
                     btnCreateUpdatePayment.Text = "Update Payment";
                     chckActive.Visible = true;
+                    ObjPaymentDeatilsToBeEdited = new PaymentDetails();
+                    ExtractPaymentDetailsFromRow(SelectedDataRow);
+
                 }
                 this.Text = FormTitle;
                 this.UpdatePaymentsOnClose = UpdatePaymentOnClose;
@@ -61,6 +65,20 @@ namespace SalesOrdersReport.Views
             }
         }
 
+        void ExtractPaymentDetailsFromRow(DataGridViewRow SelectedRow)
+        {
+            try
+            {
+                ObjPaymentDeatilsToBeEdited.PaymentId = int.Parse(SelectedRow.Cells["PAYMENTID"].Value.ToString());
+                ObjPaymentDeatilsToBeEdited.Description = SelectedRow.Cells["DESCRIPTION"].Value.ToString();
+                ObjPaymentDeatilsToBeEdited.Active = bool.Parse(SelectedRow.Cells["ACTIVE"].Value.ToString());
+                ObjPaymentDeatilsToBeEdited.StaffName = SelectedRow.Cells["STAFFNAME"].Value.ToString();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExtractPaymentDetailsFromRow()", ex);
+            }
+        }
         private void CreatePaymentForm_Load(object sender, EventArgs e)
         {
             try
@@ -84,7 +102,12 @@ namespace SalesOrdersReport.Views
                 cmbxcreatePaymentStaffName.DataSource = ListOfAllUsers;
                 cmbxCreatePaymentCustomerNames.SelectedIndex = 0;
                 cmbxcreatePaymentStaffName.SelectedIndex = 0;
-                cmbxCreatePaymentNumber.SelectedItem = 0;
+                if (this.Text == "Update Payment")
+                {
+                    cmbxCreatePaymentNumber.SelectedItem = ObjPaymentDeatilsToBeEdited.StaffName;
+                    txtCreatePaymentDesc.Text = ObjPaymentDeatilsToBeEdited.Description;
+                }
+                else cmbxCreatePaymentNumber.SelectedItem = 0;
                 cmbxCreatePaymentPaymentAgainst.SelectedIndex = 0;
                 txtbxCreatePaymentAmount.Text = "0";
                 cmbBoxPaymentModes.SelectedIndex = 0;
@@ -144,103 +167,45 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                List<string> ListColumnValues = new List<string>(), ListTempColValues = new List<string>();
-                List<string> ListColumnNames = new List<string>(), ListTempColNames = new List<string>();
-                List<Types> ListTypes = new List<Types>();
-
-                ListColumnValues.Add(ObjAccountDetails.AccountID.ToString());
-                ListColumnNames.Add("ACCOUNTID");
-                ListTypes.Add(Types.Number);
-
-                ListColumnValues.Add(ObjPaymentsModel.GetPaymentModeDetails(cmbBoxPaymentModes.SelectedItem.ToString()).PaymentModeID.ToString());
-                ListColumnNames.Add("PAYMENTMODEID");
-                ListTypes.Add(Types.Number);
-
-                if (cmbxCreatePaymentPaymentAgainst.SelectedItem.ToString().ToUpper() == "INVOICE")
+                PaymentDetails tmpPaymentDetails = new PaymentDetails()
                 {
-                    ListColumnValues.Add(ListInvoiceDtls[CurrInvoiceCacheIndex].InvoiceID.ToString());
-                    ListColumnNames.Add("INVOICEID");
-                    ListTypes.Add(Types.Number);
-                }
-                else
+                    CustomerID = ObjAccountDetails.CustomerID,
+                    AccountID = ObjAccountDetails.AccountID,
+                    Description = txtCreatePaymentDesc.Text.Trim(),
+                    InvoiceID = ListInvoiceDtls[CurrInvoiceCacheIndex].InvoiceID,
+                    InvoiceNumber = ListInvoiceDtls[CurrInvoiceCacheIndex].InvoiceNumber,
+                    PaidOn = DateTime.Parse(dtpCreatePaymentPaidOn.Text.Trim()),
+                    Amount = Double.Parse(txtbxCreatePaymentAmount.Text),
+                    UserID = CommonFunctions.ObjUserMasterModel.GetUserID(MySQLHelper.GetMySqlHelperObj().CurrentUser),
+                    PaymentModeID = ObjPaymentsModel.GetPaymentModeDetails(cmbBoxPaymentModes.SelectedItem.ToString()).PaymentModeID,
+                    Active = true,
+                    CreationDate = DateTime.Now,
+                    LastUpdateDate = DateTime.Now
+
+                };
+
+                CustomerAccountHistoryDetails tmpCustomerAccountHistoryDetails = new CustomerAccountHistoryDetails()
                 {
-                    ListColumnValues.Add(txtCreatePaymentInvoiceNum.Text);
-                    ListColumnNames.Add("QUOTATIONID");
-                    ListTypes.Add(Types.Number);
-                }
+                    AccountID = ObjAccountDetails.AccountID,
+                    SaleAmount = Double.Parse(txtCreatePaymentSaleAmount.Text == string.Empty ? "0" : txtCreatePaymentSaleAmount.Text),
+                    DiscountAmount = Double.Parse(txtCreatePaymentSaleAmount.Text == string.Empty ? "0" : txtCreatePaymentSaleAmount.Text),
+                    CancelAmount = Double.Parse(txtCreatePaymentCancelAmt.Text == string.Empty ? "0" : txtCreatePaymentCancelAmt.Text),
+                    RefundAmount = Double.Parse((txtCreatePaymentRefundAmt.Text == string.Empty ? "0" : txtCreatePaymentRefundAmt.Text)),
+                    BalanceAmount = Double.Parse(txtCreatePaymentOB.Text == string.Empty ? "0" : txtCreatePaymentOB.Text),
+                    NewBalanceAmount = Double.Parse(txtCreatePaymentBA.Text == string.Empty ? "0" : txtCreatePaymentBA.Text),
+                    AmountReceived = Double.Parse(txtbxCreatePaymentAmount.Text == string.Empty ? "0" : txtbxCreatePaymentAmount.Text),
+                    NetSaleAmount = Double.Parse(txtCreatePaymentNetSaleAmt.Text == string.Empty ? "0" : txtCreatePaymentNetSaleAmt.Text),
+                    TotalTaxAmount = Double.Parse(txtCreatePaymentTotalTax.Text == string.Empty ? "0" : txtCreatePaymentTotalTax.Text)
+                };
 
-                ListColumnValues.Add(DateTime.Parse(dtpCreatePaymentPaidOn.Text).ToString("yyyy-MM-dd H:mm:ss"));
-                ListColumnNames.Add("PAYMENTDATE");
-                ListTypes.Add(Types.String);
-
-                ListColumnValues.Add("1");
-                ListColumnNames.Add("ACTIVE");
-                ListTypes.Add(Types.Number);
-
-
-                ListColumnValues.Add(txtbxCreatePaymentAmount.Text);
-                ListColumnNames.Add("PAYMENTAMOUNT");
-                ListTypes.Add(Types.Number);
-
-                ListColumnValues.Add(ObjUserMasterModel.GetUserID(cmbxcreatePaymentStaffName.Text).ToString());
-                ListColumnNames.Add("USERID");
-                ListTypes.Add(Types.Number);
-
-                if (txtCreatePaymentDesc.Text.Trim() != string.Empty)
-                {
-                    ListColumnValues.Add(txtCreatePaymentDesc.Text.Trim());
-                    ListColumnNames.Add("DESCRIPTION");
-                    ListTypes.Add(Types.String);
-                }
-
-                string Now = DateTime.Now.ToString("yyyy-MM-dd H:mm:ss");
-                ListColumnValues.Add(Now);
-                ListColumnNames.Add("LASTUPDATEDATE");
-                ListTypes.Add(Types.String);
-
-                ListTempColValues.Add(txtbxCreatePaymentAmount.Text);
-                ListTempColNames.Add("BALANCEAMOUNT");
-
-
-                ListTempColValues.Add(Now);
-                ListTempColNames.Add("LASTUPDATEDDATE");
-
-                ListColumnValues.Add(DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"));
-                ListColumnNames.Add("CREATIONDATE");
-                ListTypes.Add(Types.String);
-
-
-                int ResultVal = ObjMySQLHelper.InsertIntoTable("PAYMENTS", ListColumnNames, ListColumnValues, ListTypes);
-                if (cmbxCreatePaymentPaymentAgainst.SelectedItem.ToString().ToUpper() == "INVOICE") ObjInvoicesModel.MarkInvoicesAsPaid(new List<int>() { ListInvoiceDtls[CurrInvoiceCacheIndex].InvoiceID });
-                if (ResultVal <= 0) MessageBox.Show("Wasnt able to create the payment", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else if (ResultVal == 2)
-                {
-                    MessageBox.Show("err", "Error");
-                }
-                else
-                {
-                    MessageBox.Show("Added New Payment for :: " + txtCreatePaymentCustName.Text + " successfully", "Added New Payment");
-                    FillCustAccHistoryTble();
-                    string WhereCondition = "ACCOUNTID = '" + ObjAccountDetails.AccountID.ToString() + "'";
-
-                    ResultVal = CommonFunctions.ObjUserMasterModel.UpdateAnyTableDetails("ACCOUNTSMASTER", ListTempColNames, ListTempColValues, WhereCondition);
-
-                    if (ResultVal < 0) MessageBox.Show("Wasnt able to Update the Account Master details", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    else
-                    {
-                        //MessageBox.Show("Updated Account Master Details :: " + ObjAccountDetails.AccountID.ToString() + " successfully", "Update Account Details");
-                        UpdatePaymentsOnClose(Mode: 1);
-                    }
-
-                    // UpdateCustomerOnClose(Mode: 1);
-                    btnReset.PerformClick();
-                }
+                ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails, ref tmpCustomerAccountHistoryDetails);
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.CreatePaymentTable()", ex);
             }
         }
+     
 
         public void EditPaymentTable()
         {
@@ -335,7 +300,7 @@ namespace SalesOrdersReport.Views
             try
             {
 
-                int PaymentId = ObjPaymentsModel.GetPaymentDetailsFromAccID(ObjAccountDetails.AccountID).PaymentId;
+                int PaymentId = ObjPaymentDeatilsToBeEdited.PaymentId;
                 List<string> ListColumnValues = new List<string>(), ListTempColValues = new List<string>();
                 List<string> ListColumnNames = new List<string>(), ListTempColNames = new List<string>();
 
@@ -506,17 +471,18 @@ namespace SalesOrdersReport.Views
                     ObjCustomerDetails = ObjCustomerMasterModel.GetCustomerDetails(cmbxCreatePaymentCustomerNames.SelectedItem.ToString());
                     txtCreatePaymentCustName.Text = ObjCustomerDetails.CustomerName;
                     txtCreatePaymentCustAddress.Text = ObjCustomerDetails.Address;
+                    txtCreatePaymentsCustPhoneNo.Text = ObjCustomerDetails.PhoneNo;
                     ObjAccountDetails = ObjAccountsMasterModel.GetAccDtlsFromCustID(ObjCustomerDetails.CustomerID);
                     if (ObjAccountDetails != null) txtCreatePaymentOB.Text = ObjAccountDetails.BalanceAmount.ToString();
                     FillPaymentAgainst();
                     if (this.Text == "Update Payment")
                     {
-                        PaymentDetails ObjPaymentDtls = new PaymentDetails();
+                       //PaymentDetails ObjPaymentDtls = new PaymentDetails();
 
                         if (ObjAccountDetails != null)
                         {
-                            ObjPaymentDtls = ObjPaymentsModel.GetPaymentDetailsFromAccID(ObjAccountDetails.AccountID);
-                            CustomerAccountHistoryDetails ObjCustomerAccountHistoryDetails = ObjAccountHistoryModel.GetAccountHistoryDetailsFromPaymentID(ObjPaymentDtls.PaymentId);
+                            //ObjPaymentDtls = ObjPaymentsModel.GetPaymentDetailsFromAccID(ObjAccountDetails.AccountID);
+                            CustomerAccountHistoryDetails ObjCustomerAccountHistoryDetails = ObjAccountHistoryModel.GetAccountHistoryDetailsFromPaymentID(ObjPaymentDeatilsToBeEdited.PaymentId);
                             txtCreatePaymentRefundAmt.Text = ObjCustomerAccountHistoryDetails.RefundAmount.ToString();
                             txtCreatePaymentDiscAmt.Text = ObjCustomerAccountHistoryDetails.DiscountAmount.ToString();
                             txtCreatePaymentTotalTax.Text = ObjCustomerAccountHistoryDetails.TotalTaxAmount.ToString();
@@ -525,10 +491,10 @@ namespace SalesOrdersReport.Views
                             txtCreatePaymentSaleAmount.Text = ObjCustomerAccountHistoryDetails.SaleAmount.ToString();
                             txtCreatePaymentOB.Text = ObjCustomerAccountHistoryDetails.BalanceAmount.ToString();
                         }
-                        txtCreatePaymentDesc.Text = ObjPaymentDtls.Description;
-                        txtbxCreatePaymentAmount.Text = ObjPaymentDtls.Amount.ToString();
-                        cmbxcreatePaymentStaffName.SelectedItem = ObjPaymentDtls.StaffName;
-                        chckActive.Checked = ObjPaymentDtls.Active;
+                        //txtCreatePaymentDesc.Text = ObjPaymentDtls.Description;
+                        //txtbxCreatePaymentAmount.Text = ObjPaymentDtls.Amount.ToString();
+                        cmbxcreatePaymentStaffName.SelectedItem = ObjPaymentDeatilsToBeEdited.StaffName;
+                        chckActive.Checked = ObjPaymentDeatilsToBeEdited.Active;
                     }
                 }
             }

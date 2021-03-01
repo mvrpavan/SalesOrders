@@ -30,3 +30,13 @@ Insert into PaymentModeMaster (PaymentMode, Description) Values('Credit Card', '
 Insert into PaymentModeMaster (PaymentMode, Description) Values('Check', 'Check Payment');
 Insert into PaymentModeMaster (PaymentMode, Description) Values('UPI', 'UPI Payment');
 
+--CustomerTypeMaster
+Insert into CustomerTypeMaster (CustomerType, Description) Values('Regular', 'Regular');
+Insert into CustomerTypeMaster (CustomerType, Description) Values('Retailer', 'Retailer');
+Insert into CustomerTypeMaster (CustomerType, Description) Values('Wholesale', 'Wholesale');
+
+
+
+
+
+

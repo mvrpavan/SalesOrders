@@ -14,7 +14,8 @@ namespace SalesOrdersReport.Views
         String FormTitle = "", OrderInvoice = "";
         List<ProductDetails> ListAllProducts, ListProducts;
         List<String> ListCustomerNames;
-        List<Int64> ListCustomerPhoneNumbers;
+        //List<Int64> ListCustomerPhoneNumbers;
+        List<string> ListCustomerPhoneNumbers;
         CustomerDetails CurrCustomerDetails;
         DiscountGroupDetails CurrCustomerDiscountGroup;
         CustomerOrderInvoiceDetails CurrOrderInvoiceDetails;
@@ -37,7 +38,8 @@ namespace SalesOrdersReport.Views
         InvoicesModel ObjInvoicesModel;
         UpdateUsingObjectOnCloseDel UpdateObjectOnClose;
         List<InvoiceDetails> ListCustomerInvoices;
-        Dictionary<Int64, CustomerDetails> DictPhoneNumberCustomerDetails = new Dictionary<Int64, CustomerDetails>();
+        //Dictionary<Int64, CustomerDetails> DictPhoneNumberCustomerDetails = new Dictionary<Int64, CustomerDetails>();
+        Dictionary<string, CustomerDetails> DictPhoneNumberCustomerDetails = new Dictionary<string, CustomerDetails>();
         PaymentsModel ObjPaymentsModel = new PaymentsModel();
 
         public CreatePOSBillForm(Int32 InvoiceID, UpdateUsingObjectOnCloseDel UpdateObjectOnClose)
@@ -101,7 +103,7 @@ namespace SalesOrdersReport.Views
                 for (int i = 0; i < ListCustomerDetails.Count; i++)
                 {
                     CustomerDetails tmpCustomerDetails = ListCustomerDetails[i].Clone();
-                    if (tmpCustomerDetails.PhoneNo <= 0) continue;
+                    if (tmpCustomerDetails.PhoneNo.Trim() == string.Empty) continue;
                     if (!DictPhoneNumberCustomerDetails.ContainsKey(tmpCustomerDetails.PhoneNo))
                     {
                         DictPhoneNumberCustomerDetails.Add(tmpCustomerDetails.PhoneNo, tmpCustomerDetails);
@@ -1034,7 +1036,7 @@ namespace SalesOrdersReport.Views
                 if (!IsCustomerNameChanged)
                 {
                     IsPhoneNumberChanged = true;
-                    CustomerDetails tmpCustomerDetails = DictPhoneNumberCustomerDetails[Int64.Parse(cmbBoxPhoneNumbers.SelectedItem.ToString())];
+                    CustomerDetails tmpCustomerDetails = DictPhoneNumberCustomerDetails[cmbBoxPhoneNumbers.SelectedItem.ToString()];
                     cmbBoxCustomers.SelectedIndex = ListCustomerNames.FindIndex(s => s.Equals(tmpCustomerDetails.CustomerName, StringComparison.InvariantCultureIgnoreCase));
                 }
                 IsCustomerNameChanged = false;
@@ -1067,7 +1069,7 @@ namespace SalesOrdersReport.Views
                     case 1:         //Add New Customer
                         CustomerDetails tmpCustomerDetails = (CustomerDetails)ObjAddUpdated;
                         ListCustomerNames.Add(tmpCustomerDetails.CustomerName);
-                        if (tmpCustomerDetails.PhoneNo > 0 && !DictPhoneNumberCustomerDetails.ContainsKey(tmpCustomerDetails.PhoneNo))
+                        if (tmpCustomerDetails.PhoneNo.Trim()!=string.Empty && !DictPhoneNumberCustomerDetails.ContainsKey(tmpCustomerDetails.PhoneNo))
                         {
                             DictPhoneNumberCustomerDetails.Add(tmpCustomerDetails.PhoneNo, tmpCustomerDetails);
                             ListCustomerPhoneNumbers.Add(tmpCustomerDetails.PhoneNo);

@@ -29,9 +29,9 @@ namespace SalesOrdersReport.Views
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnRedirectCreateCustomer = new System.Windows.Forms.Button();
             this.panelAllCustomerBtnTab = new System.Windows.Forms.Panel();
             this.btnImportFromExcel = new System.Windows.Forms.Button();
@@ -46,6 +46,8 @@ namespace SalesOrdersReport.Views
             this.btnRedirectEditCustomer = new System.Windows.Forms.Button();
             this.dgvCustomerCache = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
+            this.cmbxSelectCustomerType = new System.Windows.Forms.ComboBox();
+            this.lblSelectCustomerType = new System.Windows.Forms.Label();
             this.panelAllCustomerBtnTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCustomerCache)).BeginInit();
             this.SuspendLayout();
@@ -234,35 +236,35 @@ namespace SalesOrdersReport.Views
             this.dgvCustomerCache.AllowUserToResizeRows = false;
             this.dgvCustomerCache.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(5);
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvCustomerCache.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(5);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCustomerCache.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvCustomerCache.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCustomerCache.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCustomerCache.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvCustomerCache.Location = new System.Drawing.Point(12, 154);
             this.dgvCustomerCache.MultiSelect = false;
             this.dgvCustomerCache.Name = "dgvCustomerCache";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvCustomerCache.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCustomerCache.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvCustomerCache.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvCustomerCache.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvCustomerCache.Size = new System.Drawing.Size(1164, 435);
@@ -278,6 +280,25 @@ namespace SalesOrdersReport.Views
             this.label1.TabIndex = 5;
             this.label1.Text = "Customer List";
             // 
+            // cmbxSelectCustomerType
+            // 
+            this.cmbxSelectCustomerType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbxSelectCustomerType.FormattingEnabled = true;
+            this.cmbxSelectCustomerType.Location = new System.Drawing.Point(734, 120);
+            this.cmbxSelectCustomerType.Name = "cmbxSelectCustomerType";
+            this.cmbxSelectCustomerType.Size = new System.Drawing.Size(121, 21);
+            this.cmbxSelectCustomerType.TabIndex = 6;
+            this.cmbxSelectCustomerType.SelectedIndexChanged += new System.EventHandler(this.cmbxSelectCustomerType_SelectedIndexChanged);
+            // 
+            // lblSelectCustomerType
+            // 
+            this.lblSelectCustomerType.AutoSize = true;
+            this.lblSelectCustomerType.Location = new System.Drawing.Point(636, 123);
+            this.lblSelectCustomerType.Name = "lblSelectCustomerType";
+            this.lblSelectCustomerType.Size = new System.Drawing.Size(81, 13);
+            this.lblSelectCustomerType.TabIndex = 7;
+            this.lblSelectCustomerType.Text = "Customer Type:";
+            // 
             // ManageCustomerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -285,8 +306,10 @@ namespace SalesOrdersReport.Views
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1188, 747);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblSelectCustomerType);
+            this.Controls.Add(this.cmbxSelectCustomerType);
             this.Controls.Add(this.dgvCustomerCache);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.panelAllCustomerBtnTab);
             this.Name = "ManageCustomerForm";
             this.ShowIcon = false;
@@ -318,5 +341,7 @@ namespace SalesOrdersReport.Views
         private System.Windows.Forms.Button btnCreateDiscountGrp;
         private Button btnImportFromExcel;
         private Label label1;
+        private ComboBox cmbxSelectCustomerType;
+        private Label lblSelectCustomerType;
     }
 }

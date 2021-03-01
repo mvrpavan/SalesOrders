@@ -17,15 +17,35 @@ namespace SalesOrdersReport.Views
     {
         MySQLHelper tmpMySQlHelper = MySQLHelper.GetMySqlHelperObj();
         CheckBox headerCheckBox = new CheckBox();
+
         public ManageCustomerForm()
         {
             try
             {
-            InitializeComponent();
+                InitializeComponent();
+                FillCustomerTypes();
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("ManagerCustomerForm.ManageCustomerForm()", ex);
+                throw ex;
+            }
+        }
+        void FillCustomerTypes()
+        {
+            try
+            {
+                cmbxSelectCustomerType.Items.Add("All");
+                List<string> ListCustomerTypes = CommonFunctions.ObjCustomerMasterModel.GetAllCustomerTypes();
+                foreach (var item in ListCustomerTypes)
+                {
+                    cmbxSelectCustomerType.Items.Add(item);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ManagerCustomerForm.FillCustomerTypes()", ex);
                 throw ex;
             }
         }
@@ -58,12 +78,12 @@ namespace SalesOrdersReport.Views
                 ObjEditCustomerForm.cmbxEditCustSelectPriceGrp.SelectedItem = CurrentRow.Cells["PRICEGROUPNAME"].Value.ToString();
                 ObjEditCustomerForm.cmbxEditCustSelectDiscGrp.SelectedItem = CurrentRow.Cells["DISCOUNTGROUPNAME"].Value.ToString();
                 ObjEditCustomerForm.cmbxEditCustSelectState.SelectedItem = CurrentRow.Cells["STATE"].Value.ToString();
-
+                ObjEditCustomerForm.cmbxEditCustType.SelectedItem = CurrentRow.Cells["CUSTOMERTYPE"].Value.ToString();
                 string[] OrderDaysCode = CurrentRow.Cells["ORDERDAYS"].Value.ToString().Split(',');
                 string[] OrderDays = new string[OrderDaysCode.Length];
                 for (int i = 0; i < OrderDaysCode.Length; i++)
                 {
-                    if (OrderDaysCode[i] != string.Empty) OrderDays[i] = CommonFunctions.ObjCustomerMasterModel.GetOrderDaysFromCode(int.Parse(OrderDaysCode[i].Replace('"',' ').Trim()));
+                    if (OrderDaysCode[i] != string.Empty) OrderDays[i] = CommonFunctions.ObjCustomerMasterModel.GetOrderDaysFromCode(int.Parse(OrderDaysCode[i].Replace('"', ' ').Trim()));
                     else OrderDays[i] = "";
                 }
                 for (int i = 0; i < OrderDays.Length; i++)
@@ -170,6 +190,7 @@ namespace SalesOrdersReport.Views
                 dgvCustomerCache.AutoResizeColumns();
                 dgvCustomerCache.AutoResizeRows();
                 dgvCustomerCache.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
             }
             catch (Exception ex)
             {
@@ -188,7 +209,6 @@ namespace SalesOrdersReport.Views
                     //CheckBox chk = (CheckBox)ItemRow.Cells["checkBoxColumn"];
                     if (ItemRow.Cells["checkBoxColumn"].Value != null && ItemRow.Cells["checkBoxColumn"].Value.ToString().ToUpper() == "TRUE")
                     {
-
                         CountOfSelectedRow++;
                         if (CountOfSelectedRow > 1)
                         {
@@ -210,8 +230,6 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog("ManagerCustomerForm.GetSelectedRowFrmGrid()", ex);
                 throw;
             }
-
-
         }
         public void BindCustomerGrid(Boolean ReloadFromDB)
         {
@@ -239,6 +257,7 @@ namespace SalesOrdersReport.Views
                     dgvCustomerCache.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                     //EnableDisableControls(false);
                 }
+                cmbxSelectCustomerType.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -246,7 +265,7 @@ namespace SalesOrdersReport.Views
                 throw;
             }
         }
-        public void EnableDisableControls(bool Enable=true)
+        public void EnableDisableControls(bool Enable = true)
         {
             try
             {
@@ -276,7 +295,7 @@ namespace SalesOrdersReport.Views
                 throw;
             }
         }
-        Int32 LoadCustomerDetailsDataGridView(Boolean ReloadFromDB)
+        Int32 LoadCustomerDetailsDataGridView(Boolean ReloadFromDB, int TypeID = 0)
         {
             try
             {
@@ -284,38 +303,44 @@ namespace SalesOrdersReport.Views
 
                 dgvCustomerCache.Rows.Clear();
                 dgvCustomerCache.Columns.Clear();
-                List<CustomerDetails> ListCustDtlsCache = CommonFunctions.ObjCustomerMasterModel.GetListCustomerCache();
+                List<CustomerDetails> ListCustDtlsCache = new List<CustomerDetails>();
+                if (TypeID == 0) ListCustDtlsCache = CommonFunctions.ObjCustomerMasterModel.GetListCustomerCache();
+                else ListCustDtlsCache = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetailsFrmType(TypeID);
                 if (ListCustDtlsCache.Count > 0)
                 {
-                    String[] ArrColumnNames = new String[] { "CUSTOMERID", "LINEID", "DISCOUNTGROUPID", "PRICEGROUPID", "STATEID", "CUSTOMERNAME", "ADDRESS", "STATE", "PHONENO", "GSTIN", "ORDERDAYS", "LINENAME", "DISCOUNTGROUPNAME", "PRICEGROUPNAME", "ACTIVE", "ADDEDDATE", "LASTUPDATEDATE" };
-                    String[] ArrColumnHeaders = new String[] { "CustomerID", "LineID", "Discount Group ID", "Price Group ID", "State ID", "Customer Name", "Address", "State", "Phone No", "GSTIN", "OrderDays", "Line", "Discount Group Name", "Price Group Name", "Active", "Added Date", "Last Update Date" };
+                    String[] ArrColumnNames = new String[] { "CUSTOMERID", "LINEID", "DISCOUNTGROUPID", "PRICEGROUPID", "STATEID", "CUSTOMERTYPEID", "CUSTOMERNAME", "ADDRESS", "STATE", "PHONENO", "CUSTOMERTYPE", "GSTIN", "ORDERDAYS", "LINENAME", "DISCOUNTGROUPNAME", "PRICEGROUPNAME", "ACTIVE", "ADDEDDATE", "LASTUPDATEDATE" };
+                    String[] ArrColumnHeaders = new String[] { "CustomerID", "LineID", "Discount Group ID", "Price Group ID", "State ID", "Customer Type ID", "Customer Name", "Address", "State", "Phone No", "Customer Type", "GSTIN", "OrderDays", "Line", "Discount Group Name", "Price Group Name", "Active", "Added Date", "Last Update Date" };
                     for (int i = 0; i < ArrColumnNames.Length; i++)
                     {
+                        //if (i == 6) continue;
                         dgvCustomerCache.Columns.Add(ArrColumnNames[i], ArrColumnHeaders[i]);
                         DataGridViewColumn CurrentCol = dgvCustomerCache.Columns[dgvCustomerCache.Columns.Count - 1];
                         CurrentCol.ReadOnly = true;
-                        if (i <= 4) CurrentCol.Visible = false;    //CustomerID, LineID", "Discount Group ID, Price Group ID,State ID
+                        if (i <= 5) CurrentCol.Visible = false;    //CustomerID, LineID", "Discount Group ID, Price Group ID,State ID,Customertypeid
+
                     }
                     foreach (CustomerDetails ObjCustomerDetails in ListCustDtlsCache)
                     {
-                        Object[] ArrRowItems = new Object[17];
+                        Object[] ArrRowItems = new Object[19];
                         ArrRowItems[0] = ObjCustomerDetails.CustomerID;
                         ArrRowItems[1] = ObjCustomerDetails.LineID;
                         ArrRowItems[2] = ObjCustomerDetails.DiscountGroupID;
                         ArrRowItems[3] = ObjCustomerDetails.PriceGroupID;
                         ArrRowItems[4] = ObjCustomerDetails.StateID;
-                        ArrRowItems[5] = ObjCustomerDetails.CustomerName;
-                        ArrRowItems[6] = ObjCustomerDetails.Address;
-                        ArrRowItems[7] = ObjCustomerDetails.State;
-                        ArrRowItems[8] = ObjCustomerDetails.PhoneNo == 0 ? "" : ObjCustomerDetails.PhoneNo.ToString();
-                        ArrRowItems[9] = ObjCustomerDetails.GSTIN;
-                        ArrRowItems[10] = ObjCustomerDetails.OrderDaysAssigned;
-                        ArrRowItems[11] = ObjCustomerDetails.LineName;
-                        ArrRowItems[12] = ObjCustomerDetails.DiscountGroupName;
-                        ArrRowItems[13] = ObjCustomerDetails.PriceGroupName;
-                        ArrRowItems[14] = ObjCustomerDetails.Active;
-                        ArrRowItems[15] = ObjCustomerDetails.AddedDate == DateTime.MinValue ? DateTime.Now : ObjCustomerDetails.AddedDate;
-                        ArrRowItems[16] = ObjCustomerDetails.LastUpdateDate == DateTime.MinValue ? DateTime.Now : ObjCustomerDetails.LastUpdateDate;
+                        ArrRowItems[5] = ObjCustomerDetails.CustomerTypeID;
+                        ArrRowItems[6] = ObjCustomerDetails.CustomerName;
+                        ArrRowItems[7] = ObjCustomerDetails.Address;
+                        ArrRowItems[8] = ObjCustomerDetails.State;
+                        ArrRowItems[9] = ObjCustomerDetails.PhoneNo;
+                        ArrRowItems[10] = ObjCustomerDetails.CustomerTypeName;
+                        ArrRowItems[11] = ObjCustomerDetails.GSTIN;
+                        ArrRowItems[12] = ObjCustomerDetails.OrderDaysAssigned;
+                        ArrRowItems[13] = ObjCustomerDetails.LineName;
+                        ArrRowItems[14] = ObjCustomerDetails.DiscountGroupName;
+                        ArrRowItems[15] = ObjCustomerDetails.PriceGroupName;
+                        ArrRowItems[16] = ObjCustomerDetails.Active;
+                        ArrRowItems[17] = ObjCustomerDetails.AddedDate == DateTime.MinValue ? DateTime.Now : ObjCustomerDetails.AddedDate;
+                        ArrRowItems[18] = ObjCustomerDetails.LastUpdateDate == DateTime.MinValue ? DateTime.Now : ObjCustomerDetails.LastUpdateDate;
 
                         dgvCustomerCache.Rows.Add(ArrRowItems);
                     }
@@ -331,6 +356,7 @@ namespace SalesOrdersReport.Views
             }
         }
 
+
         private void AddCheckBoxToDGV()
         {
             try
@@ -338,7 +364,7 @@ namespace SalesOrdersReport.Views
                 //Add a CheckBox Column to the DataGridView Header Cell.
 
                 //Find the Location of Header Cell.
-                Point headerCellLocation = this.dgvCustomerCache.GetCellDisplayRectangle(5, -1, true).Location;
+                Point headerCellLocation = this.dgvCustomerCache.GetCellDisplayRectangle(6, -1, true).Location;
 
                 //Place the Header CheckBox in the Location of the Header Cell.
                 //headerCheckBox.Location = new Point(headerCellLocation.X + 8, headerCellLocation.Y + 2);
@@ -350,12 +376,12 @@ namespace SalesOrdersReport.Views
                 headerCheckBox.Click += new EventHandler(HeaderCheckBox_Clicked);
                 dgvCustomerCache.Controls.Add(headerCheckBox);
 
-                //Add a CheckBox Column to the DataGridView at the first position.
+                //Add a CheckBox Column to the DataGridView at the position.
                 DataGridViewCheckBoxColumn checkBoxColumn = new DataGridViewCheckBoxColumn();
                 checkBoxColumn.HeaderText = "";
                 checkBoxColumn.Width = 30;
                 checkBoxColumn.Name = "checkBoxColumn";
-                dgvCustomerCache.Columns.Insert(4, checkBoxColumn);
+                dgvCustomerCache.Columns.Insert(5, checkBoxColumn);
 
                 //Assign Click event to the DataGridView Cell.
                 dgvCustomerCache.CellContentClick += new DataGridViewCellEventHandler(CustomerDataGridView_CellClick);
@@ -555,7 +581,7 @@ namespace SalesOrdersReport.Views
             {
                 switch (Mode)
                 {
-                    case 1:     
+                    case 1:
                         BindCustomerGrid(true);
                         break;
                     case 2:
@@ -718,10 +744,10 @@ namespace SalesOrdersReport.Views
                     ObjCustomerDetails.CustomerName = arr[CustomerNameIndex].Trim();
                     ObjCustomerDetails.Address = arr[AddressIndex].Trim();
                     ObjCustomerDetails.GSTIN = arr[GSTINIndex].Trim();
-                    ObjCustomerDetails.PhoneNo = ((arr[PhoneIndex] == null) || arr[PhoneIndex].Trim() == "") ? 0 : Int64.Parse(arr[PhoneIndex].Trim());
+                    ObjCustomerDetails.PhoneNo = (arr[PhoneIndex] == null) ? "" : arr[PhoneIndex].Trim();
                     if (arr[ActiveIndex].Trim() != "") ObjCustomerDetails.Active = bool.Parse(arr[ActiveIndex].Trim());
                     ObjCustomerDetails.State = ((arr[StateIndex] == null) || arr[StateIndex].Trim() == "") ? "" : arr[StateIndex].Trim();
-                    ObjCustomerDetails.OrderDaysAssigned = arr[OrderDaysIndex].Replace('"',' ').Trim();
+                    ObjCustomerDetails.OrderDaysAssigned = arr[OrderDaysIndex].Replace('"', ' ').Trim();
                     ObjCustomerDetails.LineName = ((arr[LineNameIndex] == null) || arr[LineNameIndex].Trim() == "") ? "" : arr[LineNameIndex].Trim();
                     ObjCustomerDetails.DiscountGroupName = ((arr[DiscountGroupNameIndex] == null) || arr[DiscountGroupNameIndex].Trim() == "") ? "" : arr[DiscountGroupNameIndex].Trim();
                     ObjCustomerDetails.PriceGroupName = ((arr[PriceGroupNameIndex] == null) || arr[PriceGroupNameIndex].Trim() == "") ? "" : arr[PriceGroupNameIndex].Trim();
@@ -817,6 +843,25 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.ManageCustomerForm_Shown()", ex);
+            }
+        }
+
+        private void cmbxSelectCustomerType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                int TypeID = 0;
+                if (cmbxSelectCustomerType.SelectedItem.ToString().ToUpper() != "ALL")
+                {
+                    TypeID = CommonFunctions.ObjCustomerMasterModel.GetCustomerTypeDtlsFromTypeName(cmbxSelectCustomerType.SelectedItem.ToString()).CustomerTypeID;
+                }
+                LoadCustomerDetailsDataGridView(false, TypeID);
+                AddCheckBoxToDGV();
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.cmbxSelectCustomerType_SelectedIndexChanged()", ex);
             }
         }
     }

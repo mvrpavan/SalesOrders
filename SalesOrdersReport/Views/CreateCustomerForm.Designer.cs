@@ -65,13 +65,15 @@ namespace SalesOrdersReport
             this.lblCreateCustAddrs = new System.Windows.Forms.Label();
             this.lblCreateCustName = new System.Windows.Forms.Label();
             this.txtCreateCustomerName = new System.Windows.Forms.TextBox();
+            this.lblCustomerType = new System.Windows.Forms.Label();
+            this.cmbxCustomerType = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.flpCreateCustOrderDays.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(232, 445);
+            this.btnReset.Location = new System.Drawing.Point(232, 467);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(97, 39);
             this.btnReset.TabIndex = 18;
@@ -81,7 +83,7 @@ namespace SalesOrdersReport
             // 
             // btnCreateCustomer
             // 
-            this.btnCreateCustomer.Location = new System.Drawing.Point(113, 445);
+            this.btnCreateCustomer.Location = new System.Drawing.Point(113, 467);
             this.btnCreateCustomer.Name = "btnCreateCustomer";
             this.btnCreateCustomer.Size = new System.Drawing.Size(113, 39);
             this.btnCreateCustomer.TabIndex = 17;
@@ -91,6 +93,8 @@ namespace SalesOrdersReport
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cmbxCustomerType);
+            this.groupBox1.Controls.Add(this.lblCustomerType);
             this.groupBox1.Controls.Add(this.flpCreateCustOrderDays);
             this.groupBox1.Controls.Add(this.cmbxCreateCustSelectState);
             this.groupBox1.Controls.Add(this.lblCreateCustOrderDays);
@@ -120,7 +124,7 @@ namespace SalesOrdersReport
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(344, 494);
+            this.groupBox1.Size = new System.Drawing.Size(344, 515);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Create Customer";
@@ -134,7 +138,7 @@ namespace SalesOrdersReport
             this.flpCreateCustOrderDays.Controls.Add(this.chbxWednesday);
             this.flpCreateCustOrderDays.Controls.Add(this.chbxSaturday);
             this.flpCreateCustOrderDays.Controls.Add(this.chbxSunday);
-            this.flpCreateCustOrderDays.Location = new System.Drawing.Point(113, 336);
+            this.flpCreateCustOrderDays.Location = new System.Drawing.Point(113, 358);
             this.flpCreateCustOrderDays.Name = "flpCreateCustOrderDays";
             this.flpCreateCustOrderDays.Size = new System.Drawing.Size(208, 90);
             this.flpCreateCustOrderDays.TabIndex = 32;
@@ -222,7 +226,7 @@ namespace SalesOrdersReport
             // 
             this.lblCreateCustOrderDays.AutoSize = true;
             this.lblCreateCustOrderDays.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCreateCustOrderDays.Location = new System.Drawing.Point(6, 336);
+            this.lblCreateCustOrderDays.Location = new System.Drawing.Point(6, 358);
             this.lblCreateCustOrderDays.Name = "lblCreateCustOrderDays";
             this.lblCreateCustOrderDays.Size = new System.Drawing.Size(62, 13);
             this.lblCreateCustOrderDays.TabIndex = 28;
@@ -269,7 +273,7 @@ namespace SalesOrdersReport
             // 
             this.lblCommonErrorMsg.AutoSize = true;
             this.lblCommonErrorMsg.ForeColor = System.Drawing.Color.Red;
-            this.lblCommonErrorMsg.Location = new System.Drawing.Point(113, 429);
+            this.lblCommonErrorMsg.Location = new System.Drawing.Point(113, 451);
             this.lblCommonErrorMsg.Name = "lblCommonErrorMsg";
             this.lblCommonErrorMsg.Size = new System.Drawing.Size(0, 13);
             this.lblCommonErrorMsg.TabIndex = 29;
@@ -348,7 +352,7 @@ namespace SalesOrdersReport
             // 
             this.cmbxCreateCustSelectLine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbxCreateCustSelectLine.FormattingEnabled = true;
-            this.cmbxCreateCustSelectLine.Location = new System.Drawing.Point(113, 306);
+            this.cmbxCreateCustSelectLine.Location = new System.Drawing.Point(113, 328);
             this.cmbxCreateCustSelectLine.Name = "cmbxCreateCustSelectLine";
             this.cmbxCreateCustSelectLine.Size = new System.Drawing.Size(171, 21);
             this.cmbxCreateCustSelectLine.TabIndex = 9;
@@ -358,7 +362,7 @@ namespace SalesOrdersReport
             // 
             this.lblCreateCustLineID.AutoSize = true;
             this.lblCreateCustLineID.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCreateCustLineID.Location = new System.Drawing.Point(6, 309);
+            this.lblCreateCustLineID.Location = new System.Drawing.Point(6, 331);
             this.lblCreateCustLineID.Name = "lblCreateCustLineID";
             this.lblCreateCustLineID.Size = new System.Drawing.Size(27, 13);
             this.lblCreateCustLineID.TabIndex = 27;
@@ -425,17 +429,35 @@ namespace SalesOrdersReport
             this.txtCreateCustomerName.Size = new System.Drawing.Size(208, 20);
             this.txtCreateCustomerName.TabIndex = 0;
             // 
+            // lblCustomerType
+            // 
+            this.lblCustomerType.AutoSize = true;
+            this.lblCustomerType.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCustomerType.Location = new System.Drawing.Point(6, 304);
+            this.lblCustomerType.Name = "lblCustomerType";
+            this.lblCustomerType.Size = new System.Drawing.Size(78, 13);
+            this.lblCustomerType.TabIndex = 33;
+            this.lblCustomerType.Text = "Customer Type";
+            // 
+            // cmbxCustomerType
+            // 
+            this.cmbxCustomerType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbxCustomerType.FormattingEnabled = true;
+            this.cmbxCustomerType.Location = new System.Drawing.Point(113, 301);
+            this.cmbxCustomerType.Name = "cmbxCustomerType";
+            this.cmbxCustomerType.Size = new System.Drawing.Size(171, 21);
+            this.cmbxCustomerType.TabIndex = 34;
+            // 
             // CreateCustomerForm
             // 
             this.AcceptButton = this.btnCreateCustomer;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(368, 508);
+            this.ClientSize = new System.Drawing.Size(368, 539);
             this.Controls.Add(this.groupBox1);
             this.Name = "CreateCustomerForm";
             this.ShowIcon = false;
             this.Text = "Create Customer Form";
-
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.flpCreateCustOrderDays.ResumeLayout(false);
@@ -484,5 +506,7 @@ namespace SalesOrdersReport
         public System.Windows.Forms.CheckBox chbxWednesday;
         public System.Windows.Forms.CheckBox chbxSaturday;
         public System.Windows.Forms.CheckBox chbxSunday;
+        private System.Windows.Forms.ComboBox cmbxCustomerType;
+        private System.Windows.Forms.Label lblCustomerType;
     }
 }

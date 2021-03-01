@@ -40,8 +40,9 @@ namespace SalesOrdersReport
 
 	            this.UpdateObjectOnClose = UpdateObjectOnClose;
 	            this.IsRetailCustomer = IsRetailCustomer;
-	
-	            if (IsRetailCustomer)
+                cmbxCustomerType.DataSource = CommonFunctions.ObjCustomerMasterModel.GetAllCustomerTypes();
+
+                if (IsRetailCustomer)
 	            {
 	                cmbxCreateCustSelectState.SelectedIndex = cmbxCreateCustSelectState.FindStringExact("Karnataka");
 	                cmbxCreateCustSelectPriceGrp.SelectedIndex = cmbxCreateCustSelectPriceGrp.FindStringExact("Retail Price");
@@ -175,16 +176,26 @@ namespace SalesOrdersReport
                     lblCommonErrorMsg.Text = "Pls Set whether Customer Is Active or Not ";
                     return;
                 }
+
+                if (cmbxCustomerType.SelectedItem.ToString() == "Regular" && txtCreateCustPhone.Text.Trim() == string.Empty)
+                {
+                    lblCommonErrorMsg.Visible = true;
+                    lblCommonErrorMsg.Text = "PhoneNo is Must for CustomerType Regular!";
+                    return;
+                }
+
                 if (lblCommonErrorMsg.Visible == true)
                 {
                     lblCommonErrorMsg.Visible = false;
                 }
-
-                CustomerDetails customerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetailsByPhoneNo(txtCreateCustPhone.Text);
-                if (customerDetails != null)
+                if (txtCreateCustPhone.Text != String.Empty)
                 {
-                    MessageBox.Show(this, "Customer with same Phone number already exists.\nCannot create another Customer with same Phone number.", "Create Customer", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    CustomerDetails customerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetailsByPhoneNo(txtCreateCustPhone.Text);
+                    if (customerDetails != null)
+                    {
+                        MessageBox.Show(this, "Customer with same Phone number already exists.\nCannot create another Customer with same Phone number.", "Create Customer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                 }
 
                 List<string> ListColumnValues = new List<string>();
@@ -241,6 +252,8 @@ namespace SalesOrdersReport
                     ListColumnValues.Add(SelectedOrderEndDays);
                     ListColumnNamesWithDataType.Add("ORDERDAYS,VARCHAR");
                 }
+                ListColumnValues.Add(CommonFunctions.ObjCustomerMasterModel.GetCustomerTypeDtlsFromTypeName(cmbxCustomerType.SelectedItem.ToString()).CustomerTypeID.ToString());
+                ListColumnNamesWithDataType.Add("CUSTOMERTYPEID,VARCHAR");
 
                 ListColumnValues.Add(DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"));
                 ListColumnNamesWithDataType.Add("LASTUPDATEDATE,DATETIME");
@@ -327,5 +340,7 @@ namespace SalesOrdersReport
                 throw ex;
             }
         }
+
+     
     }
 }

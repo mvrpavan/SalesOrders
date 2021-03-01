@@ -68,8 +68,8 @@ namespace SalesOrdersReport.CommonModules
                 ListSelectedVendors = new List<String>();
                 DictFilterNamesWithActualDBColNames = new Dictionary<string, string>()
                 {
-                    // { 111, new StudentName { FirstName="Sachin", LastName="Karnik", ID=211 } },
                     { "Customer Name","CUSTOMERNAME" } ,
+                    { "Customer Phone","PHONENO" } ,
                     { "Invoice Number","INVOICENUMBER"  },
                     { "Invoice Status","INVOICESTATUS"  },
                     { "Invoice Date","INVOICEDATE"  },

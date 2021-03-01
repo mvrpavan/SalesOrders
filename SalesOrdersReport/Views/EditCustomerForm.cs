@@ -29,7 +29,8 @@ namespace SalesOrdersReport
             cmbxEditCustSelectPriceGrp.SelectedIndex = 0;
             FillLines();
             cmbxEditCustSelectLine.SelectedIndex = 0;
-
+            cmbxEditCustType.DataSource = CommonFunctions.ObjCustomerMasterModel.GetAllCustomerTypes();
+            cmbxEditCustType.SelectedIndex = 0;
             this.UpdateCustomerOnClose = UpdateCustomerOnClose;
             this.FormClosed += EditCustomerForm_FormClosed;
         }
@@ -160,6 +161,13 @@ namespace SalesOrdersReport
                 {
                     if (!CheckForValidPhone()) return;
                 }
+
+                if (cmbxEditCustType.SelectedItem.ToString() == "Regular" && txtEditCustPhone.Text.Trim() == string.Empty)
+                {
+                    lblCommonErrorMsg.Visible = true;
+                    lblCommonErrorMsg.Text = "PhoneNo is Must for CustomerType Regular!";
+                    return;
+                }
                 if (lblCommonErrorMsg.Visible == true)
                 {
                     lblCommonErrorMsg.Visible = false;
@@ -220,6 +228,8 @@ namespace SalesOrdersReport
                 ListColumnValues.Add(SelectedOrderEndDays);
                 ListColumnNames.Add("ORDERDAYS");
 
+                ListColumnValues.Add(CommonFunctions.ObjCustomerMasterModel.GetCustomerTypeDtlsFromTypeName(cmbxEditCustType.SelectedItem.ToString()).CustomerTypeID.ToString());
+                ListColumnNames.Add("CUSTOMERTYPEID");
 
                 ListColumnValues.Add(DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"));
                 ListColumnNames.Add("LASTUPDATEDATE");

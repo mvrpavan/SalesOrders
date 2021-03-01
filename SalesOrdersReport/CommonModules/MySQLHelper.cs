@@ -558,6 +558,22 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
+        public static string GetTimeStampStrForSearch(DateTime DateToBeProcessed, bool IsFromDate = true)
+        {
+            try
+            {
+                string TmpDate = "";
+                if (IsFromDate) TmpDate = GetDateStringForDB(DateToBeProcessed) + " 00:00:00";
+                else TmpDate = GetDateStringForDB(DateToBeProcessed) + " 23:59:59";
+                return TmpDate;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.GetTimeStampStrForSearch()", ex);
+                throw ex;
+            }
+        }
+
         public void ExecuteScriptFile(String ScriptFilePath)
         {
             try
