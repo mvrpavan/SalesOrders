@@ -15,8 +15,10 @@ namespace SalesOrdersReport
         XmlNode SettingsNode;
         public String MainFormTitleText, LogoFileName;
         public Int32 ReportRowsFromTop, ReportAppendRowsAtBottom, LogoImageHeight;
-        public string Server="", DatabaseName="", UserName="", Password="";
+        public string Server = "", DatabaseName = "", UserName = "", Password = "";
+        public String SenderMailID = "", SenderMailPassword = "", SenderName = "", ReceiverMailID = "", ReceiverName = "", StoreName = "", POSNumber = "";
         public List<String> ListSQLScriptFiles = new List<String>();
+        public Boolean EnableMail = true;
 
         public void ReadSettingsFromNode(XmlNode Node)
         {
@@ -46,6 +48,20 @@ namespace SalesOrdersReport
                     XMLFileUtils.GetAttributeValue(ScriptNode, "FilePath", out FilePath);
                     ListSQLScriptFiles.Add(FilePath);
                 }
+
+                XmlNode EmailDetailsNode;
+                XMLFileUtils.GetChildNode(SettingsNode, "EmailDetails", out EmailDetailsNode);
+                XMLFileUtils.GetAttributeValue(EmailDetailsNode, "SenderMailID", out SenderMailID);
+                XMLFileUtils.GetAttributeValue(EmailDetailsNode, "SenderMailPassword", out SenderMailPassword);
+                XMLFileUtils.GetAttributeValue(EmailDetailsNode, "ReceiverMailID", out ReceiverMailID);
+                XMLFileUtils.GetAttributeValue(EmailDetailsNode, "SenderName", out SenderName);
+                XMLFileUtils.GetAttributeValue(EmailDetailsNode, "ReceiverName", out ReceiverName);
+                XMLFileUtils.GetAttributeValue(EmailDetailsNode, "EnableMail", out EnableMail);
+
+                XmlNode POSDetailsNode;
+                XMLFileUtils.GetChildNode(SettingsNode, "POSDetails", out POSDetailsNode);
+                XMLFileUtils.GetAttributeValue(POSDetailsNode, "StoreName", out StoreName);
+                XMLFileUtils.GetAttributeValue(POSDetailsNode, "POSNumber", out POSNumber);
             }
             catch (Exception ex)
             {
@@ -62,14 +78,6 @@ namespace SalesOrdersReport
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "ReportAppendRowsAtBottom", ReportAppendRowsAtBottom.ToString());
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "LogoFileName", LogoFileName);
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "LogoImageHeight", LogoImageHeight.ToString());
-
-                //XmlNode DatabaseNode;
-                //XMLFileUtils.SetChildNodeValue(SettingsNode, "Database", "");
-                //XMLFileUtils.SetAttributeValue(DatabaseNode, "Server", Server);
-                //XMLFileUtils.SetAttributeValue(DatabaseNode, "DatabaseName", out DatabaseName);
-                //XMLFileUtils.SetAttributeValue(DatabaseNode, "UserName", out UserName);
-                //XMLFileUtils.SetAttributeValue(DatabaseNode, "Password", out Password);
-              
             }
             catch (Exception ex)
             {
@@ -86,7 +94,7 @@ namespace SalesOrdersReport
     class ReportSettings
     {
         XmlNode SettingsNode;
-        public String HeaderTitle, HeaderSubTitle, FooterTitle, Address, PhoneNumber, EMailID, VATPercent, TINNumber, GSTINumber;
+        public String HeaderTitle, HeaderSubTitle, FooterTitle, Address, PhoneNumber, EMailID, VATPercent, TINNumber, GSTINumber, ReportTitle;
         public Int32 LastNumber;
         public Color HeaderTitleColor, HeaderSubTitleColor, FooterTitleColor, FooterTextColor;
         public Int32 PastSalePeriodValue;
@@ -110,6 +118,7 @@ namespace SalesOrdersReport
                 XMLFileUtils.GetChildNodeValue(SettingsNode, "VATPercent", out VATPercent);
                 XMLFileUtils.GetChildNodeValue(SettingsNode, "TINNumber", out TINNumber);
                 XMLFileUtils.GetChildNodeValue(SettingsNode, "GSTINumber", out GSTINumber);
+                XMLFileUtils.GetChildNodeValue(SettingsNode, "ReportTitle", out ReportTitle);
 
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "LastNumber", out Value)) LastNumber = Int32.Parse(Value);
 

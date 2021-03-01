@@ -1,14 +1,8 @@
 ﻿using SalesOrdersReport.CommonModules;
 using SalesOrdersReport.Models;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SalesOrdersReport.Views
@@ -107,13 +101,6 @@ namespace SalesOrdersReport.Views
                 ReportProgressFunc(100);
 
                 //TODO: Print a log file
-
-                //for (int i = 0; i < 3; i++)
-                //{
-                //    Thread.Sleep(1000);
-                //    lblLoadingStatus.Text = "Loading completed..." + ((i + 1) * 33) + "%";
-                //    backgroundWorker1.ReportProgress((i + 1) * 33);
-                //}
                 ReportProgressFunc(100);
                 Thread.Sleep(1000);
             }

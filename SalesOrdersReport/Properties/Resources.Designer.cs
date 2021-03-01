@@ -233,6 +233,16 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap close_40 {
+            get {
+                object obj = ResourceManager.GetObject("close_40", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Close_Black {
             get {
                 object obj = ResourceManager.GetObject("Close_Black", resourceCulture);
@@ -246,6 +256,16 @@ namespace SalesOrdersReport.Properties {
         internal static System.Drawing.Bitmap Close_Black_VerySmall {
             get {
                 object obj = ResourceManager.GetObject("Close_Black_VerySmall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap close_shop_32 {
+            get {
+                object obj = ResourceManager.GetObject("close-shop_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

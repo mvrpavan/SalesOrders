@@ -16,13 +16,44 @@ namespace SalesOrdersReport.Models
         public Double SaleQty, ItemMRP, ItemRate, Tax, Amount;
     }
 
+    class PrintPaymentDetails
+    {
+        public String PaymentMode, CardNumber;
+        public Double Amount;
+    }
+
     class PrintDetails
     {
-        public String Header1, Header2, CustomerName, CustomerPhone, StaffName, InvoiceNumber;
+        public String Header1, Header2, CustomerName, CustomerPhone, StaffName, POSNumber, InvoiceNumber;
         public List<String> ListSubHeaderLines = new List<string>();
         public DateTime DateValue;
         public List<PrintItemDetails> ListPrintItemDetails = new List<PrintItemDetails>();
+        public List<PrintPaymentDetails> ListPrintPaymentDetails = new List<PrintPaymentDetails>();
         public Double GrossAmount, DiscountAmount, TotalTaxAmount, NetAmount;
+        public List<String> ListFooterLines = new List<string>();
+    }
+
+    class SummaryByInvoiceStatusDetails
+    {
+        public String Status;
+        public Int32 InvoiceCount;
+        public Double GrossAmount, DiscountAmount, NetAmount;
+    }
+
+    class SummaryByPaymentModeDetails
+    {
+        public String PaymentMode;
+        public Int32 PaymentCount, BillCount;
+        public Double TotalAmount;
+    }
+
+    class PrintSummaryDetails
+    {
+        public String Header, SummaryHeader, StaffName, POSNumber;
+        public List<String> ListSubHeaderLines = new List<string>();
+        public DateTime DateValue;
+        public List<SummaryByInvoiceStatusDetails> ListSummaryByInvoiceStatusDetails = new List<SummaryByInvoiceStatusDetails>();
+        public List<SummaryByPaymentModeDetails> ListSummaryByPaymentModeDetails = new List<SummaryByPaymentModeDetails>();
         public List<String> ListFooterLines = new List<string>();
     }
 
@@ -31,12 +62,10 @@ namespace SalesOrdersReport.Models
         protected PrintDocument ObjPrintDocument;
         protected PrintPreviewDialog printPreviewDialog;
         protected PrintDetails ObjPrintDetails;
+        protected PrintSummaryDetails ObjPrintSummaryDetails;
         protected Single PaperWidth, PaperWidthInPixel, PaperCenterX;
-        protected Font HeaderFont = new System.Drawing.Font(new System.Drawing.FontFamily("Times New Roman"), 8, System.Drawing.FontStyle.Bold);
-        protected Font SubHeaderFont = new System.Drawing.Font(new System.Drawing.FontFamily("Times New Roman"), 6, System.Drawing.FontStyle.Regular);
-        protected Font ItemParticularsHeader = new System.Drawing.Font(new System.Drawing.FontFamily("Times New Roman"), (float)6, System.Drawing.FontStyle.Bold);
-        protected Font ItemParticularsFont = new System.Drawing.Font(new System.Drawing.FontFamily("Times New Roman"), 6, System.Drawing.FontStyle.Regular);
-        protected Font FooterFont = new System.Drawing.Font(new System.Drawing.FontFamily("Times New Roman"), 6, System.Drawing.FontStyle.Regular);
+        FontFamily fontFamily = new FontFamily("Times New Roman");
+        protected Font HeaderFont, SubHeaderFont, ItemParticularsHeader, ItemParticularsFont, FooterFont;
 
         public PrintBase(Single PaperWidth)
         {
@@ -49,6 +78,12 @@ namespace SalesOrdersReport.Models
                 printPreviewDialog = new PrintPreviewDialog();
                 ObjPrintDocument = new PrintDocument();
                 ObjPrintDocument.PrintPage += ObjPrintDocument_PrintPage;
+
+                HeaderFont = new Font(fontFamily, 8, FontStyle.Bold);
+                SubHeaderFont = new Font(fontFamily, 6, FontStyle.Regular);
+                ItemParticularsHeader = new Font(fontFamily, (float)6, FontStyle.Bold);
+                ItemParticularsFont = new Font(fontFamily, 6, FontStyle.Regular);
+                FooterFont = new Font(fontFamily, 6, FontStyle.Regular);
             }
             catch (Exception ex)
             {
@@ -75,12 +110,26 @@ namespace SalesOrdersReport.Models
             }
         }
 
+        public void Print(PrintSummaryDetails ObjPrintSummaryDetails)
+        {
+            try
+            {
+                this.ObjPrintSummaryDetails = ObjPrintSummaryDetails;
+                ObjPrintDocument.DefaultPageSettings.PaperSize = new PaperSize("", (Int32)PaperWidth, 600);
+                ObjPrintDocument.Print();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.Print()", ex);
+            }
+        }
+
         public void ShowPrintPreview()
         {
             try
             {
                 printPreviewDialog.Document = ObjPrintDocument;
-                ObjPrintDocument.DefaultPageSettings.PaperSize = new System.Drawing.Printing.PaperSize("", (Int32)PaperWidth, 600);
+                ObjPrintDocument.DefaultPageSettings.PaperSize = new PaperSize("", (Int32)PaperWidth, 600);
                 printPreviewDialog.ShowDialog();
             }
             catch (Exception ex)
@@ -93,8 +142,10 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                Int32 Height = FormatPrintDocument(e);
-                ObjPrintDocument.DefaultPageSettings.PaperSize = new System.Drawing.Printing.PaperSize("", (Int32)PaperWidth, Height);
+                Int32 Height = -1;
+                if (ObjPrintDetails != null) Height = FormatPrintDocument(e);
+                if (ObjPrintSummaryDetails != null) Height = FormatPrintSummaryDocument(e);
+                ObjPrintDocument.DefaultPageSettings.PaperSize = new PaperSize("", (Int32)PaperWidth, Height);
             }
             catch (Exception ex)
             {
@@ -103,5 +154,7 @@ namespace SalesOrdersReport.Models
         }
 
         public abstract Int32 FormatPrintDocument(PrintPageEventArgs ObjPrintPageEventArgs);
+
+        public abstract Int32 FormatPrintSummaryDocument(PrintPageEventArgs ObjPrintPageEventArgs);
     }
 }

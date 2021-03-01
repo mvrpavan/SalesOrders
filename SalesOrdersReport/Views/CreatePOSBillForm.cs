@@ -507,51 +507,34 @@ namespace SalesOrdersReport.Views
                         picBoxLoading.Visible = false;
                         cmbBoxProdCat.Focus();
                         cmbBoxProdCat.SelectedIndex = 0;
-                        //if (CurrentInvoiceID < 0)
-                        //{
-                        //    MessageBox.Show(this, "Loaded Invoice data for selected Customer", "Customer Invoice", MessageBoxButtons.OK);
-                        //}
                         break;
                     case 3:     //Update or Create Bill
                         MessageBox.Show(this, "Created Customer Bill successfully", "Create Bill", MessageBoxButtons.OK);
                         DialogResult dialogResult = MessageBox.Show(this, "Is this Bill Paid?", "Create Bill", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                         if (dialogResult == DialogResult.Yes)
                         {
-                            //Create Payment entry
-                            PaymentDetails tmpPaymentDetails = new PaymentDetails() {
-                                CustomerID = AddUpdatedInvoiceDetails.CustomerID,
-                                AccountID = CommonFunctions.ObjAccountsMasterModel.GetAccDtlsFromCustID(AddUpdatedInvoiceDetails.CustomerID).AccountID,
-                                Description = "POS Payment",
-                                InvoiceID = AddUpdatedInvoiceDetails.InvoiceID,
-                                InvoiceNumber = AddUpdatedInvoiceDetails.InvoiceNumber,
-                                PaidOn = AddUpdatedInvoiceDetails.InvoiceDate,
-                                Amount = AddUpdatedInvoiceDetails.NetInvoiceAmount,
-                                UserID = CommonFunctions.ObjUserMasterModel.GetUserID(MySQLHelper.GetMySqlHelperObj().CurrentUser),
-                                PaymentModeID = ObjPaymentsModel.GetPaymentMode("Cash").PaymentModeID,
-                                CreationDate = DateTime.Now,
-                                LastUpdateDate = DateTime.Now
-                            };
+                            while (true)
+                            {
+                                dialogResult = CommonFunctions.ShowDialog(new PaymentModeSelectionForm(AddUpdatedInvoiceDetails.NetInvoiceAmount, UpdatePaymentsOnClose), this);
+                                if (dialogResult == DialogResult.OK)
+                                {
+                                    dialogResult = MessageBox.Show(this, "Would you like to print the Bill?", "Create Bill", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                                    if (dialogResult == DialogResult.Yes)
+                                    {
+                                        InvoicesModel.PrintBill(AddUpdatedInvoiceDetails.InvoiceID);
+                                    }
+                                    break;
+                                }
 
-                            CustomerAccountHistoryDetails tmpCustomerAccountHistoryDetails = new CustomerAccountHistoryDetails() {
-                                AccountID = tmpPaymentDetails.AccountID,
-                                SaleAmount = AddUpdatedInvoiceDetails.ListInvoiceItems.Sum(s => s.SaleQty * s.Price),
-                                DiscountAmount = AddUpdatedInvoiceDetails.DiscountAmount,
-                                CancelAmount = 0,
-                                RefundAmount = 0,
-                                BalanceAmount = 0,
-                                NewBalanceAmount = 0,
-                                AmountReceived  = AddUpdatedInvoiceDetails.NetInvoiceAmount,
-                                NetSaleAmount = AddUpdatedInvoiceDetails.NetInvoiceAmount,
-                                TotalTaxAmount = 0
-                            };
-
-                            ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails, ref tmpCustomerAccountHistoryDetails);
-                        }
-
-                        dialogResult = MessageBox.Show(this, "Would you like to print the Bill?", "Create Bill", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                        if (dialogResult == DialogResult.Yes)
-                        {
-                            InvoicesModel.PrintBill(AddUpdatedInvoiceDetails.InvoiceID);
+                                if (dialogResult == DialogResult.Cancel)
+                                {
+                                    dialogResult = MessageBox.Show(this, "Bill is saved, but payments was cancelled. Would you like to retry payment now?", "Create Bill", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                                    if (dialogResult == DialogResult.No)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
                         }
 
                         cmbBoxCustomers.SelectedIndex = -1;
@@ -595,6 +578,57 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.backgroundWorker1_RunWorkerCompleted()", ex);
+            }
+        }
+
+        private void UpdatePaymentsOnClose(Int32 Mode, Object ObjAddUpdatedDetails)
+        {
+            try
+            {
+                List<PaymentDetails> ListPaymentDetails = (List<PaymentDetails>)ObjAddUpdatedDetails;
+
+                Boolean FirstEntry = true;
+                Int32 AccountID = CommonFunctions.ObjAccountsMasterModel.GetAccDtlsFromCustID(AddUpdatedInvoiceDetails.CustomerID).AccountID;
+                Int32 UserID = CommonFunctions.ObjUserMasterModel.GetUserID(MySQLHelper.GetMySqlHelperObj().CurrentUser);
+                foreach (PaymentDetails item in ListPaymentDetails)
+                {
+                    //Create Payment entry
+                    PaymentDetails tmpPaymentDetails = new PaymentDetails()
+                    {
+                        CustomerID = AddUpdatedInvoiceDetails.CustomerID,
+                        AccountID = AccountID,
+                        Description = "POS Payment",
+                        InvoiceID = AddUpdatedInvoiceDetails.InvoiceID,
+                        InvoiceNumber = AddUpdatedInvoiceDetails.InvoiceNumber,
+                        PaidOn = AddUpdatedInvoiceDetails.InvoiceDate,
+                        Amount = item.Amount,
+                        UserID = UserID,
+                        PaymentModeID = ObjPaymentsModel.GetPaymentMode(item.PaymentMode).PaymentModeID,
+                        CreationDate = DateTime.Now,
+                        LastUpdateDate = DateTime.Now
+                    };
+
+                    CustomerAccountHistoryDetails tmpCustomerAccountHistoryDetails = new CustomerAccountHistoryDetails()
+                    {
+                        AccountID = tmpPaymentDetails.AccountID,
+                        SaleAmount = (FirstEntry ? AddUpdatedInvoiceDetails.ListInvoiceItems.Sum(s => s.SaleQty * s.Price) : 0),
+                        DiscountAmount = (FirstEntry ? AddUpdatedInvoiceDetails.DiscountAmount : 0),
+                        CancelAmount = 0,
+                        RefundAmount = 0,
+                        BalanceAmount = 0,
+                        NewBalanceAmount = 0,
+                        AmountReceived = item.Amount,
+                        NetSaleAmount = (FirstEntry ? AddUpdatedInvoiceDetails.NetInvoiceAmount : 0),
+                        TotalTaxAmount = 0
+                    };
+
+                    ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails, ref tmpCustomerAccountHistoryDetails);
+                    FirstEntry = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdatePaymentsOnClose()", ex);
             }
         }
 

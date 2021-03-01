@@ -11,6 +11,8 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
 using SalesOrdersReport.Models;
 using SalesOrdersReport.Views;
+using System.Net;
+using System.Net.Mail;
 
 namespace SalesOrdersReport.CommonModules
 {
@@ -786,7 +788,7 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public static void ShowDialog(Form ObjForm, Form Owner)
+        public static DialogResult ShowDialog(Form ObjForm, Form Owner)
         {
             try
             {
@@ -798,11 +800,12 @@ namespace SalesOrdersReport.CommonModules
                 //ObjForm.ControlBox = false;
                 ObjForm.FormBorderStyle = FormBorderStyle.FixedDialog;
                 ApplyPrivilegeControl(ObjForm);
-                ObjForm.ShowDialog(Owner);
+                return ObjForm.ShowDialog(Owner);
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("CommonFunctions.ShowDialog()", ex);
+                return DialogResult.Cancel;
             }
         }
 
@@ -1221,6 +1224,46 @@ namespace SalesOrdersReport.CommonModules
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"CommonFunctions.WriteToLogFile()", ex);
+            }
+        }
+
+        public static Int32 SendMail(String ReceiverMailAddress, String ReceiverName, String Subject, String Body, List<String> ListAttachmentFiles)
+        {
+            try
+            {
+                var fromAddress = new MailAddress(ObjApplicationSettings.SenderMailID, ObjApplicationSettings.SenderName);
+                var toAddress = new MailAddress(ReceiverMailAddress, ReceiverName);
+                string fromPassword = ObjApplicationSettings.SenderMailPassword;
+
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = Subject,
+                    Body = Body
+                })
+                {
+                    for (int i = 0; i < ListAttachmentFiles.Count; i++)
+                    {
+                        message.Attachments.Add(new Attachment(ListAttachmentFiles[i]));
+                    }
+                    message.IsBodyHtml = true;
+                    smtp.Send(message);
+                }
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"CommonFunctions.SendMail()", ex);
+                return -1;
             }
         }
     }

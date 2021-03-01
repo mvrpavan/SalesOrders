@@ -40,9 +40,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.btnExportBill = new System.Windows.Forms.Button();
+            this.btnCloseCounter = new System.Windows.Forms.Button();
             this.btnSearchBill = new System.Windows.Forms.Button();
             this.btnPrintBill = new System.Windows.Forms.Button();
             this.btnReloadBills = new System.Windows.Forms.Button();
+            this.btnCancelBill = new System.Windows.Forms.Button();
             this.btnViewEditBill = new System.Windows.Forms.Button();
             this.dtGridViewBills = new System.Windows.Forms.DataGridView();
             this.dtGridViewBilledProducts = new System.Windows.Forms.DataGridView();
@@ -51,7 +53,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.lblOrdersCount = new System.Windows.Forms.Label();
             this.backgroundWorkerBills = new System.ComponentModel.BackgroundWorker();
-            this.btnCancelBill = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewBills)).BeginInit();
@@ -84,6 +85,7 @@
             this.panel1.Controls.Add(this.groupBox3);
             this.panel1.Controls.Add(this.comboBox2);
             this.panel1.Controls.Add(this.btnExportBill);
+            this.panel1.Controls.Add(this.btnCloseCounter);
             this.panel1.Controls.Add(this.btnSearchBill);
             this.panel1.Controls.Add(this.btnPrintBill);
             this.panel1.Controls.Add(this.btnReloadBills);
@@ -198,6 +200,23 @@
             this.btnExportBill.UseVisualStyleBackColor = false;
             this.btnExportBill.Click += new System.EventHandler(this.btnExportBill_Click);
             // 
+            // btnCloseCounter
+            // 
+            this.btnCloseCounter.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnCloseCounter.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnCloseCounter.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnCloseCounter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCloseCounter.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnCloseCounter.Image = global::SalesOrdersReport.Properties.Resources.close_40;
+            this.btnCloseCounter.Location = new System.Drawing.Point(474, 3);
+            this.btnCloseCounter.Name = "btnCloseCounter";
+            this.btnCloseCounter.Size = new System.Drawing.Size(99, 73);
+            this.btnCloseCounter.TabIndex = 0;
+            this.btnCloseCounter.Text = "Close Counter";
+            this.btnCloseCounter.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnCloseCounter.UseVisualStyleBackColor = false;
+            this.btnCloseCounter.Click += new System.EventHandler(this.btnCloseCounter_Click);
+            // 
             // btnSearchBill
             // 
             this.btnSearchBill.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -248,6 +267,23 @@
             this.btnReloadBills.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnReloadBills.UseVisualStyleBackColor = false;
             this.btnReloadBills.Click += new System.EventHandler(this.btnReloadBills_Click);
+            // 
+            // btnCancelBill
+            // 
+            this.btnCancelBill.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnCancelBill.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnCancelBill.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnCancelBill.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancelBill.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnCancelBill.Image = global::SalesOrdersReport.Properties.Resources.delete_icon_32;
+            this.btnCancelBill.Location = new System.Drawing.Point(137, 3);
+            this.btnCancelBill.Name = "btnCancelBill";
+            this.btnCancelBill.Size = new System.Drawing.Size(58, 73);
+            this.btnCancelBill.TabIndex = 0;
+            this.btnCancelBill.Text = "Cancel Bill";
+            this.btnCancelBill.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnCancelBill.UseVisualStyleBackColor = false;
+            this.btnCancelBill.Click += new System.EventHandler(this.btnCancelBill_Click);
             // 
             // btnViewEditBill
             // 
@@ -335,30 +371,13 @@
             this.lblOrdersCount.TabIndex = 4;
             this.lblOrdersCount.Text = "[Displaying all Bills]";
             // 
-            // backgroundWorkerInvoices
+            // backgroundWorkerBills
             // 
             this.backgroundWorkerBills.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerBills_DoWork);
             this.backgroundWorkerBills.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerBills_ProgressChanged);
             this.backgroundWorkerBills.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerBills_RunWorkerCompleted);
             // 
-            // btnCancelBill
-            // 
-            this.btnCancelBill.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btnCancelBill.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            this.btnCancelBill.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.btnCancelBill.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancelBill.Font = new System.Drawing.Font("Calibri", 10F);
-            this.btnCancelBill.Image = global::SalesOrdersReport.Properties.Resources.delete_icon_32;
-            this.btnCancelBill.Location = new System.Drawing.Point(137, 3);
-            this.btnCancelBill.Name = "btnCancelBill";
-            this.btnCancelBill.Size = new System.Drawing.Size(58, 73);
-            this.btnCancelBill.TabIndex = 0;
-            this.btnCancelBill.Text = "Cancel Bill";
-            this.btnCancelBill.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnCancelBill.UseVisualStyleBackColor = false;
-            this.btnCancelBill.Click += new System.EventHandler(this.btnCancelBill_Click);
-            // 
-            // BillsMainForm
+            // POSBillsMainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoScroll = true;
@@ -373,7 +392,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "BillsMainForm";
+            this.Name = "POSBillsMainForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "POS Billing";
@@ -416,5 +435,6 @@
         private System.ComponentModel.BackgroundWorker backgroundWorkerBills;
         private System.Windows.Forms.Button btnExportBill;
         private System.Windows.Forms.Button btnCancelBill;
+        private System.Windows.Forms.Button btnCloseCounter;
     }
 }

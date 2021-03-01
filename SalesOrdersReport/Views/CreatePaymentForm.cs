@@ -428,6 +428,7 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog($"{this}.FillCustAccHistoryTble()", ex);
             }
         }
+
         private void btnReset_Click(object sender, EventArgs e)
         {
             try

@@ -227,10 +227,27 @@ namespace SalesOrdersReport.Models
                 ObjMySQLHelper.UpdateTableDetails("Invoices", new List<string>() { "InvoiceStatus" }, new List<string>() { INVOICESTATUS.Cancelled.ToString() }, 
                                             new List<Types>() { Types.String }, $"InvoiceID = {InvoiceID}");
 
+                ObjMySQLHelper.UpdateTableDetails("InvoiceItems", new List<string>() { "InvoiceItemStatus" }, new List<string>() { INVOICEITEMSTATUS.Cancelled.ToString() },
+                            new List<Types>() { Types.String }, $"InvoiceID = {InvoiceID}");
+
                 dtAllInvoices.Select($"InvoiceID = {InvoiceID}")[0]["Invoice Status"] = INVOICESTATUS.Cancelled;
                 dtAllInvoices.AcceptChanges();
 
-                ListInvoices.Find(e => e.InvoiceID == InvoiceID).InvoiceStatus = INVOICESTATUS.Cancelled;
+                InvoiceDetails ObjInvoiceDetails = ListInvoices.Find(e => e.InvoiceID == InvoiceID);
+
+                if (ObjInvoiceDetails.InvoiceStatus == INVOICESTATUS.Paid)
+                {
+                    //TODO: Rollback Payments, Stock, Stock History, Accounts & Account History
+                }
+
+                ObjInvoiceDetails.InvoiceStatus = INVOICESTATUS.Cancelled;
+                if (ObjInvoiceDetails.ListInvoiceItems != null && ObjInvoiceDetails.ListInvoiceItems.Count > 0)
+                {
+                    foreach (var item in ObjInvoiceDetails.ListInvoiceItems)
+                    {
+                        item.InvoiceItemStatus = INVOICEITEMSTATUS.Cancelled;
+                    }
+                }
 
                 return 0;
             }
@@ -384,26 +401,7 @@ namespace SalesOrdersReport.Models
                 if (IsBill) ObjMySQLHelper.UpdateIDValue("Bills", InvoiceNumber);
                 else ObjMySQLHelper.UpdateIDValue("Invoices", InvoiceNumber);
 
-                Object[] ArrItems = new Object[] {
-                    NewInvoiceDetails.InvoiceID,
-                    NewInvoiceDetails.CustomerID,
-                    NewInvoiceDetails.OrderID,
-                    NewInvoiceDetails.InvoiceNumber,
-                    new MySql.Data.Types.MySqlDateTime(NewInvoiceDetails.InvoiceDate),
-                    NewInvoiceDetails.CustomerName,
-                    NewInvoiceDetails.InvoiceItemCount,
-                    NewInvoiceDetails.GrossInvoiceAmount,
-                    NewInvoiceDetails.DiscountAmount,
-                    NewInvoiceDetails.NetInvoiceAmount,
-                    NewInvoiceDetails.InvoiceStatus,
-                    new MySql.Data.Types.MySqlDateTime(NewInvoiceDetails.CreationDate),
-                    new MySql.Data.Types.MySqlDateTime(NewInvoiceDetails.LastUpdatedDate)
-                };
-                if (dtAllInvoices != null)
-                {
-                    ListInvoices.Add(NewInvoiceDetails);
-                    dtAllInvoices.Rows.Add(ArrItems);
-                }
+                AddInvoiceDetailsToCache(NewInvoiceDetails);
 
                 return NewInvoiceDetails;
             }
@@ -411,6 +409,84 @@ namespace SalesOrdersReport.Models
             {
                 CommonFunctions.ShowErrorDialog($"{this}.CreateNewInvoiceForCustomer()", ex);
                 throw;
+            }
+        }
+
+        public void AddInvoiceDetailsToCache(InvoiceDetails ObjInvoiceDetails)
+        {
+            try
+            {
+                if (dtAllInvoices != null)
+                {
+                    ListInvoices.Add(ObjInvoiceDetails);
+                    Object[] ArrItems = GetDataRowForInvoice(ObjInvoiceDetails);
+                    dtAllInvoices.Rows.Add(ArrItems);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.AddInvoiceDetailsToCache()", ex);
+            }
+        }
+
+        public void UpdateInvoiceDetailsToCache(InvoiceDetails ObjInvoiceDetails)
+        {
+            try
+            {
+                if (dtAllInvoices != null)
+                {
+                    DataRow[] ArrdtRows = dtAllInvoices.Select($"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
+                    if (ArrdtRows != null && ArrdtRows.Length > 0)
+                    {
+                        DataRow dtRow = ArrdtRows[0];
+                        dtRow["Invoice Item Count"] = ObjInvoiceDetails.InvoiceItemCount;
+                        dtRow["Gross Invoice Amount"] = ObjInvoiceDetails.GrossInvoiceAmount;
+                        dtRow["Discount Amount"] = ObjInvoiceDetails.DiscountAmount;
+                        dtRow["Net Invoice Amount"] = ObjInvoiceDetails.NetInvoiceAmount;
+                        dtRow["Invoice Status"] = ObjInvoiceDetails.InvoiceStatus;
+                    }
+                }
+
+                Int32 Index = ListInvoices.FindIndex(e => e.InvoiceID == ObjInvoiceDetails.InvoiceID);
+                if (Index > 0)
+                {
+                    ListInvoices[Index].InvoiceItemCount = ObjInvoiceDetails.InvoiceItemCount;
+                    ListInvoices[Index].GrossInvoiceAmount = ObjInvoiceDetails.GrossInvoiceAmount;
+                    ListInvoices[Index].DiscountAmount = ObjInvoiceDetails.DiscountAmount;
+                    ListInvoices[Index].NetInvoiceAmount = ObjInvoiceDetails.NetInvoiceAmount;
+                    ListInvoices[Index].InvoiceStatus = ObjInvoiceDetails.InvoiceStatus;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdateInvoiceDetailsToCache()", ex);
+            }
+        }
+
+        public Object[] GetDataRowForInvoice(InvoiceDetails ObjInvoiceDetails)
+        {
+            try
+            {
+                return new Object[] {
+                    ObjInvoiceDetails.InvoiceID,
+                    ObjInvoiceDetails.CustomerID,
+                    ObjInvoiceDetails.OrderID,
+                    ObjInvoiceDetails.InvoiceNumber,
+                    new MySql.Data.Types.MySqlDateTime(ObjInvoiceDetails.InvoiceDate),
+                    ObjInvoiceDetails.CustomerName,
+                    ObjInvoiceDetails.InvoiceItemCount,
+                    ObjInvoiceDetails.GrossInvoiceAmount,
+                    ObjInvoiceDetails.DiscountAmount,
+                    ObjInvoiceDetails.NetInvoiceAmount,
+                    ObjInvoiceDetails.InvoiceStatus,
+                    new MySql.Data.Types.MySqlDateTime(ObjInvoiceDetails.CreationDate),
+                    new MySql.Data.Types.MySqlDateTime(ObjInvoiceDetails.LastUpdatedDate)
+                };
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetDataRowForInvoice()", ex);
+                return null;
             }
         }
 
@@ -1033,7 +1109,7 @@ namespace SalesOrdersReport.Models
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"CreatePOSBillForm.btnPrintBill_Click()", ex);
+                CommonFunctions.ShowErrorDialog("InvoicesModel.PrintBill()", ex);
             }
         }
 
@@ -1043,8 +1119,6 @@ namespace SalesOrdersReport.Models
             {
                 InvoicesModel ObjInvoicesModel = new InvoicesModel();
                 ObjInvoicesModel.Initialize();
-
-                PrintBase ObjPrintBase = new ThermalPaperBillPrinter(288);
 
                 InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
                 CustomerDetails ObjCustomerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(ObjInvoiceDetails.CustomerID);
@@ -1059,11 +1133,12 @@ namespace SalesOrdersReport.Models
                     DiscountAmount = ObjInvoiceDetails.DiscountAmount,
                     TotalTaxAmount = 0,
                     NetAmount = ObjInvoiceDetails.NetInvoiceAmount,
-                    StaffName = MySQLHelper.GetMySqlHelperObj().CurrentUser,
-                    Header1 = "Kachatathapa Kerala Super Store",
-                    Header2 = "Customer Bill",
-                    ListSubHeaderLines = new List<string>() { "Veerannapalaya", "Mobile: 8147354960" },
-                    ListFooterLines = new List<string>() { "Thank you and Visit again" }
+                    StaffName = CommonFunctions.ObjUserMasterModel.GetUserDtlsObjBasedOnUsrName(MySQLHelper.GetMySqlHelperObj().CurrentUser).FullName,
+                    POSNumber = CommonFunctions.ObjApplicationSettings.POSNumber,
+                    Header1 = CommonFunctions.ObjInvoiceSettings.HeaderTitle,
+                    Header2 = CommonFunctions.ObjInvoiceSettings.ReportTitle,
+                    ListSubHeaderLines = new List<string>() { CommonFunctions.ObjInvoiceSettings.HeaderSubTitle, $"Phone: {CommonFunctions.ObjInvoiceSettings.PhoneNumber}" },
+                    ListFooterLines = new List<string>() { CommonFunctions.ObjInvoiceSettings.FooterTitle }
                 };
 
                 for (int i = 0; i < ObjInvoiceDetails.ListInvoiceItems.Count; i++)
@@ -1081,11 +1156,147 @@ namespace SalesOrdersReport.Models
                     });
                 }
 
+                PaymentsModel ObjPaymentsModel = new PaymentsModel();
+                List<PaymentDetails> ListPaymentDetails = ObjPaymentsModel.GetPaymentDetailsForInvoice(InvoiceID);
+                foreach (var item in ListPaymentDetails)
+                {
+                    ObjPrintDetails.ListPrintPaymentDetails.Add(new PrintPaymentDetails()
+                    {
+                        PaymentMode = item.PaymentMode,
+                        Amount = item.Amount,
+                        CardNumber = item.CardNumber
+                    });
+                }
+
+                PrintBase ObjPrintBase = new ThermalPaperBillPrinter(288);
                 ObjPrintBase.Print(ObjPrintDetails);
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"CreatePOSBillForm.btnPrintBill_Click()", ex);
+                CommonFunctions.ShowErrorDialog("InvoicesModel.PrintBill(InvoiceID)", ex);
+            }
+        }
+
+        public void PrintBillingSummary(DateTime ForDate)
+        {
+            try
+            {
+                DataTable dtInvoiceStatusCount = ObjMySQLHelper.GetQueryResultInDataTable("Select InvoiceStatus, Count(*) InvoiceCount, " +
+                                            "Sum(GrossInvoiceAmount) TotalGrossAmount, Sum(DiscountAmount) TotalDiscountAmount, " +
+                                            "Sum(NetInvoiceAmount) TotalNetAmount from Invoices " +
+                                            $"Where Date(InvoiceDate) = '{MySQLHelper.GetDateStringForDB(ForDate)}' " +
+                                            $"Group by InvoiceStatus");
+
+                DataTable dtPaymentsCount = ObjMySQLHelper.GetQueryResultInDataTable("Select a.PaymentModeID, b.PaymentMode, Count(a.PaymentID) PaymentCount, " +
+                                            "Count(Distinct a.InvoiceID) BillCount, Sum(a.PaymentAmount) TotalAmount " +
+                                            "from PAYMENTS a Inner Join PaymentModeMaster b on a.PaymentModeID = b.PaymentModeID " +
+                                            $"Where a.Active = 1 and Date(a.PaymentDate) = '{MySQLHelper.GetDateStringForDB(ForDate)}' " +
+                                            $"Group by a.PaymentModeID, b.PaymentMode Order by 1");
+
+                PrintSummaryDetails ObjPrintSummaryDetails = new PrintSummaryDetails()
+                {
+                    DateValue = DateTime.Now,
+                    StaffName = CommonFunctions.ObjUserMasterModel.GetUserDtlsObjBasedOnUsrName(MySQLHelper.GetMySqlHelperObj().CurrentUser).FullName,
+                    POSNumber = CommonFunctions.ObjApplicationSettings.POSNumber,
+                    Header = CommonFunctions.ObjInvoiceSettings.HeaderTitle,
+                    SummaryHeader = "Day Close Summary",
+                    ListSubHeaderLines = new List<string>() { CommonFunctions.ObjInvoiceSettings.HeaderSubTitle, $"Phone: {CommonFunctions.ObjInvoiceSettings.PhoneNumber}" },
+                    ListFooterLines = new List<string>() { CommonFunctions.ObjInvoiceSettings.FooterTitle }
+                };
+
+                foreach (DataRow item in dtInvoiceStatusCount.Rows)
+                {
+                    ObjPrintSummaryDetails.ListSummaryByInvoiceStatusDetails.Add(new SummaryByInvoiceStatusDetails()
+                    {
+                        Status = item["InvoiceStatus"].ToString(),
+                        InvoiceCount = Int32.Parse(item["InvoiceCount"].ToString()),
+                        GrossAmount = Double.Parse(item["TotalGrossAmount"].ToString()),
+                        DiscountAmount = Double.Parse(item["TotalDiscountAmount"].ToString()),
+                        NetAmount = Double.Parse(item["TotalNetAmount"].ToString())
+                    });
+                }
+
+                foreach (DataRow item in dtPaymentsCount.Rows)
+                {
+                    ObjPrintSummaryDetails.ListSummaryByPaymentModeDetails.Add(new SummaryByPaymentModeDetails()
+                    {
+                        PaymentMode = item["PaymentMode"].ToString(),
+                        PaymentCount = Int32.Parse(item["PaymentCount"].ToString()),
+                        BillCount = Int32.Parse(item["BillCount"].ToString()),
+                        TotalAmount = Double.Parse(item["TotalAmount"].ToString())
+                    });
+                }
+
+                //Send Mail
+                if (CommonFunctions.ObjApplicationSettings.EnableMail)
+                {
+                    Excel.Application xlApp = new Excel.Application();
+                    String SaveFilePath = "";
+                    try
+                    {
+                        Excel.Workbook xlWorkbook = xlApp.Workbooks.Add();
+                        Excel.Worksheet xlWorkSheet = xlWorkbook.Sheets[1];
+                        xlApp.DisplayAlerts = false;
+
+                        xlWorkSheet.Cells[1, 1].Value = "Date";
+                        xlWorkSheet.Cells[1, 2].Value = ObjPrintSummaryDetails.DateValue.ToString("dd-MM-yyyy HH:mm:ss");
+
+                        xlWorkSheet.Cells[2, 1].Value = "Staff Name";
+                        xlWorkSheet.Cells[2, 2].Value = ObjPrintSummaryDetails.StaffName;
+
+                        xlWorkSheet.Cells[1, 5].Value = "Store";
+                        xlWorkSheet.Cells[1, 6].Value = CommonFunctions.ObjApplicationSettings.StoreName;
+
+                        xlWorkSheet.Cells[2, 5].Value = "POS Number";
+                        xlWorkSheet.Cells[2, 6].Value = CommonFunctions.ObjApplicationSettings.POSNumber;
+
+                        Int32 StartRow = 4;
+                        CommonFunctions.ExportDataTableToExcelWorksheet(dtInvoiceStatusCount, xlWorkSheet, StartRow, 1);
+                        CommonFunctions.ExportDataTableToExcelWorksheet(dtPaymentsCount, xlWorkSheet, StartRow + dtInvoiceStatusCount.Rows.Count + 2, 1);
+
+                        xlWorkSheet.UsedRange.Columns.AutoFit();
+
+                        for (int i = xlWorkbook.Sheets.Count; i >= 2; i--)
+                        {
+                            xlWorkbook.Sheets[i].Delete();
+                        }
+
+                        xlApp.DisplayAlerts = true;
+                        Excel.Worksheet FirstWorksheet = xlWorkbook.Sheets[1];
+                        FirstWorksheet.Select();
+
+                        SaveFilePath = Path.GetTempPath() + $"DayCloseSummary_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
+                        xlWorkbook.SaveAs(SaveFilePath);
+                        xlWorkbook.Close(SaveChanges: true);
+                        CommonFunctions.ReleaseCOMObject(xlWorkbook);
+                    }
+                    catch (Exception ex)
+                    {
+                        CommonFunctions.ShowErrorDialog($"{this}.PrintBillingSummary().ExcelExport", ex);
+                    }
+                    finally
+                    {
+                        xlApp.Quit();
+                        CommonFunctions.ReleaseCOMObject(xlApp);
+                    }
+
+                    if (!String.IsNullOrEmpty(SaveFilePath) && File.Exists(SaveFilePath))
+                    {
+                        //Send this file as attachment to mail
+                        String Subject = $"EOD Summary of Store:{CommonFunctions.ObjApplicationSettings.StoreName} POSNumber:{CommonFunctions.ObjApplicationSettings.POSNumber}";
+                        String Body = $"<html>PFA End of Day summary of Store:{CommonFunctions.ObjApplicationSettings.StoreName} POSNumber:{CommonFunctions.ObjApplicationSettings.POSNumber}</html>";
+                        CommonFunctions.SendMail(CommonFunctions.ObjApplicationSettings.ReceiverMailID, CommonFunctions.ObjApplicationSettings.ReceiverName,
+                                                Subject, Body, new List<String>() { SaveFilePath });
+                        File.Delete(SaveFilePath);
+                    }
+                }
+
+                PrintBase ObjPrintBase = new ThermalPaperBillPrinter(288);
+                ObjPrintBase.Print(ObjPrintSummaryDetails);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.PrintBillingSummary()", ex);
             }
         }
     }

@@ -17,7 +17,7 @@ namespace SalesOrdersReport.Models
     class PaymentDetails
     {
         public int PaymentId = -1, InvoiceID = -1, QuotationID = -1, AccountID = -1, PaymentModeID = -1, CustomerID = -1, UserID = -1;
-        public string InvoiceNumber = "", QuotationNumber = "";
+        public string InvoiceNumber = "", QuotationNumber = "", CardNumber = "";
         public string CustomerName = "", CustPhoneNo = "";
         public DateTime PaidOn, LastUpdateDate, CreationDate;
         public String PaymentMode = "", Description = "", PaymentAgainst = "";
@@ -149,7 +149,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public DataTable GetPaytmentsDataTable(DateTime FromDate, DateTime ToDate)
+        public DataTable GetPaytmentsDataTable(DateTime FromDate, DateTime ToDate, Int32 InvoiceID = -1, Boolean Active = true)
         {
             try
             {
@@ -157,7 +157,10 @@ namespace SalesOrdersReport.Models
                 if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) Query = "SELECT " + TempQueryStr + " WHERE (a.CREATIONDATE >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "')";
                 else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) Query = "SELECT " + TempQueryStr + " WHERE (a.CREATIONDATE <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
                 else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) Query = "SELECT " + TempQueryStr + " WHERE (a.CREATIONDATE BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
-                else Query = "SELECT " + TempQueryStr;
+                else Query = "SELECT "+ TempQueryStr + " Where 1 = 1";
+
+                if (InvoiceID > 0) Query += $" and a.InvoiceID = {InvoiceID}";
+                Query += $" and a.Active = {(Active ? 1 : 0)}";
 
                 DataTable dtPayments = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 LoadPaymentDetails(dtPayments);
@@ -166,6 +169,20 @@ namespace SalesOrdersReport.Models
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.GetPaytmentsDataTable()", ex);
+                return null;
+            }
+        }
+
+        public List<PaymentDetails> GetPaymentDetailsForInvoice(Int32 InvoiceID)
+        {
+            try
+            {
+                GetPaytmentsDataTable(DateTime.MinValue, DateTime.MinValue, InvoiceID);
+                return ListPaymentDetails;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetPaymentDetailsForInvoice()", ex);
                 return null;
             }
         }
@@ -206,14 +223,13 @@ namespace SalesOrdersReport.Models
                     ObjPaymentDetails.Description = dr["DESCRIPTION"].ToString();
                     ObjPaymentDetails.AccountID = int.Parse(dr["ACCOUNTID"].ToString());
                     ObjPaymentDetails.PaidOn = DateTime.Parse(dr["PAYMENTDATE"].ToString());
+                    ObjPaymentDetails.Amount = Double.Parse(dr["PAYMENTAMOUNT"].ToString());
                     ObjPaymentDetails.CreationDate = DateTime.Parse(dr["CREATIONDATE"].ToString());
                     ObjPaymentDetails.LastUpdateDate = DateTime.Parse(dr["LASTUPDATEDATE"].ToString());
-                    //ObjPaymentDetails.StaffName = CommonFunctions.ObjUserMasterModel.GetUserName(int.Parse(dr["USERID"].ToString()));
                     ObjPaymentDetails.StaffName = dr["USERNAME"].ToString();
                     ObjPaymentDetails.CustPhoneNo = dr["PHONENO"].ToString();
                     ObjPaymentDetails.Active = dr["ACTIVE"].ToString() == "1" ? true : false;
                     ObjPaymentDetails.InvoiceID = int.Parse(dr["INVOICEID"].ToString());
-                    //ObjPaymentDetails.InvoiceDate = DateTime.Parse(dr["INVOICEDATE"].ToString());
                     ObjPaymentDetails.InvoiceNumber = dr["INVOICENUMBER"].ToString();
                     ObjPaymentDetails.CustomerName= dr["CUSTOMERNAME"].ToString();
                     ObjPaymentDetails.UserID = int.Parse(dr["USERID"].ToString());
@@ -313,7 +329,7 @@ namespace SalesOrdersReport.Models
                 ObjPaymentDetails.PaymentId = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select Max(PaymentID) PaymentID from PAYMENTS Where ACCOUNTID = {ObjPaymentDetails.AccountID}" +
                                             $" and INVOICEID = {ObjPaymentDetails.InvoiceID} and QUOTATIONID = {ObjPaymentDetails.QuotationID};").ToString());
 
-                if (ObjPaymentDetails.InvoiceID > 0) ObjInvoicesModel.MarkInvoicesAsPaid(new List<int>() { ObjPaymentDetails.InvoiceID });
+                if (ObjPaymentDetails.InvoiceID > 0 && ObjCustomerAccountHistoryDetails.SaleAmount > 0) ObjInvoicesModel.MarkInvoicesAsPaid(new List<int>() { ObjPaymentDetails.InvoiceID });
                 if (ResultVal <= 0) return -1;
 
                 ObjCustomerAccountHistoryDetails.PaymentID = ObjPaymentDetails.PaymentId;

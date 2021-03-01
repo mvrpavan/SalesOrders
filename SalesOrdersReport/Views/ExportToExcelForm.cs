@@ -201,7 +201,6 @@ namespace SalesOrdersReport.Views
                     bgWorkerExportExcel.WorkerReportsProgress = true;
                     bgWorkerExportExcel.RunWorkerAsync();
 #endif
-                    txtExportToExcelFilePath.Text = "";
                 }
             }
             catch (Exception ex)
@@ -321,6 +320,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
+                txtExportToExcelFilePath.Text = "";
                 CommonFunctions.ToggleEnabledPropertyOfAllControls(this);
                 CommonFunctions.ResetProgressBar();
                 if (ExportResult != 0) return;

@@ -29,11 +29,11 @@ namespace SalesOrdersReport.Views
                 ObjInvoicesModel = new InvoicesModel();
                 ObjInvoicesModel.Initialize();
 
-                dTimePickerFrom.Value = DateTime.Today.AddDays(-30);
-                dTimePickerTo.Value = DateTime.Today.AddDays(30);
-                FilterFromDate = DateTime.MinValue;
-                FilterToDate = DateTime.MinValue;
-                CurrInvoiceStatus = INVOICESTATUS.Created;
+                dTimePickerFrom.Value = DateTime.Now;
+                dTimePickerTo.Value = DateTime.Now;
+                FilterFromDate = DateTime.Now;
+                FilterToDate = DateTime.Now;
+                CurrInvoiceStatus = INVOICESTATUS.Paid;
 
                 cmbBoxBillStatus.DropDownStyle = ComboBoxStyle.DropDownList;
                 cmbBoxBillStatus.Items.Clear();
@@ -42,7 +42,7 @@ namespace SalesOrdersReport.Views
                 cmbBoxBillStatus.Items.Add(INVOICESTATUS.Delivered.ToString());
                 cmbBoxBillStatus.Items.Add(INVOICESTATUS.Paid.ToString());
                 cmbBoxBillStatus.Items.Add(INVOICESTATUS.Cancelled.ToString());
-                cmbBoxBillStatus.SelectedIndex = 1;
+                cmbBoxBillStatus.SelectedIndex = 3;
 
                 btnSearchBill.Enabled = false;
 
@@ -131,13 +131,16 @@ namespace SalesOrdersReport.Views
         {
             try
             {
+                InvoiceDetails ObjInvoiceDetails = (InvoiceDetails)ObjAddUpdatedDetails;
                 switch (Mode)
                 {
-                    case 1:     //Add Invoice
+                    case 1:     //Add Bill
+                        ObjInvoicesModel.AddInvoiceDetailsToCache(ObjInvoiceDetails);
                         break;
-                    case 2:
+                    case 2:     //Update Bill
+                        ObjInvoicesModel.UpdateInvoiceDetailsToCache(ObjInvoiceDetails);
                         break;
-                    case 3:     //Reload Invoices
+                    case 3:     //Reload Bills
                         break;
                     default:
                         break;
@@ -269,11 +272,11 @@ namespace SalesOrdersReport.Views
             try
             {
                 IsFormLoaded = false;
-                CurrInvoiceStatus = INVOICESTATUS.Created;
-                FilterFromDate = DateTime.MinValue;
-                FilterToDate = DateTime.MinValue;
-                checkBoxApplyFilter.Checked = false;
-                cmbBoxBillStatus.SelectedIndex = 1;
+                //CurrInvoiceStatus = INVOICESTATUS.Paid;
+                //FilterFromDate = DateTime.Now;
+                //FilterToDate = DateTime.Now;
+                //checkBoxApplyFilter.Checked = false;
+                //cmbBoxBillStatus.SelectedIndex = 3;
                 IsFormLoaded = true;
 
                 LoadGridView();
@@ -290,8 +293,8 @@ namespace SalesOrdersReport.Views
             {
                 if (!checkBoxApplyFilter.Checked)
                 {
-                    FilterFromDate = DateTime.MinValue;
-                    FilterToDate = DateTime.MinValue;
+                    FilterFromDate = DateTime.Now;
+                    FilterToDate = DateTime.Now;
                 }
                 else
                 {
@@ -529,6 +532,7 @@ namespace SalesOrdersReport.Views
                                 InvoiceDetails tmpInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
                                 ListInvoicesToExport.Add(tmpInvoiceDetails);
                             }
+
                             String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, false,
                                         ((InvoiceDetails)ListInvoicesToExport[0]).InvoiceDate, ObjInvoicesModel, ListInvoicesToExport, ExportFolderPath,
                                         CreateSummary, PrintOldBalance, ReportProgressFunc);
@@ -577,6 +581,18 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerBills_RunWorkerCompleted()", ex);
+            }
+        }
+
+        private void btnCloseCounter_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ObjInvoicesModel.PrintBillingSummary(DateTime.Now);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnCloseCounter_Click()", ex);
             }
         }
     }

@@ -262,6 +262,12 @@
     <Compile Include="Views\ImportFromExcelForm.Designer.cs">
       <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\PaymentModeSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\PaymentModeSelectionForm.Designer.cs">
+      <DependentUpon>PaymentModeSelectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\POSBillsMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -533,6 +539,9 @@
     <EmbeddedResource Include="Views\ImportFromExcelForm.resx">
       <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\PaymentModeSelectionForm.resx">
+      <DependentUpon>PaymentModeSelectionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\POSBillsMainForm.resx">
       <DependentUpon>POSBillsMainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -676,6 +685,8 @@
     <None Include="Resources\tax.png" />
     <None Include="Resources\tax_menu.png" />
     <None Include="Resources\database_upload_32.png" />
+    <None Include="Resources\close-shop_32.png" />
+    <None Include="Resources\close_40.png" />
     <Content Include="SQLScripts\ProductMasterTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
