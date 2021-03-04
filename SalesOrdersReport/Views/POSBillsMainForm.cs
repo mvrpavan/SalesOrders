@@ -16,6 +16,7 @@ namespace SalesOrdersReport.Views
         INVOICESTATUS CurrInvoiceStatus;
         DateTime FilterFromDate, FilterToDate;
         Boolean IsFormLoaded = false;
+        List<String> ListPaymentModes;
 
         public POSBillsMainForm()
         {
@@ -45,6 +46,10 @@ namespace SalesOrdersReport.Views
                 cmbBoxBillStatus.SelectedIndex = 3;
 
                 btnSearchBill.Enabled = false;
+
+                PaymentsModel ObjPaymentsModel = new PaymentsModel();
+                ObjPaymentsModel.LoadPaymentModes();
+                ListPaymentModes = ObjPaymentsModel.GetPaymentModesList();
 
                 LoadGridView();
             }
@@ -113,10 +118,42 @@ namespace SalesOrdersReport.Views
 
                 for (int i = 0; i < dtGridViewBills.Columns.Count; i++)
                 {
-                    if (dtGridViewBills.Columns[i].Name.Equals("InvoiceID") || 
-                        dtGridViewBills.Columns[i].Name.Equals("OrderID") || dtGridViewBills.Columns[i].Name.Equals("CustomerID"))
-                        dtGridViewBills.Columns[i].Visible = false;
+                    DataGridViewColumn column = dtGridViewBills.Columns[i];
+                    if (column.Name.Equals("InvoiceID") || column.Name.Equals("OrderID") || column.Name.Equals("CustomerID"))
+                        column.Visible = false;
+
+                    if (ListPaymentModes.Contains(column.Name))
+                    {
+                        column.DefaultCellStyle.Format = "F";
+                    }
                 }
+
+                //Add Totals Row at the bottom of Grid
+                dtGridViewBillsTotal.Rows.Clear();
+                dtGridViewBillsTotal.Columns.Clear();
+                dtGridViewBillsTotal.ColumnHeadersVisible = false;
+                CommonFunctions.SetDataGridViewProperties(dtGridViewBillsTotal);
+                dtGridViewBillsTotal.SelectionMode = DataGridViewSelectionMode.CellSelect;
+                dtGridViewBillsTotal.DefaultCellStyle.Font = new System.Drawing.Font(dtGridViewBills.Font, System.Drawing.FontStyle.Bold);
+                foreach (DataGridViewColumn item in dtGridViewBills.Columns)
+                {
+                    DataGridViewColumn newColumn = new DataGridViewColumn(item.CellTemplate);
+                    newColumn.Name = item.Name;
+                    newColumn.Width = item.Width;
+                    newColumn.Visible = item.Visible;
+                    dtGridViewBillsTotal.Columns.Add(newColumn);
+                }
+
+                Object[] ArrObjects = dtAllInvoices.NewRow().ItemArray;
+                ArrObjects[dtAllInvoices.Columns["Invoice Number"].Ordinal] = "Total";
+                List<String> ListSumColumns = new List<String>() { "Gross Invoice Amount", "Discount Amount", "Net Invoice Amount" };
+                ListSumColumns.AddRange(ListPaymentModes);
+                for (int i = 0; i < ListSumColumns.Count; i++)
+                {
+                    String Value = dtAllInvoices.Compute($"Sum([{ListSumColumns[i]}])", "").ToString();
+                    ArrObjects[dtAllInvoices.Columns[ListSumColumns[i]].Ordinal] = (String.IsNullOrEmpty(Value) ? 0.ToString("F") : Double.Parse(Value).ToString("F"));
+                }
+                dtGridViewBillsTotal.Rows.Add(ArrObjects);
                 dtGridViewBills.ClearSelection();
 
                 lblOrdersCount.Text = $"[Displaying {dtGridViewBills.Rows.Count} of {dtAllInvoices.Rows.Count} Bills]";
@@ -251,15 +288,19 @@ namespace SalesOrdersReport.Views
 
                 if (!dtGridViewBills.SelectedRows[0].Cells["Invoice Status"].Value.ToString().Equals(INVOICESTATUS.Created.ToString()))
                 {
-                    MessageBox.Show(this, "Unable to cancel a Delivered/Paid Bill.", "Cancel Bill", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    DialogResult dialogResult = MessageBox.Show(this, "You are about to cancel a Paid Bill. Please Confirm", "Cancel Bill", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    if (dialogResult == DialogResult.Cancel) return;
                 }
 
-                Int32 InvoiceID = Int32.Parse(dtGridViewBills.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
-                if (ObjInvoicesModel.DeleteInvoiceDetails(InvoiceID) == 0)
-                {
-                    dtGridViewBilledProducts.DataSource = null;
-                }
+                BackgroundTask = 4;
+#if DEBUG
+                backgroundWorkerBills_DoWork(null, null);
+                backgroundWorkerBills_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerBills.ReportProgress;
+                backgroundWorkerBills.RunWorkerAsync();
+                backgroundWorkerBills.WorkerReportsProgress = true;
+#endif
             }
             catch (Exception ex)
             {
@@ -517,7 +558,7 @@ namespace SalesOrdersReport.Views
                             Boolean CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0) || ((ExportOption & 4) > 0);
 
                             List<Object> ListInvoicesToExport = new List<Object>();
-                            if ((ExportOption & 1) > 0)      //Export all displayed Invoices
+                            if (CreateSummary || ((ExportOption & 1) > 0))      //Export all displayed Invoices
                             {
                                 for (int i = 0; i < dtGridViewBills.Rows.Count; i++)
                                 {
@@ -535,10 +576,26 @@ namespace SalesOrdersReport.Views
 
                             String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, false,
                                         ((InvoiceDetails)ListInvoicesToExport[0]).InvoiceDate, ObjInvoicesModel, ListInvoicesToExport, ExportFolderPath,
-                                        CreateSummary, PrintOldBalance, ReportProgressFunc);
+                                        CreateSummary, PrintOldBalance, ReportProgressFunc, ((ExportOption & 3) > 0));
 
-                            MessageBox.Show(this, $"Exported Bills file is created successfully at:{ExportedFilePath}", "Export Bills", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(this, $"Exported file is created successfully at:{ExportedFilePath}", "Export Bills", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
+                        break;
+                    case 4:     //Cancel Bill
+                        {
+                            Int32 InvoiceID = Int32.Parse(dtGridViewBills.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
+                            String InvoiceNumber = dtGridViewBills.SelectedRows[0].Cells["Invoice Number"].Value.ToString();
+                            if (ObjInvoicesModel.DeleteInvoiceDetails(InvoiceID) == 0)
+                            {
+                                dtAllInvoices.AcceptChanges();
+                                dtGridViewBilledProducts.DataSource = null;
+                                MessageBox.Show(this, $"Bill: {InvoiceNumber} cancelled successfully", "Cancel Bill", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                        }
+                        break;
+                    case 5:     //Close Counter
+                        ObjInvoicesModel.PrintBillingSummary(DateTime.Now);
+                        MessageBox.Show(this, $"EOD Summary sent successfully", "Close Counter", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                     default:
                         break;
@@ -584,11 +641,32 @@ namespace SalesOrdersReport.Views
             }
         }
 
+        private void dtGridViewBills_Scroll(object sender, ScrollEventArgs e)
+        {
+            try
+            {
+                if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
+                    dtGridViewBillsTotal.HorizontalScrollingOffset = e.NewValue;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.dtGridViewBills_Scroll()", ex);
+            }
+        }
+
         private void btnCloseCounter_Click(object sender, EventArgs e)
         {
             try
             {
-                ObjInvoicesModel.PrintBillingSummary(DateTime.Now);
+                BackgroundTask = 5;
+#if DEBUG
+                backgroundWorkerBills_DoWork(null, null);
+                backgroundWorkerBills_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerBills.ReportProgress;
+                backgroundWorkerBills.RunWorkerAsync();
+                backgroundWorkerBills.WorkerReportsProgress = true;
+#endif
             }
             catch (Exception ex)
             {

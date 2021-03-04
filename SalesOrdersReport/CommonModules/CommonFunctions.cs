@@ -95,9 +95,15 @@ namespace SalesOrdersReport.CommonModules
             try
             {
                 if (CurrentForm != null)
+                {
                     MessageBox.Show(CurrentForm, "Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+                    WriteToLogFile($"Error occured in Form:{CurrentForm.Name}\nError occured in Method:{Method}\nError Message:{ex.Message}\n{ex.StackTrace}\nInner Exception Error Message:{ex.InnerException.Message}");
+                }
                 else
+                {
                     MessageBox.Show("Following Error Occured in " + Method + ":\n" + ex.Message, "Exception occured", MessageBoxButtons.OK);
+                    WriteToLogFile($"Error occured in Method:{Method}\nError Message:{ex.Message}\n{ex.StackTrace}\nInner Exception Error Message:{ex.InnerException.Message}");
+                }
             }
             catch (Exception)
             {
@@ -792,6 +798,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                WriteToLogFile($"Form:{ObjForm.Name} opened from {Owner.Name}");
                 ObjForm.ShowInTaskbar = false;
                 ObjForm.ShowIcon = false;
                 ObjForm.StartPosition = FormStartPosition.CenterParent;
@@ -1064,7 +1071,8 @@ namespace SalesOrdersReport.CommonModules
         }
 
         public static String ExportOrdInvQuotToExcel(ReportType EnumReportType, Boolean IsDummyBill, DateTime OrdInvQuotDate, Object ObjectModel, 
-                            List<Object> ListObjects, String ExportFolderPath, Boolean CreateSummary = false, Boolean PrintOldBalance = false, ReportProgressDel ReportProgress = null)
+                            List<Object> ListObjects, String ExportFolderPath, Boolean CreateSummary = false, Boolean PrintOldBalance = false,
+                            ReportProgressDel ReportProgress = null, Boolean CreateOrdersInvoices = false)
         {
             Excel.Application xlApp = null;
             try
@@ -1098,23 +1106,26 @@ namespace SalesOrdersReport.CommonModules
 
                 Excel.Workbook xlWorkbook = xlApp.Workbooks.Add();
 
-                for (int i = 0; i < ListObjects.Count; i++)
+                if (CreateOrdersInvoices)
                 {
-                    switch (EnumReportType)
+                    for (int i = 0; i < ListObjects.Count; i++)
                     {
-                        case ReportType.ORDER:
-                            ((OrdersModel)ObjectModel).ExportOrder(EnumReportType, IsDummyBill, xlWorkbook, (OrderDetails)ListObjects[i]);
-                            break;
-                        case ReportType.INVOICE:
-                            ((InvoicesModel)ObjectModel).ExportInvoice(EnumReportType, IsDummyBill, xlWorkbook, (InvoiceDetails)ListObjects[i]);
-                            break;
-                        case ReportType.QUOTATION:
-                            ((InvoicesModel)ObjectModel).ExportInvoice(EnumReportType, IsDummyBill, xlWorkbook, (InvoiceDetails)ListObjects[i]);
-                            break;
-                        default:
-                            break;
+                        switch (EnumReportType)
+                        {
+                            case ReportType.ORDER:
+                                ((OrdersModel)ObjectModel).ExportOrder(EnumReportType, IsDummyBill, xlWorkbook, (OrderDetails)ListObjects[i]);
+                                break;
+                            case ReportType.INVOICE:
+                                ((InvoicesModel)ObjectModel).ExportInvoice(EnumReportType, IsDummyBill, xlWorkbook, (InvoiceDetails)ListObjects[i]);
+                                break;
+                            case ReportType.QUOTATION:
+                                ((InvoicesModel)ObjectModel).ExportInvoice(EnumReportType, IsDummyBill, xlWorkbook, (InvoiceDetails)ListObjects[i]);
+                                break;
+                            default:
+                                break;
+                        }
+                        ReportProgress((Int32)(100 * (i + 1) * 1.0 / ListObjects.Count));
                     }
-                    ReportProgress((Int32)(100 * (i + 1) * 1.0 / ListObjects.Count));
                 }
 
                 if (CreateSummary)
@@ -1220,6 +1231,9 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
+                StreamWriter swLogFile = new StreamWriter(Environment.CurrentDirectory + @"\SalesOrdersLog.txt", true);
+                swLogFile.WriteLine(DateTime.Now.ToString() + "::" + String.Join("\n" + DateTime.Now.ToString() + "::", Message.Split('\n')));
+                swLogFile.Close();
             }
             catch (Exception ex)
             {

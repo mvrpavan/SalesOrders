@@ -79,6 +79,7 @@ namespace SalesOrdersReport.Models
         const String InvoiceNumberPrefix = "INV", BillNumberPrefix = "BILL";
         ProductMasterModel ObjProductMasterModel;
         Boolean IsBill = false;
+        PaymentsModel ObjPaymentsModel;
 
         public void Initialize()
         {
@@ -87,6 +88,8 @@ namespace SalesOrdersReport.Models
                 ListInvoices = new List<InvoiceDetails>();
                 ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
                 ObjProductMasterModel = CommonFunctions.ObjProductMaster;
+                ObjPaymentsModel = new PaymentsModel();
+                ObjPaymentsModel.LoadPaymentModes();
             }
             catch (Exception ex)
             {
@@ -132,12 +135,28 @@ namespace SalesOrdersReport.Models
             try
             {
                 String[] ArrDtColumns1 = new string[] { "InvoiceID", "CustomerID", "OrderID", "InvoiceNumber", "InvoiceDate" };
-                String[] ArrDtColumns2 = new string[] { "InvoiceItemCount", "GrossInvoiceAmount", "DiscountAmount", "NetInvoiceAmount", "InvoiceStatus", "CreationDate", "LastUpdatedDate" };
+                String[] ArrDtColumns2 = new string[] { "InvoiceItemCount", "GrossInvoiceAmount", "DiscountAmount", "NetInvoiceAmount" };
+                String[] ArrDtColumns3 = new string[] { "InvoiceStatus", "CreationDate", "LastUpdatedDate" };
 
-                String[] ArrColumns = new string[] { "InvoiceID", "CustomerID", "OrderID", "Invoice Number", "Invoice Date", "Customer Name", "Invoice Item Count", "Gross Invoice Amount", "Discount Amount", "Net Invoice Amount",
-                                                    "Invoice Status", "Creation Date", "Last Updated Date" };
+                List<String> ListPaymentModes = ObjPaymentsModel.GetPaymentModesList();
 
-                String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)} from Invoices a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID", WhereClause = $" Where 1 = 1";
+                List<String> ListColumns = new List<String>() { "InvoiceID", "CustomerID", "OrderID", "Invoice Number", "Invoice Date", "Customer Name", "Invoice Item Count", "Gross Invoice Amount", "Discount Amount", "Net Invoice Amount" };
+                ListColumns.AddRange(ListPaymentModes);
+                ListColumns.AddRange(new string[] { "Invoice Status", "Creation Date", "Last Updated Date" });
+
+                List<Int32> ListPaymentModeIDs = ListPaymentModes.Select(e => ObjPaymentsModel.GetPaymentModeDetails(e).PaymentModeID).ToList();
+
+                String PaymentsQuery = "";
+                for (int i = 0; i < ListPaymentModeIDs.Count; i++)
+                {
+                    PaymentsQuery += $", Sum(Case When PaymentModeID = {ListPaymentModeIDs[i]} then PaymentAmount else null end) '{ListPaymentModes[i]}'";
+                }
+
+                String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)}, " +
+                            $"d.`{String.Join("`, d.`", ListPaymentModes)}`, a.{String.Join(", a.", ArrDtColumns3)} " +
+                            $"from Invoices a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID " +
+                            $"Inner Join (Select InvoiceID{PaymentsQuery} from PAYMENTS Where InvoiceID > 0 and Active = 1 Group by InvoiceID) d on a.InvoiceID = d.InvoiceID";
+                String WhereClause = $" Where 1 = 1";
                 if (FromDate > DateTime.MinValue && ToDate > DateTime.MinValue)
                 {
                     WhereClause += $" and DATE(a.InvoiceDate) between '{MySQLHelper.GetDateStringForDB(FromDate)}' and '{MySQLHelper.GetDateStringForDB(ToDate)}'";
@@ -209,7 +228,7 @@ namespace SalesOrdersReport.Models
 
                 for (int i = 0; i < dtAllInvoices.Columns.Count; i++)
                 {
-                    dtAllInvoices.Columns[i].ColumnName = ArrColumns[i];
+                    dtAllInvoices.Columns[i].ColumnName = ListColumns[i];
                 }
                 return dtAllInvoices;
             }
@@ -224,20 +243,75 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                ObjMySQLHelper.UpdateTableDetails("Invoices", new List<string>() { "InvoiceStatus" }, new List<string>() { INVOICESTATUS.Cancelled.ToString() }, 
-                                            new List<Types>() { Types.String }, $"InvoiceID = {InvoiceID}");
-
-                ObjMySQLHelper.UpdateTableDetails("InvoiceItems", new List<string>() { "InvoiceItemStatus" }, new List<string>() { INVOICEITEMSTATUS.Cancelled.ToString() },
-                            new List<Types>() { Types.String }, $"InvoiceID = {InvoiceID}");
-
-                dtAllInvoices.Select($"InvoiceID = {InvoiceID}")[0]["Invoice Status"] = INVOICESTATUS.Cancelled;
-                dtAllInvoices.AcceptChanges();
-
                 InvoiceDetails ObjInvoiceDetails = ListInvoices.Find(e => e.InvoiceID == InvoiceID);
+
+                if (ObjInvoiceDetails.InvoiceStatus == INVOICESTATUS.Paid || ObjInvoiceDetails.InvoiceStatus == INVOICESTATUS.Delivered)
+                {
+                    //Rollback Payments, Stock, Stock History, Accounts & Account History
+                    //Update Invoices
+                    UpdateInvoiceStatus(InvoiceID, INVOICESTATUS.Cancelled);
+
+                    //Update Inventory
+                    FillInvoiceItemDetails(ObjInvoiceDetails);
+                    List<InvoiceItemDetails> ListAllInvoiceItems = new List<InvoiceItemDetails>();
+                    for (int j = 0; j < ObjInvoiceDetails.ListInvoiceItems.Count; j++)
+                    {
+                        InvoiceItemDetails tmpItem = ObjInvoiceDetails.ListInvoiceItems[j];
+                        if (tmpItem.InvoiceItemStatus != INVOICEITEMSTATUS.Invoiced) continue;
+
+                        Int32 ItemIndex = ListAllInvoiceItems.FindIndex(e => e.ProductID == tmpItem.ProductID);
+                        if (ItemIndex < 0)
+                        {
+                            ListAllInvoiceItems.Add(tmpItem.Clone());
+                            ItemIndex = ListAllInvoiceItems.Count - 1;
+                        }
+                        else
+                        {
+                            ListAllInvoiceItems[ItemIndex].OrderQty += tmpItem.OrderQty;
+                            ListAllInvoiceItems[ItemIndex].SaleQty += tmpItem.SaleQty;
+                        }
+                    }
+
+                    for (int i = 0; i < ListAllInvoiceItems.Count; i++)
+                    {
+                        ListAllInvoiceItems[i].OrderQty *= -1;
+                        ListAllInvoiceItems[i].SaleQty *= -1;
+                    }
+                    ObjProductMasterModel.UpdateProductInventoryDataFromInvoice(ListAllInvoiceItems, ObjInvoiceDetails.InvoiceDate);
+
+                    //Update InvoiceItems
+                    ObjMySQLHelper.UpdateTableDetails("InvoiceItems", new List<String>() { "InvoiceItemStatus" },
+                                                new List<String>() { INVOICEITEMSTATUS.Cancelled.ToString() }, new List<Types>() { Types.String },
+                                                $"InvoiceID = {ObjInvoiceDetails.InvoiceID};");
+                }
 
                 if (ObjInvoiceDetails.InvoiceStatus == INVOICESTATUS.Paid)
                 {
-                    //TODO: Rollback Payments, Stock, Stock History, Accounts & Account History
+                    //Update Payments
+                    ObjMySQLHelper.UpdateTableDetails("PAYMENTS", new List<string>() { "ACTIVE" }, new List<string>() { "0" },
+                                                    new List<Types>() { Types.Number }, $"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
+                    Int32 PaymentID = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select Max(PaymentID) from PAYMENTS Where InvoiceID = {ObjInvoiceDetails.InvoiceID} and Active = 0;").ToString());
+
+                    //Update CUSTOMERACCOUNTHISTORY
+                    AccountDetails ObjAccountDetails = CommonFunctions.ObjAccountsMasterModel.GetAccDtlsFromCustID(ObjInvoiceDetails.CustomerID);
+                    Double AmountReceived = Double.Parse(ObjMySQLHelper.ExecuteScalar($"Select AMOUNTRECEIVED from CUSTOMERACCOUNTHISTORY " +
+                                                $"Where ACCOUNTID = {ObjAccountDetails.AccountID} and PaymentID = {PaymentID};").ToString());
+
+                    if (AmountReceived > 0)
+                    {
+                        ObjMySQLHelper.InsertIntoTable("CUSTOMERACCOUNTHISTORY", new List<string>() { "ACCOUNTID", "PAYMENTID", "AMOUNTRECEIVED", "BALANCEAMOUNT", "NEWBALANCEAMOUNT" },
+                                                    new List<string>() { ObjAccountDetails.AccountID.ToString(), PaymentID.ToString(),
+                                                                    (-1 * AmountReceived).ToString(), ObjAccountDetails.BalanceAmount.ToString(),
+                                                                    (ObjAccountDetails.BalanceAmount - (ObjInvoiceDetails.NetInvoiceAmount - AmountReceived)).ToString() },
+                                                    new List<Types>() { Types.Number, Types.Number, Types.Number, Types.Number, Types.Number });
+                    }
+
+                    //Update ACCOUNTSMASTER
+                    ObjMySQLHelper.UpdateTableDetails("ACCOUNTSMASTER", new List<string>() { "BALANCEAMOUNT", "LASTUPDATEDDATE" },
+                                                    new List<string>() { (ObjAccountDetails.BalanceAmount - (ObjInvoiceDetails.NetInvoiceAmount - AmountReceived)).ToString(), MySQLHelper.GetDateTimeStringForDB(DateTime.Now) },
+                                                    new List<Types>() { Types.Number, Types.String }, $"ACCOUNTID = {ObjAccountDetails.AccountID}");
+
+                    ObjAccountDetails.BalanceAmount = ObjAccountDetails.BalanceAmount - (ObjInvoiceDetails.NetInvoiceAmount - AmountReceived);
                 }
 
                 ObjInvoiceDetails.InvoiceStatus = INVOICESTATUS.Cancelled;
@@ -248,6 +322,15 @@ namespace SalesOrdersReport.Models
                         item.InvoiceItemStatus = INVOICEITEMSTATUS.Cancelled;
                     }
                 }
+
+                ObjMySQLHelper.UpdateTableDetails("Invoices", new List<string>() { "InvoiceStatus" }, new List<string>() { INVOICESTATUS.Cancelled.ToString() },
+                            new List<Types>() { Types.String }, $"InvoiceID = {InvoiceID}");
+
+                ObjMySQLHelper.UpdateTableDetails("InvoiceItems", new List<string>() { "InvoiceItemStatus" }, new List<string>() { INVOICEITEMSTATUS.Cancelled.ToString() },
+                            new List<Types>() { Types.String }, $"InvoiceID = {InvoiceID}");
+
+                dtAllInvoices.Select($"InvoiceID = {InvoiceID}")[0]["Invoice Status"] = INVOICESTATUS.Cancelled;
+                dtAllInvoices.AcceptChanges();
 
                 return 0;
             }

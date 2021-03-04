@@ -87,22 +87,6 @@ namespace SalesOrdersReport.Models
                 return null;
             }
         }
-        public PaymentModeDetails GetPaymentMode(string PaymentMode)
-        {
-            try
-            {
-                if (ListPaymentModes == null || ListPaymentModes.Count == 0) return null;
-                Int32 Index = ListPaymentModes.FindIndex(e => e.PaymentMode == PaymentMode);
-                if (Index < 0) return null;
-
-                return ListPaymentModes[Index];
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.GetPaymentModeDetails(PaymentModeID)", ex);
-                return null;
-            }
-        }
 
         public PaymentModeDetails GetPaymentModeDetails(String PaymentMode)
         {
@@ -134,20 +118,20 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public PaymentDetails GetPaymentDetailsFromAccID(int AccID)
-        {
+        //public PaymentDetails GetPaymentDetailsFromAccID(int AccID)
+        //{
 
-            try
-            {
-                int Index = ListPaymentDetails.FindIndex(e => e.AccountID == AccID);
-                return ListPaymentDetails[Index];
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.GetPaymentDetailsFromAccID", ex);
-                return null;
-            }
-        }
+        //    try
+        //    {
+        //        int Index = ListPaymentDetails.FindIndex(e => e.AccountID == AccID);
+        //        return ListPaymentDetails[Index];
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CommonFunctions.ShowErrorDialog($"{this}.GetPaymentDetailsFromAccID", ex);
+        //        return null;
+        //    }
+        //}
 
         public DataTable GetPaytmentsDataTable(DateTime FromDate, DateTime ToDate, Int32 InvoiceID = -1, Boolean Active = true)
         {

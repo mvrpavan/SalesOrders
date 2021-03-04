@@ -65,6 +65,8 @@ namespace SalesOrdersReport.CommonModules
                 ObjDbConnectionStringBuilder.Add("persistsecurityinfo", "True");
                 ObjDbConnectionStringBuilder.Add("Allow Zero Datetime", "True");
                 ObjDbConnectionStringBuilder.Add("Allow User Variables", "True");
+                ObjDbConnectionStringBuilder.ConnectionTimeout = 999999;
+                ObjDbConnectionStringBuilder.ConnectionLifeTime = 999999;
 
                 ObjDbConnection = new MySqlConnection();
                 ObjDbConnection.ConnectionString = ObjDbConnectionStringBuilder.ConnectionString;
@@ -72,7 +74,7 @@ namespace SalesOrdersReport.CommonModules
 
                 ObjDbCommand = (MySqlCommand)ObjDbConnection.CreateCommand();
                 ObjDbCommand.CommandTimeout = 99999;
-                ObjDbCommand.CommandText = "set net_write_timeout=99999; set net_read_timeout=99999;";
+                ObjDbCommand.CommandText = "set net_write_timeout=99999; set net_read_timeout=99999; set wait_timeout=99999; set interactive_timeout=99999;";
                 ObjDbCommand.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -86,7 +88,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                if (ObjDbConnection.State == ConnectionState.Closed || ObjDbConnection.State == ConnectionState.Broken)
+                if (ObjDbConnection.State != ConnectionState.Open)
                 {
                     OpenConnection(DBServer, DBName, DBUsername, DBPassword);
                 }
@@ -130,6 +132,7 @@ namespace SalesOrdersReport.CommonModules
                 throw;
             }
         }
+
         public Boolean CheckTableExists(String TableName)
         {
             try

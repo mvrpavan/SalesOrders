@@ -56,6 +56,7 @@ namespace SalesOrdersReport.Views
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            CommonFunctions.WriteToLogFile("Application closed\n==============================================================");
             CommonFunctions.WriteToSettingsFile();
         }
 
@@ -99,6 +100,7 @@ namespace SalesOrdersReport.Views
                 }
 
                 CommonFunctions.ResetProgressBar();
+                CommonFunctions.WriteToLogFile($"Form:{ObjForm.Name} opened from {this.Name}");
 
                 CommonFunctions.CurrentForm = ObjForm;
                 ObjForm.MdiParent = this;
@@ -114,7 +116,7 @@ namespace SalesOrdersReport.Views
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("MainForm.ShowChildForm()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.ShowChildForm()", ex);
             }
         }
 
@@ -142,6 +144,7 @@ namespace SalesOrdersReport.Views
 
         void ChildFormClosed(object sender, FormClosedEventArgs e)
         {
+            CommonFunctions.WriteToLogFile($"Form:{CommonFunctions.CurrentForm.Name} closed");
             EnableDisableAllMenuItems(true, true);
         }
 

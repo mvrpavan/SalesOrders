@@ -53,11 +53,13 @@
             this.label6 = new System.Windows.Forms.Label();
             this.lblOrdersCount = new System.Windows.Forms.Label();
             this.backgroundWorkerBills = new System.ComponentModel.BackgroundWorker();
+            this.dtGridViewBillsTotal = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewBills)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewBilledProducts)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtGridViewBillsTotal)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCreateBill
@@ -107,7 +109,7 @@
             this.groupBox3.Controls.Add(this.dTimePickerFrom);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(744, 3);
+            this.groupBox3.Location = new System.Drawing.Point(698, 3);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(521, 73);
             this.groupBox3.TabIndex = 10;
@@ -312,9 +314,10 @@
             this.dtGridViewBills.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtGridViewBills.Location = new System.Drawing.Point(12, 127);
             this.dtGridViewBills.Name = "dtGridViewBills";
-            this.dtGridViewBills.Size = new System.Drawing.Size(1269, 291);
+            this.dtGridViewBills.Size = new System.Drawing.Size(1223, 262);
             this.dtGridViewBills.TabIndex = 2;
             this.dtGridViewBills.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtGridViewBills_CellMouseClick);
+            this.dtGridViewBills.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dtGridViewBills_Scroll);
             // 
             // dtGridViewBilledProducts
             // 
@@ -325,7 +328,7 @@
             this.dtGridViewBilledProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtGridViewBilledProducts.Location = new System.Drawing.Point(0, 36);
             this.dtGridViewBilledProducts.Name = "dtGridViewBilledProducts";
-            this.dtGridViewBilledProducts.Size = new System.Drawing.Size(1269, 265);
+            this.dtGridViewBilledProducts.Size = new System.Drawing.Size(1223, 265);
             this.dtGridViewBilledProducts.TabIndex = 2;
             // 
             // label1
@@ -345,9 +348,9 @@
             this.groupBox1.Controls.Add(this.dtGridViewBilledProducts);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.groupBox1.Location = new System.Drawing.Point(12, 424);
+            this.groupBox1.Location = new System.Drawing.Point(12, 441);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1269, 307);
+            this.groupBox1.Size = new System.Drawing.Size(1223, 307);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             // 
@@ -377,6 +380,16 @@
             this.backgroundWorkerBills.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerBills_ProgressChanged);
             this.backgroundWorkerBills.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerBills_RunWorkerCompleted);
             // 
+            // dtGridViewBillsTotal
+            // 
+            this.dtGridViewBillsTotal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtGridViewBillsTotal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtGridViewBillsTotal.Location = new System.Drawing.Point(12, 395);
+            this.dtGridViewBillsTotal.Name = "dtGridViewBillsTotal";
+            this.dtGridViewBillsTotal.Size = new System.Drawing.Size(1223, 39);
+            this.dtGridViewBillsTotal.TabIndex = 6;
+            // 
             // POSBillsMainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -384,6 +397,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1289, 743);
+            this.Controls.Add(this.dtGridViewBillsTotal);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblOrdersCount);
             this.Controls.Add(this.label1);
@@ -404,6 +418,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewBilledProducts)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtGridViewBillsTotal)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -436,5 +451,6 @@
         private System.Windows.Forms.Button btnExportBill;
         private System.Windows.Forms.Button btnCancelBill;
         private System.Windows.Forms.Button btnCloseCounter;
+        private System.Windows.Forms.DataGridView dtGridViewBillsTotal;
     }
 }

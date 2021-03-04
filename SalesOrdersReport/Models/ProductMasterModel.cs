@@ -695,10 +695,12 @@ namespace SalesOrdersReport.Models
                     Double OrderedQty = ObjProductInventoryDetails.ComputeInventory(ListInvoiceItems[i].OrderQty, ObjProductDetails.Units, ObjProductDetails.UnitsOfMeasurement);
                     Double ReceivedQty = -1 * ObjProductInventoryDetails.ComputeInventory(ListInvoiceItems[i].SaleQty, ObjProductDetails.Units, ObjProductDetails.UnitsOfMeasurement);
                     Double NetQty = ObjProductInventoryDetails.Inventory + ReceivedQty;
+                    String EntryType = "Sale";
+                    if (OrderedQty < 0 && ReceivedQty > 0) EntryType = "SaleRev";
 
                     ObjMySQLHelper.InsertIntoTable("ProductStockHistory",
                         new List<String>() { "ProductInvID", "Type", "OrderedQty", "ReceivedQty", "NetQty", "PODate", "UpdateDate" },
-                        new List<String>() { ProductInvID.ToString(), "Sale", OrderedQty.ToString(), ReceivedQty.ToString(), NetQty.ToString(),
+                        new List<String>() { ProductInvID.ToString(), EntryType, OrderedQty.ToString(), ReceivedQty.ToString(), NetQty.ToString(),
                             MySQLHelper.GetDateStringForDB(InvoiceDate), MySQLHelper.GetDateStringForDB(DateTime.Now)},
                         new List<Types>() { Types.Number, Types.String, Types.Number, Types.Number, Types.Number, Types.String, Types.String });
 

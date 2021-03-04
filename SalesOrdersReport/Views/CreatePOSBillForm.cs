@@ -603,7 +603,7 @@ namespace SalesOrdersReport.Views
                         PaidOn = AddUpdatedInvoiceDetails.InvoiceDate,
                         Amount = item.Amount,
                         UserID = UserID,
-                        PaymentModeID = ObjPaymentsModel.GetPaymentMode(item.PaymentMode).PaymentModeID,
+                        PaymentModeID = ObjPaymentsModel.GetPaymentModeDetails(item.PaymentMode).PaymentModeID,
                         CreationDate = DateTime.Now,
                         LastUpdateDate = DateTime.Now
                     };

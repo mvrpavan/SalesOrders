@@ -21,6 +21,7 @@ namespace SalesOrdersReport
 
             //Application.Run(new LoginForm());
             //Application.Run(new GetDBConnectionConfigForm());
+            CommonFunctions.WriteToLogFile("==============================================================\nApplication started");
             Application.Run(new WelcomeSplashForm());
             Login();
         }
