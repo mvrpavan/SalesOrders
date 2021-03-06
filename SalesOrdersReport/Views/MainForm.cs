@@ -78,7 +78,7 @@ namespace SalesOrdersReport.Views
                 invoicesToolStripMenuItem.ShortcutKeys = Keys.F3;
                 productMenu.ShortcutKeys = Keys.F4;
                 customerToolStripMenuItem.ShortcutKeys = Keys.F5;
-                PaymentsExpensesToolStripMenuItem.ShortcutKeys = Keys.F6;
+                PaymentsToolStripMenuItem.ShortcutKeys = Keys.F6;
                 //vendorHistoryToolStripMenuItem.ShortcutKeys = Keys.F7;
             }
             catch (Exception ex)
@@ -639,16 +639,16 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void PaymentsExpensesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PaymentsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                PaymentsExpensesMainForm ObjPaymentsExpensesMainForm = new PaymentsExpensesMainForm();
-                ShowChildForm(ObjPaymentsExpensesMainForm);
+                PaymentsForm ObjPaymentsMainForm = new PaymentsForm();
+                ShowChildForm(ObjPaymentsMainForm);
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"{this}.PaymentsExpensesToolStripMenuItem_Click()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.PaymentsToolStripMenuItem_Click()", ex);
             }
         }
 
@@ -709,6 +709,19 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.POSbillingToolStripMenuItem_Click()", ex);
+            }
+        }
+
+        private void ExpensesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ExpensesForm ObjExpensesForm = new ExpensesForm();
+                ShowChildForm(ObjExpensesForm);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExpensesToolStripMenuItem_Click()", ex);
             }
         }
     }

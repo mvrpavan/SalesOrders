@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace SalesOrdersReport.Views
 {
@@ -668,7 +669,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new ImportFromExcelForm(ImportDataTypes.Customers, UpdateCustomerOnClose, ReadNProcessCustomerFile), this);
+                CommonFunctions.ShowDialog(new ImportFromExcelForm(ImportDataTypes.Customers, UpdateCustomerOnClose, ProcessCustomerRelatedFile), this);
             }
             catch (Exception ex)
             {
@@ -676,7 +677,203 @@ namespace SalesOrdersReport.Views
                 throw ex;
             }
         }
+        private Int32 ProcessCustomerRelatedFile(String FilePathToImport, Object ObjDetails, ReportProgressDel ReportProgress)
+        {
+            try
+            {
+                List<CustomerDetails> ListTempCustDtls = new List<CustomerDetails>();
+                List<LineDetails> ListTempLineDtls = new List<LineDetails>();
+                List<PriceGroupDetails> ListTempPGDtls = new List<PriceGroupDetails>();
+                List<DiscountGroupDetails> ListTempDGDtls = new List<DiscountGroupDetails>();
 
+                MySQLHelper ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+                int LastLineIDFromDB = ObjMySQLHelper.GetLatestColValFromTable("LINEID", "LINEMASTER");
+                int LastPGIDFromDB = ObjMySQLHelper.GetLatestColValFromTable("PRICEGROUPID", "PRICEGROUPMASTER");
+                int LastDGIDFromDB = ObjMySQLHelper.GetLatestColValFromTable("DISCOUNTGROUPID", "DISCOUNTGROUPMASTER");
+                int LastCustIDFromDB = ObjMySQLHelper.GetLatestColValFromTable("CUSTOMERID", "CUSTOMERMASTER");
+                List<string> ListExistingLineNamesinDB = CommonFunctions.ObjCustomerMasterModel.GetAllLineNames();
+                List<string> ListExistingDiscGrpNamesinDB = CommonFunctions.ObjCustomerMasterModel.GetAllDiscGrp();
+                List<string> ListExistingPriceGrpNamesinDB = CommonFunctions.ObjCustomerMasterModel.GetAllPriceGrp();
+                List<string> ListExistingCustomerNamesinDB = CommonFunctions.ObjCustomerMasterModel.GetCustomerList();
+                List<string> ListOfCustAlreadyInDB = new List<string>();
+
+                int LineID = LastLineIDFromDB + 1, PGID = LastPGIDFromDB + 1, DGID = LastDGIDFromDB + 1, CustID = LastCustIDFromDB + 1;
+                if (LineID == 0) LineID += 1;
+                if (PGID == 0) PGID += 1;
+                if (DGID == 0) DGID += 1;
+                if (CustID == 0) CustID += 1;
+
+                Excel.Application xlApp = new Excel.Application();
+
+                DataTable dtLineDetails = CommonFunctions.ReturnDataTableFromExcelWorksheet("Line Details", FilePathToImport, "*");
+                if (dtLineDetails == null)
+                {
+                    MessageBox.Show(this, "Provided Customer details file doesn't contain \"Line Details\" Sheet.\nPlease provide correct file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return -1;
+                }
+                DataTable dtDiscountGrpDetails = CommonFunctions.ReturnDataTableFromExcelWorksheet("Discount Group Details", FilePathToImport, "*");
+                if (dtDiscountGrpDetails == null)
+                {
+                    MessageBox.Show(this, "Provided Customer details file doesn't contain \"Discount Group Details\" Sheet.\nPlease provide correct file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return -1;
+                }
+                DataTable dtPriceGrpDetails = CommonFunctions.ReturnDataTableFromExcelWorksheet("Price Group Details", FilePathToImport, "*");
+                if (dtPriceGrpDetails == null)
+                {
+                    MessageBox.Show(this, "Provided Customer details file doesn't contain \"Price Group Details\" Sheet.\nPlease provide correct file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return -1;
+                }
+                DataTable dtCustomerDetails = CommonFunctions.ReturnDataTableFromExcelWorksheet("Customer Details", FilePathToImport, "*");
+                if (dtCustomerDetails == null)
+                {
+                    MessageBox.Show(this, "Provided Customer details file doesn't contain \"Customer Details\" Sheet.\nPlease provide correct file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return -1;
+                }
+                ImportFromExcelCustomerCache ObjImportFromExcelCustomerCache = new ImportFromExcelCustomerCache();
+                int AlreadyExistsIndex = -1;
+                foreach (DataRow item in dtLineDetails.Rows)
+                {
+                    LineDetails ObjLineDetails = new LineDetails();
+                    ObjLineDetails.LineName = item[ObjImportFromExcelCustomerCache.LineColName].ToString();
+                    AlreadyExistsIndex = ListExistingLineNamesinDB.FindIndex(e => e.Equals(ObjLineDetails.LineName, StringComparison.InvariantCultureIgnoreCase));
+                    if (AlreadyExistsIndex < 0)
+                    {
+                        int Index = ListTempLineDtls.BinarySearch(ObjLineDetails, ObjLineDetails);
+                        if (Index < 0)
+                        {
+                            ObjLineDetails.LineID = LineID;
+                            ObjLineDetails.LineDescription = (item["DESCRIPTION"] == null) ? "" : item["DESCRIPTION"].ToString();
+                            ListTempLineDtls.Insert(~Index, ObjLineDetails);
+                            LineID++;
+                        }
+                    }
+                }
+
+                foreach (DataRow item in dtDiscountGrpDetails.Rows)
+                {
+                    DiscountGroupDetails ObjDiscountGroupDetails = new DiscountGroupDetails();
+
+                    ObjDiscountGroupDetails.DiscountGrpName = item[ObjImportFromExcelCustomerCache.DiscountGroupColName].ToString();
+                    AlreadyExistsIndex = ListExistingDiscGrpNamesinDB.FindIndex(e => e.Equals(ObjDiscountGroupDetails.DiscountGrpName, StringComparison.InvariantCultureIgnoreCase));
+                    if (AlreadyExistsIndex < 0)
+                    {
+
+                        int Index = ListTempDGDtls.BinarySearch(ObjDiscountGroupDetails, ObjDiscountGroupDetails);
+                        if (Index < 0)
+                        {
+                            ObjDiscountGroupDetails.Description = item["DESCRIPTION"] == null ? "" : item["DESCRIPTION"].ToString();
+                            ObjDiscountGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(item[ObjImportFromExcelCustomerCache.DGDiscCountTypeColName].ToString().Trim());
+                            ObjDiscountGroupDetails.IsDefault = (item[ObjImportFromExcelCustomerCache.DGDefaultColName].ToString().Trim().ToUpper() == "TRUE") ? true : false;
+                            ObjDiscountGroupDetails.DiscountGrpID = DGID;
+                            ListTempDGDtls.Insert(~Index, ObjDiscountGroupDetails);
+                            DGID++;
+                        }
+                    }
+                }
+
+                foreach (DataRow item in dtPriceGrpDetails.Rows)
+                {
+                    PriceGroupDetails ObjPriceGroupDetails = new PriceGroupDetails();
+                    ObjPriceGroupDetails.PriceGrpName = item[ObjImportFromExcelCustomerCache.PriceGroupColName].ToString();
+                    AlreadyExistsIndex = ListExistingPriceGrpNamesinDB.FindIndex(e => e.Equals(ObjPriceGroupDetails.PriceGrpName, StringComparison.InvariantCultureIgnoreCase));
+                    if (AlreadyExistsIndex < 0)
+                    {
+                        int Index = ListTempPGDtls.BinarySearch(ObjPriceGroupDetails, ObjPriceGroupDetails);
+                        if (Index < 0)
+                        {
+                            ObjPriceGroupDetails.PriceGroupID = PGID;
+                            ObjPriceGroupDetails.Description = item["DESCRIPTION"] == null ? "" : item["DESCRIPTION"].ToString();
+                            ObjPriceGroupDetails.DiscountType = PriceGroupDetails.GetDiscountType(item[ObjImportFromExcelCustomerCache.PGDiscCountTypeColName].ToString().Trim());
+                            ObjPriceGroupDetails.IsDefault = (item[ObjImportFromExcelCustomerCache.PGDefaultColName].ToString().Trim().ToUpper() == "TRUE") ? true : false;
+                            ObjPriceGroupDetails.PriceColumn = item[ObjImportFromExcelCustomerCache.PriceGroupColName].ToString();
+                            ListTempPGDtls.Insert(~Index, ObjPriceGroupDetails);
+                            PGID++;
+                        }
+                    }
+                }
+
+                //CustomerName	LineName	State	Active	Address	GSTIN	Phone	OrderDays	PriceColumn
+                List<string> ListErrMsg = new List<string>();
+                foreach (DataRow item in dtCustomerDetails.Rows)
+                {
+                    CustomerDetails ObjCustomerDetails = new CustomerDetails();
+                    ObjCustomerDetails.CustomerName = item[ObjImportFromExcelCustomerCache.CustomerColName].ToString().Trim();
+                    AlreadyExistsIndex = ListExistingCustomerNamesinDB.FindIndex(e => e.Equals(ObjCustomerDetails.CustomerName, StringComparison.InvariantCultureIgnoreCase));
+                    if (AlreadyExistsIndex < 0)
+                    {
+                        int Index = ListTempCustDtls.BinarySearch(ObjCustomerDetails, ObjCustomerDetails);
+                        if (Index < 0)
+                        {
+                            ObjCustomerDetails.CustomerID = CustID;
+                            LineDetails ObjLine = new LineDetails();
+                            ObjLine.LineName = ObjCustomerDetails.LineName = item[ObjImportFromExcelCustomerCache.LineColName].ToString().Trim();
+                            int tmpIndex = ListTempLineDtls.BinarySearch(ObjLine, ObjLine);
+                            if (tmpIndex < 0)
+                            {
+                                ListErrMsg.Add("Line Name: " + ObjCustomerDetails.LineName + " not available in  Line Details Sheet for Customer " + ObjCustomerDetails.CustomerName);
+                                continue;
+                            }
+                            ObjCustomerDetails.LineID = ListTempLineDtls[tmpIndex].LineID;
+
+                            DiscountGroupDetails ObjDG = new DiscountGroupDetails();
+                            ObjDG.DiscountGrpName = ObjCustomerDetails.DiscountGroupName = item[ObjImportFromExcelCustomerCache.DiscountGroupColName].ToString().Trim();
+                            tmpIndex = ListTempDGDtls.BinarySearch(ObjDG, ObjDG);
+                            if (tmpIndex < 0)
+                            {
+                                ListErrMsg.Add("Discount Group Name " + ObjDG.DiscountGrpName + "  not available in  Discount Details Sheet for Customer " + ObjCustomerDetails.CustomerName);
+                                continue;
+                            }
+                            ObjCustomerDetails.DiscountGroupID = ListTempDGDtls[tmpIndex].DiscountGrpID;
+
+                            PriceGroupDetails ObjPG = new PriceGroupDetails();
+                            ObjPG.PriceGrpName = ObjCustomerDetails.PriceGroupName = item[ObjImportFromExcelCustomerCache.PriceGroupColName].ToString().Trim();
+                            tmpIndex = ListTempPGDtls.BinarySearch(ObjPG, ObjPG);
+                            if (tmpIndex < 0)
+                            {
+                                ListErrMsg.Add("Price Group Name " + ObjDG.DiscountGrpName + " not available in   Price Details Sheet for Customer " + ObjCustomerDetails.CustomerName);
+                                continue;
+                            }
+                            ObjCustomerDetails.PriceGroupID = ListTempPGDtls[tmpIndex].PriceGroupID;
+                            ObjCustomerDetails.State = item[ObjImportFromExcelCustomerCache.StateColName].ToString().Trim();
+                            ObjCustomerDetails.StateID = CommonFunctions.ObjCustomerMasterModel.GetStateID(ObjCustomerDetails.State);
+                            //Active	Address	GSTIN	Phone	OrderDays	PriceColumn
+                            ObjCustomerDetails.Active = (item[ObjImportFromExcelCustomerCache.ActiveColName].ToString().Trim().ToUpper() == "TRUE") ? true : false;
+
+                            ObjCustomerDetails.Address = item[ObjImportFromExcelCustomerCache.AddressColName].ToString().Trim();
+                            ObjCustomerDetails.GSTIN = item[ObjImportFromExcelCustomerCache.GSTINColName].ToString().Trim();
+                            ObjCustomerDetails.PhoneNo = item[ObjImportFromExcelCustomerCache.PhoneNoColName].ToString().Trim();
+                            ObjCustomerDetails.CustomerTypeName = item[ObjImportFromExcelCustomerCache.CustomerTypeColName].ToString().Trim();
+                            ObjCustomerDetails.CustomerTypeID = CommonFunctions.ObjCustomerMasterModel.GetCustomerTypeDtlsFromTypeName(ObjCustomerDetails.CustomerTypeName).CustomerTypeID;
+                            if (ObjCustomerDetails.CustomerTypeName.ToUpper() == "REGULAR" && ObjCustomerDetails.PhoneNo == string.Empty)
+                            {
+                                ListErrMsg.Add("PhoneNo cant be empty for Customer Type 'REGULAR', Not added to DB: CustomerName: " + ObjCustomerDetails.CustomerName);
+                                continue;
+                            }
+                            ObjCustomerDetails.OrderDaysAssigned = item[ObjImportFromExcelCustomerCache.OrderDaysColName].ToString().Replace('"', ' ').Trim();
+                            ObjCustomerDetails.PriceGroupName = item[ObjImportFromExcelCustomerCache.PriceGroupColName].ToString().Trim();
+
+                            ListTempCustDtls.Insert(~Index, ObjCustomerDetails);
+                            CustID++;
+                        }
+                    }
+
+                }
+
+                if(ListErrMsg.Count>0) MessageBox.Show("Following are Error Msgs " + string.Join("\n", ListErrMsg), "Missed Customers", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ListTempLineDtls.Count > 0) CommonFunctions.ObjCustomerMasterModel.FillLineDBFromCache(ListTempLineDtls);
+                if (ListTempDGDtls.Count > 0) CommonFunctions.ObjCustomerMasterModel.FillDiscountGroupDBFromCache(ListTempDGDtls);
+                if (ListTempPGDtls.Count > 0) CommonFunctions.ObjCustomerMasterModel.FillPriceGroupDBFromCache(ListTempPGDtls);
+                if (ListTempCustDtls.Count > 0) CommonFunctions.ObjCustomerMasterModel.FillCustomerDBFromCache(ListTempCustDtls);
+
+                if (ListTempLineDtls.Count > 0 || ListTempDGDtls.Count > 0 || ListTempPGDtls.Count > 0 || ListTempCustDtls.Count > 0) CommonFunctions.ObjCustomerMasterModel.LoadAllCustomerMasterTables();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ManagerCustomerForm.ProcessCustomerRelatedFile()", ex);
+                throw ex;
+            }
+        }
         private Int32 ReadNProcessCustomerFile(String FilePathToImport, Object ObjDetails, ReportProgressDel ReportProgress)
         {
             try

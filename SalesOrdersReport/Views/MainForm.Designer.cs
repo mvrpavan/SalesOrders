@@ -43,7 +43,7 @@ namespace SalesOrdersReport.Views
             this.manageVendorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.purchaseOrdersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.purchaseInvoicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.PaymentsExpensesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PaymentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reportsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.sellerHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vendorHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,6 +79,7 @@ namespace SalesOrdersReport.Views
             this.picBoxBackgroundLogo = new System.Windows.Forms.PictureBox();
             this.pnlShortcuts = new System.Windows.Forms.Panel();
             this.lblShortcuts = new System.Windows.Forms.Label();
+            this.ExpensesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -95,7 +96,8 @@ namespace SalesOrdersReport.Views
             this.productMenu,
             this.customerToolStripMenuItem,
             this.inventoryToolStripMenuItem,
-            this.PaymentsExpensesToolStripMenuItem,
+            this.PaymentsToolStripMenuItem,
+            this.ExpensesToolStripMenuItem,
             this.reportsMenu,
             this.administrationToolStripMenuItem,
             this.helpMenu,
@@ -184,12 +186,12 @@ namespace SalesOrdersReport.Views
             this.purchaseInvoicesToolStripMenuItem.Text = "&Purchase Invoices";
             this.purchaseInvoicesToolStripMenuItem.Click += new System.EventHandler(this.purchaseInvoicesToolStripMenuItem_Click);
             // 
-            // PaymentsExpensesToolStripMenuItem
+            // PaymentsToolStripMenuItem
             // 
-            this.PaymentsExpensesToolStripMenuItem.Name = "PaymentsExpensesToolStripMenuItem";
-            this.PaymentsExpensesToolStripMenuItem.Size = new System.Drawing.Size(124, 20);
-            this.PaymentsExpensesToolStripMenuItem.Text = "Payments/&Expenses";
-            this.PaymentsExpensesToolStripMenuItem.Click += new System.EventHandler(this.PaymentsExpensesToolStripMenuItem_Click);
+            this.PaymentsToolStripMenuItem.Name = "PaymentsToolStripMenuItem";
+            this.PaymentsToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
+            this.PaymentsToolStripMenuItem.Text = "Payments";
+            this.PaymentsToolStripMenuItem.Click += new System.EventHandler(this.PaymentsToolStripMenuItem_Click);
             // 
             // reportsMenu
             // 
@@ -413,7 +415,7 @@ namespace SalesOrdersReport.Views
             // toolStripStatusLabel
             // 
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(941, 17);
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(972, 17);
             this.toolStripStatusLabel.Spring = true;
             this.toolStripStatusLabel.Text = "Status";
             this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -469,6 +471,13 @@ namespace SalesOrdersReport.Views
             this.lblShortcuts.Size = new System.Drawing.Size(63, 15);
             this.lblShortcuts.TabIndex = 0;
             this.lblShortcuts.Text = "Shortcuts";
+            // 
+            // ExpensesToolStripMenuItem
+            // 
+            this.ExpensesToolStripMenuItem.Name = "ExpensesToolStripMenuItem";
+            this.ExpensesToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.ExpensesToolStripMenuItem.Text = "Expenses";
+            this.ExpensesToolStripMenuItem.Click += new System.EventHandler(this.ExpensesToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -552,13 +561,14 @@ namespace SalesOrdersReport.Views
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Panel pnlShortcuts;
         private System.Windows.Forms.Label lblShortcuts;
-        private System.Windows.Forms.ToolStripMenuItem PaymentsExpensesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem PaymentsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem inventoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manageInventoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem purchaseOrdersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem purchaseInvoicesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manageVendorsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem POSbillingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ExpensesToolStripMenuItem;
     }
 }
 

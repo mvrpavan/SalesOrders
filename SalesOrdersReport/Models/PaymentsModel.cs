@@ -44,6 +44,9 @@ namespace SalesOrdersReport.Models
                             + " Inner Join CUSTOMERMASTER c on b.CUSTOMERID = c.CUSTOMERID "
                             + " Inner Join Invoices d on a.INVOICEID = d.INVOICEID "
                             + " Inner Join USERMASTER e on a.USERID = e.USERID ";
+
+
+   
         public PaymentsModel()
         {
             try
@@ -225,6 +228,29 @@ namespace SalesOrdersReport.Models
                 CommonFunctions.ShowErrorDialog($"{this}.LoadPaymentDetails()", ex);
             }
         }
+
+
+        public DataTable GetPaymentSummaryTable()
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                String Query = "SELECT a.INVOICEID,a.INVOICENUMBER as 'INVOICE#',b.CUSTOMERNAME,c.LINENAME,a.GROSSINVOICEAMOUNT as SALE,a.NETINVOICEAMOUNT as 'NET SALE',a.DISCOUNTAMOUNT as DISCOUNT,e.BALANCEAMOUNT as OB "
+                          + " FROM INVOICES a INNER JOIN CUSTOMERMASTER b on a.CUSTOMERID = b.CUSTOMERID "
+                          + " INNER JOIN LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
+                          + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = a.CUSTOMERID "
+                          + " WHERE a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'DELIVERED'; ";
+
+                dt = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.LoadPaymentDetails()", ex);
+                return null;
+            }
+        }
+
         public void LoadPaymentModes()
         {
             try
@@ -248,6 +274,19 @@ namespace SalesOrdersReport.Models
             }
         }
 
+        public List<string> GetAllPaymentsModeNames()
+        {
+            try
+            {
+                List<string> ListAllPaymentModesNames = ListPaymentModes.Select(e => e.PaymentMode).ToList();
+                return ListAllPaymentModesNames;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetAllPaymentsModeNames()", ex);
+                return null;
+            }
+        }
         public Int32 CreateNewPaymentDetails(ref PaymentDetails ObjPaymentDetails, ref CustomerAccountHistoryDetails ObjCustomerAccountHistoryDetails)
         {
             try

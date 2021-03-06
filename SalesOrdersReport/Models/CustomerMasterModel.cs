@@ -1187,11 +1187,11 @@ namespace SalesOrdersReport.Models
                     //                            + ",'" + DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") + "','" + DateTime.Now.ToString("yyyy-MM-dd H:mm:ss")+"'"
                     //                            +")";
 
-                    Query = "INSERT INTO CUSTOMERMASTER (CUSTOMERID,LINEID,DISCOUNTGROUPID,PRICEGROUPID,STATEID,CUSTOMERNAME, ADDRESS, PHONENO, GSTIN, ORDERDAYS,ACTIVE,ADDEDDATE,LASTUPDATEDATE) VALUES ("
+                    Query = "INSERT INTO CUSTOMERMASTER (CUSTOMERID,LINEID,DISCOUNTGROUPID,PRICEGROUPID,STATEID,CUSTOMERNAME, ADDRESS, PHONENO, GSTIN, ORDERDAYS,ACTIVE,CUSTOMERTYPEID,ADDEDDATE,LASTUPDATEDATE) VALUES ("
                                              + listtemp[i].CustomerID + "," + listtemp[i].LineID + "," + listtemp[i].DiscountGroupID + "," + listtemp[i].PriceGroupID
                                              + "," + listtemp[i].StateID + ",'" + listtemp[i].CustomerName + "','" + listtemp[i].Address
-                                             + "'," + listtemp[i].PhoneNo + ",'" + listtemp[i].GSTIN + "','" + listtemp[i].OrderDaysAssigned + "'," + (listtemp[i].Active == true ? 1 : 0)
-                                             + ",'" + DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") + "','" + DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") + "'"
+                                             + "','" + listtemp[i].PhoneNo + "','" + listtemp[i].GSTIN + "','" + listtemp[i].OrderDaysAssigned + "'," + (listtemp[i].Active == true ? 1 : 0)
+                                             + ","+ listtemp[i].CustomerTypeID + ",'"+ DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") + "','" + DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") + "'"
                                              + ")";
                     Query += ";";
                     ObjMySQLHelper.ExecuteNonQuery(Query);

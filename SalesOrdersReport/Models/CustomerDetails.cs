@@ -17,7 +17,7 @@ namespace SalesOrdersReport.Models
         public string CustomerColName = "CustomerName", LineColName = "LineName", PriceGroupColName = "PriceGroupName", DiscountGroupColName = "DiscountGroupName", StateColName = "State";
         public string PGDefaultColName = "PG_Default", DGDefaultColName = "DG_Default", ActiveColName = "Active", AddressColName = "Address", GSTINColName = "GSTIN";
         public string AddedDateColName = "AddedDate", LastUpdateDateColName = "LastUpdateDate", PhoneNoColName = "Phone", OrderDaysColName = "OrderDays";
-        public string PGDiscCountTypeColName = "PG_DiscountType", DGDiscCountTypeColName = "DG_DiscountType", SelectedPriceGrpColName = "PriceColumn";
+        public string PGDiscCountTypeColName = "PG_DiscountType", DGDiscCountTypeColName = "DG_DiscountType", SelectedPriceGrpColName = "PriceColumn", CustomerTypeColName = "CustomerType";
         //CustomerName,LineName,PriceGroupName,DiscountGroupName,State,PG_Default,DG_Default,Active,Address,GSTIN,AddedDate,LastUpdateDate,Phone,OrderDays,PG_DiscountType,DG_DiscountType,PriceGroupColumnName
     }
     class CustomerTypeDetails

@@ -50,9 +50,12 @@ namespace SalesOrdersReport.Views
                     case ImportDataTypes.Customers:
                         this.Text = "Import Customers from Excel";
                         btnImportFrmExclUploadFile.Text = "Import Customers";
+                        chkListBoxDataToImport.Items.Add("Line Details", true);
+                        chkListBoxDataToImport.Items.Add("Discount Group Details", true);
+                        chkListBoxDataToImport.Items.Add("Price Group Details", true);
                         chkListBoxDataToImport.Items.Add("Customer Details", true);
-                        chkListBoxDataToImport.Enabled = false;
-                        OFDImportExcelFileDialog.Filter = "Comma separated Files (*.csv)|*.csv|Text Files(*.txt)|*.txt";
+                        //chkListBoxDataToImport.Enabled = false;
+                        OFDImportExcelFileDialog.Filter = "Excel Files(*.xlsx;*.xls)|*.xlsx;*.xls|All Files(*.*)|*.*";
                         OFDImportExcelFileDialog.Title = "Choose File to Import Customers data from";
                         break;
                     case ImportDataTypes.Payments:

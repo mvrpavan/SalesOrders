@@ -566,6 +566,7 @@ namespace SalesOrdersReport.CommonModules
                     "DiscountAmount, float DEFAULT 0",
                     "NetInvoiceAmount, float DEFAULT 0",
                     "InvoiceStatus, varchar(20) DEFAULT NULL",
+                    "DeliveryLineID, smallint Not Null",
                     "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
                     "LastUpdatedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
                     "PRIMARY KEY, InvoiceID"

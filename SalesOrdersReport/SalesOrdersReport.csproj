@@ -268,6 +268,12 @@
     <Compile Include="Views\PaymentModeSelectionForm.Designer.cs">
       <DependentUpon>PaymentModeSelectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ExpensesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ExpensesForm.Designer.cs">
+      <DependentUpon>ExpensesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\POSBillsMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -298,11 +304,11 @@
     <Compile Include="Views\ProductInventoryMainForm.Designer.cs">
       <DependentUpon>ProductInventoryMainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\PaymentsExpensesMainForm.cs">
+    <Compile Include="Views\PaymentsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\PaymentsExpensesMainForm.Designer.cs">
-      <DependentUpon>PaymentsExpensesMainForm.cs</DependentUpon>
+    <Compile Include="Views\PaymentsForm.Designer.cs">
+      <DependentUpon>PaymentsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginForm.cs">
       <SubType>Form</SubType>
@@ -542,6 +548,9 @@
     <EmbeddedResource Include="Views\PaymentModeSelectionForm.resx">
       <DependentUpon>PaymentModeSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\ExpensesForm.resx">
+      <DependentUpon>ExpensesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\POSBillsMainForm.resx">
       <DependentUpon>POSBillsMainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -557,8 +566,8 @@
     <EmbeddedResource Include="Views\ProductInventoryMainForm.resx">
       <DependentUpon>ProductInventoryMainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\PaymentsExpensesMainForm.resx">
-      <DependentUpon>PaymentsExpensesMainForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\PaymentsForm.resx">
+      <DependentUpon>PaymentsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
