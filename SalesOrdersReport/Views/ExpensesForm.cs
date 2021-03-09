@@ -33,7 +33,7 @@ namespace SalesOrdersReport.Views
 
                 LoadExpensesGridView();
 
-               groupBoxExpenses.Visible = false;
+               //groupBoxExpenses.Visible = false;
             }
             catch (Exception ex)
             {

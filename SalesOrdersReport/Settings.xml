@@ -6,7 +6,9 @@
     <LogoImageHeight>80</LogoImageHeight>
     <ReportRowsFromTop>7</ReportRowsFromTop>
     <ReportAppendRowsAtBottom>7</ReportAppendRowsAtBottom>
-    <Database Server="localhost" DatabaseName="SALES_ORDERS" UserName="pavan" Password="Pavan1024"/>
+    <Database Server="localhost" DatabaseName="SALES_ORDERS" UserName="username" Password="password"/>
+    <EmailDetails SMTPServer="smtp.gmail.com" SMTPPort="587" SenderMailID="sender@gmail.com" SenderMailPassword="avcsds" SenderName="MVR Pavan" ReceiverMailID="receiver@gmail.com" ReceiverName="MVR Pavan Kumar" EnableMail="false"/>
+    <POSDetails StoreName="Kachatathapa Kerala Super Store" POSNumber="POS0001"/>
     <SQLScripts>
       <SQLScript FilePath="E:\PavanData\Projects\GitHub\SalesOrders_V8\SalesOrdersReport\SQLScripts\ProductMasterTables.sql"></SQLScript>
     </SQLScripts>

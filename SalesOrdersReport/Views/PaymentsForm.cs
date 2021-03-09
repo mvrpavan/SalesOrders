@@ -29,6 +29,8 @@ namespace SalesOrdersReport.Views
                 ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
                 CommonFunctions.SetDataGridViewProperties(dtGridViewPayments);
                 CommonFunctions.SetDataGridViewProperties(dgvPaymentSummary);
+                dgvPaymentSummary.SelectionMode = DataGridViewSelectionMode.CellSelect;
+                dgvPaymentSummary.ReadOnly = false;
 
                 ObjPaymentsModel = new PaymentsModel();
                 ObjPaymentsModel.LoadPaymentModes();

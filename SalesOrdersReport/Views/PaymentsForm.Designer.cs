@@ -263,8 +263,7 @@
             // 
             // dtGridViewPayments
             // 
-            this.dtGridViewPayments.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dtGridViewPayments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dtGridViewPayments.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dtGridViewPayments.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
