@@ -25,7 +25,7 @@ namespace SalesOrdersReport.CommonModules
         public static List<ProductLine> ListProductLines;
         public static Int32 SelectedProductLineIndex;
         public static List<String> ListSelectedCustomer, ListSelectedVendors;
-        public static String AppDataFolder;
+        public static String AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SalesOrders";
         public static String MasterFilePath;
         public static ToolStripProgressBar ToolStripProgressBarMainForm;
         public static ToolStripLabel ToolStripProgressBarMainFormStatus;
@@ -46,7 +46,6 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SalesOrders";
                 if (!Directory.Exists(AppDataFolder)) Directory.CreateDirectory(AppDataFolder);
                 SettingsFilePath = CommonFunctions.AppDataFolder + @"\Settings_V8.xml";
 
@@ -1029,7 +1028,6 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-
         public static void PrintOrderInvoiceQuotation(ReportType EnumReportType, Boolean IsDummyBill, Object ObjectModel, List<Object> ListObjects, 
             DateTime OrdInvQuotDate, Int32 PrintCopies = 1, Boolean CreateSummary = false, Boolean PrintOldBalance = false, ReportProgressDel ReportProgress = null)
         {
@@ -1231,7 +1229,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                StreamWriter swLogFile = new StreamWriter(Environment.CurrentDirectory + @"\SalesOrdersLog.txt", true);
+                StreamWriter swLogFile = new StreamWriter(AppDataFolder + @"\SalesOrdersLog.txt", true);
                 swLogFile.WriteLine(DateTime.Now.ToString() + "::" + String.Join("\n" + DateTime.Now.ToString() + "::", Message.Split('\n')));
                 swLogFile.Close();
             }
@@ -1251,8 +1249,8 @@ namespace SalesOrdersReport.CommonModules
 
                 var smtp = new SmtpClient
                 {
-                    Host = "smtp.gmail.com",
-                    Port = 587,
+                    Host = ObjApplicationSettings.SMTPServer,
+                    Port = ObjApplicationSettings.SMTPPort,
                     EnableSsl = true,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     UseDefaultCredentials = false,

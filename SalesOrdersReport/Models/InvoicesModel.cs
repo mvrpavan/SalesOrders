@@ -1185,8 +1185,6 @@ namespace SalesOrdersReport.Models
                 InvoicesModel ObjInvoicesModel = new InvoicesModel();
                 ObjInvoicesModel.Initialize();
 
-                PrintBase ObjPrintBase = new ThermalPaperBillPrinter(288);
-
                 Int32 InvoiceID = ObjInvoicesModel.GetInvoiceIDFromNum(BillNumber);
                 PrintBill(InvoiceID);
             }

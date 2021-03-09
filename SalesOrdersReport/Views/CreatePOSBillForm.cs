@@ -157,11 +157,6 @@ namespace SalesOrdersReport.Views
                     cmbBoxBillNumber.Items.Add("<New>");
                     cmbBoxBillNumber.Items.AddRange(ListCustomerInvoices.Select(s => s.InvoiceNumber).ToArray());
                     cmbBoxBillNumber.SelectedIndex = ListCustomerInvoices.FindIndex(s => s.InvoiceID == CurrentInvoiceID) + 1;
-
-                    if (ObjInvoiceDetails.InvoiceStatus == INVOICESTATUS.Delivered || ObjInvoiceDetails.InvoiceStatus == INVOICESTATUS.Paid)
-                    {
-                        EnableItemsPanel(false);
-                    }
                 }
             }
             catch (Exception ex)
@@ -276,7 +271,7 @@ namespace SalesOrdersReport.Views
                 picBoxLoading.Visible = true;
                 BackgroundTask = 3;
                 if (IsSaveBillClicked) BackgroundTask = 4;
-                if (InvoiceModified) lblStatus.Text = "Updating Customer Bill, please wait...";
+                if (InvoiceModified || CurrOrderInvoiceDetails.CurrInvoiceDetailsOrig != null) lblStatus.Text = "Updating Customer Bill, please wait...";
                 else lblStatus.Text = "Creating Customer Bill, please wait...";
 #if DEBUG
                 backgroundWorker1_DoWork(null, null);
@@ -451,6 +446,8 @@ namespace SalesOrdersReport.Views
 
                         Int32 Index = dtGridViewInvOrdProdList.Rows.Add(row);
                         DictItemsSelected.Add(item.ProductName, dtGridViewInvOrdProdList.Rows[Index]);
+
+                        dtTmPckrInvOrdDate.Value = CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceDate;
                     }
                     FormTitle = "Update Bill";
                     btnCreateBill.Text = "Update Bill";
@@ -503,10 +500,48 @@ namespace SalesOrdersReport.Views
                 switch (BackgroundTask)
                 {
                     case 2:     //Load Order/Invoice for Current Customer
-                        EnableItemsPanel(true);
-                        picBoxLoading.Visible = false;
-                        cmbBoxProdCat.Focus();
-                        cmbBoxProdCat.SelectedIndex = 0;
+                        if (ListCustomerInvoices != null && ListCustomerInvoices.Count > 0)
+                        {
+                            InvoiceDetails ObjInvoiceDetails = ListCustomerInvoices.Find(i => i.InvoiceNumber.Equals(cmbBoxBillNumber.SelectedItem.ToString()));
+                            if (ObjInvoiceDetails.InvoiceStatus == INVOICESTATUS.Delivered || ObjInvoiceDetails.InvoiceStatus == INVOICESTATUS.Paid)
+                            {
+                                panelOrderControls.Enabled = true;
+                                cmbBoxProdCat.Enabled = false;
+                                cmbBoxProduct.Enabled = false;
+                                cmbBoxBillNumber.Enabled = false;
+                                btnCreateBill.Enabled = false;
+                                btnDiscount.Enabled = false;
+                                btnItemDiscount.Enabled = false;
+                                btnRemItem.Enabled = false;
+                                btnSaveBill.Enabled = false;
+                                btnSelectAll.Enabled = false;
+                                btnSelectAllToRemove.Enabled = false;
+                                btnAddCustomer.Enabled = false;
+                                btnAddItem.Enabled = false;
+                                btnCancelChanges.Enabled = false;
+                                dtTmPckrInvOrdDate.Enabled = false;
+
+                                cmbBoxCustomers.Enabled = false;
+                                cmbBoxPhoneNumbers.Enabled = false;
+                                dtGridViewInvOrdProdList.Enabled = true;
+                                dtGridViewInvOrdProdList.ReadOnly = true;
+                                picBoxLoading.Visible = false;
+                            }
+                            else
+                            {
+                                EnableItemsPanel(true);
+                                picBoxLoading.Visible = false;
+                                cmbBoxProdCat.Focus();
+                                cmbBoxProdCat.SelectedIndex = 0;
+                            }
+                        }
+                        else
+                        {
+                            EnableItemsPanel(true);
+                            picBoxLoading.Visible = false;
+                            cmbBoxProdCat.Focus();
+                            cmbBoxProdCat.SelectedIndex = 0;
+                        }
                         break;
                     case 3:     //Update or Create Bill
                         MessageBox.Show(this, "Created Customer Bill successfully", "Create Bill", MessageBoxButtons.OK);
@@ -639,7 +674,7 @@ namespace SalesOrdersReport.Views
                 if (cmbBoxProdCat.SelectedIndex < 0 || !LoadCompleted) return;
 
                 ListProducts = CommonFunctions.ObjProductMaster.GetProductListForCategory(cmbBoxProdCat.SelectedItem.ToString());
-                ListProducts = ListProducts.OrderBy(p => p.ProductID).ToList();
+                ListProducts = ListProducts.Where(p => p.Active == true).OrderBy(p => p.SortName).ToList();
                 List<String> ListItems = new List<String>();
                 ListItems.Add("<ALL>");
                 ListItems.AddRange(ListProducts.Select(s => s.ItemName));

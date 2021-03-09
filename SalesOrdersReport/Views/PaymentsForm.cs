@@ -28,6 +28,7 @@ namespace SalesOrdersReport.Views
                 InitializeComponent();
                 ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
                 CommonFunctions.SetDataGridViewProperties(dtGridViewPayments);
+                CommonFunctions.SetDataGridViewProperties(dgvPaymentSummary);
 
                 ObjPaymentsModel = new PaymentsModel();
                 ObjPaymentsModel.LoadPaymentModes();

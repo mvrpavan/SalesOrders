@@ -201,7 +201,7 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void btnViewEditInvoice_Click(object sender, EventArgs e)
+        private void btnViewEditBill_Click(object sender, EventArgs e)
         {
             try
             {
@@ -226,7 +226,7 @@ namespace SalesOrdersReport.Views
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"{this}.btnViewEditInvoice_Click()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.btnViewEditBill_Click()", ex);
             }
         }
 

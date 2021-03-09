@@ -236,10 +236,10 @@ namespace SalesOrdersReport.Models
             {
                 DataTable dt = new DataTable();
                 String Query = "SELECT a.INVOICEID,a.INVOICENUMBER as 'INVOICE#',b.CUSTOMERNAME,c.LINENAME,a.GROSSINVOICEAMOUNT as SALE,a.NETINVOICEAMOUNT as 'NET SALE',a.DISCOUNTAMOUNT as DISCOUNT,e.BALANCEAMOUNT as OB "
-                          + " FROM INVOICES a INNER JOIN CUSTOMERMASTER b on a.CUSTOMERID = b.CUSTOMERID "
-                          + " INNER JOIN LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
+                          + " FROM Invoices a INNER JOIN CUSTOMERMASTER b on a.CUSTOMERID = b.CUSTOMERID "
+                          + " Left Outer Join LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
                           + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = a.CUSTOMERID "
-                          + " WHERE a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'DELIVERED'; ";
+                          + " WHERE a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered'; ";
 
                 dt = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 return dt;

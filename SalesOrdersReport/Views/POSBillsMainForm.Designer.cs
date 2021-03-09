@@ -302,7 +302,7 @@
             this.btnViewEditBill.Text = "View Bill";
             this.btnViewEditBill.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnViewEditBill.UseVisualStyleBackColor = false;
-            this.btnViewEditBill.Click += new System.EventHandler(this.btnViewEditInvoice_Click);
+            this.btnViewEditBill.Click += new System.EventHandler(this.btnViewEditBill_Click);
             // 
             // dtGridViewBills
             // 

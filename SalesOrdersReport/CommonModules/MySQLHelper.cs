@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using System.Data.Common;
 using System.Data;
-using System.Windows.Forms;
 using System.IO;
 
 namespace SalesOrdersReport.CommonModules

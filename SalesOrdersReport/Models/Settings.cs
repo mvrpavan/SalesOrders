@@ -16,7 +16,8 @@ namespace SalesOrdersReport
         public String MainFormTitleText, LogoFileName;
         public Int32 ReportRowsFromTop, ReportAppendRowsAtBottom, LogoImageHeight;
         public string Server = "", DatabaseName = "", UserName = "", Password = "";
-        public String SenderMailID = "", SenderMailPassword = "", SenderName = "", ReceiverMailID = "", ReceiverName = "", StoreName = "", POSNumber = "";
+        public String SMTPServer = "", SenderMailID = "", SenderMailPassword = "", SenderName = "", ReceiverMailID = "", ReceiverName = "", StoreName = "", POSNumber = "";
+        public Int32 SMTPPort = 0;
         public List<String> ListSQLScriptFiles = new List<String>();
         public Boolean EnableMail = true;
 
@@ -51,6 +52,8 @@ namespace SalesOrdersReport
 
                 XmlNode EmailDetailsNode;
                 XMLFileUtils.GetChildNode(SettingsNode, "EmailDetails", out EmailDetailsNode);
+                XMLFileUtils.GetAttributeValue(EmailDetailsNode, "SMTPServer", out SMTPServer);
+                XMLFileUtils.GetAttributeValue(EmailDetailsNode, "SMTPPort", out SMTPPort);
                 XMLFileUtils.GetAttributeValue(EmailDetailsNode, "SenderMailID", out SenderMailID);
                 XMLFileUtils.GetAttributeValue(EmailDetailsNode, "SenderMailPassword", out SenderMailPassword);
                 XMLFileUtils.GetAttributeValue(EmailDetailsNode, "ReceiverMailID", out ReceiverMailID);

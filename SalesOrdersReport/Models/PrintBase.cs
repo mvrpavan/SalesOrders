@@ -145,7 +145,10 @@ namespace SalesOrdersReport.Models
                 Int32 Height = -1;
                 if (ObjPrintDetails != null) Height = FormatPrintDocument(e);
                 if (ObjPrintSummaryDetails != null) Height = FormatPrintSummaryDocument(e);
+                //Height = (Int32)(((Height / 8.0) / 25.4) * 100);
+                //Height = (Int32)(Height * 0.010416667 * 100);
                 ObjPrintDocument.DefaultPageSettings.PaperSize = new PaperSize("", (Int32)PaperWidth, Height);
+                e.HasMorePages = false;
             }
             catch (Exception ex)
             {
