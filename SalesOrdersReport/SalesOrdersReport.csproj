@@ -109,6 +109,12 @@
     <Compile Include="Views\AddTaxForm.Designer.cs">
       <DependentUpon>AddTaxForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\CreateVendorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CreateVendorForm.Designer.cs">
+      <DependentUpon>CreateVendorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\CreateCustomerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -193,6 +199,12 @@
     <Compile Include="Views\DiscountForm.Designer.cs">
       <DependentUpon>DiscountForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\EditVendorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\EditVendorForm.Designer.cs">
+      <DependentUpon>EditVendorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\EditCustomerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -261,6 +273,12 @@
     </Compile>
     <Compile Include="Views\ImportFromExcelForm.Designer.cs">
       <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ManageVendorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ManageVendorForm.Designer.cs">
+      <DependentUpon>ManageVendorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\PaymentModeSelectionForm.cs">
       <SubType>Form</SubType>
@@ -470,6 +488,9 @@
     <EmbeddedResource Include="Views\AddTaxForm.resx">
       <DependentUpon>AddTaxForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\CreateVendorForm.resx">
+      <DependentUpon>CreateVendorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\CreateCustomerForm.resx">
       <DependentUpon>CreateCustomerForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -512,6 +533,9 @@
     <EmbeddedResource Include="Views\DiscountForm.resx">
       <DependentUpon>DiscountForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\EditVendorForm.resx">
+      <DependentUpon>EditVendorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\EditCustomerForm.resx">
       <DependentUpon>EditCustomerForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -544,6 +568,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ImportFromExcelForm.resx">
       <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ManageVendorForm.resx">
+      <DependentUpon>ManageVendorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\PaymentModeSelectionForm.resx">
       <DependentUpon>PaymentModeSelectionForm.cs</DependentUpon>

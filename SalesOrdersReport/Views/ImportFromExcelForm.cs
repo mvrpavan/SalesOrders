@@ -8,7 +8,7 @@ namespace SalesOrdersReport.Views
 {
     public enum ImportDataTypes
     {
-        Products, Customers , Payments
+        Products, Customers , Payments, Vendors
     };
 
     public delegate Int32 ImportDataFromFileDel(String FilePath, Object ObjDetails, ReportProgressDel ReportProgress);
@@ -65,6 +65,14 @@ namespace SalesOrdersReport.Views
                         chkListBoxDataToImport.Enabled = false;
                         OFDImportExcelFileDialog.Filter = "Excel Files(*.xlsx;*.xls)|*.xlsx;*.xls|All Files(*.*)|*.*";
                         OFDImportExcelFileDialog.Title = "Choose File to Import Payments data from";
+                        break;
+                    case ImportDataTypes.Vendors:
+                        this.Text = "Import Vendors from Excel";
+                        btnImportFrmExclUploadFile.Text = "Import Vendors";
+                        chkListBoxDataToImport.Items.Add("Vendor Details", true);
+                        chkListBoxDataToImport.Enabled = false;
+                        OFDImportExcelFileDialog.Filter = "Excel Files(*.xlsx;*.xls)|*.xlsx;*.xls|All Files(*.*)|*.*";
+                        OFDImportExcelFileDialog.Title = "Choose File to Import Vendors data from";
                         break;
                     default:
                         break;
@@ -188,21 +196,32 @@ namespace SalesOrdersReport.Views
                             MessageBox.Show(this, "Importing Customers data from File to Database failed!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                             ImportResult = -1;
                         }
-                        //MessageBox.Show("Importing Customer File to DB Successful!!!");
                         break;
                     case ImportDataTypes.Payments:
                         Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgress);
                         if (Retval == 0)
                         {
-                            MessageBox.Show(this, "Importing Customers data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                            MessageBox.Show(this, "Importing Payments data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                             ImportResult = 0;
                         }
                         else
                         {
-                            MessageBox.Show(this, "Importing Customers data from File to Database failed!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                            MessageBox.Show(this, "Importing Payments data from File to Database failed!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                             ImportResult = -1;
                         }
-                        //MessageBox.Show("Importing Customer File to DB Successful!!!");
+                        break;
+                    case ImportDataTypes.Vendors:
+                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgress);
+                        if (Retval == 0)
+                        {
+                            MessageBox.Show(this, "Importing Vendors data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                            ImportResult = 0;
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, "Importing Vendors data from File to Database failed!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                            ImportResult = -1;
+                        }
                         break;
                     default:
                         break;
@@ -241,6 +260,12 @@ namespace SalesOrdersReport.Views
                         UpdateOnClose(Mode: 1);
                         break;
                     case ImportDataTypes.Customers:
+                        UpdateOnClose(Mode: 1);
+                        break;
+                    case ImportDataTypes.Payments:
+                        UpdateOnClose(Mode: 1);
+                        break;
+                    case ImportDataTypes.Vendors:
                         UpdateOnClose(Mode: 1);
                         break;
                     default:

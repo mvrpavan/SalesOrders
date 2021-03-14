@@ -51,10 +51,14 @@
             this.cmbxStaffName = new System.Windows.Forms.ComboBox();
             this.lblStaffName = new System.Windows.Forms.Label();
             this.btnAddToDB = new System.Windows.Forms.Button();
+            this.lblPaymentSummary = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnExportToExcel = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewPayments)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPaymentSummary)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCreatePayment
@@ -79,6 +83,7 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.btnExportToExcel);
             this.panel1.Controls.Add(this.btnImportFromExcel);
             this.panel1.Controls.Add(this.groupBox3);
             this.panel1.Controls.Add(this.comboBox2);
@@ -90,7 +95,7 @@
             this.panel1.Controls.Add(this.btnCreatePayment);
             this.panel1.Location = new System.Drawing.Point(12, 37);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1164, 84);
+            this.panel1.Size = new System.Drawing.Size(1181, 84);
             this.panel1.TabIndex = 1;
             // 
             // btnImportFromExcel
@@ -118,7 +123,7 @@
             this.groupBox3.Controls.Add(this.dTimePickerFromPayments);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(862, 3);
+            this.groupBox3.Location = new System.Drawing.Point(858, 3);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(298, 73);
             this.groupBox3.TabIndex = 10;
@@ -294,7 +299,7 @@
             this.dgvPaymentSummary.Location = new System.Drawing.Point(12, 423);
             this.dgvPaymentSummary.MultiSelect = false;
             this.dgvPaymentSummary.Name = "dgvPaymentSummary";
-            this.dgvPaymentSummary.Size = new System.Drawing.Size(1164, 228);
+            this.dgvPaymentSummary.Size = new System.Drawing.Size(1164, 244);
             this.dgvPaymentSummary.TabIndex = 5;
             this.dgvPaymentSummary.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPaymentSummary_CellEndEdit);
             this.dgvPaymentSummary.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPaymentSummary_CellValueChanged);
@@ -303,7 +308,7 @@
             // cmbxDeliveryLine
             // 
             this.cmbxDeliveryLine.FormattingEnabled = true;
-            this.cmbxDeliveryLine.Location = new System.Drawing.Point(88, 396);
+            this.cmbxDeliveryLine.Location = new System.Drawing.Point(373, 394);
             this.cmbxDeliveryLine.Name = "cmbxDeliveryLine";
             this.cmbxDeliveryLine.Size = new System.Drawing.Size(121, 21);
             this.cmbxDeliveryLine.TabIndex = 6;
@@ -312,7 +317,7 @@
             // lblSelectDeliveryLine
             // 
             this.lblSelectDeliveryLine.AutoSize = true;
-            this.lblSelectDeliveryLine.Location = new System.Drawing.Point(14, 399);
+            this.lblSelectDeliveryLine.Location = new System.Drawing.Point(299, 397);
             this.lblSelectDeliveryLine.Name = "lblSelectDeliveryLine";
             this.lblSelectDeliveryLine.Size = new System.Drawing.Size(68, 13);
             this.lblSelectDeliveryLine.TabIndex = 7;
@@ -321,7 +326,7 @@
             // cmbxStaffName
             // 
             this.cmbxStaffName.FormattingEnabled = true;
-            this.cmbxStaffName.Location = new System.Drawing.Point(305, 396);
+            this.cmbxStaffName.Location = new System.Drawing.Point(873, 13);
             this.cmbxStaffName.Name = "cmbxStaffName";
             this.cmbxStaffName.Size = new System.Drawing.Size(121, 21);
             this.cmbxStaffName.TabIndex = 8;
@@ -329,25 +334,65 @@
             // lblStaffName
             // 
             this.lblStaffName.AutoSize = true;
-            this.lblStaffName.Location = new System.Drawing.Point(239, 399);
+            this.lblStaffName.Location = new System.Drawing.Point(747, 16);
             this.lblStaffName.Name = "lblStaffName";
-            this.lblStaffName.Size = new System.Drawing.Size(60, 13);
+            this.lblStaffName.Size = new System.Drawing.Size(112, 13);
             this.lblStaffName.TabIndex = 9;
-            this.lblStaffName.Text = "Staff Name";
+            this.lblStaffName.Text = "Payment Recived By :";
             // 
             // btnAddToDB
             // 
             this.btnAddToDB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnAddToDB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAddToDB.Image = global::SalesOrdersReport.Properties.Resources.math_add_icon_24;
-            this.btnAddToDB.Location = new System.Drawing.Point(478, 383);
+            this.btnAddToDB.Location = new System.Drawing.Point(1048, 5);
             this.btnAddToDB.Name = "btnAddToDB";
-            this.btnAddToDB.Size = new System.Drawing.Size(93, 34);
+            this.btnAddToDB.Size = new System.Drawing.Size(108, 34);
             this.btnAddToDB.TabIndex = 10;
-            this.btnAddToDB.Text = "Add to DB";
+            this.btnAddToDB.Text = "Add Payments";
             this.btnAddToDB.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnAddToDB.UseVisualStyleBackColor = false;
             this.btnAddToDB.Click += new System.EventHandler(this.btnAddToDB_Click);
+            // 
+            // lblPaymentSummary
+            // 
+            this.lblPaymentSummary.AutoSize = true;
+            this.lblPaymentSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F);
+            this.lblPaymentSummary.Location = new System.Drawing.Point(12, 385);
+            this.lblPaymentSummary.Name = "lblPaymentSummary";
+            this.lblPaymentSummary.Size = new System.Drawing.Size(188, 25);
+            this.lblPaymentSummary.TabIndex = 12;
+            this.lblPaymentSummary.Text = "Payments Summary";
+            // 
+            // panel2
+            // 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel2.AutoSize = true;
+            this.panel2.Controls.Add(this.btnAddToDB);
+            this.panel2.Controls.Add(this.lblStaffName);
+            this.panel2.Controls.Add(this.cmbxStaffName);
+            this.panel2.Location = new System.Drawing.Point(12, 673);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1164, 42);
+            this.panel2.TabIndex = 11;
+            // 
+            // btnExportToExcel
+            // 
+            this.btnExportToExcel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnExportToExcel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnExportToExcel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnExportToExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExportToExcel.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnExportToExcel.Image = global::SalesOrdersReport.Properties.Resources.export_icon;
+            this.btnExportToExcel.Location = new System.Drawing.Point(628, 3);
+            this.btnExportToExcel.Name = "btnExportToExcel";
+            this.btnExportToExcel.Size = new System.Drawing.Size(83, 73);
+            this.btnExportToExcel.TabIndex = 13;
+            this.btnExportToExcel.Text = "Export to Excel";
+            this.btnExportToExcel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnExportToExcel.UseVisualStyleBackColor = false;
+            this.btnExportToExcel.Click += new System.EventHandler(this.btnExportToExcel_Click);
             // 
             // PaymentsForm
             // 
@@ -355,10 +400,9 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1184, 743);
-            this.Controls.Add(this.btnAddToDB);
-            this.Controls.Add(this.lblStaffName);
-            this.Controls.Add(this.cmbxStaffName);
+            this.ClientSize = new System.Drawing.Size(1184, 745);
+            this.Controls.Add(this.lblPaymentSummary);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.lblSelectDeliveryLine);
             this.Controls.Add(this.cmbxDeliveryLine);
             this.Controls.Add(this.dgvPaymentSummary);
@@ -378,6 +422,8 @@
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewPayments)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPaymentSummary)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -408,5 +454,8 @@
         private System.Windows.Forms.ComboBox cmbxStaffName;
         private System.Windows.Forms.Label lblStaffName;
         private System.Windows.Forms.Button btnAddToDB;
+        private System.Windows.Forms.Label lblPaymentSummary;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button btnExportToExcel;
     }
 }

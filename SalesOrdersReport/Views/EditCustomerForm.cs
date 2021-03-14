@@ -185,6 +185,13 @@ namespace SalesOrdersReport
                 ListColumnValues.Add(txtEditGSTIN.Text);
                 ListColumnNames.Add("GSTIN");
                 //}
+                ListColumnNames.Add("ACTIVE");
+
+                if (rdbtnEditCustActiveNo.Checked == true)
+                {
+                    ListColumnValues.Add("0");
+                }
+                else ListColumnValues.Add("1");
 
                 ListColumnValues.Add(txtEditCustPhone.Text.Trim() == string.Empty ? "NULL" : txtEditCustPhone.Text.Trim());
                 ListColumnNames.Add("PHONENO");

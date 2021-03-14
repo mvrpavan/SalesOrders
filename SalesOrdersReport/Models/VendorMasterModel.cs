@@ -9,8 +9,8 @@ namespace SalesOrdersReport.Models
 {
     class VendorDetails : IComparer<VendorDetails>
     {
-        public Int32 VendorID, StateID, PriceGroupID, DiscountGroupID;
-        public String VendorName, Address, PhoneNo, GSTIN;
+        public Int32 VendorID, StateID; //,PriceGroupID, DiscountGroupID;
+        public String VendorName, Address, PhoneNo, GSTIN, State;
         public Int32 PriceGroupIndex, DiscountGroupIndex;
         public Boolean Active;
         public DateTime AddedDate, LastUpdateDate;
@@ -19,6 +19,12 @@ namespace SalesOrdersReport.Models
         {
             return x.VendorName.ToUpper().CompareTo(y.VendorName.ToUpper());
         }
+    }
+    class ImportFromExcelVendorCache
+    {
+        public string VendorColName = "VendorName",  StateColName = "State";
+        public string  ActiveColName = "Active", AddressColName = "Address", GSTINColName = "GSTIN";
+        public string AddedDateColName = "AddedDate", LastUpdateDateColName = "LastUpdateDate", PhoneNoColName = "Phone";       
     }
 
     class VendorMasterModel
@@ -43,10 +49,67 @@ namespace SalesOrdersReport.Models
             }
         }
 
+        public void FillVendorDBFromCache(List<VendorDetails> ListVendorDtls = null)
+        {
+            try
+            {
+                List<VendorDetails> listtemp = ListVendorDtls;
+                if (ListVendorDtls == null) listtemp = ListVendorDetails;
+                string Query = "";
+                for (int i = 0; i < listtemp.Count; i++)
+                {
+                    Query = "INSERT INTO VendorMaster (VendorID,StateID,VendorName, Address, PhoneNo, GSTIN, Active,AddedDate,LastUpdateDate) VALUES ("
+                                             + listtemp[i].VendorID
+                                             + "," + listtemp[i].StateID + ",'" + listtemp[i].VendorName + "','" + listtemp[i].Address
+                                             + "','" + listtemp[i].PhoneNo + "','" + listtemp[i].GSTIN + "'," + (listtemp[i].Active == true ? 1 : 0)
+                                             + ",'" + DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") + "','" + DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") + "'"
+                                             + ")";
+                    Query += ";";
+                    ObjMySQLHelper.ExecuteNonQuery(Query);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("VendorMasterModel.FillVendorDBFromCache()", ex);
+            }
+        }
+        public List<VendorDetails> GetListVendorCache()
+        {
+            try
+            {
+                List<VendorDetails> ListCustomerCache = new List<VendorDetails>();
+                ListCustomerCache.AddRange(ListVendorDetails);
+
+                return ListCustomerCache;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("VendorMasterModel.GetListVendorCache()", ex);
+            }
+            return null;
+        }
+
+        public DataTable LoadNGetVendorDataTable()
+        {
+            try
+            {
+                String Query = "SELECT * FROM VendorMaster;";
+                DataTable dtVendor = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                LoadVendorMaster(dtVendor);
+                return dtVendor;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.LoadNGetVendorDataTable()", ex);
+                return null;
+            }
+        }
+
         public void LoadVendorMaster(DataTable dtVendorMaster)
         {
             try
             {
+                ListVendorDetails = new List<VendorDetails>();
                 #region Load Vendor Details
                 for (int i = 0; i < dtVendorMaster.Rows.Count; i++)
                 {
@@ -60,9 +123,7 @@ namespace SalesOrdersReport.Models
                     ObjVendorDetails.PhoneNo = dtRow["PhoneNo"].ToString().Trim();
                     ObjVendorDetails.GSTIN = dtRow["GSTIN"].ToString().Trim();
                     ObjVendorDetails.StateID = Int32.Parse(dtRow["StateID"].ToString().Trim());
-                    ObjVendorDetails.PriceGroupID = (dtRow["PriceGroupID"] == DBNull.Value) ? -1 : Int32.Parse(dtRow["PriceGroupID"].ToString().Trim());
-                    ObjVendorDetails.DiscountGroupID = (dtRow["DiscountGroupID"] == DBNull.Value) ? -1 : Int32.Parse(dtRow["DiscountGroupID"].ToString().Trim());
-                    ObjVendorDetails.Active = dtRow["Active"].ToString().Trim().Equals("1");
+                    ObjVendorDetails.Active = (dtRow["Active"].ToString().Trim() == "1") ? true : false;
                     ObjVendorDetails.AddedDate = DateTime.Parse(dtRow["AddedDate"].ToString().Trim());
                     ObjVendorDetails.LastUpdateDate = DateTime.Parse(dtRow["LastUpdateDate"].ToString().Trim());
 
@@ -85,14 +146,14 @@ namespace SalesOrdersReport.Models
                 {
                     ListVendorDetails.Insert(~VendorIndex, ObjVendorDetails);
 
-                    PriceGroupDetails priceGroupDetails = null;
-                    Models.DiscountGroupDetails discountGroupDetails = null;
-                    if (ObjVendorDetails.PriceGroupID > 0) priceGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetPriceGrpDetails(ObjVendorDetails.PriceGroupID);
-                    if (ObjVendorDetails.DiscountGroupID > 0) discountGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetDiscountGrpDetails(ObjVendorDetails.DiscountGroupID);
+                    //PriceGroupDetails priceGroupDetails = null;
+                    //Models.DiscountGroupDetails discountGroupDetails = null;
+                    //if (ObjVendorDetails.PriceGroupID > 0) priceGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetPriceGrpDetails(ObjVendorDetails.PriceGroupID);
+                    //if (ObjVendorDetails.DiscountGroupID > 0) discountGroupDetails = CommonFunctions.ObjCustomerMasterModel.GetDiscountGrpDetails(ObjVendorDetails.DiscountGroupID);
 
-                    ObjVendorDetails.PriceGroupIndex = ObjVendorDetails.DiscountGroupIndex = -1;
-                    if (priceGroupDetails != null) ObjVendorDetails.PriceGroupIndex = CommonFunctions.ObjCustomerMasterModel.GetAllDiscountGrp().FindIndex(e => e.Equals(priceGroupDetails.PriceGrpName));
-                    if (discountGroupDetails != null) ObjVendorDetails.DiscountGroupIndex = CommonFunctions.ObjCustomerMasterModel.GetAllDiscountGrp().FindIndex(e => e.Equals(discountGroupDetails.DiscountGrpName, StringComparison.InvariantCultureIgnoreCase));
+                   // ObjVendorDetails.PriceGroupIndex = ObjVendorDetails.DiscountGroupIndex = -1;
+                    //if (priceGroupDetails != null) ObjVendorDetails.PriceGroupIndex = CommonFunctions.ObjCustomerMasterModel.GetAllDiscountGrp().FindIndex(e => e.Equals(priceGroupDetails.PriceGrpName));
+                    //if (discountGroupDetails != null) ObjVendorDetails.DiscountGroupIndex = CommonFunctions.ObjCustomerMasterModel.GetAllDiscountGrp().FindIndex(e => e.Equals(discountGroupDetails.DiscountGrpName, StringComparison.InvariantCultureIgnoreCase));
                 }
             }
             catch (Exception ex)
@@ -194,10 +255,10 @@ namespace SalesOrdersReport.Models
 
                 //Insert new Vendor to VendorMaster
                 Int32 RetVal = ObjMySQLHelper.InsertIntoTable("VendorMaster",
-                                                        new List<string>() { "VendorName", "Address", "PhoneNo", "GSTIN", "StateID", "Active" },
+                                                        new List<string>() { "VendorName", "Address", "PhoneNo", "GSTIN", "StateID", "Active" ,"AddedDate","LastUpdateDate"},
                                                         new List<string>() { ObjVendorDetails.VendorName, ObjVendorDetails.Address, ObjVendorDetails.PhoneNo,
-                                                            ObjVendorDetails.GSTIN, ObjVendorDetails.StateID.ToString(), (ObjVendorDetails.Active ? "1" : "0") },
-                                                        new List<Types>() { Types.String, Types.String, Types.String, Types.String, Types.Number, Types.Number });
+                                                            ObjVendorDetails.GSTIN, ObjVendorDetails.StateID.ToString(), (ObjVendorDetails.Active ? "1" : "0"), MySQLHelper.GetDateTimeStringForDB(ObjVendorDetails.AddedDate),MySQLHelper.GetDateTimeStringForDB(ObjVendorDetails.LastUpdateDate) },
+                                                        new List<Types>() { Types.String, Types.String, Types.String, Types.String, Types.Number, Types.Number ,Types.String,Types.String});
 
                 if (RetVal <= 0) return null;
                 Int32 VendorID = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select VendorID from VendorMaster Where VendorName= '{ObjVendorDetails.VendorName}';").ToString());

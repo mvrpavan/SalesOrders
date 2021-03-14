@@ -9,7 +9,7 @@ namespace SalesOrdersReport.Views
 
     public enum ExportDataTypes
     {
-        Products, Customers, Orders, Invoices
+        Products, Customers, Orders, Invoices, Payments
     };
 
     public delegate Int32 ExportDataToFileDel(String FilePath, Object ObjDetails, Boolean Append);
@@ -70,6 +70,14 @@ namespace SalesOrdersReport.Views
                         folderBrowserDialogExport.Description = "Save Exported file to";
                         chkBoxAppend.Visible = false;
                         break;
+                    case ExportDataTypes.Payments:
+                        this.Text = "Export Payments Data to Excel";
+                        chkListBoxDataToExport.Items.Add("Payment Details", true);
+                        lblExport.Text = "Export to File";
+                        btnExportToExcelFile.Text = "Export Payments Data to Excel File";
+                        saveFileDialogExportToExcel.Title = "Save Exported file as";
+                        chkBoxAppend.Visible = false;
+                        break;
                     default:
                         break;
                 }
@@ -100,6 +108,13 @@ namespace SalesOrdersReport.Views
                         if (result == DialogResult.OK)
                         {
                             txtExportToExcelFilePath.Text = folderBrowserDialogExport.SelectedPath;
+                        }
+                        break;
+                    case ExportDataTypes.Payments:
+                        result = saveFileDialogExportToExcel.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            txtExportToExcelFilePath.Text = saveFileDialogExportToExcel.FileName;
                         }
                         break;
                     default:
@@ -163,6 +178,13 @@ namespace SalesOrdersReport.Views
                             return;
                         }
                         break;
+                    case ExportDataTypes.Payments:
+                        if (chkListBoxDataToExport.CheckedItems.Count == 0)
+                        {
+                            MessageBox.Show(this, "Choose atleast one dataset to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                            return;
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -190,6 +212,19 @@ namespace SalesOrdersReport.Views
                             }
                             break;
                         case ExportDataTypes.Orders:
+                            break;
+                        case ExportDataTypes.Payments:
+                            if (!Directory.Exists(Path.GetDirectoryName(FilePath)))
+                            {
+                                MessageBox.Show(this, "Choose a valid directory to Save file to.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
+
+                            if (!chkBoxAppend.Checked && File.Exists(FilePath))
+                            {
+                                DialogResult dialogResult = MessageBox.Show(this, "Do you want to overwrite the file?", "Export data", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                                if (dialogResult == DialogResult.No) return;
+                            }
                             break;
                         default:
                             break;
@@ -304,6 +339,26 @@ namespace SalesOrdersReport.Views
                                 MessageBox.Show(this, "Exporting Invoices data to Excel file failed!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                                 ExportResult = -1;
                             }
+                        }
+                        break;
+                    case ExportDataTypes.Payments:
+
+                        Retval = ExportDataToFile(txtExportToExcelFilePath.Text, null, chkBoxAppend.Checked);
+
+                        if (Retval == 0)
+                        {
+                            MessageBox.Show(this, "Exporting Payments data to Excel File is successful!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                            ExportResult = 0;
+                        }
+                        else if (Retval == 1)
+                        {
+                            MessageBox.Show(this, "No Payments data available to export!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                            ExportResult = 1;
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, "Exporting Payments data to Excel file failed!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                            ExportResult = -1;
                         }
                         break;
                     default:

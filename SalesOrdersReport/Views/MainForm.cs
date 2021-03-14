@@ -668,7 +668,8 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                ShowChildForm(new VendorsMainForm());
+                //ShowChildForm(new VendorsMainForm());
+                ShowChildForm(new ManageVendorForm());
             }
             catch (Exception ex)
             {

@@ -16,7 +16,7 @@ namespace SalesOrdersReport.Views
         DataTable dtAllPayments;
         DataTable dtPaymentSummary;
         MySQLHelper ObjMySQLHelper;
-        InvoicesModel ObjInvoicesModel ;
+        InvoicesModel ObjInvoicesModel;
         List<string> ListPaymentModeNames;
         List<Type> ListPaymentModeColTypes;
         List<int> ListEditedInvoiceIDs = new List<int>();
@@ -51,10 +51,10 @@ namespace SalesOrdersReport.Views
                 dTimePickerToPayments.Value = DateTime.Today;
 
                 LoadPaymentsGridView(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
-              
+
                 cmbxStaffName.DataSource = CommonFunctions.ObjUserMasterModel.GetAllUsers();
                 cmbxStaffName.SelectedItem = CommonFunctions.CurrentUserName;
-               
+
 
                 LoadInputPaymentSummaryGridView();
                 List<string> ListTempNames = new List<string>() { "All" };
@@ -68,7 +68,7 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void LoadPaymentsGridView(DateTime FromDate,DateTime ToDate)
+        private void LoadPaymentsGridView(DateTime FromDate, DateTime ToDate)
         {
             try
             {
@@ -78,52 +78,11 @@ namespace SalesOrdersReport.Views
                 if (dtGridViewPayments.Columns.Count > 0) dtGridViewPayments.Columns.Clear();
                 if (dtAllPayments.Rows.Count == 0)
                 {
-                    var dataTable = new DataTable();
-                    dataTable.Columns.Add("Message", typeof(string));
-                    dataTable.Rows.Add("No Payments Added/found in DB");
-                    if (dtGridViewPayments.Columns.Count > 0) dtGridViewPayments.Columns.Clear();
-                    dtGridViewPayments.DataSource = new BindingSource { DataSource = dataTable };
+                    dtGridViewPayments.DataSource = new BindingSource { DataSource = CommonFunctions.GetDataTableWhenNoRecordsFound() };
                     dtGridViewPayments.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    return;
                 }
-                else
-                {
-                    List<PaymentDetails> ListPaymentDtlsCache = ObjPaymentsModel.GetPaymentDtlsCache();
-                    if (ListPaymentDtlsCache.Count > 0)
-                    {
-                        //PaymentID, PaymentDate, InvoiceID, QuotationID, AccountID, PaymentModeID, PaymentAmount, Description, CreationDate, LastUpdateDate, UserID
-                        String[] ArrColumnNames = new String[] { "PAYMENTID", "INVOICEID", "QUOTATIONID", "ACCOUNTID", "PAYMENTMODEID", "INVOICENUMBER", "CUSTOMERNAME", "PHONEN0","PAYMENTDATE", "PAYMENTMODE", "PAYMENTAMOUNT", "DESCRIPTION", "CREATIONDATE", "LASTUPDATEDATE", "STAFFNAME", "ACTIVE" };
-                        String[] ArrColumnHeaders = new String[] { "Payment ID", "Invoice ID", "Quotation  ID", "AccountID", "PaymentMode ID", "InvoiceNumber", "Customer Name","PhoneNo", "Payment Date", "Payment Mode", "Amount", "Description", "CreationDate", "LastUpdateDate", "Staff Name", "Active" };
-                        for (int i = 0; i < ArrColumnNames.Length; i++)
-                        {
-                            dtGridViewPayments.Columns.Add(ArrColumnNames[i], ArrColumnHeaders[i]);
-                            DataGridViewColumn CurrentCol = dtGridViewPayments.Columns[dtGridViewPayments.Columns.Count - 1];
-                            CurrentCol.ReadOnly = true;
-                            if (i <= 4) CurrentCol.Visible = false;    //CustomerID, LineID", "Discount Group ID, Price Group ID,State ID
-                        }
-                        foreach (PaymentDetails ObjPaymentDetails in ListPaymentDtlsCache)
-                        {
-                            Object[] ArrRowItems = new Object[16];
-                            ArrRowItems[0] = ObjPaymentDetails.PaymentId;
-                            ArrRowItems[1] = ObjPaymentDetails.InvoiceID;
-                            ArrRowItems[2] = ObjPaymentDetails.QuotationID;
-                            ArrRowItems[3] = ObjPaymentDetails.AccountID;
-                            ArrRowItems[4] = ObjPaymentDetails.PaymentModeID;
-                            ArrRowItems[5] = ObjPaymentDetails.InvoiceNumber;
-                            ArrRowItems[6] = ObjPaymentDetails.CustomerName;
-                            ArrRowItems[7] = ObjPaymentDetails.CustPhoneNo;
-                            ArrRowItems[8] = ObjPaymentDetails.PaidOn;
-
-                            ArrRowItems[9] = ObjPaymentDetails.PaymentMode;
-                            ArrRowItems[10] = ObjPaymentDetails.Amount;
-                            ArrRowItems[11] = ObjPaymentDetails.Description;
-                            ArrRowItems[12] = ObjPaymentDetails.PaidOn;
-                            ArrRowItems[13] = ObjPaymentDetails.LastUpdateDate;
-                            ArrRowItems[14] = ObjPaymentDetails.StaffName;
-                            ArrRowItems[15] = ObjPaymentDetails.Active;
-                            dtGridViewPayments.Rows.Add(ArrRowItems);
-                        }
-                    }
-                }
+                LoadGridView(dtAllPayments);
             }
             catch (Exception ex)
             {
@@ -131,13 +90,57 @@ namespace SalesOrdersReport.Views
             }
         }
 
-
+        void LoadGridView(DataTable DtNew)
+        {
+            try
+            {
+                //PaymentID, PaymentDate, InvoiceID, QuotationID, AccountID, PaymentModeID, PaymentAmount, Description, CreationDate, LastUpdateDate, UserID
+                String[] ArrColumnNames = new String[] { "PAYMENTID", "INVOICEID", "QUOTATIONID", "ACCOUNTID", "PAYMENTMODEID", "INVOICENUMBER", "CUSTOMERNAME", "PHONEN0", "PAYMENTDATE", "PAYMENTMODE", "PAYMENTAMOUNT", "DESCRIPTION", "CREATIONDATE", "LASTUPDATEDATE", "STAFFNAME", "ACTIVE" };
+                String[] ArrColumnHeaders = new String[] { "Payment ID", "Invoice ID", "Quotation  ID", "AccountID", "PaymentMode ID", "InvoiceNumber", "Customer Name", "PhoneNo", "Payment Date", "Payment Mode", "Amount", "Description", "CreationDate", "LastUpdateDate", "Staff Name", "Active" };
+                for (int i = 0; i < ArrColumnNames.Length; i++)
+                {
+                    dtGridViewPayments.Columns.Add(ArrColumnNames[i], ArrColumnHeaders[i]);
+                    DataGridViewColumn CurrentCol = dtGridViewPayments.Columns[dtGridViewPayments.Columns.Count - 1];
+                    CurrentCol.ReadOnly = true;
+                    if (i <= 4) CurrentCol.Visible = false;    //CustomerID, LineID", "Discount Group ID, Price Group ID,State ID
+                }
+                for (int i = 0; i < DtNew.Rows.Count; i++)
+                {
+                    Object[] ArrRowItems = new Object[ArrColumnNames.Length];
+                    int col = 0;
+                    DataRow dr = DtNew.Rows[i];
+                    ArrRowItems[col++] = dr["PAYMENTID"];
+                    ArrRowItems[col++] = dr["INVOICEID"];
+                    ArrRowItems[col++] = dr["QUOTATIONID"];
+                    ArrRowItems[col++] = dr["ACCOUNTID"];
+                    ArrRowItems[col++] = dr["PAYMENTMODEID"];
+                    ArrRowItems[col++] = dr["INVOICENUMBER"];
+                    ArrRowItems[col++] = dr["CUSTOMERNAME"];
+                    ArrRowItems[col++] = dr["PHONENO"];
+                    ArrRowItems[col++] = dr["PAYMENTDATE"];
+                    PaymentModeDetails ObjPayModeDtls = ObjPaymentsModel.GetPaymentModeDetails(int.Parse(dr["PAYMENTMODEID"].ToString().Trim() == string.Empty ? "0" : dr["PAYMENTMODEID"].ToString().Trim()));
+                    if (ObjPayModeDtls != null) ArrRowItems[col++] = ObjPayModeDtls.PaymentMode;
+                    else ArrRowItems[col++] = "";
+                    ArrRowItems[col++] = dr["PAYMENTAMOUNT"];
+                    ArrRowItems[col++] = dr["DESCRIPTION"];
+                    ArrRowItems[col++] = dr["CREATIONDATE"];
+                    ArrRowItems[col++] = dr["LASTUPDATEDATE"];
+                    ArrRowItems[col++] = dr["USERNAME"];
+                    ArrRowItems[col++] = dr["ACTIVE"];
+                    dtGridViewPayments.Rows.Add(ArrRowItems);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.LoadPaymentsGridView()", ex);
+            }
+        }
         DataTable GetPaymentsSummaryDataTable()
         {
             try
             {
                 DataTable dtPaymentSummary = new DataTable();
-                List<string> ListColumns = new List<string> { "Sl#", "InvoiceID","Line", "Invoice#", "Customer Name", "Sale", "Cancel", "Return", "Discount", "Total Tax", "Net Sale", "OB" };// Cash, UPI, Credit Card, Debit Card, Check};
+                List<string> ListColumns = new List<string> { "Sl#", "InvoiceID", "Line", "Invoice#", "Customer Name", "Sale", "Cancel", "Return", "Discount", "Total Tax", "Net Sale", "OB" };// Cash, UPI, Credit Card, Debit Card, Check};
                 ListColumns.AddRange(ListPaymentModeNames);
                 List<Type> ListColumnsType = new List<Type> { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeString,
                                                     CommonFunctions.TypeString,CommonFunctions.TypeString, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble,
@@ -183,12 +186,12 @@ namespace SalesOrdersReport.Views
                 return null;
             }
         }
-        private void LoadInputPaymentSummaryGridView(string DataFilter="")
+        private void LoadInputPaymentSummaryGridView(string DataFilter = "")
         {
             try
             {
                 //Sl#	Line	Invoice#	Customer Name	Sale	Cancel	Return	Discount	Total Tax	Net Sale	OB	Cash
-         
+
                 dtPaymentSummary = GetPaymentsSummaryDataTable();
 
                 if (ListEditedInvoiceIDs.Count > 0)
@@ -207,12 +210,12 @@ namespace SalesOrdersReport.Views
                 if (DataFilter != null) dtPaymentSummary.DefaultView.RowFilter = DataFilter;
 
                 dgvPaymentSummary.DataSource = dtPaymentSummary.DefaultView;
-           
+
 
                 foreach (DataGridViewColumn item in dgvPaymentSummary.Columns)
                 {
                     item.ReadOnly = true;
-                    if (item.HeaderText.Equals("INVOICEID")) item.Visible = false;
+                    if (item.HeaderText.Equals("InvoiceID") || item.HeaderText.Equals("Sl#")) item.Visible = false;
                     if (item.Name.Equals("Cancel") || item.Name.Equals("Return")
                         || ListPaymentModeNames.Contains(item.Name))
                     {
@@ -229,7 +232,7 @@ namespace SalesOrdersReport.Views
                             item.Selected = true;
                         }
                     }
-                }              
+                }
             }
             catch (Exception ex)
             {
@@ -260,10 +263,10 @@ namespace SalesOrdersReport.Views
                 if (dtCustomerSummary == null)
                 {
                     MessageBox.Show(this, "Provided Customer Summary file doesn't contain \"Customer Summary\" Sheet.\nPlease provide correct file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                   
+
                     return -1;
                 }
-                
+
 
                 dtCustomerSummary.DefaultView.RowFilter = "IsNull([Sl#], 0) > 0 AND Convert(IsNull([Cash], 0),'System.Double')>0 ";
                 DataRow[] drSellers = dtCustomerSummary.DefaultView.ToTable().Select("", "[Sl#] asc");
@@ -273,7 +276,7 @@ namespace SalesOrdersReport.Views
                 DateTime SummaryCreationDate = DateTime.Parse(xlSellerSummaryWorksheet.Cells[1, 2].Value.ToString());
                 xlSellerSummaryWorkbook.Close(false);
 
-             
+
 
                 PaymentModeDetails ObjPayModeDtls = ObjPaymentsModel.GetPaymentModeDetails("Cash");
                 string WhereCondition = " and InvoiceStatus = '" + INVOICESTATUS.Created + "' or InvoiceStatus = '" + INVOICESTATUS.Delivered + "'";
@@ -290,7 +293,7 @@ namespace SalesOrdersReport.Views
                         ListNotAdded.Add(CustomerName + " :: CustomerID Doesnt Exists in DB");
                         continue;
                     }
-                
+
                     AccountDetails ObjAccountDetails = ObjAccountsMasterModel.GetAccDtlsFromCustID(ObjCustomerDtls.CustomerID);
                     if (ObjAccountDetails == null)
                     {
@@ -301,15 +304,15 @@ namespace SalesOrdersReport.Views
                     int InvoiceID = ObjInvoicesModel.GetInvoiceIDFromNum(InvoiceNumb, WhereCondition);
                     if (InvoiceID < 0)
                     {
-                        ListNotAdded.Add(CustomerName + ":: InvoiceID not available for the invoice Number: "+ InvoiceNumb);
+                        ListNotAdded.Add(CustomerName + ":: InvoiceID not available for the invoice Number: " + InvoiceNumb);
                         continue;
                     }
 
                     //Insert Payment Table
-                    CreatePaymentTable(dr, ObjAccountDetails.AccountID,InvoiceID,ObjPayModeDtls.PaymentModeID,SummaryCreationDate);
+                    CreatePaymentTable(dr, ObjAccountDetails.AccountID, InvoiceID, ObjPayModeDtls.PaymentModeID, SummaryCreationDate);
 
                 }
-                MessageBox.Show(this, "Was not able add following customers to table : \n" + string.Join("\n",ListNotAdded), "Update Sales", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, "Was not able add following customers to table : \n" + string.Join("\n", ListNotAdded), "Update Sales", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 return 0;
             }
@@ -319,7 +322,7 @@ namespace SalesOrdersReport.Views
                 return -1;
             }
         }
-        void FillCustAccHistoryTble(DataRow dr,double AccountID)
+        void FillCustAccHistoryTble(DataRow dr, double AccountID)
         {
             try
             {
@@ -336,7 +339,7 @@ namespace SalesOrdersReport.Views
                 ListColumnNames.Add("PAYMENTID");
                 ListTypes.Add(Types.Number);
 
-                ListColumnValues.Add(dr["Sale"].ToString()==string.Empty?"0": dr["Sale"].ToString());
+                ListColumnValues.Add(dr["Sale"].ToString() == string.Empty ? "0" : dr["Sale"].ToString());
                 ListColumnNames.Add("SALEAMOUNT");
                 ListTypes.Add(Types.Number);
 
@@ -368,7 +371,7 @@ namespace SalesOrdersReport.Views
                 ListColumnNames.Add("AMOUNTRECEIVED");
                 ListTypes.Add(Types.Number);
 
-                ListColumnValues.Add(NwBalanceAmnt.ToString()); 
+                ListColumnValues.Add(NwBalanceAmnt.ToString());
                 ListColumnNames.Add("NEWBALANCEAMOUNT");
                 ListTypes.Add(Types.Number);
 
@@ -393,7 +396,7 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog($"{this}.FillCustAccHistoryTble()", ex);
             }
         }
-        public void CreatePaymentTable(DataRow dr,double AccountID, int InvoiceID,int PaymentMode,DateTime SummaryCreationDate)
+        public void CreatePaymentTable(DataRow dr, double AccountID, int InvoiceID, int PaymentMode, DateTime SummaryCreationDate)
         {
             try
             {
@@ -439,7 +442,7 @@ namespace SalesOrdersReport.Views
                 ListColumnValues.Add(SummaryCreationDate.ToString("yyyy-MM-dd H:mm:ss"));
                 ListColumnNames.Add("CREATIONDATE");
                 ListTypes.Add(Types.String);
-              
+
                 ListTempColValues.Add(dr["OB"].ToString() == string.Empty ? "0" : dr["OB"].ToString());
                 ListTempColNames.Add("BALANCEAMOUNT");
 
@@ -456,7 +459,7 @@ namespace SalesOrdersReport.Views
                 else
                 {
                     //MessageBox.Show("Added New Payment for :: " + dr["Customer Name"].ToString() + " successfully", "Added New Payment");
-                    FillCustAccHistoryTble(dr,AccountID);
+                    FillCustAccHistoryTble(dr, AccountID);
                     string WhereCondition = "ACCOUNTID = '" + AccountID.ToString() + "'";
 
                     ResultVal = CommonFunctions.ObjUserMasterModel.UpdateAnyTableDetails("ACCOUNTSMASTER", ListTempColNames, ListTempColValues, WhereCondition);
@@ -544,15 +547,15 @@ namespace SalesOrdersReport.Views
             {
                 //if ()
                 //{
-                    //DataGridViewRow row = this.dtGridViewPayments.SelectedRows[0];
+                //DataGridViewRow row = this.dtGridViewPayments.SelectedRows[0];
                 //string val = dtGridViewPayments.CurrentRow.Cells["PAYMENTID"].Value.ToString();
-                    //row.Cells["PAYMENTID"].Value
-                    // }
-                if(dtGridViewPayments.SelectedRows.Count == 0)
+                //row.Cells["PAYMENTID"].Value
+                // }
+                if (dtGridViewPayments.SelectedRows.Count == 0)
                 {
                     MessageBox.Show("Please Select a Payment Row To Edit!", "Error");
                     return;
-                 }
+                }
                 CommonFunctions.ShowDialog(new CreatePaymentForm(UpdatePaymentsOnClose, dTimePickerFromPayments.Value, dTimePickerToPayments.Value, false, this.dtGridViewPayments.SelectedRows[0]), this);
             }
             catch (Exception ex)
@@ -561,7 +564,7 @@ namespace SalesOrdersReport.Views
             }
         }
 
-     
+
 
         private void btnPrintPayment_Click(object sender, EventArgs e)
         {
@@ -609,46 +612,24 @@ namespace SalesOrdersReport.Views
                 //return null;
             }
         }
-        public string GetModifiedStringBasedOnMatchPatterns(string SearchStr, MatchPatterns MatchPttrn)
-        {
-            try
-            {
-                switch (MatchPttrn)
-                {
-                    case MatchPatterns.StartsWith:
-                        return SearchStr + "%";
-                    case MatchPatterns.EndsWith:
-                        return "%" + SearchStr;
-                    case MatchPatterns.Contains:
-                        return "%" + SearchStr + "%";
-                    case MatchPatterns.Whole:
-                        return SearchStr;
-                }
-                return SearchStr + "%";
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.GetModifiedStringBasedOnMatchPatterns()", ex);
-                return SearchStr + "%";
-            }
-        }
+
         public void AssignFilterDataTableToGrid(SearchDetails ObjSearchDtls)
         {
             try
             {
 
-                string ModifiedStr = GetModifiedStringBasedOnMatchPatterns(ObjSearchDtls.SearchString, ObjSearchDtls.MatchPattern);
-
+                string ModifiedStr = CommonFunctions.GetModifiedStringBasedOnMatchPatterns(ObjSearchDtls.SearchString, ObjSearchDtls.MatchPattern);
                 var rows = dtAllPayments.Select(CommonFunctions.DictFilterNamesWithActualDBColNames[ObjSearchDtls.SearchIn] + " like '" + ModifiedStr + "'");
+                dtGridViewPayments.DataSource = null;
+                if (dtGridViewPayments.Columns.Count > 0) dtGridViewPayments.Columns.Clear();
                 if (rows.Any())
                 {
-                    dtGridViewPayments.DataSource = rows.CopyToDataTable();
+                    LoadGridView(rows.CopyToDataTable());
                 }
                 else
                 {
-                    dtGridViewPayments.Rows.Clear();
-
-                    dtGridViewPayments.DataSource = null;
+                    dtGridViewPayments.DataSource = new BindingSource { DataSource = CommonFunctions.GetDataTableWhenNoRecordsFound() };
+                    dtGridViewPayments.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 }
             }
             catch (Exception ex)
@@ -657,7 +638,7 @@ namespace SalesOrdersReport.Views
 
             }
         }
-      
+
 
         private void btnDeletePayment_Click(object sender, EventArgs e)
         {
@@ -697,7 +678,7 @@ namespace SalesOrdersReport.Views
             }
         }
 
-    
+
         private void checkBoxApplyFilterPayments_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -716,7 +697,7 @@ namespace SalesOrdersReport.Views
             }
         }
 
-      
+
 
         private void dtGridViewInvoices_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -785,7 +766,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                if (e.ColumnIndex < 6 ||( e.ColumnIndex > 7 && e.ColumnIndex <= 11) || e.RowIndex < 0 || !ValueChanged) return;
+                if (e.ColumnIndex < 6 || (e.ColumnIndex > 7 && e.ColumnIndex <= 11) || e.RowIndex < 0 || !ValueChanged) return;
 
                 Int32 InvoiceID = Int32.Parse(dgvPaymentSummary["INVOICEID", e.RowIndex].Value.ToString());
                 if (!ListEditedInvoiceIDs.Contains(InvoiceID)) ListEditedInvoiceIDs.Add(InvoiceID);
@@ -818,10 +799,9 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                
                 for (int i = 0; i < ListEditedInvoiceIDs.Count; i++)
                 {
-                  
+
                     for (int j = 0; j < dgvPaymentSummary.Rows.Count; j++)
                     {
                         if (dgvPaymentSummary["INVOICEID", j].Value.ToString().Equals(ListEditedInvoiceIDs[i].ToString()))
@@ -844,7 +824,7 @@ namespace SalesOrdersReport.Views
                             tmpCustomerAccountHistoryDetails.DiscountAmount = Double.Parse(dgvPaymentSummary["DISCOUNT", j].Value.ToString());
                             tmpCustomerAccountHistoryDetails.CancelAmount = Double.Parse(dgvPaymentSummary["Cancel", j].Value.ToString());
                             tmpCustomerAccountHistoryDetails.RefundAmount = Double.Parse(dgvPaymentSummary["Return", j].Value.ToString());
-                            
+
 
 
                             tmpCustomerAccountHistoryDetails.NetSaleAmount = Double.Parse(dgvPaymentSummary["NET SALE", j].Value.ToString());
@@ -888,6 +868,84 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.btnAddToDB_Click()", ex);
+            }
+        }
+
+        private void btnExportToExcel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dtGridViewPayments.Columns.Count == 1)
+                {
+                    MessageBox.Show("No Data in the grid! Pls Choose valid Date Filter and fill the grid", "ERROR NO DATA", MessageBoxButtons.OK);
+                    return;
+                }
+                CommonFunctions.ShowDialog(new ExportToExcelForm(ExportDataTypes.Payments, UpdatePaymentsOnClose, ExportPaymentsData), this);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnExportToExcel_Click()", ex);
+            }
+        }
+        private Int32 ExportPaymentsData(String ExcelFilePath, Object ObjDetails, Boolean Append)
+        {
+            try
+            {
+                DialogResult result = MessageBox.Show(this, $"Export Payments data to Excel File. {dtGridViewPayments.Rows.Count} rows of Payments Data will be Exported.\n\nDo you want to continue to Export this data?",
+                                "Export Status", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+
+                if (result == DialogResult.No) return 1;
+
+                DataTable dtTempPayment = new DataTable();
+                List<string> ListOfColumnsToBeExcluded = new List<string>() { "INVOICEID", "QUOTATIONID", "ACCOUNTID", "PAYMENTMODEID" };
+                List<int> ListOfColumnIndexesNotAdded = new List<int>();
+                foreach (DataGridViewColumn col in dtGridViewPayments.Columns)
+                {
+                    if (!ListOfColumnsToBeExcluded.Contains(col.Name))
+                    {
+                        dtTempPayment.Columns.Add(col.Name);
+                    }
+                    else ListOfColumnIndexesNotAdded.Add(col.Index);
+                }
+
+                foreach (DataGridViewRow row in dtGridViewPayments.Rows)
+                {
+                    DataRow dRow = dtTempPayment.NewRow();
+                    int index = 0;
+                    foreach (DataGridViewCell cell in row.Cells)
+                    {
+                        if (!ListOfColumnIndexesNotAdded.Contains(cell.ColumnIndex))
+                        {
+                            dRow[index] = cell.Value;
+                            index++;
+                        }
+                    }
+                    dtTempPayment.Rows.Add(dRow);
+                }
+
+                string ExportStatus = ""; dtTempPayment.TableName = "PaymentsDetails";
+                Int32 RetVal = CommonFunctions.ExportDataTableToExcelFile(dtTempPayment, ExcelFilePath, dtTempPayment.TableName, Append);
+
+                if (RetVal < 0) ExportStatus += $"{(!String.IsNullOrEmpty(ExportStatus) ? "\n" : "")}Payments:: Failed export";
+                else ExportStatus += $"{(!String.IsNullOrEmpty(ExportStatus) ? "\n" : "")}Payments:: Exported:{dtTempPayment.Rows.Count}";
+
+                if (RetVal == 0)
+                {
+                    MessageBox.Show(this, $"Exported Payments data to Excel File. Following is the Export status:\n{ExportStatus}",
+                                    "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    return 0;
+                }
+                else
+                {
+                    MessageBox.Show(this, $"Following error occurred while exporting Payments data to Excel File.\n{ExportStatus}\n\nPlease check.",
+                                    "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExportPaymentssData()", ex);
+                return -1;
             }
         }
     }

@@ -58,7 +58,6 @@ namespace SalesOrdersReport.CommonModules
                 ObjCustomerMasterModel = new CustomerMasterModel();
                 ObjCustomerMasterModel.Initialize();
                 ObjAccountsMasterModel = new AccountsMasterModel();
-
                 if (!File.Exists(CommonFunctions.AppDataFolder + "\\" + CommonFunctions.ObjApplicationSettings.LogoFileName))
                 {
                     File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\Images\" + CommonFunctions.ObjApplicationSettings.LogoFileName,
@@ -78,9 +77,12 @@ namespace SalesOrdersReport.CommonModules
                     { "Order Status","ORDERSTATUS"  },
                     { "Order Date","ORDERDATE" } ,
                     { "Payment Date","PAYMENTDATE" } ,
-                    {"Payment Amount","PAYMENTAMOUNT" } ,
-                    {"Payment Method","PAYMENTMODE" } ,
-                    {"Payment Received by","USERNAME" }
+                    { "Payment Amount","PAYMENTAMOUNT" } ,
+                    { "Payment Method","PAYMENTMODE" } ,
+                    { "Payment Received by","USERNAME" },
+                    { "Vendor Name","VENDORNAME" },
+                    { "Vendor Phone" ,"PHONENO"},
+                    { "Vendor State","STATE"}
                 };
             }
             catch (Exception ex)
@@ -109,6 +111,23 @@ namespace SalesOrdersReport.CommonModules
                 throw;
             }
         }
+
+        public static DataTable GetDataTableWhenNoRecordsFound()
+        {
+            try
+            {
+                var dataTable = new DataTable();
+                dataTable.Columns.Add("Message", typeof(string));
+                dataTable.Rows.Add("No Records Added/found in DB");
+                return dataTable;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.GetDataTableWhenNoRecordsFound", ex);
+                return null;
+            }
+        }
+
 
         public static char GetColSeparator(String Header)
         {
@@ -430,7 +449,29 @@ namespace SalesOrdersReport.CommonModules
                 throw;
             }
         }
-
+        public static string GetModifiedStringBasedOnMatchPatterns(string SearchStr, MatchPatterns MatchPttrn)
+        {
+            try
+            {
+                switch (MatchPttrn)
+                {
+                    case MatchPatterns.StartsWith:
+                        return SearchStr + "%";
+                    case MatchPatterns.EndsWith:
+                        return "%" + SearchStr;
+                    case MatchPatterns.Contains:
+                        return "%" + SearchStr + "%";
+                    case MatchPatterns.Whole:
+                        return SearchStr;
+                }
+                return SearchStr + "%";
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.GetModifiedStringBasedOnMatchPatterns)", ex);
+                return SearchStr + "%";
+            }
+        }
         public static void AddNewProductLine(String Name, Int32 UseSettingsOfProductLineIndex)
         {
             try

@@ -570,6 +570,27 @@ namespace SalesOrdersReport.Models
                 throw ex;
             }
         }
+
+        public string GetStateName(int StateID)
+        {
+            try
+            {
+                StateDetails ObjStateDetails = new StateDetails();
+                ObjStateDetails.StateID = StateID;
+                if (ListStateDetails.Count == 0)
+                {
+                    CommonFunctions.ObjCustomerMasterModel.LoadStateMaster(ObjMySQLHelper.GetQueryResultInDataTable("SELECT * FROM STATEMASTER;"));
+                }
+                int Index = ListStateDetails.FindIndex(e => e.StateID == StateID);
+
+                return Index < 0 ? "" : ListStateDetails[Index].State;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetStateName()", ex);
+                throw ex;
+            }
+        }
         public int GetOrderDaysCode(string SelectedOrderDay)
         {
             try
