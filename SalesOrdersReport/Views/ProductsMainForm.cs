@@ -353,7 +353,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new AddProductCategoryForm(true, null, UpdateProductOnClose), this);
+                CommonFunctions.ShowDialog(new CreateProductCategoryForm(true, null, UpdateProductOnClose), this);
             }
             catch (Exception ex)
             {
@@ -373,7 +373,7 @@ namespace SalesOrdersReport.Views
 
                 String Category = dtGridViewProductCategory.SelectedRows[0].Cells["Name"].Value.ToString();
 
-                CommonFunctions.ShowDialog(new AddProductCategoryForm(false, Category, UpdateProductOnClose), this);
+                CommonFunctions.ShowDialog(new CreateProductCategoryForm(false, Category, UpdateProductOnClose), this);
             }
             catch (Exception ex)
             {
@@ -538,7 +538,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new AddProductForm(true, -1, UpdateProductOnClose), this);
+                CommonFunctions.ShowDialog(new CreateProductForm(true, -1, UpdateProductOnClose), this);
             }
             catch (Exception ex)
             {
@@ -558,7 +558,7 @@ namespace SalesOrdersReport.Views
 
                 Int32 ProductID = Int32.Parse(dtGridViewProducts.Rows[dtGridViewProducts.SelectedCells[0].RowIndex].Cells["ID"].Value.ToString());
 
-                CommonFunctions.ShowDialog(new AddProductForm(false, ProductID, UpdateProductOnClose), this);
+                CommonFunctions.ShowDialog(new CreateProductForm(false, ProductID, UpdateProductOnClose), this);
             }
             catch (Exception ex)
             {
@@ -657,7 +657,7 @@ namespace SalesOrdersReport.Views
 
                 Int32 ProductID = Int32.Parse(dtGridViewProducts.Rows[e.RowIndex].Cells["ID"].Value.ToString());
 
-                CommonFunctions.ShowDialog(new AddProductForm(false, ProductID, UpdateProductOnClose), this);
+                CommonFunctions.ShowDialog(new CreateProductForm(false, ProductID, UpdateProductOnClose), this);
             }
             catch (Exception ex)
             {
@@ -686,7 +686,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new AddTaxForm(true, -1, null), this);
+                CommonFunctions.ShowDialog(new CreateTaxForm(true, -1, null), this);
             }
             catch (Exception ex)
             {

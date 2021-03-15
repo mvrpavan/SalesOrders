@@ -42,7 +42,6 @@ namespace SalesOrdersReport.Views
                 {
                     cmbxSelectCustomerType.Items.Add(item);
                 }
-
             }
             catch (Exception ex)
             {
@@ -50,6 +49,7 @@ namespace SalesOrdersReport.Views
                 throw ex;
             }
         }
+
         private void btnRedirectCreateCustomer_Click(object sender, EventArgs e)
         {
             try
@@ -116,7 +116,6 @@ namespace SalesOrdersReport.Views
                 if (ObjEditCustomerForm.txtEditCustPhone.Text == "0") ObjEditCustomerForm.txtEditCustPhone.Text = "";
 
                 CommonFunctions.ShowDialog(ObjEditCustomerForm, this);
-
 
                 #region CheckOnce
                 //if (headerCheckBox.Checked == false)

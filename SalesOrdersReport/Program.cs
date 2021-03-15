@@ -34,7 +34,6 @@ namespace SalesOrdersReport
             {
                 LoginForm ObjLoginForm = new LoginForm();
                 MainForm ObjMainForm = new MainForm();
-                ObjMainForm.FormClosed += new FormClosedEventHandler(ObjMainForm.MainForm_FormClosed);
                 if (ObjLoginForm.ShowDialog(ObjMainForm) == DialogResult.OK)
                 {
                     Application.Run(ObjMainForm);

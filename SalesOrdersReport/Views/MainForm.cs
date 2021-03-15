@@ -1,12 +1,5 @@
 ﻿using SalesOrdersReport.CommonModules;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SalesOrdersReport.Views
@@ -19,10 +12,8 @@ namespace SalesOrdersReport.Views
 
         public MainForm()
         {
-            // CommonFunctions.Initialize();
             tmpMySQLHelper = MySQLHelper.GetMySqlHelperObj();
             InitializeComponent();
-
 #if RELEASE
             if (!String.IsNullOrEmpty(CommonFunctions.ObjApplicationSettings.LogoFileName.Trim()))
             {
@@ -40,16 +31,9 @@ namespace SalesOrdersReport.Views
 
             MasterSheetSelected = false;
 
-            //LoadProductLines();
-
-            sellerMenu.Visible = false;
             vendorMenu.Visible = false;
             productMenu.Visible = true;
             reportsMenu.Visible = true;
-
-            addModifyVendorToolStripMenuItem.Visible = false;
-            vendorHistoryToolStripMenuItem.Visible = false;
-            productStockToolStripMenuItem.Visible = false;
 
             FillShortcuts();
         }
@@ -200,92 +184,12 @@ namespace SalesOrdersReport.Views
         }
         #endregion
 
-        #region Seller Menu Item
-        private void createSalesOrderSheetToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-
-                SellerOrderSheetForm ObjAddNewOrderSheetForm = new SellerOrderSheetForm();
-                ShowChildForm(ObjAddNewOrderSheetForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.createSalesOrderSheetToolStripMenuItem_Click()", ex);
-            }
-        }
-
-        private void createInvoiceFromSalesOrderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-
-                SellerInvoiceForm ObjInvoiceForm = new SellerInvoiceForm();
-                ShowChildForm(ObjInvoiceForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.createInvoiceFromSalesOrderToolStripMenuItem_Click()", ex);
-            }
-        }
-
-        private void ShowCreateCustomerBillForm(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-
-                CustomerInvoiceSellerOrderForm ObjCustomerInvoiceForm = new CustomerInvoiceSellerOrderForm(false, true);
-                ShowChildForm(ObjCustomerInvoiceForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.ShowCreateCustomerBillForm()", ex);
-            }
-        }
-
-        private void createSellerOrderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-
-                CustomerInvoiceSellerOrderForm ObjCustomerInvoiceForm = new CustomerInvoiceSellerOrderForm(true, false);
-                ShowChildForm(ObjCustomerInvoiceForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.createSellerOrderToolStripMenuItem_Click()", ex);
-            }
-        }
-
-        private void updateSalesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-
-                UpdateOrderMasterForm ObjUpdateOrderMasterForm = new UpdateOrderMasterForm();
-                ShowChildForm(ObjUpdateOrderMasterForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.updateSalesToolStripMenuItem_Click()", ex);
-            }
-        }
-        #endregion
-
         #region Products Menu Item
         private void productMenu_Click(object sender, EventArgs e)
         {
             try
             {
-                //if (!IsValidToOpenChildForm()) return;
-
-                Views.ProductsMainForm productsMainForm = new Views.ProductsMainForm();
-                ShowChildForm(productsMainForm);
+                ShowChildForm(new ProductsMainForm());
             }
             catch (Exception ex)
             {
@@ -339,11 +243,6 @@ namespace SalesOrdersReport.Views
         #endregion
 
         #region Reports Menu Item
-        private void vendorHistoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void sellerHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -358,18 +257,12 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog("MainForm.sellerHistoryToolStripMenuItem_Click()", ex);
             }
         }
-
-        private void productStockToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
         #endregion
 
         #region Help Menu Item
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            About ObjAbout = new About();
-            ShowChildForm(ObjAbout);
+            ShowChildForm(new About());
         }
         #endregion
 
@@ -393,32 +286,11 @@ namespace SalesOrdersReport.Views
         }
         #endregion
 
-        private void mergeSalesOrderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-
-                MergeSalesOrdersForm ObjMergeSalesOrdersForm = new MergeSalesOrdersForm();
-                ShowChildForm(ObjMergeSalesOrdersForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.mergeSalesOrderToolStripMenuItem_Click()", ex);
-            }
-        }
-
         private void ProfileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-
-                EditProfileForm ObjEditProfileForm = new EditProfileForm();
-                ShowChildForm(ObjEditProfileForm);
-
-                //EditProfileForm ObjEditProfileForm = new EditProfileForm();
-                //ShowChildForm(ObjEditProfileForm);
-
+                ShowChildForm(new EditProfileForm());
             }
             catch (Exception ex)
             {
@@ -430,24 +302,9 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-
                 this.IsLoggedOut = true;
                 this.Close();
                 DialogResult = DialogResult.OK;
-                //this.Close();
-                // if (!IsValidToOpenChildForm()) return;
-                //Application.Run(new LoginForm());
-                //UpdateTableOnLogout();
-                //this.Hide();
-                //CommonFunctions.CurrentForm.Dispose();
-                //CommonFunctions.CurrentForm.Close();
-                //LoginForm ObjLog = new LoginForm();
-                //ObjLog.Show();
-                //ObjLog.Dispose(); //because user has logged out so the data must be flushed, by "Disposing" it will not be in the RAM anymore, so your hanging problem will be solved
-                //ObjLog.Show();
-
-
-                //Application.Exit();
             }
             catch (Exception ex)
             {
@@ -455,49 +312,11 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void btnUserProfile_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //cntxtMenuStripUserProfile.Items.Clear();
-                ////cntxtMenuStripUserProfile.Items.Add("Change Password");
-                //cntxtMenuStripUserProfile.Items.Add("Profile");
-                // cntxtMenuStripUserProfile.Items.Add("Log Out");
-
-                //cntxtMenuStripUserProfile.Show(btnUserProfile, new Point(0, btnUserProfile.Height));
-                //cntxtMenuStripUserProfile.ItemClicked += new ToolStripItemClickedEventHandler(cntxtMenuStripUserProfile_ItemClicked);// cntxtMenuStripUserProfile_ItemClicked(null, cntxtMenuStripUserProfile;//new System.EventHandler(this.cntxtMenuStripUserProfile_ItemClicked);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.btnUserProfile_Click()", ex);
-                throw;
-            }
-
-        }
-
-        private void showAllOrdersToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Views.OrdersMainForm ordersMainForm = new Views.OrdersMainForm();
-                ShowChildForm(ordersMainForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.showAllOrdersToolStripMenuItem_Click()", ex);
-            }
-        }
-
         private void manageUsersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                //if (!IsValidToOpenChildForm()) return;
-
-                ManageUsersForm ObjManageUsersForm = new ManageUsersForm();
-                ShowChildForm(ObjManageUsersForm);
-                //ObjManageUsersForm.FormClosed += ObjManageUsersForm_FormClosed;
-                //ObjManageUsersForm.Show();
+                ShowChildForm(new ManageUsersForm());
             }
             catch (Exception ex)
             {
@@ -506,52 +325,10 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void btnUserProfile_Paint(object sender, PaintEventArgs e)
-        {
-            try
-            {
-
-
-                System.Drawing.Drawing2D.GraphicsPath buttonPath =
-               new System.Drawing.Drawing2D.GraphicsPath();
-
-                //// Set a new rectangle to the same size as the button's 
-                //// ClientRectangle property.
-                //System.Drawing.Rectangle newRectangle = btnUserProfile.ClientRectangle;
-
-                //// Decrease the size of the rectangle.
-                //newRectangle.Inflate(-10, -10);
-
-                //// Draw the button's border.
-                //e.Graphics.DrawEllipse(System.Drawing.Pens.Black, newRectangle);
-
-                //// Increase the size of the rectangle to include the border.
-                //newRectangle.Inflate(1, 1);
-
-                //// Create a circle within the new rectangle.
-                //buttonPath.AddEllipse(newRectangle);
-
-                //// Set the button's Region property to the newly created 
-                //// circle region.
-                //btnUserProfile.Region = new System.Drawing.Region(buttonPath);
-            }
-
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.btnUserProfile_Paint()", ex);
-            }
-        }
-
-        public void MainForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            //IsLoggedOut = true ;
-        }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             try
             {
-
                 this.UserProfileToolStripMenuItem.Text = tmpMySQLHelper.CurrentUser;
             }
             catch (Exception ex)
@@ -560,25 +337,11 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void manageCustomertoolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                ManageCustomerForm ObjManageCustomerForm = new ManageCustomerForm();
-                ShowChildForm(ObjManageCustomerForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.manageCustomertoolStripMenuItem_Click()", ex);
-            }
-        }
-
         private void ordersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                Views.OrdersMainForm ordersMainForm = new Views.OrdersMainForm();
-                ShowChildForm(ordersMainForm);
+                ShowChildForm(new OrdersMainForm());
             }
             catch (Exception ex)
             {
@@ -590,8 +353,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                Views.InvoicesMainForm invoicesMainForm = new Views.InvoicesMainForm();
-                ShowChildForm(invoicesMainForm);
+                ShowChildForm(new InvoicesMainForm());
             }
             catch (Exception ex)
             {
@@ -603,8 +365,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                SettingsForm ObjSettingsForm = new SettingsForm();
-                ShowChildForm(ObjSettingsForm);
+                ShowChildForm(new SettingsForm());
             }
             catch (Exception ex)
             {
@@ -630,8 +391,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                ManageCustomerForm ObjManageCustomerForm = new ManageCustomerForm();
-                ShowChildForm(ObjManageCustomerForm);
+                ShowChildForm(new ManageCustomerForm());
             }
             catch (Exception ex)
             {
@@ -643,8 +403,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                PaymentsForm ObjPaymentsMainForm = new PaymentsForm();
-                ShowChildForm(ObjPaymentsMainForm);
+                ShowChildForm(new PaymentsForm());
             }
             catch (Exception ex)
             {
@@ -668,7 +427,6 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                //ShowChildForm(new VendorsMainForm());
                 ShowChildForm(new ManageVendorForm());
             }
             catch (Exception ex)
@@ -717,8 +475,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                ExpensesForm ObjExpensesForm = new ExpensesForm();
-                ShowChildForm(ObjExpensesForm);
+                ShowChildForm(new ExpensesForm());
             }
             catch (Exception ex)
             {

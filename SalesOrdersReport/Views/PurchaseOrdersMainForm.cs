@@ -157,7 +157,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(-1, true, false, UpdateOrdersOnClose), this);
+                CommonFunctions.ShowDialog(new CreateOrderForm(-1, UpdateOrdersOnClose), this);
             }
             catch (Exception ex)
             {
@@ -177,7 +177,7 @@ namespace SalesOrdersReport.Views
 
                 Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
 
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(OrderID, true, false, UpdateOrdersOnClose), this);
+                CommonFunctions.ShowDialog(new CreateOrderForm(OrderID, UpdateOrdersOnClose), this);
 
                 dtGridViewOrders.ClearSelection();
                 dtGridViewOrderedProducts.DataSource = null;

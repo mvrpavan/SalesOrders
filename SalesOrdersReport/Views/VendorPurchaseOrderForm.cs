@@ -430,7 +430,7 @@ namespace SalesOrdersReport.Views
                     drVendors[ListVendorIndexes[i]]["PONumber"] = PONumber;
 
                     xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow, 1], xlWorkSheet.Cells[CustDetailsStartRow + 3, TotalColNum]];
-                    SellerInvoiceForm.SetAllBorders(xlRange);
+                    CommonFunctions.SetAllBorders(xlRange);
                     #endregion
 
                     xlWorkSheet.Cells[POStartRow + 1, SlNoColNum].Value = "Sl.No.";
@@ -562,11 +562,11 @@ namespace SalesOrdersReport.Views
                     #endregion
 
                     xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[POStartRow + 1, 1], xlWorkSheet.Cells[SlNo + POStartRow + 1 + TotalCostRowOffset, TotalColNum]];
-                    SellerInvoiceForm.SetAllBorders(xlRange);
+                    CommonFunctions.SetAllBorders(xlRange);
                     #endregion
 
                     xlWorkSheet.UsedRange.Columns.AutoFit();
-                    SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorkSheet, CurrReportSettings.HeaderSubTitle, CurrReportSettings);
+                    CommonFunctions.AddPageHeaderAndFooter(ref xlWorkSheet, CurrReportSettings.HeaderSubTitle, CurrReportSettings);
                 }
                 #endregion
 
@@ -646,7 +646,7 @@ namespace SalesOrdersReport.Views
                 tmpxlRange.NumberFormat = "#,##0.00";
                 xlSummaryWorkSheet.UsedRange.Columns.AutoFit();
                 xlApp.DisplayAlerts = false;
-                SellerInvoiceForm.AddPageHeaderAndFooter(ref xlSummaryWorkSheet, "Itemwise Summary", CurrReportSettings);
+                CommonFunctions.AddPageHeaderAndFooter(ref xlSummaryWorkSheet, "Itemwise Summary", CurrReportSettings);
                 xlApp.DisplayAlerts = true;
                 #endregion
             }
@@ -741,7 +741,7 @@ namespace SalesOrdersReport.Views
                 }
 
                 xlRange = xlVendorSummaryWorkSheet.Range[xlVendorSummaryWorkSheet.Cells[SummaryStartRow + 1, 1], xlVendorSummaryWorkSheet.Cells[CurrRow + 1, LastCol]];
-                SellerInvoiceForm.SetAllBorders(xlRange);
+                CommonFunctions.SetAllBorders(xlRange);
 
                 xlVendorSummaryWorkSheet.UsedRange.Columns.AutoFit();
 
@@ -750,7 +750,7 @@ namespace SalesOrdersReport.Views
                 xlRange = xlVendorSummaryWorkSheet.Columns["C"];
                 xlRange.ColumnWidth = 24;
 
-                SellerInvoiceForm.AddPageHeaderAndFooter(ref xlVendorSummaryWorkSheet, "Vendorwise Summary", CurrReportSettings);
+                CommonFunctions.AddPageHeaderAndFooter(ref xlVendorSummaryWorkSheet, "Vendorwise Summary", CurrReportSettings);
                 #endregion
             }
             catch (Exception ex)

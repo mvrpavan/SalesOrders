@@ -347,7 +347,7 @@ namespace SalesOrdersReport.Models
                 xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow, DictColNumbers[SlNoCol]], xlWorkSheet.Cells[LastInvoiceRowNum, LastInvoiceCol]];
                 xlRange.Font.Name = "Calibri";
                 xlRange.Font.Size = 10;
-                SellerInvoiceForm.SetAllBorders(xlRange);
+                CommonFunctions.SetAllBorders(xlRange);
 
                 #region Set Column Width & Row Height
                 Double[] ArrColumnWidths = new Double[] { 3.14, 13.86, 6.29, 3.57, 3.57, 6.57, 5.71, 8.14, 8.14, 8.14, 4.86, 7.14, 4.86, 7.14/*, 4.86, 7.14*/ };
@@ -363,7 +363,7 @@ namespace SalesOrdersReport.Models
                 xlRange.RowHeight = 29.25;
                 #endregion
 
-                SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorkSheet, CurrReportSettings.HeaderSubTitle, CurrReportSettings);
+                CommonFunctions.AddPageHeaderAndFooter(ref xlWorkSheet, CurrReportSettings.HeaderSubTitle, CurrReportSettings);
 
                 xlWorkSheet.UsedRange.Rows.AutoFit();
 

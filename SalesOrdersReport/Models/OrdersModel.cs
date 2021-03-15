@@ -95,6 +95,49 @@ namespace SalesOrdersReport.Models
             }
         }
 
+        public void AddOrderDetailsToCache(OrderDetails ObjOrderDetails)
+        {
+            try
+            {
+                if (dtAllOrders != null)
+                {
+                    ListOrders.Add(ObjOrderDetails);
+                    Object[] ArrItems = GetDataRowForOrder(ObjOrderDetails);
+                    dtAllOrders.Rows.Add(ArrItems);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.AddOrderDetailsToCache()", ex);
+            }
+        }
+
+        public Object[] GetDataRowForOrder(OrderDetails ObjOrderDetails)
+        {
+            try
+            {
+                return new Object[] {
+                    ObjOrderDetails.OrderID,
+                    ObjOrderDetails.CustomerID,
+                    ObjOrderDetails.OrderNumber,
+                    new MySql.Data.Types.MySqlDateTime(ObjOrderDetails.OrderDate),
+                    ObjOrderDetails.CustomerName,
+                    ObjOrderDetails.OrderItemCount,
+                    ObjOrderDetails.EstimateOrderAmount,
+                    ObjOrderDetails.OrderStatus,
+                    new MySql.Data.Types.MySqlDateTime(ObjOrderDetails.CreationDate),
+                    new MySql.Data.Types.MySqlDateTime(ObjOrderDetails.LastUpdatedDate),
+                    new MySql.Data.Types.MySqlDateTime(ObjOrderDetails.DateDelivered),
+                    new MySql.Data.Types.MySqlDateTime(ObjOrderDetails.DateInvoiceCreated)
+                };
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetDataRowForOrder()", ex);
+                return null;
+            }
+        }
+
         public String GenerateNewOrderNumber()
         {
             try
@@ -124,7 +167,7 @@ namespace SalesOrdersReport.Models
                 String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)} from Orders a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID", WhereClause = $" Where 1 = 1";
                 if (FromDate > DateTime.MinValue && ToDate > DateTime.MinValue)
                 {
-                    WhereClause += $" and a.OrderDate between '{MySQLHelper.GetDateStringForDB(FromDate)}' and '{MySQLHelper.GetDateStringForDB(ToDate)}'";
+                    WhereClause += $" and Date(a.OrderDate) between '{MySQLHelper.GetDateStringForDB(FromDate)}' and '{MySQLHelper.GetDateStringForDB(ToDate)}'";
                 }
                 if (OrderStatus != ORDERSTATUS.All)
                 {
@@ -331,7 +374,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public OrderDetails GetOrderDetailsForCustomer(DateTime OrderDate, Int32 CustomerID)
+        public List<OrderDetails> GetOrderDetailsForCustomer(DateTime OrderDate, Int32 CustomerID)
         {
             try
             {
@@ -341,9 +384,12 @@ namespace SalesOrdersReport.Models
                 Int32 Index = ListOrders.FindIndex(e => e.CustomerID == CustomerID);
                 if (Index < 0) return null;
 
-                FillOrderItemDetails(ListOrders[Index]);    //Assuming there will be only one Order for a given Customer on a given OrderDate
+                for (int i = 0; i < ListOrders.Count; i++)
+                {
+                    FillOrderItemDetails(ListOrders[i]);
+                }
 
-                return ListOrders[Index];
+                return ListOrders;
             }
             catch (Exception ex)
             {
@@ -359,7 +405,7 @@ namespace SalesOrdersReport.Models
                 if (ListOrders.Count == 0) LoadOrderDetails(DateTime.MinValue, DateTime.MinValue, ORDERSTATUS.Created, "OrderID", OrderID.ToString());
                 if (ListOrders.Count == 0) return null;
 
-                Int32 Index = ListOrders.FindIndex(e => e.OrderID == OrderID);
+                Int32 Index = ListOrders.FindIndex(e => e.OrderID == OrderID); 
                 if (Index < 0) return null;
 
                 FillOrderItemDetails(ListOrders[Index]);
@@ -387,7 +433,8 @@ namespace SalesOrdersReport.Models
                     CustomerID = CustomerID,
                     ListOrderItems = ListOrderItems.Select(e => e.Clone()).ToList(),
                     CreationDate = DateTime.Now,
-                    OrderItemCount = ListOrderItems.Count(e => e.OrderQty > 0)
+                    OrderItemCount = ListOrderItems.Count(e => e.OrderQty > 0),
+                    CustomerName = CommonFunctions.ObjCustomerMasterModel.GetCustomerName(CustomerID)
                 };
 
                 NewOrderDetails.OrderID = InsertOrderDetails(NewOrderDetails);
@@ -409,13 +456,13 @@ namespace SalesOrdersReport.Models
             try
             {
                 String Query = "Insert into Orders(OrderNumber, OrderDate, CreationDate, LastUpdatedDate, CustomerID, OrderItemCount, EstimateOrderAmount, OrderStatus) Values (";
-                Query += $"'{ObjOrderDetails.OrderNumber}', '{MySQLHelper.GetDateStringForDB(ObjOrderDetails.OrderDate)}', '{MySQLHelper.GetDateStringForDB(ObjOrderDetails.CreationDate)}',";
-                Query += $"'{MySQLHelper.GetDateStringForDB(ObjOrderDetails.LastUpdatedDate)}', {ObjOrderDetails.CustomerID}, {ObjOrderDetails.OrderItemCount}, {ObjOrderDetails.EstimateOrderAmount}, '{ObjOrderDetails.OrderStatus}'";
+                Query += $"'{ObjOrderDetails.OrderNumber}', '{MySQLHelper.GetDateTimeStringForDB(ObjOrderDetails.OrderDate)}', '{MySQLHelper.GetDateTimeStringForDB(ObjOrderDetails.CreationDate)}',";
+                Query += $"'{MySQLHelper.GetDateTimeStringForDB(ObjOrderDetails.LastUpdatedDate)}', {ObjOrderDetails.CustomerID}, {ObjOrderDetails.OrderItemCount}, {ObjOrderDetails.EstimateOrderAmount}, '{ObjOrderDetails.OrderStatus}'";
                 Query += ")";
                 ObjMySQLHelper.ExecuteNonQuery(Query);
 
                 Int32 OrderID = -1;
-                Query = $"Select Max(OrderID) from Orders where CustomerID = {ObjOrderDetails.CustomerID} and OrderDate = '{MySQLHelper.GetDateStringForDB(ObjOrderDetails.OrderDate)}'";
+                Query = $"Select Max(OrderID) from Orders where CustomerID = {ObjOrderDetails.CustomerID} and OrderDate = '{MySQLHelper.GetDateTimeStringForDB(ObjOrderDetails.OrderDate)}'";
                 foreach (var item in ObjMySQLHelper.ExecuteQuery(Query)) OrderID = Int32.Parse(item[0].ToString());
 
                 InsertOrderItems(ObjOrderDetails.ListOrderItems, OrderID);
@@ -665,7 +712,7 @@ namespace SalesOrdersReport.Models
                 xlRange.Font.Bold = true;
 
                 xlWorksheet.UsedRange.Columns.AutoFit();
-                SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorksheet, "Item Summary", CommonFunctions.ObjOrderSettings);
+                CommonFunctions.AddPageHeaderAndFooter(ref xlWorksheet, "Item Summary", CommonFunctions.ObjOrderSettings);
             }
             catch (Exception ex)
             {

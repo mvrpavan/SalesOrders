@@ -137,7 +137,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(-1, true, false, UpdateInvoicesOnClose), this);
+                CommonFunctions.ShowDialog(new CreateInvoiceForm(-1, UpdateInvoicesOnClose), this);
             }
             catch (Exception ex)
             {
@@ -157,7 +157,7 @@ namespace SalesOrdersReport.Views
 
                 Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
 
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(InvoiceID, true, false, UpdateInvoicesOnClose), this);
+                CommonFunctions.ShowDialog(new CreateInvoiceForm(InvoiceID, UpdateInvoicesOnClose), this);
 
                 dtGridViewInvoices.ClearSelection();
                 dtGridViewInvoicedProducts.DataSource = null;

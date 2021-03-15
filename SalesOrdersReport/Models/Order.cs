@@ -86,7 +86,7 @@ namespace SalesOrdersReport.Models
                 xlWorkSheet.Cells[CustDetailsStartRow + 1, TotalColNum].Value = SerialNumber;
 
                 xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[CustDetailsStartRow, 1], xlWorkSheet.Cells[CustDetailsStartRow + 3, TotalColNum]];
-                SellerInvoiceForm.SetAllBorders(xlRange);
+                CommonFunctions.SetAllBorders(xlRange);
                 #endregion
 
                 xlWorkSheet.Cells[InvoiceStartRow + 1, SlNoColNum].Value = "Sl No";
@@ -235,11 +235,11 @@ namespace SalesOrdersReport.Models
                 #endregion
 
                 xlRange = xlWorkSheet.Range[xlWorkSheet.Cells[InvoiceStartRow + 1, 1], xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + TotalCostRowOffset, TotalColNum]];
-                SellerInvoiceForm.SetAllBorders(xlRange);
+                CommonFunctions.SetAllBorders(xlRange);
                 #endregion
 
                 xlWorkSheet.UsedRange.Columns.AutoFit();
-                SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorkSheet, CurrReportSettings.HeaderSubTitle, CurrReportSettings);
+                CommonFunctions.AddPageHeaderAndFooter(ref xlWorkSheet, CurrReportSettings.HeaderSubTitle, CurrReportSettings);
             }
             catch (Exception ex)
             {

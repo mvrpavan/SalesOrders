@@ -30,7 +30,7 @@ namespace SalesOrdersReport.Views
                 ObjOrdersModel.Initialize();
 
                 dTimePickerFrom.Value = DateTime.Today;
-                dTimePickerTo.Value = DateTime.Today.AddDays(30);
+                dTimePickerTo.Value = DateTime.Today;
                 FilterFromDate = DateTime.MinValue;
                 FilterToDate = DateTime.MinValue;
                 CurrOrderStatus = ORDERSTATUS.Created;
@@ -138,34 +138,18 @@ namespace SalesOrdersReport.Views
                 switch (Mode)
                 {
                     case 1:     //Add Order
-                        Object[] ArrItems = new Object[] {
-                            tmpOrderDetails.OrderID,
-                            tmpOrderDetails.CustomerID,
-                            tmpOrderDetails.OrderNumber,
-                            new MySql.Data.Types.MySqlDateTime(tmpOrderDetails.OrderDate),
-                            CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(tmpOrderDetails.CustomerID).CustomerName,
-                            tmpOrderDetails.OrderItemCount,
-                            tmpOrderDetails.EstimateOrderAmount,
-                            tmpOrderDetails.OrderStatus,
-                            new MySql.Data.Types.MySqlDateTime(tmpOrderDetails.CreationDate),
-                            new MySql.Data.Types.MySqlDateTime(tmpOrderDetails.LastUpdatedDate),
-                            null, null
-                        };
-                        dtAllOrders.Rows.Add(ArrItems);
+                        ObjOrdersModel.AddOrderDetailsToCache(tmpOrderDetails);
                         break;
                     case 2:     //Update Order
                         DataRow dtRow = dtAllOrders.Select($"OrderID = {tmpOrderDetails.OrderID}")[0];
                         dtRow["Order Item Count"] = tmpOrderDetails.OrderItemCount;
                         dtRow["Estimate Order Amount"] = tmpOrderDetails.EstimateOrderAmount;
-                        dtRow["Order Status"] = tmpOrderDetails.EstimateOrderAmount;
+                        dtRow["Order Status"] = tmpOrderDetails.OrderStatus;
                         dtRow["Last Updated Date"] = new MySql.Data.Types.MySqlDateTime(tmpOrderDetails.LastUpdatedDate);
-                        break;
-                    case 3:     //Reload Orders
                         break;
                     default:
                         break;
                 }
-                
             }
             catch (Exception ex)
             {
@@ -177,7 +161,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(-1, true, false, UpdateOrdersOnClose), this);
+                CommonFunctions.ShowDialog(new CreateOrderForm(-1, UpdateOrdersOnClose), this);
             }
             catch (Exception ex)
             {
@@ -203,7 +187,7 @@ namespace SalesOrdersReport.Views
 
                 Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
 
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(OrderID, true, false, UpdateOrdersOnClose), this);
+                CommonFunctions.ShowDialog(new CreateOrderForm(OrderID, UpdateOrdersOnClose), this);
 
                 dtGridViewOrders.ClearSelection();
                 dtGridViewOrderedProducts.DataSource = null;

@@ -132,7 +132,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreateOrderInvoiceForm(-1, true, false, UpdateOrdersOnClose), this);
+                CommonFunctions.ShowDialog(new CreateOrderForm(-1, UpdateOrdersOnClose), this);
             }
             catch (Exception ex)
             {

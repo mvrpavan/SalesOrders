@@ -435,42 +435,6 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        public static void SetAllBorders(Excel.Range xlRange)
-        {
-            try
-            {
-                xlRange.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic);
-                xlRange.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle = Excel.XlLineStyle.xlContinuous;
-                xlRange.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
-                xlRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                xlRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                xlRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-                xlRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CreateSellerReport", ex);
-                throw ex;
-            }
-        }
-
-        public static void SetBorders(Excel.Range xlRange)
-        {
-            try
-            {
-                xlRange.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic);
-                xlRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
-                xlRange.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
-                xlRange.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
-                xlRange.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("CreateSellerReport", ex);
-                throw ex;
-            }
-        }
-
         private void CreateItemSummarySheet(DataRow[] drItems, Excel.Workbook xlWorkbook, ReportSettings CurrReportSettings)
         {
             try
@@ -513,7 +477,7 @@ namespace SalesOrdersReport.Views
                 tmpxlRange.NumberFormat = "#,##0.00";
                 xlSummaryWorkSheet.UsedRange.Columns.AutoFit();
                 xlApp.DisplayAlerts = false;
-                AddPageHeaderAndFooter(ref xlSummaryWorkSheet, "Itemwise Summary", CurrReportSettings);
+                CommonFunctions.AddPageHeaderAndFooter(ref xlSummaryWorkSheet, "Itemwise Summary", CurrReportSettings);
                 xlApp.DisplayAlerts = true;
                 #endregion
             }
@@ -639,7 +603,7 @@ namespace SalesOrdersReport.Views
                 }*/
 
                 xlRange = xlSellerSummaryWorkSheet.Range[xlSellerSummaryWorkSheet.Cells[SummaryStartRow + 1, 1], xlSellerSummaryWorkSheet.Cells[CurrRow + 1, LastCol]];
-                SetAllBorders(xlRange);
+                CommonFunctions.SetAllBorders(xlRange);
 
                 xlSellerSummaryWorkSheet.UsedRange.Columns.AutoFit();
 
@@ -649,8 +613,8 @@ namespace SalesOrdersReport.Views
                 xlRange.ColumnWidth = 7;
                 xlRange = xlSellerSummaryWorkSheet.Columns["D"];
                 xlRange.ColumnWidth = 24;
-                
-                AddPageHeaderAndFooter(ref xlSellerSummaryWorkSheet, "Sellerwise Summary", CurrReportSettings);
+
+                CommonFunctions.AddPageHeaderAndFooter(ref xlSellerSummaryWorkSheet, "Sellerwise Summary", CurrReportSettings);
                 #endregion
             }
             catch (Exception ex)
@@ -658,116 +622,6 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog("CreateSellerSummarySheet", ex);
                 xlApp.Quit();
                 CommonFunctions.ReleaseCOMObject(xlApp);
-            }
-        }
-
-        internal static void AddPageHeaderAndFooter(ref Excel.Worksheet xlWorksheet, String PageHeaderTitle, ReportSettings CurrReportSettings)
-        {
-            try
-            {
-                if (!String.IsNullOrEmpty(CommonFunctions.ObjApplicationSettings.LogoFileName))
-                {
-                    xlWorksheet.PageSetup.RightHeaderPicture.Filename = AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.ObjApplicationSettings.LogoFileName;
-                    xlWorksheet.PageSetup.RightHeaderPicture.ColorType = Microsoft.Office.Core.MsoPictureColorType.msoPictureAutomatic;
-                    xlWorksheet.PageSetup.RightHeaderPicture.CropBottom = 0;
-                    xlWorksheet.PageSetup.RightHeaderPicture.CropLeft = 0;
-                    xlWorksheet.PageSetup.RightHeaderPicture.CropRight = 0;
-                    xlWorksheet.PageSetup.RightHeaderPicture.CropTop = 0;
-                    xlWorksheet.PageSetup.RightHeaderPicture.LockAspectRatio = Microsoft.Office.Core.MsoTriState.msoTrue;
-                    xlWorksheet.PageSetup.RightHeaderPicture.Height = CommonFunctions.ObjApplicationSettings.LogoImageHeight;
-                    //xlWorksheet.PageSetup.RightHeaderPicture.Width = 30;
-                    //xlWorksheet.PageSetup.Application.PrintCommunication = false;
-                    //xlWorksheet.PageSetup.PrintArea = "";
-                    /*xlWorksheet.PageSetup.PrintTitleRows = "";
-                    xlWorksheet.PageSetup.PrintTitleColumns = "";
-
-                    xlWorksheet.PageSetup.Application.PrintCommunication = true;
-                    xlWorksheet.PageSetup.PrintArea = "";
-                    xlWorksheet.PageSetup.Application.PrintCommunication = false;*/
-                }
-
-                xlWorksheet.PageSetup.LeftHeader = "";
-                //xlWorksheet.PageSetup.CenterHeader = "\n&\"Gill Sans MT,Bold\"&12&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.HeaderTitleColor) + CurrReportSettings.HeaderTitle;
-                xlWorksheet.PageSetup.CenterHeader = "\n&\"Arial,Bold\"&16&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.HeaderTitleColor) + CurrReportSettings.HeaderTitle;
-                if (!String.IsNullOrEmpty(PageHeaderTitle))
-                {
-                    xlWorksheet.PageSetup.CenterHeader += "\n&\"Arial,Regular\"&14&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.HeaderSubTitleColor) + PageHeaderTitle;
-                }
-                xlWorksheet.PageSetup.CenterHeader += "\n\n";
-                xlWorksheet.PageSetup.RightHeader = "&G";
-                xlWorksheet.PageSetup.CenterFooter = "";
-                if (!String.IsNullOrEmpty(CurrReportSettings.FooterTitle))
-                {
-                    xlWorksheet.PageSetup.CenterFooter += "\n&\"Arial,Bold\"&14&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.FooterTitleColor) + CurrReportSettings.FooterTitle;
-                }
-                if (!String.IsNullOrEmpty(CurrReportSettings.Address))
-                {
-                    xlWorksheet.PageSetup.CenterFooter += "\n&\"Arial,Italic\"&10&K" + CommonFunctions.GetColorHexCode(CurrReportSettings.FooterTextColor) + CurrReportSettings.Address;
-                }
-                if (!String.IsNullOrEmpty(CurrReportSettings.GSTINumber))
-                {
-                    xlWorksheet.PageSetup.CenterFooter += "\nGSTIN:" + CurrReportSettings.GSTINumber;
-                }
-                if (!String.IsNullOrEmpty(CurrReportSettings.PhoneNumber))
-                {
-                    xlWorksheet.PageSetup.CenterFooter += "\nPhone:" + CurrReportSettings.PhoneNumber;
-                }
-                if (!String.IsNullOrEmpty(CurrReportSettings.EMailID))
-                {
-                    if (String.IsNullOrEmpty(CurrReportSettings.PhoneNumber)) xlWorksheet.PageSetup.CenterFooter += "\n";
-                    else xlWorksheet.PageSetup.CenterFooter += " | ";
-                    xlWorksheet.PageSetup.CenterFooter += "Email:" + CurrReportSettings.EMailID;
-                }
-                if (xlWorksheet.PageSetup.Pages.Count > 1)
-                    xlWorksheet.PageSetup.RightFooter = "&P";
-                xlWorksheet.PageSetup.PrintGridlines = true;
-                xlWorksheet.PageSetup.CenterHorizontally = true;
-                xlWorksheet.PageSetup.TopMargin = xlWorksheet.PageSetup.Application.InchesToPoints(1.5);
-                xlWorksheet.PageSetup.BottomMargin = xlWorksheet.PageSetup.Application.InchesToPoints(1.5);
-                xlWorksheet.PageSetup.FooterMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.25);
-                xlWorksheet.PageSetup.HeaderMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.25);
-                xlWorksheet.PageSetup.LeftMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.7);
-                xlWorksheet.PageSetup.RightMargin = xlWorksheet.PageSetup.Application.InchesToPoints(0.7);
-
-                /*xlWorksheet.PageSetup.PrintHeadings = false;
-                xlWorksheet.PageSetup.PrintGridlines = false;
-                xlWorksheet.PageSetup.PrintComments = Excel.XlPrintLocation.xlPrintNoComments;
-                xlWorksheet.PageSetup.PrintQuality = 600;
-                xlWorksheet.PageSetup.CenterHorizontally = false;
-                xlWorksheet.PageSetup.CenterVertically = false;
-
-                xlWorksheet.PageSetup.Orientation = Excel.XlPageOrientation.xlPortrait;
-                xlWorksheet.PageSetup.Draft = false;
-                xlWorksheet.PageSetup.PaperSize = Excel.XlPaperSize.xlPaperLetter;
-                xlWorksheet.PageSetup.FirstPageNumber = 1;
-                xlWorksheet.PageSetup.Order = Excel.XlOrder.xlDownThenOver;
-                xlWorksheet.PageSetup.BlackAndWhite = false;
-                xlWorksheet.PageSetup.Zoom = 100;
-                xlWorksheet.PageSetup.PrintErrors = Excel.XlPrintErrors.xlPrintErrorsDisplayed;
-                xlWorksheet.PageSetup.OddAndEvenPagesHeaderFooter = false;
-                xlWorksheet.PageSetup.DifferentFirstPageHeaderFooter = false;
-                xlWorksheet.PageSetup.ScaleWithDocHeaderFooter = true;
-                xlWorksheet.PageSetup.AlignMarginsHeaderFooter = true;
-
-                /*xlWorksheet.PageSetup.EvenPage.LeftHeader.Text = "";
-                xlWorksheet.PageSetup.EvenPage.CenterHeader.Text = "";
-                xlWorksheet.PageSetup.EvenPage.RightHeader.Text = "";
-                xlWorksheet.PageSetup.EvenPage.LeftFooter.Text = "";
-                xlWorksheet.PageSetup.EvenPage.CenterFooter.Text = "";
-                xlWorksheet.PageSetup.EvenPage.RightFooter.Text = "";
-
-                xlWorksheet.PageSetup.FirstPage.LeftHeader.Text = "";
-                xlWorksheet.PageSetup.FirstPage.CenterHeader.Text = "";
-                xlWorksheet.PageSetup.FirstPage.RightHeader.Text = "";
-                xlWorksheet.PageSetup.FirstPage.LeftFooter.Text = "";
-                xlWorksheet.PageSetup.FirstPage.CenterFooter.Text = "";
-                xlWorksheet.PageSetup.FirstPage.RightFooter.Text = "";
-                */
-                //xlWorksheet.PageSetup.Application.PrintCommunication = true;
-            }
-            catch (Exception)
-            {
-                throw;
             }
         }
 

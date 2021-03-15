@@ -1564,7 +1564,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                EditOldBalanceForm editOldBalanceForm = new EditOldBalanceForm(this, Double.Parse(lblBalanceAmountValue.Text));
+                EditOldBalanceForm editOldBalanceForm = new EditOldBalanceForm(UpdateBalanceAmount, Double.Parse(lblBalanceAmountValue.Text));
                 editOldBalanceForm.ShowDialog(this);
             }
             catch (Exception ex)

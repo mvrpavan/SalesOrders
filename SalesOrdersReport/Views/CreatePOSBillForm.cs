@@ -14,8 +14,7 @@ namespace SalesOrdersReport.Views
         String FormTitle = "", OrderInvoice = "";
         List<ProductDetails> ListAllProducts, ListProducts;
         List<String> ListCustomerNames;
-        //List<Int64> ListCustomerPhoneNumbers;
-        List<string> ListCustomerPhoneNumbers;
+        List<String> ListCustomerPhoneNumbers;
         CustomerDetails CurrCustomerDetails;
         DiscountGroupDetails CurrCustomerDiscountGroup;
         CustomerOrderInvoiceDetails CurrOrderInvoiceDetails;
@@ -38,8 +37,7 @@ namespace SalesOrdersReport.Views
         InvoicesModel ObjInvoicesModel;
         UpdateUsingObjectOnCloseDel UpdateObjectOnClose;
         List<InvoiceDetails> ListCustomerInvoices;
-        //Dictionary<Int64, CustomerDetails> DictPhoneNumberCustomerDetails = new Dictionary<Int64, CustomerDetails>();
-        Dictionary<string, CustomerDetails> DictPhoneNumberCustomerDetails = new Dictionary<string, CustomerDetails>();
+        Dictionary<String, CustomerDetails> DictPhoneNumberCustomerDetails = new Dictionary<String, CustomerDetails>();
         PaymentsModel ObjPaymentsModel = new PaymentsModel();
 
         public CreatePOSBillForm(Int32 InvoiceID, UpdateUsingObjectOnCloseDel UpdateObjectOnClose)
@@ -149,7 +147,7 @@ namespace SalesOrdersReport.Views
                     //Load Selected Customer Details
                     cmbBoxCustomers.SelectedIndex = cmbBoxCustomers.Items.IndexOf(ObjInvoiceDetails.CustomerName);
                     cmbBoxCustomerIndex = cmbBoxCustomers.SelectedIndex;
-                    CurrCustomerDetails = ObjCustomerMasterModel.GetCustomerDetails(ObjInvoiceDetails.CustomerName);
+                    CurrCustomerDetails = ObjCustomerMasterModel.GetCustomerDetails(ObjInvoiceDetails.CustomerID);
                     UpdateCustomerDetails();
 
                     ListCustomerInvoices = ObjInvoicesModel.GetInvoiceDetailsForCustomer(dtTmPckrInvOrdDate.Value, CurrCustomerDetails.CustomerID);
@@ -398,7 +396,7 @@ namespace SalesOrdersReport.Views
                 else
                 {
                     //Check for existing Invoice or create new Invoice for selected Customer
-                    CustomerDetails ObjCustomerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxCustomers.Items[cmbBoxCustomers.SelectedIndex].ToString());
+                    CustomerDetails ObjCustomerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetailsByPhoneNo(cmbBoxPhoneNumbers.SelectedItem.ToString());
                     ListCustomerInvoices = ObjInvoicesModel.GetInvoiceDetailsForCustomer(dtTmPckrInvOrdDate.Value, ObjCustomerDetails.CustomerID);
                     if (ListCustomerInvoices != null && ListCustomerInvoices.Count >= 0)
                     {
@@ -446,11 +444,11 @@ namespace SalesOrdersReport.Views
 
                         Int32 Index = dtGridViewInvOrdProdList.Rows.Add(row);
                         DictItemsSelected.Add(item.ProductName, dtGridViewInvOrdProdList.Rows[Index]);
-
-                        dtTmPckrInvOrdDate.Value = CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceDate;
                     }
-                    FormTitle = "Update Bill";
+                    dtTmPckrInvOrdDate.Value = CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceDate;
+                    this.FormTitle = "Update Bill";
                     btnCreateBill.Text = "Update Bill";
+                    txtBoxInvOrdNumber.Text = CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceNumber;
                 }
                 lblStatus.Text = "Add/Delete/Modify Items to Bill";
 
@@ -860,8 +858,8 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                CustomerDetails sellerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxCustomers.SelectedValue.ToString());
-                String CustomerDetails = sellerDetails.CustomerName + "\n" + sellerDetails.Address + "\n" + sellerDetails.PhoneNo;
+                //CustomerDetails sellerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxCustomers.SelectedValue.ToString());
+                String CustomerDetails = CurrCustomerDetails.CustomerName + "\n" + CurrCustomerDetails.Address + "\n" + CurrCustomerDetails.PhoneNo;
                 lblCustomerDetails.Text = CustomerDetails;
             }
             catch (Exception ex)
@@ -985,7 +983,7 @@ namespace SalesOrdersReport.Views
                 CurrOrderInvoiceDetails = new CustomerOrderInvoiceDetails();
                 CurrOrderInvoiceDetails.CustomerName = CurrCustomerDetails.CustomerName;
 
-                CurrCustomerDiscountGroup = ObjCustomerMasterModel.GetCustomerDiscount(CurrCustomerDetails.CustomerName);
+                CurrCustomerDiscountGroup = ObjCustomerMasterModel.GetCustomerDiscount(CurrCustomerDetails.CustomerID);
                 if (CurrCustomerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
                     DiscountPerc = CurrCustomerDiscountGroup.Discount;
                 else if (CurrCustomerDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
@@ -1343,7 +1341,7 @@ namespace SalesOrdersReport.Views
                 CurrOrderInvoiceDetails = new CustomerOrderInvoiceDetails();
                 CurrOrderInvoiceDetails.CustomerName = CurrCustomerDetails.CustomerName;
 
-                CurrCustomerDiscountGroup = ObjCustomerMasterModel.GetCustomerDiscount(CurrCustomerDetails.CustomerName);
+                CurrCustomerDiscountGroup = ObjCustomerMasterModel.GetCustomerDiscount(CurrCustomerDetails.CustomerID);
                 if (CurrCustomerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
                     DiscountPerc = CurrCustomerDiscountGroup.Discount;
                 else if (CurrCustomerDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)

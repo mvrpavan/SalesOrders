@@ -392,7 +392,7 @@ namespace SalesOrdersReport.Views
 
                     Excel.Range xlRange1 = xlVendorHistoryWorksheet.Range[xlVendorHistoryWorksheet.Cells[1, 1], xlVendorHistoryWorksheet.Cells[1, Header.Length]];
                     xlRange1.Font.Bold = true;
-                    SellerInvoiceForm.SetAllBorders(xlRange1);
+                    CommonFunctions.SetAllBorders(xlRange1);
                     xlVendorHistoryWorkbook.SaveAs(VendorHistoryFile);
 
                     Excel.Worksheet xlSheet = CommonFunctions.GetWorksheet(xlVendorHistoryWorkbook, "Sheet1");
@@ -444,7 +444,7 @@ namespace SalesOrdersReport.Views
                 ReportProgressFunc(100);
 
                 Excel.Range xlRange = xlVendorHistoryWorksheet.Range[xlVendorHistoryWorksheet.Cells[StartRow, StartColumn], xlVendorHistoryWorksheet.Cells[StartRow + LastRow, StartColumn + Header.Length - 1]];
-                SellerInvoiceForm.SetAllBorders(xlRange);
+                CommonFunctions.SetAllBorders(xlRange);
 
                 xlVendorHistoryWorkbook.Save();
                 xlVendorHistoryWorkbook.Close();

@@ -964,7 +964,7 @@ namespace SalesOrdersReport.Models
 
                     Excel.Range xlRange1 = xlStockHistoryWorksheet.Range[xlStockHistoryWorksheet.Cells[1, 1], xlStockHistoryWorksheet.Cells[1, Header.Length]];
                     xlRange1.Font.Bold = true;
-                    SellerInvoiceForm.SetAllBorders(xlRange1);
+                    CommonFunctions.SetAllBorders(xlRange1);
                     xlProductStockHistory.SaveAs(ProductStockHistoryFile);
 
                     Excel.Worksheet xlSheet = CommonFunctions.GetWorksheet(xlProductStockHistory, "Sheet1");
@@ -1031,7 +1031,7 @@ namespace SalesOrdersReport.Models
                 }
 
                 Excel.Range xlRange = xlStockHistoryWorksheet.Range[xlStockHistoryWorksheet.Cells[StartRow, PODateColPos], xlStockHistoryWorksheet.Cells[StartRow + StockCounter, NetCostColPos]];
-                SellerInvoiceForm.SetAllBorders(xlRange);
+                CommonFunctions.SetAllBorders(xlRange);
 
                 xlProductStockHistory.Save();
                 xlProductStockHistory.Close();

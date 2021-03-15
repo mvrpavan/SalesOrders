@@ -876,7 +876,7 @@ namespace SalesOrdersReport.Models
                 xlRange = xlWorksheet.Range[xlWorksheet.Cells[SummaryStartRow + 1, 5], xlWorksheet.Cells[SummaryStartRow + 1 + dtCustomerSummary.Rows.Count + 1, 12]];
                 xlRange.NumberFormat = "#,##0.00";
                 xlRange = xlWorksheet.Range[xlWorksheet.Cells[SummaryStartRow, 1], xlWorksheet.Cells[SummaryStartRow + dtCustomerSummary.Rows.Count + 1, 12]];
-                SellerInvoiceForm.SetAllBorders(xlRange);
+                CommonFunctions.SetAllBorders(xlRange);
 
                 xlWorksheet.UsedRange.Columns.AutoFit();
 
@@ -887,7 +887,7 @@ namespace SalesOrdersReport.Models
                 xlRange = xlWorksheet.Columns["D"];
                 xlRange.ColumnWidth = 24;
 
-                SellerInvoiceForm.AddPageHeaderAndFooter(ref xlWorksheet, "Customer Summary", CommonFunctions.ObjInvoiceSettings);
+                CommonFunctions.AddPageHeaderAndFooter(ref xlWorksheet, "Customer Summary", CommonFunctions.ObjInvoiceSettings);
             }
             catch (Exception ex)
             {

@@ -97,17 +97,23 @@
     <Compile Include="Views\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\AddProductCategoryForm.cs">
+    <Compile Include="Views\CreateProductCategoryForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\AddProductCategoryForm.Designer.cs">
-      <DependentUpon>AddProductCategoryForm.cs</DependentUpon>
+    <Compile Include="Views\CreateProductCategoryForm.Designer.cs">
+      <DependentUpon>CreateProductCategoryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\AddTaxForm.cs">
+    <Compile Include="Views\CreateTaxForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\AddTaxForm.Designer.cs">
-      <DependentUpon>AddTaxForm.cs</DependentUpon>
+    <Compile Include="Views\CreateTaxForm.Designer.cs">
+      <DependentUpon>CreateTaxForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreateInvoiceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CreateInvoiceForm.Designer.cs">
+      <DependentUpon>CreateInvoiceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\CreateVendorForm.cs">
       <SubType>Form</SubType>
@@ -175,11 +181,11 @@
     <Compile Include="Views\CreateUserForm.Designer.cs">
       <DependentUpon>CreateUserForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\CreateOrderInvoiceForm.cs">
+    <Compile Include="Views\CreateOrderForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\CreateOrderInvoiceForm.Designer.cs">
-      <DependentUpon>CreateOrderInvoiceForm.cs</DependentUpon>
+    <Compile Include="Views\CreateOrderForm.Designer.cs">
+      <DependentUpon>CreateOrderForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\CustomerInvoiceSellerOrderForm.cs">
       <SubType>Form</SubType>
@@ -353,11 +359,11 @@
       <DependentUpon>MergeSalesOrdersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CommonModules\MySQLHelper.cs" />
-    <Compile Include="Views\AddProductForm.cs">
+    <Compile Include="Views\CreateProductForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\AddProductForm.Designer.cs">
-      <DependentUpon>AddProductForm.cs</DependentUpon>
+    <Compile Include="Views\CreateProductForm.Designer.cs">
+      <DependentUpon>CreateProductForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\OrderInvQuotSearchForm.cs">
       <SubType>Form</SubType>
@@ -482,11 +488,14 @@
     <EmbeddedResource Include="Views\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\AddProductCategoryForm.resx">
-      <DependentUpon>AddProductCategoryForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\CreateProductCategoryForm.resx">
+      <DependentUpon>CreateProductCategoryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\AddTaxForm.resx">
-      <DependentUpon>AddTaxForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\CreateTaxForm.resx">
+      <DependentUpon>CreateTaxForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CreateInvoiceForm.resx">
+      <DependentUpon>CreateInvoiceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\CreateVendorForm.resx">
       <DependentUpon>CreateVendorForm.cs</DependentUpon>
@@ -521,8 +530,8 @@
     <EmbeddedResource Include="Views\CreateUserForm.resx">
       <DependentUpon>CreateUserForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\CreateOrderInvoiceForm.resx">
-      <DependentUpon>CreateOrderInvoiceForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\CreateOrderForm.resx">
+      <DependentUpon>CreateOrderForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\CustomerInvoiceSellerOrderForm.resx">
       <DependentUpon>CustomerInvoiceSellerOrderForm.cs</DependentUpon>
@@ -608,8 +617,8 @@
     <EmbeddedResource Include="Views\MergeSalesOrdersForm.resx">
       <DependentUpon>MergeSalesOrdersForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\AddProductForm.resx">
-      <DependentUpon>AddProductForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\CreateProductForm.resx">
+      <DependentUpon>CreateProductForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\OrderInvQuotSearchForm.resx">
       <DependentUpon>OrderInvQuotSearchForm.cs</DependentUpon>

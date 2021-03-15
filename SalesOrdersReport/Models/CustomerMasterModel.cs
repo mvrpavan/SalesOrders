@@ -387,6 +387,24 @@ namespace SalesOrdersReport.Models
             return null;
         }
 
+        public DiscountGroupDetails GetCustomerDiscount(Int32 CustomerID)
+        {
+            try
+            {
+                CustomerDetails ObjCustomerDetails = GetCustomerDetails(CustomerID);
+                if (ObjCustomerDetails == null) return null;
+                Int32 DiscountGroupIndex = ObjCustomerDetails.DiscountGroupIndex;
+                if (DiscountGroupIndex < 0) DiscountGroupIndex = DefaultDiscountGroupIndex;
+
+                return ListDiscountGroupDetails[DiscountGroupIndex];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CustomerMasterModel.GetCustomerDiscount(CustomerID)", ex);
+            }
+            return null;
+        }
+
         public void SetCustomerDiscount(String CustomerName, DiscountGroupDetails DiscountGroup)
         {
             try

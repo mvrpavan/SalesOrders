@@ -275,7 +275,7 @@ namespace SalesOrdersReport.Views
                     ReportProgressFunc(10 + ((i + 1) * 90/ProgressBarCount));
                 }
                 xlRange = xlSellerReportWorksheet.Range[xlSellerReportWorksheet.Cells[StartRow, StartCol], xlSellerReportWorksheet.Cells[StartRow + drSellerRecords.Length, LastCol]];
-                SellerInvoiceForm.SetAllBorders(xlRange);
+                CommonFunctions.SetAllBorders(xlRange);
 
                 xlSellerReportWorksheet.UsedRange.Columns.AutoFit();
 

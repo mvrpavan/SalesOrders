@@ -10,14 +10,16 @@ using System.Windows.Forms;
 
 namespace SalesOrdersReport.Views
 {
+    public delegate void UpdateBalanceAmountDel(Double NewBalanceAmount);
+
     public partial class EditOldBalanceForm : Form
     {
-        CustomerInvoiceSellerOrderForm objCustomerForm = null;
+        UpdateBalanceAmountDel UpdateBalanceAmount = null;
 
-        public EditOldBalanceForm(CustomerInvoiceSellerOrderForm ObjForm, Double BalanceAmount)
+        public EditOldBalanceForm(UpdateBalanceAmountDel UpdateBalanceAmount, Double BalanceAmount)
         {
             InitializeComponent();
-            objCustomerForm = ObjForm;
+            this.UpdateBalanceAmount = UpdateBalanceAmount;
             txtBoxBalanceAmount.Text = BalanceAmount.ToString();
         }
 
@@ -37,7 +39,7 @@ namespace SalesOrdersReport.Views
                     MessageBox.Show(this, "Invalid Balance amount. Please provide numeric value.", "Balance Amount", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 }
 
-                objCustomerForm.UpdateBalanceAmount(result);
+                UpdateBalanceAmount(result);
 
                 this.Close();
             }
