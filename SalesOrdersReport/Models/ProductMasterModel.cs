@@ -21,7 +21,7 @@ namespace SalesOrdersReport.Models
         MySQLHelper ObjMySQLHelper = null;
         List<String> ListPriceGroupColumns;
         const String SKUPrefix = "SKU";
-
+        string ProdInvColumnsQueryStr = "ProductInvID, StockName, Inventory, Units, UnitsOfMeasurement, ReOrderStockLevel, ReOrderStockQty, LastPODate, LastUpdateDate, CASE WHEN Active = 1 THEN 'true' ELSE 'false' END as Active";
         public void Initialize()
         {
             try
@@ -350,7 +350,37 @@ namespace SalesOrdersReport.Models
                 CommonFunctions.ShowErrorDialog("ProductMasterModel.LoadTaxMaster()", ex);
             }
         }
+        public DataTable LoadNGetProdInvDataTable(string ProductCategoryFilter="")
+        {
+            try
+            {
+                string Query = "";
+                if (ProductCategoryFilter.Contains("like")) Query = "Select "+ ProdInvColumnsQueryStr + " from ProductInventory where ProductInvID in ( Select a.ProductInvID from ProductMaster a Left join ProductCategoryMaster b on a.CategoryId = b.CategoryId where b.CategoryName " + ProductCategoryFilter + " ) Order by StockName;";
+                else if (ProductCategoryFilter != "" && ProductCategoryFilter != "ALL") Query = "Select  " + ProdInvColumnsQueryStr + " from ProductInventory where ProductInvID in ( Select a.ProductInvID from ProductMaster a Left join ProductCategoryMaster b on a.CategoryID = b.CategoryID where b.CategoryName = '" + ProductCategoryFilter + "' ) Order by StockName;";
+                else Query = "Select  " + ProdInvColumnsQueryStr + " from ProductInventory Order by StockName;";
+                DataTable dtProductInventory = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                LoadProductInventory(dtProductInventory);
+                return dtProductInventory;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMasterModel.LoadNGetProdInvDataTable()", ex);
+                throw ex;
+            }
+        }
 
+        public string GetProductCategoryQueryStr()
+        {
+            try
+            {
+                return "";
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMasterModel.GetProductCategoryQueryStr()", ex);
+                return "";
+            }
+        }
         public void LoadProductInventory(DataTable dtProductInventory)
         {
             try
@@ -371,7 +401,7 @@ namespace SalesOrdersReport.Models
                     ObjProductInventoryDetails.ReOrderStockQty = Double.Parse(dr["ReOrderStockQty"].ToString());
                     ObjProductInventoryDetails.LastPODate = ((dr["LastPODate"] == DBNull.Value) ? DateTime.MinValue : DateTime.Parse(dr["LastPODate"].ToString()));
                     ObjProductInventoryDetails.LastUpdateDate = ((dr["LastUpdateDate"] == DBNull.Value) ? DateTime.MinValue : DateTime.Parse(dr["LastUpdateDate"].ToString()));
-
+                    ObjProductInventoryDetails.Active = (dr["Active"].ToString() == "1" || dr["Active"].ToString() == "true") ? true : false;
                     AddProductInventoryDetails(ObjProductInventoryDetails);
                 }
             }
@@ -592,6 +622,23 @@ namespace SalesOrdersReport.Models
             }
             return null;
         }
+        public ProductInventoryDetails GetProductInventoryDetails(string StockName)
+        {
+            try
+            {
+                ProductInventoryDetails ObjProductInventoryDetails = new ProductInventoryDetails();
+                ObjProductInventoryDetails.StockName=StockName;
+                Int32 Index = ListProductInventoryDetails.BinarySearch(ObjProductInventoryDetails, ObjProductInventoryDetails);
+
+                if (Index < 0) return null;
+                return ListProductInventoryDetails[Index];
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMasterModel.GetProductInventoryDetails()", ex);
+            }
+            return null;
+        }
 
         public Double GetPriceForProduct(String ItemName, Int32 PriceGroupIndex)
         {
@@ -677,6 +724,77 @@ namespace SalesOrdersReport.Models
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("ProductMasterModel.ResetStockProducts()", ex);
+            }
+        }
+
+        public bool CanStockBeDeleted(int ProductInventoryID)
+        {
+            try
+            {
+                string Query = $"Select * from ProductMaster where ProductInvID = "+ ProductInventoryID + ";";
+                DataTable tempDt = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                if (tempDt != null && tempDt.Rows.Count > 0) return false;
+                   
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMasterModel.ResetStockProducts()", ex);
+                return false;
+            }
+        }
+        public Int32 AddProductInvDetailstoDB(ProductInventoryDetails tmpProductInventoryDetails)
+        {
+            try
+            {
+                String Query = $"Select ProductInvID from ProductInventory Where StockName = '{tmpProductInventoryDetails.StockName}'";
+                DataTable dtInvDetails = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                if (dtInvDetails.Rows.Count == 0)
+                {
+                    Query = "Insert into ProductInventory(StockName, Inventory, Units, UnitsOfMeasurement, ReOrderStockLevel, ReOrderStockQty)";
+                    Query += $" Values ('{tmpProductInventoryDetails.StockName}', {tmpProductInventoryDetails.Inventory}," +
+                             $"{tmpProductInventoryDetails.Units}, '{tmpProductInventoryDetails.UnitsOfMeasurement}'," +
+                             $"{tmpProductInventoryDetails.ReOrderStockLevel}, {tmpProductInventoryDetails.ReOrderStockQty},{tmpProductInventoryDetails.LastPODate})";
+                    ObjMySQLHelper.ExecuteNonQuery(Query);
+                }
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("ProductMasterModel.AddProductInvDetailstoDB()", ex);
+                return -1;
+            }
+        }
+        public Int32 UpdateProductInventoryDatatoDB(ProductInventoryDetails ObjProductInventoryDetails)
+        {
+            try
+            {
+                ProductInventoryDetails ExistingObjProductInventoryDetails = GetProductInventoryDetails(ObjProductInventoryDetails.StockName);  
+                Double OrderedQty = ObjProductInventoryDetails.Inventory - ExistingObjProductInventoryDetails.Inventory;
+                Double ReceivedQty = OrderedQty;
+                Double NetQty = ExistingObjProductInventoryDetails.Inventory + ReceivedQty;
+                String EntryType = "Sale";
+                int Active = (ObjProductInventoryDetails.Active == true) ? 1 : 0;
+                if (OrderedQty < 0 && ReceivedQty > 0) EntryType = "Missing";
+
+                DateTime Now = DateTime.Now;
+                ObjMySQLHelper.InsertIntoTable("ProductStockHistory",
+                    new List<String>() { "ProductInvID", "Type", "OrderedQty", "ReceivedQty", "NetQty", "PODate", "UpdateDate" },
+                    new List<String>() { ObjProductInventoryDetails.ProductInvID.ToString(), EntryType, OrderedQty.ToString(), ReceivedQty.ToString(), NetQty.ToString(),
+                            MySQLHelper.GetDateStringForDB(Now), MySQLHelper.GetDateStringForDB(DateTime.Now)},
+                    new List<Types>() { Types.Number, Types.String, Types.Number, Types.Number, Types.Number, Types.String, Types.String });
+
+                ObjMySQLHelper.UpdateTableDetails("ProductInventory", new List<String>() { "Inventory", "LastPODate" ,"Active"},
+                    new List<String>() { NetQty.ToString(), MySQLHelper.GetDateStringForDB(Now) , Active.ToString() },
+                    new List<Types>() { Types.Number, Types.String , Types.Number }, $"ProductInvID = {ObjProductInventoryDetails.ProductInvID}");
+
+                return 0;
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdateProductInventoryDatatoDB", ex);
+                return -1;
             }
         }
 
@@ -1305,7 +1423,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        ProductInventoryDetails AddNewProductInventoryDetails(ProductInventoryDetails tmpProductInventoryDetails)
+        public ProductInventoryDetails AddNewProductInventoryDetails(ProductInventoryDetails tmpProductInventoryDetails)
         {
             try
             {
@@ -1318,7 +1436,7 @@ namespace SalesOrdersReport.Models
                     Query = "Insert into ProductInventory(StockName, Inventory, Units, UnitsOfMeasurement, ReOrderStockLevel, ReOrderStockQty)";
                     Query += $" Values ('{tmpProductInventoryDetails.StockName}', {tmpProductInventoryDetails.Inventory}," +
                              $"{tmpProductInventoryDetails.Units}, '{tmpProductInventoryDetails.UnitsOfMeasurement}'," +
-                             $"{tmpProductInventoryDetails.ReOrderStockLevel}, {tmpProductInventoryDetails.ReOrderStockQty})";
+                             $"{tmpProductInventoryDetails.ReOrderStockLevel}, {tmpProductInventoryDetails.ReOrderStockQty},{tmpProductInventoryDetails.LastPODate})";
                     ObjMySQLHelper.ExecuteNonQuery(Query);
                     //Query = "Select * from ProductInventory Order by StockName";
                     //LoadProductInventory(ObjMySQLHelper.GetQueryResultInDataTable(Query));
@@ -1441,6 +1559,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
+
         public void DeleteProduct(Int32 ProductID)
         {
             try
@@ -1448,7 +1567,7 @@ namespace SalesOrdersReport.Models
                 //String Query = String.Format("Update ProductMaster Set Active = 0 Where ProductID = {0};", ProductID);
                 //ObjMySQLHelper.ExecuteNonQuery(Query);
 
-                ObjMySQLHelper.UpdateTableDetails("ProductMaster", new List<string>() { "Active" }, new List<string>() { "0" }, 
+                ObjMySQLHelper.UpdateTableDetails("ProductMaster", new List<string>() { "Active" }, new List<string>() { "0" },
                     new List<Types>() { Types.Number }, $"ProductID = {ProductID}");
 
                 GetProductDetails(ProductID).Active = false;
@@ -1586,6 +1705,117 @@ namespace SalesOrdersReport.Models
             }
         }
 
+        public Int32 ProcessStocksDataFromExcelFile(string ExcelFilePath,out String Errmsg, out String ProcessStatus,  out Int32 ExistingProductsInventoryCount)
+        {
+            ProcessStatus = ""; Errmsg="";  ExistingProductsInventoryCount = 0;
+            try
+            {
+                Excel.Application xlApp = new Excel.Application();
+                dtProductInventoryToImport = CommonFunctions.ReturnDataTableFromExcelWorksheet("Stock Details", ExcelFilePath, "*");
+                if (dtProductInventoryToImport == null)
+                {
+                    Errmsg = "Provided Stock Summary file doesn't contain \"Stock Details\" Sheet.\nPlease provide correct file.";
+                    return -1;
+                }
+                //Int32 ExistingProductInventoryCount = 0;
+                Int32 TotalRecordCount = 0;
+                dtProductInventoryToUpdate = new DataTable();
+                foreach (DataColumn item in dtProductInventoryToImport.Columns)
+                {
+                    dtProductInventoryToUpdate.Columns.Add(new DataColumn(item.ColumnName, item.DataType));
+                }
+                for (int i = dtProductInventoryToImport.Rows.Count - 1; i >= 0; i--)
+                // foreach (DataRow item in dtStockSummary.Rows)
+                {
+                    ProductInventoryDetails tmpProductInventoryDetails = GetStockProductDetails(dtProductInventoryToImport.Rows[i]["StockName"].ToString());
+                    if (tmpProductInventoryDetails != null)
+                    {
+                        ExistingProductsInventoryCount++;
+                        //dtProductInventoryToUpdate.Rows.Add(item.ItemArray.ToArray());
+                        // item.Delete();
+                        dtProductInventoryToUpdate.Rows.Add(dtProductInventoryToImport.Rows[i].ItemArray.ToArray());//up
+                        dtProductInventoryToImport.Rows[i].Delete();//in
+                    }
+                }
+
+                dtProductInventoryToImport.AcceptChanges();
+
+                ProcessStatus += $"{(!String.IsNullOrEmpty(ProcessStatus) ? "\n" : "")}Inventory:: New:{dtProductInventoryToImport.Rows.Count} Existing:{ExistingProductsInventoryCount}";
+                TotalRecordCount += dtProductInventoryToImport.Rows.Count;
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ProcessStocksDataFromExcelFile()", ex);
+                return -1;
+            }
+        }
+        public Int32 ImportStocksDataToDatabase(out String ImportStatus, Int32 ExistingProductsInventoryCount, ReportProgressDel ReportProgress)
+        {
+            ImportStatus = "";
+            try
+            {
+                if (dtProductInventoryToImport == null) return -1;
+
+                Int32 ErrorInventoryCount = 0;
+
+                //Import Inventory
+
+                Int32 ErrorProductsInventoryUpdateCount = 0;
+                //Int32 ErrorProductsInventoryUpdateCount = 0, ErrorInventoryCount = 0;
+                if (ExistingProductsInventoryCount == 0) dtProductInventoryToImport.AcceptChanges();
+                else
+                {
+                    foreach (DataRow item in dtProductInventoryToUpdate.Rows)
+                    {
+                        ProductInventoryDetails tmpProductInventoryDetails = GetStockProductDetails(item["StockName"].ToString());
+                        if (tmpProductInventoryDetails == null)
+                        {
+                            ErrorProductsInventoryUpdateCount++;
+                            continue;
+                        }
+                        tmpProductInventoryDetails = tmpProductInventoryDetails.Clone();
+                        tmpProductInventoryDetails.Inventory = (item["Inventory"].ToString() == "") ? 0 : Double.Parse(item["Inventory"].ToString());
+                        tmpProductInventoryDetails.Units = (item["Units"].ToString() == "") ? 0 : Double.Parse(item["Units"].ToString());
+                        tmpProductInventoryDetails.UnitsOfMeasurement = item["UnitsOfMeasurement"].ToString();
+                        tmpProductInventoryDetails.ReOrderStockLevel = (item["ReOrderStockLevel"].ToString() == "") ? 0 : Double.Parse(item["ReOrderStockLevel"].ToString());
+                        tmpProductInventoryDetails.Active = bool.Parse(item["Active"].ToString());
+
+                        UpdateProductInventoryDatatoDB(tmpProductInventoryDetails);
+                    }
+                }
+
+                foreach (DataRow item in dtProductInventoryToImport.Rows)
+                {
+                    ProductInventoryDetails tmpProductInventoryDetails = new ProductInventoryDetails()
+                    {
+                        StockName = item["StockName"].ToString(),
+                        Inventory = (item["Inventory"].ToString() == "") ? 0 : Double.Parse(item["Inventory"].ToString()),
+                        Units = (item["Units"].ToString() == "") ? 0 : Double.Parse(item["Units"].ToString()),
+                        UnitsOfMeasurement = item["UnitsOfMeasurement"].ToString(),
+                        ReOrderStockLevel = (item["ReOrderStockLevel"].ToString() == "") ? 0 : Double.Parse(item["ReOrderStockLevel"].ToString()),
+                        ReOrderStockQty = (item["ReOrderStockQty"].ToString() == "") ? 0 : Double.Parse(item["ReOrderStockQty"].ToString()),
+                        LastPODate = DateTime.Now
+                    };
+
+                    if (AddProductInvDetailstoDB(tmpProductInventoryDetails) == 1) ErrorInventoryCount++;
+                }
+
+                ImportStatus += $"{(!String.IsNullOrEmpty(ImportStatus) ? "\n" : "")}Inventory:: Imported:{dtProductInventoryToImport.Rows.Count - ErrorInventoryCount} Updated:{ExistingProductsInventoryCount - ErrorProductsInventoryUpdateCount} Error:{ErrorInventoryCount + ErrorProductsInventoryUpdateCount}";
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ImportStocksDataToDatabase()", ex);
+                return -1;
+            }
+            finally
+            {
+                dtProductInventoryToImport  = null;
+                dtProductInventoryToUpdate = null;
+            }
+        }
         public Int32 ProcessProductsDataFromExcelFile(out String ProcessStatus, out Int32 ExistingProductsCount, out Int32 ExistingProductsInventoryCount)
         {
             ProcessStatus = ""; ExistingProductsCount = 0; ExistingProductsInventoryCount = 0;
@@ -1593,7 +1823,7 @@ namespace SalesOrdersReport.Models
             {
                 Int32 ExistingProductCount = 0, ExistingProductCategoryCount = 0, ExistingProductInventoryCount = 0, ExistingHSNCount = 0;
                 Int32 TotalRecordCount = 0, ExistingVendorCount = 0;
-                
+
                 //Check Products
                 if (ArrDataToImport[0])
                 {
@@ -1703,6 +1933,7 @@ namespace SalesOrdersReport.Models
                 return -1;
             }
         }
+       
 
         public Int32 ImportProductsDataToDatabase(out String ImportStatus, Int32 ExistingProductsCount, Int32 ExistingProductsInventoryCount, ReportProgressDel ReportProgress)
         {

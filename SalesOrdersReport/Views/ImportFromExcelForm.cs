@@ -8,7 +8,7 @@ namespace SalesOrdersReport.Views
 {
     public enum ImportDataTypes
     {
-        Products, Customers , Payments, Vendors
+        Products, Customers, Payments, Vendors, Stocks
     };
 
     public delegate Int32 ImportDataFromFileDel(String FilePath, Object ObjDetails, ReportProgressDel ReportProgress);
@@ -73,6 +73,14 @@ namespace SalesOrdersReport.Views
                         chkListBoxDataToImport.Enabled = false;
                         OFDImportExcelFileDialog.Filter = "Excel Files(*.xlsx;*.xls)|*.xlsx;*.xls|All Files(*.*)|*.*";
                         OFDImportExcelFileDialog.Title = "Choose File to Import Vendors data from";
+                        break;
+                    case ImportDataTypes.Stocks:
+                        this.Text = "Import Stocks from Excel";
+                        btnImportFrmExclUploadFile.Text = "Import Stocks";
+                        chkListBoxDataToImport.Items.Add("Stocks Details", true);
+                        chkListBoxDataToImport.Enabled = false;
+                        OFDImportExcelFileDialog.Filter = "Excel Files(*.xlsx;*.xls)|*.xlsx;*.xls|All Files(*.*)|*.*";
+                        OFDImportExcelFileDialog.Title = "Choose File to Import Stocks data from";
                         break;
                     default:
                         break;
@@ -223,6 +231,19 @@ namespace SalesOrdersReport.Views
                             ImportResult = -1;
                         }
                         break;
+                    case ImportDataTypes.Stocks:
+                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgress);
+                        if (Retval == 0)
+                        {
+                            MessageBox.Show(this, "Importing Stocks data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                            ImportResult = 0;
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, "Importing Stocks data from File to Database failed!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                            ImportResult = -1;
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -266,6 +287,9 @@ namespace SalesOrdersReport.Views
                         UpdateOnClose(Mode: 1);
                         break;
                     case ImportDataTypes.Vendors:
+                        UpdateOnClose(Mode: 1);
+                        break;
+                    case ImportDataTypes.Stocks:
                         UpdateOnClose(Mode: 1);
                         break;
                     default:

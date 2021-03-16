@@ -195,6 +195,7 @@ namespace SalesOrdersReport
         public Double TotalCost = 0, TotalDiscount = 0, TotalTax = 0, NetCost = 0, ReOrderStockLevel = 0, ReOrderStockQty = 0;
         public Boolean IsUpdated = false, IsStockOverride = false;
         public DateTime LastPODate, LastUpdateDate;
+        public bool Active = true;
 
         public int Compare(ProductInventoryDetails x, ProductInventoryDetails y)
         {

@@ -377,6 +377,7 @@ namespace SalesOrdersReport.CommonModules
                 TableColumns.Add("UnitsOfMeasurement, varchar(10) DEFAULT NULL");
                 TableColumns.Add("ReOrderStockLevel, float DEFAULT NULL");
                 TableColumns.Add("ReOrderStockQty, float DEFAULT NULL");
+                TableColumns.Add("Active, tinyint Not NULL DEFAULT '1'");
                 TableColumns.Add("LastPODate, datetime DEFAULT NULL");
                 TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
                 TableColumns.Add("PRIMARY KEY, ProductInvID");
