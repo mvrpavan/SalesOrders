@@ -542,9 +542,10 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case 3:     //Update or Create Bill
-                        MessageBox.Show(this, "Created Customer Bill successfully", "Create Bill", MessageBoxButtons.OK);
-                        DialogResult dialogResult = MessageBox.Show(this, "Is this Bill Paid?", "Create Bill", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                        if (dialogResult == DialogResult.Yes)
+                        DialogResult dialogResult;
+                        //MessageBox.Show(this, "Created Customer Bill successfully", "Create Bill", MessageBoxButtons.OK);
+                        //DialogResult dialogResult = MessageBox.Show(this, "Is this Bill Paid?", "Create Bill", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                        // if (dialogResult == DialogResult.Yes)
                         {
                             while (true)
                             {

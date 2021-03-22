@@ -311,7 +311,7 @@ namespace SalesOrdersReport.Views
                 InvoiceDetails AddUpdatedInvoiceDetails = null;
                 if (CurrInvoiceDetails.CurrInvoiceDetails.InvoiceID < 0)
                 {
-                    AddUpdatedInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(CurrCustomerDetails.CustomerID, CurrInvoiceDetails.CurrInvoiceDetails.OrderID, dtTmPckrInvDate.Value, CurrInvoiceDetails.CurrInvoiceDetails.InvoiceNumber, CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems, Double.Parse(lblDiscount.Text));
+                    AddUpdatedInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(CurrCustomerDetails.CustomerID, CurrInvoiceDetails.CurrInvoiceDetails.OrderID, dtTmPckrInvDate.Value, CurrInvoiceDetails.CurrInvoiceDetails.InvoiceNumber, CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems, Double.Parse(lblDiscount.Text.Replace(CurrencyChar,' ').Trim()));
                     UpdateObjectOnClose(1, AddUpdatedInvoiceDetails);
                 }
                 else
@@ -413,7 +413,7 @@ namespace SalesOrdersReport.Views
                     //Check for existing Invoice or create new Invoice for selected Customer
                     CustomerDetails ObjCustomerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(cmbBoxCustomers.Items[cmbBoxCustomers.SelectedIndex].ToString());
                     ListCustomerInvoices = ObjInvoicesModel.GetInvoiceDetailsForCustomer(dtTmPckrInvDate.Value, ObjCustomerDetails.CustomerID);
-                    ListCustomerInvoices.RemoveAll(e => e.InvoiceStatus != INVOICESTATUS.Created);
+                    if(ListCustomerInvoices != null) ListCustomerInvoices.RemoveAll(e => e.InvoiceStatus != INVOICESTATUS.Created);
                     if (ListCustomerInvoices != null && ListCustomerInvoices.Count >= 0)
                     {
                         cmbBoxInvoiceNumber.Items.Clear();

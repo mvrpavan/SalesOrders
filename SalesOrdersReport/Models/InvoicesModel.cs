@@ -155,7 +155,7 @@ namespace SalesOrdersReport.Models
                 String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)}, " +
                             $"d.`{String.Join("`, d.`", ListPaymentModes)}`, a.{String.Join(", a.", ArrDtColumns3)} " +
                             $"from Invoices a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID " +
-                            $"Inner Join (Select InvoiceID{PaymentsQuery} from PAYMENTS Where InvoiceID > 0 and Active = 1 Group by InvoiceID) d on a.InvoiceID = d.InvoiceID";
+                            $"Left Join (Select InvoiceID{PaymentsQuery} from PAYMENTS Where InvoiceID > 0 and Active = 1 Group by InvoiceID) d on a.InvoiceID = d.InvoiceID";
                 String WhereClause = $" Where 1 = 1";
                 if (FromDate > DateTime.MinValue && ToDate > DateTime.MinValue)
                 {
