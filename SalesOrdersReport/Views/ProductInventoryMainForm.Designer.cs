@@ -46,7 +46,7 @@
             this.dgvGridViewStocks = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.lblStocksCount = new System.Windows.Forms.Label();
-            this.backgroundWorkerOrders = new System.ComponentModel.BackgroundWorker();
+            this.backgroundWorkerStocks = new System.ComponentModel.BackgroundWorker();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGridViewStocks)).BeginInit();
@@ -305,11 +305,11 @@
             this.lblStocksCount.TabIndex = 4;
             this.lblStocksCount.Text = "[Displaying ]";
             // 
-            // backgroundWorkerOrders
+            // backgroundWorkerStocks
             // 
-            this.backgroundWorkerOrders.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerStocks_DoWork);
-            this.backgroundWorkerOrders.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerStocks_ProgressChanged);
-            this.backgroundWorkerOrders.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerStocks_RunWorkerCompleted);
+            this.backgroundWorkerStocks.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerStocks_DoWork);
+            this.backgroundWorkerStocks.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerStocks_ProgressChanged);
+            this.backgroundWorkerStocks.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerStocks_RunWorkerCompleted);
             // 
             // ProductInventoryMainForm
             // 
@@ -355,7 +355,7 @@
         private System.Windows.Forms.TextBox txtBoxProductSearchString;
         private System.Windows.Forms.Button btnDeleteStock;
         private System.Windows.Forms.Label lblStocksCount;
-        private System.ComponentModel.BackgroundWorker backgroundWorkerOrders;
+        private System.ComponentModel.BackgroundWorker backgroundWorkerStocks;
         private System.Windows.Forms.Button btnEditStockProduct;
         private System.Windows.Forms.Button btnImportFromExcel;
         private System.Windows.Forms.Button btnExportToExcel;

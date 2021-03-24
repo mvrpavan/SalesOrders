@@ -1,5 +1,6 @@
 ﻿using SalesOrdersReport.CommonModules;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace SalesOrdersReport.Views
@@ -32,8 +33,8 @@ namespace SalesOrdersReport.Views
             MasterSheetSelected = false;
 
             vendorMenu.Visible = false;
-            productMenu.Visible = true;
-            reportsMenu.Visible = true;
+            //productMenu.Visible = true;
+            //reportsMenu.Visible = true;
 
             FillShortcuts();
         }

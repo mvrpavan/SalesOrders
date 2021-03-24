@@ -12,6 +12,7 @@
     <SQLScripts>
       <SQLScript FilePath="E:\PavanData\Projects\GitHub\SalesOrders_V8\SalesOrdersReport\SQLScripts\ProductMasterTables.sql"></SQLScript>
     </SQLScripts>
+    <ApplicationMode>Retail</ApplicationMode>
   </Application>
   <ProductLines>
     <ProductLine Name="&lt;Default&gt;">

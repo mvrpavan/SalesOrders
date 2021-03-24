@@ -8,8 +8,13 @@ using System.Data;
 using SalesOrdersReport.Views;
 using SalesOrdersReport.CommonModules;
 
-namespace SalesOrdersReport
+namespace SalesOrdersReport.Models
 {
+    enum ApplicationModes
+    {
+        RETAIL, WHOLESALE, ADMIN
+    }
+
     class ApplicationSettings
     {
         XmlNode SettingsNode;
@@ -20,6 +25,7 @@ namespace SalesOrdersReport
         public Int32 SMTPPort = 0;
         public List<String> ListSQLScriptFiles = new List<String>();
         public Boolean EnableMail = true;
+        public ApplicationModes ApplicationMode = ApplicationModes.RETAIL;
 
         public void ReadSettingsFromNode(XmlNode Node)
         {
@@ -65,6 +71,10 @@ namespace SalesOrdersReport
                 XMLFileUtils.GetChildNode(SettingsNode, "POSDetails", out POSDetailsNode);
                 XMLFileUtils.GetAttributeValue(POSDetailsNode, "StoreName", out StoreName);
                 XMLFileUtils.GetAttributeValue(POSDetailsNode, "POSNumber", out POSNumber);
+
+                String ApplicationModeName;
+                if (XMLFileUtils.GetChildNodeValue(SettingsNode, "ApplicationMode", out ApplicationModeName))
+                    ApplicationMode = (ApplicationModes)Enum.Parse(Type.GetType("SalesOrdersReport.ApplicationModes"), ApplicationModeName);
             }
             catch (Exception ex)
             {
