@@ -71,6 +71,9 @@ namespace SalesOrdersReport.Views
                 cmbBoxInvoiceNumber.Visible = true;
                 lblStatus.Text = "Please choose Invoice date";
                 dtGridViewInvProdList.Columns[PriceColIndex].ReadOnly = false;
+                cmbBxInvoiceDeliveryLine.Items.Add("Select Delivery Line");
+                cmbBxInvoiceDeliveryLine.Items.AddRange(CommonFunctions.ObjCustomerMasterModel.GetAllLineNames().ToArray());
+                cmbBxInvoiceDeliveryLine.SelectedIndex = 0;
 
                 this.Text = FormTitle;
                 picBoxLoading.Visible = false;
@@ -311,7 +314,7 @@ namespace SalesOrdersReport.Views
                 InvoiceDetails AddUpdatedInvoiceDetails = null;
                 if (CurrInvoiceDetails.CurrInvoiceDetails.InvoiceID < 0)
                 {
-                    AddUpdatedInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(CurrCustomerDetails.CustomerID, CurrInvoiceDetails.CurrInvoiceDetails.OrderID, dtTmPckrInvDate.Value, CurrInvoiceDetails.CurrInvoiceDetails.InvoiceNumber, CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems, Double.Parse(lblDiscount.Text.Replace(CurrencyChar,' ').Trim()));
+                    AddUpdatedInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(CurrCustomerDetails.CustomerID, CurrInvoiceDetails.CurrInvoiceDetails.OrderID, dtTmPckrInvDate.Value, CurrInvoiceDetails.CurrInvoiceDetails.InvoiceNumber, CurrInvoiceDetails.CurrInvoiceDetails.DeliveryLineName, CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems, Double.Parse(lblDiscount.Text.Replace(CurrencyChar, ' ').Trim()));
                     UpdateObjectOnClose(1, AddUpdatedInvoiceDetails);
                 }
                 else
@@ -445,14 +448,14 @@ namespace SalesOrdersReport.Views
                     CurrInvoiceDetails.CurrInvoiceDetails.CustomerID = CurrCustomerDetails.CustomerID;
                     CurrInvoiceDetails.CurrInvoiceDetails.InvoiceNumber = txtBoxInvNumber.Text;
                     CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems = new List<InvoiceItemDetails>();
-
-                    FormTitle = "Create New Invoice";
+                    if (cmbBxInvoiceDeliveryLine.SelectedIndex > 0) CurrInvoiceDetails.CurrInvoiceDetails.DeliveryLineName = cmbBxInvoiceDeliveryLine.SelectedItem.ToString();
+                     FormTitle = "Create New Invoice";
                     btnCreateInvoice.Text = "Create Invoice";
                 }
                 else
                 {
                     txtBoxInvNumber.Text = CurrInvoiceDetails.CurrInvoiceDetails.InvoiceNumber;
-
+                    cmbBxInvoiceDeliveryLine.SelectedItem = CurrInvoiceDetails.CurrInvoiceDetails.DeliveryLineName;
                     if (CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems == null || CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems.Count == 0)
                         ObjInvoicesModel.FillInvoiceItemDetails(CurrInvoiceDetails.CurrInvoiceDetails);
                     foreach (var item in CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems)

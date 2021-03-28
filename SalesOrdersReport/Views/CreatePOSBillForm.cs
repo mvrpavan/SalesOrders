@@ -295,7 +295,7 @@ namespace SalesOrdersReport.Views
                 {
                     AddUpdatedInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(CurrCustomerDetails.CustomerID, 
                                             CurrOrderInvoiceDetails.CurrInvoiceDetails.OrderID, DateTime.Now, 
-                                            CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceNumber, 
+                                            CurrOrderInvoiceDetails.CurrInvoiceDetails.InvoiceNumber, CurrOrderInvoiceDetails.CurrInvoiceDetails.DeliveryLineName,
                                             CurrOrderInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems, Double.Parse(lblDiscount.Text.Replace(CurrencyChar, ' ').Trim()));
                     UpdateObjectOnClose(1, AddUpdatedInvoiceDetails);
                 }

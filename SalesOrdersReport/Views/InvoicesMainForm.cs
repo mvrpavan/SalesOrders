@@ -17,6 +17,7 @@ namespace SalesOrdersReport.Views
         DateTime FilterFromDate, FilterToDate;
         Boolean IsFormLoaded = false;
         Int32 OrderIDToEditInvoice;
+        List<String> ListPaymentModes;
 
         public InvoicesMainForm(Int32 OrderIDToEditInvoice = -1)
         {
@@ -30,11 +31,13 @@ namespace SalesOrdersReport.Views
                 ObjInvoicesModel = new InvoicesModel();
                 ObjInvoicesModel.Initialize();
 
-                dTimePickerFrom.Value = DateTime.Today.AddDays(-30);
-                dTimePickerTo.Value = DateTime.Today.AddDays(30);
+                //dTimePickerFrom.Value = DateTime.Today.AddDays(-30);
+                //dTimePickerTo.Value = DateTime.Today.AddDays(30);
+                dTimePickerFrom.Value = DateTime.Today;
+                dTimePickerTo.Value = DateTime.Today;
                 FilterFromDate = DateTime.MinValue;
                 FilterToDate = DateTime.MinValue;
-                CurrInvoiceStatus = INVOICESTATUS.Created;
+                CurrInvoiceStatus = INVOICESTATUS.All;
 
                 cmbBoxInvoiceStatus.DropDownStyle = ComboBoxStyle.DropDownList;
                 cmbBoxInvoiceStatus.Items.Clear();
@@ -51,6 +54,9 @@ namespace SalesOrdersReport.Views
                 cmbBoxLine.Items.AddRange(CommonFunctions.ObjCustomerMasterModel.GetAllLineNames().ToArray());
                 cmbBoxLine.SelectedIndex = 0;
 
+                PaymentsModel ObjPaymentsModel = new PaymentsModel();
+                ObjPaymentsModel.LoadPaymentModes();
+                ListPaymentModes = ObjPaymentsModel.GetPaymentModesList();
                 LoadGridView();
 
                 if (OrderIDToEditInvoice > 0)
@@ -139,9 +145,42 @@ namespace SalesOrdersReport.Views
                 for (int i = 0; i < dtGridViewInvoices.Columns.Count; i++)
                 {
                     if (dtGridViewInvoices.Columns[i].Name.Equals("InvoiceID") || 
-                        dtGridViewInvoices.Columns[i].Name.Equals("OrderID") || dtGridViewInvoices.Columns[i].Name.Equals("CustomerID"))
+                        dtGridViewInvoices.Columns[i].Name.Equals("OrderID") || dtGridViewInvoices.Columns[i].Name.Equals("CustomerID") || dtGridViewInvoices.Columns[i].Name.Equals("DeliveryLineID"))
                         dtGridViewInvoices.Columns[i].Visible = false;
+
+                    if (ListPaymentModes.Contains(dtGridViewInvoices.Columns[i].Name))
+                    {
+                        dtGridViewInvoices.Columns[i].DefaultCellStyle.Format = "F";
+                    }
                 }
+
+                //Add Totals Row at the bottom of Grid
+                dtGridViewInvoiceTotal.Rows.Clear();
+                dtGridViewInvoiceTotal.Columns.Clear();
+                dtGridViewInvoiceTotal.ColumnHeadersVisible = false;
+                CommonFunctions.SetDataGridViewProperties(dtGridViewInvoiceTotal);
+                dtGridViewInvoiceTotal.SelectionMode = DataGridViewSelectionMode.CellSelect;
+                dtGridViewInvoiceTotal.DefaultCellStyle.Font = new System.Drawing.Font(dtGridViewInvoices.Font, System.Drawing.FontStyle.Bold);
+                foreach (DataGridViewColumn item in dtGridViewInvoices.Columns)
+                {
+                    DataGridViewColumn newColumn = new DataGridViewColumn(item.CellTemplate);
+                    newColumn.Name = item.Name;
+                    newColumn.Width = item.Width;
+                    newColumn.Visible = item.Visible;
+                    dtGridViewInvoiceTotal.Columns.Add(newColumn);
+                }
+
+                Object[] ArrObjects = dtAllInvoices.NewRow().ItemArray;
+                ArrObjects[dtAllInvoices.Columns["Invoice Number"].Ordinal] = "Total";
+                List<String> ListSumColumns = new List<String>() { "Gross Invoice Amount", "Discount Amount", "Net Invoice Amount" };
+                ListSumColumns.AddRange(ListPaymentModes);
+                for (int i = 0; i < ListSumColumns.Count; i++)
+                {
+                    String Value = dtAllInvoices.Compute($"Sum([{ListSumColumns[i]}])", "").ToString();
+                    ArrObjects[dtAllInvoices.Columns[ListSumColumns[i]].Ordinal] = (String.IsNullOrEmpty(Value) ? 0.ToString("F") : Double.Parse(Value).ToString("F"));
+                }
+                dtGridViewInvoiceTotal.Rows.Add(ArrObjects);
+
                 dtGridViewInvoices.ClearSelection();
 
                 lblOrdersCount.Text = $"[Displaying {dtGridViewInvoices.Rows.Count} of {dtAllInvoices.Rows.Count} Invoices]";
@@ -704,6 +743,19 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.MarkInvoicesAsDelivered()", ex);
+            }
+        }
+
+        private void dtGridViewInvoices_Scroll(object sender, ScrollEventArgs e)
+        {
+            try
+            {
+                if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
+                    dtGridViewInvoiceTotal.HorizontalScrollingOffset = e.NewValue;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.dtGridViewInvoices_Scroll()", ex);
             }
         }
 

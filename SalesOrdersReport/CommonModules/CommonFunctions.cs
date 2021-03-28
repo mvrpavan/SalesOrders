@@ -1362,7 +1362,7 @@ namespace SalesOrdersReport.CommonModules
             {
                 if (!String.IsNullOrEmpty(CommonFunctions.ObjApplicationSettings.LogoFileName))
                 {
-                    xlWorksheet.PageSetup.RightHeaderPicture.Filename = AppDomain.CurrentDomain.BaseDirectory + "\\Images\\" + CommonFunctions.ObjApplicationSettings.LogoFileName;
+                    xlWorksheet.PageSetup.RightHeaderPicture.Filename = AppDomain.CurrentDomain.BaseDirectory + @"\Images\" + CommonFunctions.ObjApplicationSettings.LogoFileName;
                     xlWorksheet.PageSetup.RightHeaderPicture.ColorType = Microsoft.Office.Core.MsoPictureColorType.msoPictureAutomatic;
                     xlWorksheet.PageSetup.RightHeaderPicture.CropBottom = 0;
                     xlWorksheet.PageSetup.RightHeaderPicture.CropLeft = 0;

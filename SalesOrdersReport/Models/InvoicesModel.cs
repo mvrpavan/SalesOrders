@@ -32,6 +32,8 @@ namespace SalesOrdersReport.Models
         public INVOICESTATUS InvoiceStatus;
         public List<InvoiceItemDetails> ListInvoiceItems;
         public Int32 InvoiceItemCount = 0;
+        public Int32 DeliveryLineID = -1;
+        public string DeliveryLineName = "";
 
         public InvoiceDetails Clone()
         {
@@ -134,15 +136,15 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                String[] ArrDtColumns1 = new string[] { "InvoiceID", "CustomerID", "OrderID", "InvoiceNumber", "InvoiceDate" };
+                String[] ArrDtColumns1 = new string[] { "InvoiceID", "CustomerID", "DeliveryLineID", "OrderID", "InvoiceNumber", "InvoiceDate" };
                 String[] ArrDtColumns2 = new string[] { "InvoiceItemCount", "GrossInvoiceAmount", "DiscountAmount", "NetInvoiceAmount" };
                 String[] ArrDtColumns3 = new string[] { "InvoiceStatus", "CreationDate", "LastUpdatedDate" };
 
                 List<String> ListPaymentModes = ObjPaymentsModel.GetPaymentModesList();
 
-                List<String> ListColumns = new List<String>() { "InvoiceID", "CustomerID", "OrderID", "Invoice Number", "Invoice Date", "Customer Name", "Invoice Item Count", "Gross Invoice Amount", "Discount Amount", "Net Invoice Amount" };
+                List<String> ListColumns = new List<String>() { "InvoiceID", "CustomerID","DeliveryLineID", "OrderID", "Invoice Number", "Invoice Date", "Customer Name", "Invoice Item Count", "Gross Invoice Amount", "Discount Amount", "Net Invoice Amount" };
                 ListColumns.AddRange(ListPaymentModes);
-                ListColumns.AddRange(new string[] { "Invoice Status", "Creation Date", "Last Updated Date" });
+                ListColumns.AddRange(new string[] { "Invoice Status", "Creation Date", "Last Updated Date ","Delivery Line" });
 
                 List<Int32> ListPaymentModeIDs = ListPaymentModes.Select(e => ObjPaymentsModel.GetPaymentModeDetails(e).PaymentModeID).ToList();
 
@@ -153,9 +155,11 @@ namespace SalesOrdersReport.Models
                 }
 
                 String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)}, " +
-                            $"d.`{String.Join("`, d.`", ListPaymentModes)}`, a.{String.Join(", a.", ArrDtColumns3)} " +
+                            $"d.`{String.Join("`, d.`", ListPaymentModes)}`, a.{String.Join(", a.", ArrDtColumns3)} , e.LineName as DeliveryLine " +
                             $"from Invoices a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID " +
-                            $"Left Join (Select InvoiceID{PaymentsQuery} from PAYMENTS Where InvoiceID > 0 and Active = 1 Group by InvoiceID) d on a.InvoiceID = d.InvoiceID";
+                            $"Left Join (Select InvoiceID{PaymentsQuery} from PAYMENTS Where InvoiceID > 0 and Active = 1 Group by InvoiceID) d on a.InvoiceID = d.InvoiceID "  
+                          ;
+                
                 String WhereClause = $" Where 1 = 1";
                 if (FromDate > DateTime.MinValue && ToDate > DateTime.MinValue)
                 {
@@ -199,6 +203,7 @@ namespace SalesOrdersReport.Models
                             break;
                     }
                 }
+                Query += $" left Join LINEMASTER e on a.DeliveryLineID = e.LineID";
                 Query += WhereClause + " Order by a.InvoiceID";
                 DataTable dtInvoices = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 dtAllInvoices = dtInvoices;
@@ -220,7 +225,9 @@ namespace SalesOrdersReport.Models
                         NetInvoiceAmount = Double.Parse(dtRow["NetInvoiceAmount"].ToString()),
                         InvoiceStatus = (INVOICESTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.INVOICESTATUS"), dtRow["InvoiceStatus"].ToString()),
                         CreationDate = DateTime.Parse(dtRow["CreationDate"].ToString()),
-                        LastUpdatedDate = DateTime.Parse(dtRow["LastUpdatedDate"].ToString())
+                        LastUpdatedDate = DateTime.Parse(dtRow["LastUpdatedDate"].ToString()),
+                        DeliveryLineID = (dtRow["DeliveryLineID"].ToString() == string.Empty || dtRow["DeliveryLineID"].ToString() == null) ? -1 : Int32.Parse(dtRow["DeliveryLineID"].ToString()),
+                        DeliveryLineName = dtRow["DeliveryLine"].ToString()
                     };
 
                     ListInvoices.Add(tmpInvoiceDetails);
@@ -458,7 +465,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public InvoiceDetails CreateNewInvoiceForCustomer(Int32 CustomerID, Int32 OrderID, DateTime InvoiceDate, String InvoiceNumber, 
+        public InvoiceDetails CreateNewInvoiceForCustomer(Int32 CustomerID, Int32 OrderID, DateTime InvoiceDate, String InvoiceNumber, String DeliveryLineName,
                                                     List<InvoiceItemDetails> ListInvoiceItems, Double Discount)
         {
             try
@@ -477,6 +484,8 @@ namespace SalesOrdersReport.Models
                     ListInvoiceItems = ListInvoiceItems.Select(e => e.Clone()).ToList(),
                     CreationDate = DateTime.Now,
                     InvoiceItemCount = ListInvoiceItems.Count(e => e.OrderQty > 0),
+                    DeliveryLineName = DeliveryLineName,
+                    DeliveryLineID = DeliveryLineName == "" ? -1 : CommonFunctions.ObjCustomerMasterModel.GetLineID(DeliveryLineName),
                 };
 
                 NewInvoiceDetails.CustomerName = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CustomerID).CustomerName;
@@ -578,11 +587,11 @@ namespace SalesOrdersReport.Models
             try
             {
                 String Query = "Insert into Invoices(InvoiceNumber, InvoiceDate, CustomerID, OrderID, InvoiceItemCount, GrossInvoiceAmount, " +
-                                "DiscountAmount, NetInvoiceAmount, InvoiceStatus, CreationDate, LastUpdatedDate) Values (";
+                                "DiscountAmount, NetInvoiceAmount, InvoiceStatus,DeliveryLineID, CreationDate, LastUpdatedDate) Values (";
                 Query += $"'{ObjInvoiceDetails.InvoiceNumber}', '{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.InvoiceDate)}',";
                 Query += $"{ObjInvoiceDetails.CustomerID}, {ObjInvoiceDetails.OrderID}, {ObjInvoiceDetails.InvoiceItemCount}, " +
                          $"{ObjInvoiceDetails.GrossInvoiceAmount}, {ObjInvoiceDetails.DiscountAmount}, " +
-                         $"{ObjInvoiceDetails.NetInvoiceAmount}, '{ObjInvoiceDetails.InvoiceStatus}', " +
+                         $"{ObjInvoiceDetails.NetInvoiceAmount}, '{ObjInvoiceDetails.InvoiceStatus}',   {ObjInvoiceDetails.DeliveryLineID}  , " +
                          $"'{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.CreationDate)}', '{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.LastUpdatedDate)}'";
                 Query += ")";
                 ObjMySQLHelper.ExecuteNonQuery(Query);
@@ -695,9 +704,9 @@ namespace SalesOrdersReport.Models
                 InsertInvoiceItems(ListItemsAdded, ObjInvoiceDetails.InvoiceID);
 
                 //Update InvoiceItemCount
-                ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceItemCount", "NetInvoiceAmount", "InvoiceStatus" },
-                                            new List<String>() { InvoiceItemCount.ToString(), NetInvoiceAmount.ToString(), ObjInvoiceDetails.InvoiceStatus.ToString() },
-                                            new List<Types>() { Types.Number, Types.Number, Types.String }, $"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
+                ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceItemCount", "NetInvoiceAmount", "InvoiceStatus","DeliveryLineID" },
+                                            new List<String>() { InvoiceItemCount.ToString(), NetInvoiceAmount.ToString(), ObjInvoiceDetails.InvoiceStatus.ToString(), ObjInvoiceDetails.DeliveryLineID.ToString() },
+                                            new List<Types>() { Types.Number, Types.Number, Types.String, Types.Number }, $"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
 
                 FillInvoiceItemDetails(ObjInvoiceDetails);
 

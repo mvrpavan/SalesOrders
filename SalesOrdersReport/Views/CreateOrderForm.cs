@@ -79,6 +79,9 @@ namespace SalesOrdersReport.Views
                 btnResetBalanceAmount.Enabled = false;
                 lblStatus.Text = "Please choose Order date";
                 dtGridViewOrdProdList.Columns[OrdQtyColIndex].ReadOnly = true;
+                cmbBxOrdersDeliveryLine.Items.Add("Select Delivery Line");
+                cmbBxOrdersDeliveryLine.Items.AddRange(CommonFunctions.ObjCustomerMasterModel.GetAllLineNames().ToArray());
+                cmbBxOrdersDeliveryLine.SelectedIndex = 0;
 
                 this.Text = FormTitle;
                 picBoxLoading.Visible = false;
@@ -86,6 +89,7 @@ namespace SalesOrdersReport.Views
                 dtGridViewOrdProdList.SelectionMode = DataGridViewSelectionMode.CellSelect;
                 this.UpdateObjectOnClose = UpdateObjectOnClose;
                 CurrentOrderID = OrderID;
+
             }
             catch (Exception ex)
             {
@@ -283,7 +287,7 @@ namespace SalesOrdersReport.Views
                 if (CurrOrderDetails.CurrOrderDetails.OrderID < 0)
                 {
                     AddUpdatedOrderDetails = ObjOrdersModel.CreateNewOrderForCustomer(CurrCustomerDetails.CustomerID, 
-                                            dtTmPckrOrdDate.Value, CurrOrderDetails.CurrOrderDetails.OrderNumber, 
+                                            dtTmPckrOrdDate.Value, CurrOrderDetails.CurrOrderDetails.OrderNumber, CurrOrderDetails.CurrOrderDetails.DeliveryLineName,
                                             CurrOrderDetails.CurrOrderDetails.ListOrderItems);
                     UpdateObjectOnClose(1, AddUpdatedOrderDetails);
                 }
@@ -346,14 +350,14 @@ namespace SalesOrdersReport.Views
                     CurrOrderDetails.CurrOrderDetails.CustomerID = CurrCustomerDetails.CustomerID;
                     CurrOrderDetails.CurrOrderDetails.OrderNumber = txtBoxOrderNumber.Text;
                     CurrOrderDetails.CurrOrderDetails.ListOrderItems = new List<OrderItemDetails>();
-
+                   if(cmbBxOrdersDeliveryLine.SelectedIndex>0) CurrOrderDetails.CurrOrderDetails.DeliveryLineName = cmbBxOrdersDeliveryLine.SelectedItem.ToString();
                     FormTitle = "Create New Order";
                     btnCreateOrder.Text = "Create New Order";
                 }
                 else
                 {
                     txtBoxOrderNumber.Text = CurrOrderDetails.CurrOrderDetails.OrderNumber;
-
+                    cmbBxOrdersDeliveryLine.SelectedItem = CurrOrderDetails.CurrOrderDetails.DeliveryLineName;
                     if (CurrOrderDetails.CurrOrderDetails.ListOrderItems == null || CurrOrderDetails.CurrOrderDetails.ListOrderItems.Count == 0)
                         ObjOrdersModel.FillOrderItemDetails(CurrOrderDetails.CurrOrderDetails);
                     foreach (var item in CurrOrderDetails.CurrOrderDetails.ListOrderItems)
@@ -1014,6 +1018,8 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog($"{this}.btnSelectAll_Click()", ex);
             }
         }
+
+
 
         private void btnSelectAllToRemove_Click(object sender, EventArgs e)
         {

@@ -30,7 +30,7 @@ namespace SalesOrdersReport.Views
                 ObjOrdersModel.Initialize();
 
                 dTimePickerFrom.Value = DateTime.Today;
-                dTimePickerTo.Value = DateTime.Today;
+                dTimePickerTo.Value = dTimePickerFrom.Value.AddDays(1);
                 FilterFromDate = DateTime.MinValue;
                 FilterToDate = DateTime.MinValue;
                 CurrOrderStatus = ORDERSTATUS.Created;
@@ -41,7 +41,7 @@ namespace SalesOrdersReport.Views
                 cmbBoxOrderStatus.Items.Add(ORDERSTATUS.Created.ToString());
                 cmbBoxOrderStatus.Items.Add(ORDERSTATUS.Completed.ToString());
                 cmbBoxOrderStatus.Items.Add(ORDERSTATUS.Cancelled.ToString());
-                cmbBoxOrderStatus.SelectedIndex = 1;
+                cmbBoxOrderStatus.SelectedIndex = 0;
 
                 cmbBoxLine.DropDownStyle = ComboBoxStyle.DropDownList;
                 cmbBoxLine.Items.Clear();
@@ -95,7 +95,7 @@ namespace SalesOrdersReport.Views
             {
                 DataTable dtOrders = null;
 
-                if (String.IsNullOrEmpty(LineName)) 
+                if (String.IsNullOrEmpty(LineName))
                     dtOrders = ObjOrdersModel.LoadOrderDetails(FromDate, ToDate, OrderStatus);
                 else
                     dtOrders = ObjOrdersModel.LoadOrderDetails(FromDate, ToDate, OrderStatus, "Line", LineName);
@@ -117,7 +117,7 @@ namespace SalesOrdersReport.Views
 
                 for (int i = 0; i < dtGridViewOrders.Columns.Count; i++)
                 {
-                    if (dtGridViewOrders.Columns[i].Name.Equals("OrderID") || dtGridViewOrders.Columns[i].Name.Equals("CustomerID"))
+                    if (dtGridViewOrders.Columns[i].Name.Equals("OrderID") || dtGridViewOrders.Columns[i].Name.Equals("CustomerID") || dtGridViewOrders.Columns[i].Name.Equals("DeliveryLineID"))
                         dtGridViewOrders.Columns[i].Visible = false;
                 }
                 dtGridViewOrders.ClearSelection();
@@ -202,45 +202,59 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                if (dtGridViewOrders.SelectedRows.Count == 0)
-                {
-                    MessageBox.Show(this, "Please select an Order to convert to Invoice", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+                //if (dtGridViewOrders.SelectedRows.Count == 0)
+                //{
+                //    MessageBox.Show(this, "Please select an Order to convert to Invoice", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //    return;
+                //}
 
-                if (!dtGridViewOrders.SelectedRows[0].Cells["Order Status"].Value.ToString().Equals(ORDERSTATUS.Created.ToString()))
-                {
-                    MessageBox.Show(this, "Please select an Order which is not Completed/Cancelled to convert to Invoice.", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+                //if (!dtGridViewOrders.SelectedRows[0].Cells["Order Status"].Value.ToString().Equals(ORDERSTATUS.Created.ToString()))
+                //{
+                //    MessageBox.Show(this, "Please select an Order which is not Completed/Cancelled to convert to Invoice.", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //    return;
+                //}
 
-                DialogResult dialogResult = MessageBox.Show(this, "This Order will be created as Invoice. Do you want to continue?", "Convert Order", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                DialogResult dialogResult = MessageBox.Show(this, "All Orders below will be created as Invoice. Do you want to continue?", "Convert Order", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.No) return;
 
-                Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
-
-                Int32 RetVal = ObjOrdersModel.ConvertOrderToInvoice(OrderID);
-                if (RetVal == 0)
+                List<string> ListSuccessfulOrderIDs = new List<string>(), ListNotSuccessfulOrderIDs = new List<string>();
+                for (int i = 0; i < dtGridViewOrders.Rows.Count; i++)
                 {
-                    MessageBox.Show(this, "Order converted to Invoice successfully", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    dtAllOrders.Select($"OrderID = {OrderID}")[0]["Order Status"] = ORDERSTATUS.Completed;
+                    Int32 OrderID = Int32.Parse(dtGridViewOrders.Rows[i].Cells["OrderID"].Value.ToString());
+
+                    Int32 RetVal = ObjOrdersModel.ConvertOrderToInvoice(OrderID);
+                    if (RetVal == 0)
+                    {
+                        ListSuccessfulOrderIDs.Add(ObjOrdersModel.GetOrderDetailsForOrderID(OrderID).OrderNumber);
+                        dtAllOrders.Select($"OrderID = {OrderID}")[0]["Order Status"] = ORDERSTATUS.Completed;
+                    }
+                    else ListNotSuccessfulOrderIDs.Add(ObjOrdersModel.GetOrderDetailsForOrderID(OrderID).OrderNumber);
+                }
+                //Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
+
+                //Int32 RetVal = ObjOrdersModel.ConvertOrderToInvoice(OrderID);
+                //if (RetVal == 0)
+                if (ListSuccessfulOrderIDs.Count > 0)
+                {
+                    MessageBox.Show(this, "Following Order/s converted to Invoice successfully" + string.Join("\n", ListSuccessfulOrderIDs), "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //dtAllOrders.Select($"OrderID = {OrderID}")[0]["Order Status"] = ORDERSTATUS.Completed;
                     dtGridViewOrders.ClearSelection();
                     dtGridViewOrderedProducts.DataSource = null;
 
-                    dialogResult = MessageBox.Show(this, "Would you like to open the new Invoice?", "Invoice", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        InvoicesMainForm invoicesMainForm = new InvoicesMainForm(OrderID);
-                        ((MainForm)this.MdiParent).ShowChildForm(invoicesMainForm);
-                    }
+                    //dialogResult = MessageBox.Show(this, "Would you like to open one of the new Invoice?", "Invoice", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    //if (dialogResult == DialogResult.Yes)
+                    //{
+                    //    InvoicesMainForm invoicesMainForm = new InvoicesMainForm(ListSuccessfulOrderIDs[0]);
+                    //    ((MainForm)this.MdiParent).ShowChildForm(invoicesMainForm);
+                    //}
                 }
-                else if (RetVal == -2)
+                //else if (RetVal == -2)
+                //{
+                //    MessageBox.Show(this, "Unable to find Order to convert to Invoice", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //}
+                if (ListNotSuccessfulOrderIDs.Count > 0)
                 {
-                    MessageBox.Show(this, "Unable to find Order to convert to Invoice", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    MessageBox.Show(this, "Unable to convert Order to Invoice", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, "Following Order/s failed to get converted to Invoice" + string.Join("\n", ListNotSuccessfulOrderIDs), "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
@@ -431,7 +445,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                if(cmbBoxOrderStatus.SelectedIndex > 0)
+                if (cmbBoxOrderStatus.SelectedIndex > 0)
                 {
                     CurrOrderStatus = (ORDERSTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.ORDERSTATUS"), cmbBoxOrderStatus.SelectedItem.ToString());
                 }
@@ -541,8 +555,8 @@ namespace SalesOrdersReport.Views
                                 OrderDetails tmpOrderDetails = ObjOrdersModel.GetOrderDetailsForOrderID(OrderID);
                                 ListOrdersToExport.Add(tmpOrderDetails);
                             }
-                            String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, true, 
-                                        ((OrderDetails)ListOrdersToExport[0]).OrderDate, ObjOrdersModel, ListOrdersToExport, ExportFolderPath, 
+                            String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, true,
+                                        ((OrderDetails)ListOrdersToExport[0]).OrderDate, ObjOrdersModel, ListOrdersToExport, ExportFolderPath,
                                         CreateSummary, PrintOldBalance, ReportProgressFunc);
 
                             MessageBox.Show(this, $"Exported Orders file is created successfully at:{ExportedFilePath}", "Export Orders", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -642,6 +656,8 @@ namespace SalesOrdersReport.Views
             //e.Graphics.DrawString("This is in Line 3", new System.Drawing.Font(new System.Drawing.FontFamily("Times New Roman"), 8, System.Drawing.FontStyle.Bold), Brushes.Black, new Point(10, 100));
             //e.Graphics.DrawLine(new Pen(Brushes.Red), new Point(10, 120), new Point(100, 120));
         }
+
+
 
         private void btnPrintPreview_Click(object sender, EventArgs e)
         {

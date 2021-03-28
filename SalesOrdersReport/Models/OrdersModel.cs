@@ -33,6 +33,9 @@ namespace SalesOrdersReport.Models
         public DateTime DateDelivered, DateInvoiceCreated;
         public List<OrderItemDetails> ListOrderItems;
         public Int32 OrderItemCount = 0;
+        public Int32 DeliveryLineID = -1;
+        public string DeliveryLineName = "";
+        
 
         public OrderDetails Clone()
         {
@@ -158,13 +161,13 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                String[] ArrDtColumns1 = new string[] { "OrderID", "CustomerID", "OrderNumber", "OrderDate" };
-                String[] ArrDtColumns2 = new string[] { "OrderItemCount", "EstimateOrderAmount", "OrderStatus", "CreationDate", "LastUpdatedDate", "DateDelivered", "DateInvoiceCreated" };
+                String[] ArrDtColumns1 = new string[] { "OrderID", "CustomerID", "DeliveryLineID", "OrderNumber", "OrderDate" };
+                String[] ArrDtColumns2 = new string[] { "OrderItemCount", "EstimateOrderAmount", "OrderStatus", "CreationDate", "LastUpdatedDate", "DateDelivered", "DateInvoiceCreated"};
 
-                String[] ArrColumns = new string[] { "OrderID", "CustomerID", "Order Number", "Order Date", "Customer Name", "Order Item Count", "Estimate Order Amount",
-                                                    "Order Status", "Creation Date", "Last Updated Date", "Delivered Date", "Invoice Created Date" };
+                String[] ArrColumns = new string[] { "OrderID", "CustomerID","DeliveryLineID", "Order Number", "Order Date", "Customer Name", "Order Item Count", "Estimate Order Amount",
+                                                    "Order Status", "Creation Date", "Last Updated Date", "Delivered Date", "Invoice Created Date","DeliveryLine"};
 
-                String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)} from Orders a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID", WhereClause = $" Where 1 = 1";
+                String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)} , e.LineName as DeliveryLine from Orders a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID", WhereClause = $" Where 1 = 1";
                 if (FromDate > DateTime.MinValue && ToDate > DateTime.MinValue)
                 {
                     WhereClause += $" and Date(a.OrderDate) between '{MySQLHelper.GetDateStringForDB(FromDate)}' and '{MySQLHelper.GetDateStringForDB(ToDate)}'";
@@ -204,6 +207,7 @@ namespace SalesOrdersReport.Models
                             break;
                     }
                 }
+                Query += $" left Join LINEMASTER e on a.DeliveryLineID = e.LineID";
                 Query += WhereClause + " Order by a.OrderID";
                 DataTable dtOrders = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 dtAllOrders = dtOrders;
@@ -224,7 +228,9 @@ namespace SalesOrdersReport.Models
                         EstimateOrderAmount = Double.Parse(dtRow["EstimateOrderAmount"].ToString()),
                         OrderStatus = (ORDERSTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.ORDERSTATUS"), dtRow["OrderStatus"].ToString()),
                         DateDelivered = ((dtRow["DateDelivered"] == DBNull.Value) ? DateTime.MinValue : DateTime.Parse(dtRow["DateDelivered"].ToString())),
-                        DateInvoiceCreated = ((dtRow["DateInvoiceCreated"] == DBNull.Value) ? DateTime.MinValue : DateTime.Parse(dtRow["DateInvoiceCreated"].ToString()))
+                        DateInvoiceCreated = ((dtRow["DateInvoiceCreated"] == DBNull.Value) ? DateTime.MinValue : DateTime.Parse(dtRow["DateInvoiceCreated"].ToString())),
+                        DeliveryLineID = (dtRow["DeliveryLineID"].ToString() == string.Empty || dtRow["DeliveryLineID"].ToString() == null) ? -1 : Int32.Parse(dtRow["DeliveryLineID"].ToString()),
+                        DeliveryLineName = dtRow["DeliveryLine"].ToString()
                     };
 
                     ListOrders.Add(tmpOrderDetails);
@@ -291,7 +297,7 @@ namespace SalesOrdersReport.Models
                 Double Discount = DiscountValue;
                 if (DiscountPerc > 0) Discount = ObjOrderDetails.EstimateOrderAmount* DiscountPerc;
                 
-                InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(ObjOrderDetails.CustomerID, ObjOrderDetails.OrderID, DateTime.Now, ObjInvoicesModel.GenerateNewInvoiceNumber(), ListInvoiceItems, Discount);
+                InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(ObjOrderDetails.CustomerID, ObjOrderDetails.OrderID, DateTime.Now, ObjInvoicesModel.GenerateNewInvoiceNumber(),ObjOrderDetails.DeliveryLineName, ListInvoiceItems, Discount);
 
                 if (ObjInvoiceDetails != null) return 0;
                 else return -1;
@@ -419,7 +425,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public OrderDetails CreateNewOrderForCustomer(Int32 CustomerID, DateTime OrderDate, String OrderNumber, List<OrderItemDetails> ListOrderItems)
+        public OrderDetails CreateNewOrderForCustomer(Int32 CustomerID, DateTime OrderDate, String OrderNumber, string DeliveryLineName, List<OrderItemDetails> ListOrderItems)
         {
             try
             {
@@ -434,7 +440,9 @@ namespace SalesOrdersReport.Models
                     ListOrderItems = ListOrderItems.Select(e => e.Clone()).ToList(),
                     CreationDate = DateTime.Now,
                     OrderItemCount = ListOrderItems.Count(e => e.OrderQty > 0),
-                    CustomerName = CommonFunctions.ObjCustomerMasterModel.GetCustomerName(CustomerID)
+                    CustomerName = CommonFunctions.ObjCustomerMasterModel.GetCustomerName(CustomerID),
+                    DeliveryLineName = DeliveryLineName,
+                    DeliveryLineID = DeliveryLineName == "" ? -1 : CommonFunctions.ObjCustomerMasterModel.GetLineID(DeliveryLineName)
                 };
 
                 NewOrderDetails.OrderID = InsertOrderDetails(NewOrderDetails);
@@ -455,9 +463,9 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                String Query = "Insert into Orders(OrderNumber, OrderDate, CreationDate, LastUpdatedDate, CustomerID, OrderItemCount, EstimateOrderAmount, OrderStatus) Values (";
+                String Query = "Insert into Orders(OrderNumber, OrderDate, CreationDate, LastUpdatedDate, CustomerID, OrderItemCount, EstimateOrderAmount, OrderStatus, DeliveryLineID) Values (";
                 Query += $"'{ObjOrderDetails.OrderNumber}', '{MySQLHelper.GetDateTimeStringForDB(ObjOrderDetails.OrderDate)}', '{MySQLHelper.GetDateTimeStringForDB(ObjOrderDetails.CreationDate)}',";
-                Query += $"'{MySQLHelper.GetDateTimeStringForDB(ObjOrderDetails.LastUpdatedDate)}', {ObjOrderDetails.CustomerID}, {ObjOrderDetails.OrderItemCount}, {ObjOrderDetails.EstimateOrderAmount}, '{ObjOrderDetails.OrderStatus}'";
+                Query += $"'{MySQLHelper.GetDateTimeStringForDB(ObjOrderDetails.LastUpdatedDate)}', {ObjOrderDetails.CustomerID}, {ObjOrderDetails.OrderItemCount}, {ObjOrderDetails.EstimateOrderAmount}, '{ObjOrderDetails.OrderStatus}',{ObjOrderDetails.DeliveryLineID }";
                 Query += ")";
                 ObjMySQLHelper.ExecuteNonQuery(Query);
 
@@ -548,9 +556,9 @@ namespace SalesOrdersReport.Models
                 InsertOrderItems(ListItemsAdded, ObjOrderDetails.OrderID);
 
                 //Update OrderItemCount
-                ObjMySQLHelper.UpdateTableDetails("Orders", new List<String>() { "OrderItemCount", "EstimateOrderAmount", "OrderStatus" },
-                                            new List<String>() { OrderItemCount.ToString(), EstimatedOrderAmount.ToString(), ObjOrderDetails.OrderStatus.ToString() },
-                                            new List<Types>() { Types.Number, Types.Number, Types.String }, $"OrderID = {ObjOrderDetails.OrderID}");
+                ObjMySQLHelper.UpdateTableDetails("Orders", new List<String>() { "OrderItemCount", "EstimateOrderAmount", "OrderStatus" ,"DeliveryLineID" },
+                                            new List<String>() { OrderItemCount.ToString(), EstimatedOrderAmount.ToString(), ObjOrderDetails.OrderStatus.ToString(),  ObjOrderDetails.DeliveryLineID.ToString() },
+                                            new List<Types>() { Types.Number, Types.Number, Types.String, Types.Number }, $"OrderID = {ObjOrderDetails.OrderID}");
 
                 FillOrderItemDetails(ObjOrderDetails);
                 return ObjOrderDetails;

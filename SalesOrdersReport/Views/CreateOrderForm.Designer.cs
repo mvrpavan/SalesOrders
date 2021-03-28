@@ -94,6 +94,8 @@
             this.lblSelectOrderNum = new System.Windows.Forms.Label();
             this.cmbBoxOrderNumber = new System.Windows.Forms.ComboBox();
             this.picBoxLoading = new System.Windows.Forms.PictureBox();
+            this.cmbBxOrdersDeliveryLine = new System.Windows.Forms.ComboBox();
+            this.lblOrdersDeliveryLine = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProdListForSelection)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewOrdProdList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -856,12 +858,31 @@
             this.picBoxLoading.TabIndex = 14;
             this.picBoxLoading.TabStop = false;
             // 
+            // cmbBxOrdersDeliveryLine
+            // 
+            this.cmbBxOrdersDeliveryLine.FormattingEnabled = true;
+            this.cmbBxOrdersDeliveryLine.Location = new System.Drawing.Point(504, 42);
+            this.cmbBxOrdersDeliveryLine.Name = "cmbBxOrdersDeliveryLine";
+            this.cmbBxOrdersDeliveryLine.Size = new System.Drawing.Size(148, 21);
+            this.cmbBxOrdersDeliveryLine.TabIndex = 18;
+            // 
+            // lblOrdersDeliveryLine
+            // 
+            this.lblOrdersDeliveryLine.AutoSize = true;
+            this.lblOrdersDeliveryLine.Location = new System.Drawing.Point(430, 45);
+            this.lblOrdersDeliveryLine.Name = "lblOrdersDeliveryLine";
+            this.lblOrdersDeliveryLine.Size = new System.Drawing.Size(68, 13);
+            this.lblOrdersDeliveryLine.TabIndex = 17;
+            this.lblOrdersDeliveryLine.Text = "Delivery Line";
+            // 
             // CreateOrderForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1079, 601);
+            this.Controls.Add(this.cmbBxOrdersDeliveryLine);
+            this.Controls.Add(this.lblOrdersDeliveryLine);
             this.Controls.Add(this.picBoxLoading);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.label10);
@@ -966,5 +987,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn OrdQtyCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column14;
+        private System.Windows.Forms.ComboBox cmbBxOrdersDeliveryLine;
+        private System.Windows.Forms.Label lblOrdersDeliveryLine;
     }
 }

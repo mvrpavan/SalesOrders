@@ -94,6 +94,8 @@
             this.lblSelectInvoiceNum = new System.Windows.Forms.Label();
             this.cmbBoxInvoiceNumber = new System.Windows.Forms.ComboBox();
             this.picBoxLoading = new System.Windows.Forms.PictureBox();
+            this.cmbBxInvoiceDeliveryLine = new System.Windows.Forms.ComboBox();
+            this.lblInvoiceDeliveryLine = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewProdListForSelection)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvProdList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -856,12 +858,31 @@
             this.picBoxLoading.TabIndex = 14;
             this.picBoxLoading.TabStop = false;
             // 
+            // cmbBxInvoiceDeliveryLine
+            // 
+            this.cmbBxInvoiceDeliveryLine.FormattingEnabled = true;
+            this.cmbBxInvoiceDeliveryLine.Location = new System.Drawing.Point(504, 43);
+            this.cmbBxInvoiceDeliveryLine.Name = "cmbBxInvoiceDeliveryLine";
+            this.cmbBxInvoiceDeliveryLine.Size = new System.Drawing.Size(151, 21);
+            this.cmbBxInvoiceDeliveryLine.TabIndex = 16;
+            // 
+            // lblInvoiceDeliveryLine
+            // 
+            this.lblInvoiceDeliveryLine.AutoSize = true;
+            this.lblInvoiceDeliveryLine.Location = new System.Drawing.Point(430, 46);
+            this.lblInvoiceDeliveryLine.Name = "lblInvoiceDeliveryLine";
+            this.lblInvoiceDeliveryLine.Size = new System.Drawing.Size(68, 13);
+            this.lblInvoiceDeliveryLine.TabIndex = 15;
+            this.lblInvoiceDeliveryLine.Text = "Delivery Line";
+            // 
             // CreateInvoiceForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1079, 601);
+            this.Controls.Add(this.cmbBxInvoiceDeliveryLine);
+            this.Controls.Add(this.lblInvoiceDeliveryLine);
             this.Controls.Add(this.picBoxLoading);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.label10);
@@ -966,5 +987,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn OrdQtyCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column14;
+        private System.Windows.Forms.ComboBox cmbBxInvoiceDeliveryLine;
+        private System.Windows.Forms.Label lblInvoiceDeliveryLine;
     }
 }

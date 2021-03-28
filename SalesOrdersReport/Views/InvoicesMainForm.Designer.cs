@@ -41,6 +41,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.btnExportInvoice = new System.Windows.Forms.Button();
+            this.btnMarkAsDelivered = new System.Windows.Forms.Button();
             this.btnSearchInvoice = new System.Windows.Forms.Button();
             this.btnPrintQuotation = new System.Windows.Forms.Button();
             this.btnPrintInvoice = new System.Windows.Forms.Button();
@@ -54,13 +56,13 @@
             this.label6 = new System.Windows.Forms.Label();
             this.lblOrdersCount = new System.Windows.Forms.Label();
             this.backgroundWorkerInvoices = new System.ComponentModel.BackgroundWorker();
-            this.btnExportInvoice = new System.Windows.Forms.Button();
-            this.btnMarkAsDelivered = new System.Windows.Forms.Button();
+            this.dtGridViewInvoiceTotal = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvoices)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvoicedProducts)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvoiceTotal)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCreateInvoice
@@ -207,6 +209,40 @@
             this.comboBox2.Size = new System.Drawing.Size(234, 21);
             this.comboBox2.TabIndex = 9;
             // 
+            // btnExportInvoice
+            // 
+            this.btnExportInvoice.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnExportInvoice.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnExportInvoice.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnExportInvoice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExportInvoice.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnExportInvoice.Image = global::SalesOrdersReport.Properties.Resources.export_icon;
+            this.btnExportInvoice.Location = new System.Drawing.Point(471, 3);
+            this.btnExportInvoice.Name = "btnExportInvoice";
+            this.btnExportInvoice.Size = new System.Drawing.Size(63, 73);
+            this.btnExportInvoice.TabIndex = 0;
+            this.btnExportInvoice.Text = "Export Invoice";
+            this.btnExportInvoice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnExportInvoice.UseVisualStyleBackColor = false;
+            this.btnExportInvoice.Click += new System.EventHandler(this.btnExportInvoice_Click);
+            // 
+            // btnMarkAsDelivered
+            // 
+            this.btnMarkAsDelivered.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnMarkAsDelivered.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnMarkAsDelivered.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnMarkAsDelivered.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMarkAsDelivered.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnMarkAsDelivered.Image = global::SalesOrdersReport.Properties.Resources.adddelive5_32;
+            this.btnMarkAsDelivered.Location = new System.Drawing.Point(540, 3);
+            this.btnMarkAsDelivered.Name = "btnMarkAsDelivered";
+            this.btnMarkAsDelivered.Size = new System.Drawing.Size(76, 73);
+            this.btnMarkAsDelivered.TabIndex = 0;
+            this.btnMarkAsDelivered.Text = "Mark as Delivered";
+            this.btnMarkAsDelivered.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnMarkAsDelivered.UseVisualStyleBackColor = false;
+            this.btnMarkAsDelivered.Click += new System.EventHandler(this.btnMarkAsDelivered_Click);
+            // 
             // btnSearchInvoice
             // 
             this.btnSearchInvoice.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -319,9 +355,10 @@
             this.dtGridViewInvoices.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtGridViewInvoices.Location = new System.Drawing.Point(12, 127);
             this.dtGridViewInvoices.Name = "dtGridViewInvoices";
-            this.dtGridViewInvoices.Size = new System.Drawing.Size(1269, 291);
+            this.dtGridViewInvoices.Size = new System.Drawing.Size(1269, 293);
             this.dtGridViewInvoices.TabIndex = 2;
             this.dtGridViewInvoices.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtGridViewInvoices_CellMouseClick);
+            this.dtGridViewInvoices.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dtGridViewInvoices_Scroll);
             // 
             // dtGridViewInvoicedProducts
             // 
@@ -332,7 +369,7 @@
             this.dtGridViewInvoicedProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtGridViewInvoicedProducts.Location = new System.Drawing.Point(0, 36);
             this.dtGridViewInvoicedProducts.Name = "dtGridViewInvoicedProducts";
-            this.dtGridViewInvoicedProducts.Size = new System.Drawing.Size(1269, 265);
+            this.dtGridViewInvoicedProducts.Size = new System.Drawing.Size(1269, 210);
             this.dtGridViewInvoicedProducts.TabIndex = 2;
             // 
             // label1
@@ -352,9 +389,9 @@
             this.groupBox1.Controls.Add(this.dtGridViewInvoicedProducts);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.groupBox1.Location = new System.Drawing.Point(12, 424);
+            this.groupBox1.Location = new System.Drawing.Point(12, 481);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1269, 307);
+            this.groupBox1.Size = new System.Drawing.Size(1269, 252);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             // 
@@ -384,39 +421,15 @@
             this.backgroundWorkerInvoices.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerInvoices_ProgressChanged);
             this.backgroundWorkerInvoices.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerInvoices_RunWorkerCompleted);
             // 
-            // btnExportInvoice
+            // dtGridViewBillsTotal
             // 
-            this.btnExportInvoice.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btnExportInvoice.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            this.btnExportInvoice.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.btnExportInvoice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExportInvoice.Font = new System.Drawing.Font("Calibri", 10F);
-            this.btnExportInvoice.Image = global::SalesOrdersReport.Properties.Resources.export_icon;
-            this.btnExportInvoice.Location = new System.Drawing.Point(471, 3);
-            this.btnExportInvoice.Name = "btnExportInvoice";
-            this.btnExportInvoice.Size = new System.Drawing.Size(63, 73);
-            this.btnExportInvoice.TabIndex = 0;
-            this.btnExportInvoice.Text = "Export Invoice";
-            this.btnExportInvoice.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnExportInvoice.UseVisualStyleBackColor = false;
-            this.btnExportInvoice.Click += new System.EventHandler(this.btnExportInvoice_Click);
-            // 
-            // btnMarkAsDelivered
-            // 
-            this.btnMarkAsDelivered.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btnMarkAsDelivered.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            this.btnMarkAsDelivered.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.btnMarkAsDelivered.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMarkAsDelivered.Font = new System.Drawing.Font("Calibri", 10F);
-            this.btnMarkAsDelivered.Image = global::SalesOrdersReport.Properties.Resources.adddelive5_32;
-            this.btnMarkAsDelivered.Location = new System.Drawing.Point(540, 3);
-            this.btnMarkAsDelivered.Name = "btnMarkAsDelivered";
-            this.btnMarkAsDelivered.Size = new System.Drawing.Size(76, 73);
-            this.btnMarkAsDelivered.TabIndex = 0;
-            this.btnMarkAsDelivered.Text = "Mark as Delivered";
-            this.btnMarkAsDelivered.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnMarkAsDelivered.UseVisualStyleBackColor = false;
-            this.btnMarkAsDelivered.Click += new System.EventHandler(this.btnMarkAsDelivered_Click);
+            this.dtGridViewInvoiceTotal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtGridViewInvoiceTotal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtGridViewInvoiceTotal.Location = new System.Drawing.Point(12, 426);
+            this.dtGridViewInvoiceTotal.Name = "dtGridViewBillsTotal";
+            this.dtGridViewInvoiceTotal.Size = new System.Drawing.Size(1269, 39);
+            this.dtGridViewInvoiceTotal.TabIndex = 7;
             // 
             // InvoicesMainForm
             // 
@@ -424,7 +437,8 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1289, 743);
+            this.ClientSize = new System.Drawing.Size(1289, 745);
+            this.Controls.Add(this.dtGridViewInvoiceTotal);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblOrdersCount);
             this.Controls.Add(this.label1);
@@ -445,6 +459,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvoicedProducts)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtGridViewInvoiceTotal)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -480,5 +495,6 @@
         private System.ComponentModel.BackgroundWorker backgroundWorkerInvoices;
         private System.Windows.Forms.Button btnExportInvoice;
         private System.Windows.Forms.Button btnMarkAsDelivered;
+        private System.Windows.Forms.DataGridView dtGridViewInvoiceTotal;
     }
 }

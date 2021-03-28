@@ -540,6 +540,7 @@ namespace SalesOrdersReport.CommonModules
                     "ProductID, smallint(5) NOT NULL",
                     "OrderQty, float DEFAULT NULL",
                     "Price, float DEFAULT NULL",
+                    "DeliveryLineID, smallint Null",
                     "OrderItemStatus, varchar(20) DEFAULT NULL",
                     "PRIMARY KEY, OrderItemID"
                 };
