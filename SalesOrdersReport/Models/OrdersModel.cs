@@ -59,6 +59,7 @@ namespace SalesOrdersReport.Models
         public Int32 ProductID;
         public String ProductName;
         public Double OrderQty, Price;
+        public string Comments = "";
         public ORDERITEMSTATUS OrderItemStatus;
 
         public OrderItemDetails Clone()

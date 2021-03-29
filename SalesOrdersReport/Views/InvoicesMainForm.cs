@@ -632,7 +632,7 @@ namespace SalesOrdersReport.Views
                             }
                             String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, false,
                                         ((InvoiceDetails)ListInvoicesToExport[0]).InvoiceDate, ObjInvoicesModel, ListInvoicesToExport, ExportFolderPath,
-                                        CreateSummary, PrintOldBalance, ReportProgressFunc);
+                                        CreateSummary, PrintOldBalance, ReportProgressFunc,true);
 
                             MessageBox.Show(this, $"Exported Invoices file is created successfully at:{ExportedFilePath}", "Export Invoices", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }

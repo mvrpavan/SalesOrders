@@ -563,7 +563,7 @@ namespace SalesOrdersReport.Views
                             }
                             String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, true,
                                         ((OrderDetails)ListOrdersToExport[0]).OrderDate, ObjOrdersModel, ListOrdersToExport, ExportFolderPath,
-                                        CreateSummary, PrintOldBalance, ReportProgressFunc);
+                                        CreateSummary, PrintOldBalance, ReportProgressFunc,true);
 
                             MessageBox.Show(this, $"Exported Orders file is created successfully at:{ExportedFilePath}", "Export Orders", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }

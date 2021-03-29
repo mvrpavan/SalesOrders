@@ -963,7 +963,7 @@ namespace SalesOrdersReport.Views
                 if (result == DialogResult.No) return 1;
 
                 DataTable dtTempPayment = new DataTable();
-                List<string> ListOfColumnsToBeExcluded = new List<string>() { "INVOICEID" };
+                List<string> ListOfColumnsToBeExcluded = new List<string>() { "InvoiceID", "Sl#" };
                 List<int> ListOfColumnIndexesNotAdded = new List<int>();
                 foreach (DataGridViewColumn col in dgvPaymentSummary.Columns)
                 {

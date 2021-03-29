@@ -39,6 +39,7 @@
             this.ItemCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.QuantityCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CommentsCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SelectCol = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.cmbBoxProduct = new System.Windows.Forms.ComboBox();
@@ -55,6 +56,7 @@
             this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OrdQtyCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column14 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btnSelectAll = new System.Windows.Forms.Button();
@@ -142,6 +144,7 @@
             this.ItemCol,
             this.PriceCol,
             this.QuantityCol,
+            this.CommentsCol,
             this.SelectCol});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
@@ -195,10 +198,19 @@
             // 
             this.QuantityCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.QuantityCol.HeaderText = "Quantity";
-            this.QuantityCol.MinimumWidth = 200;
+            this.QuantityCol.MinimumWidth = 150;
             this.QuantityCol.Name = "QuantityCol";
             this.QuantityCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.QuantityCol.Width = 200;
+            this.QuantityCol.Width = 150;
+
+            // 
+            // CommentsCol
+            //
+            this.CommentsCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.CommentsCol.HeaderText = "Comments";
+            this.CommentsCol.MinimumWidth = 50;
+            this.CommentsCol.Name = "CommentsCol";
+            this.CommentsCol.Width = 50;
             // 
             // SelectCol
             // 
@@ -309,6 +321,7 @@
             this.Column11,
             this.OrdQtyCol,
             this.Column12,
+            this.Column13,
             this.Column14});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
@@ -361,16 +374,23 @@
             // 
             this.OrdQtyCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.OrdQtyCol.HeaderText = "Order Quantity";
-            this.OrdQtyCol.MinimumWidth = 100;
+            this.OrdQtyCol.MinimumWidth = 75;
             this.OrdQtyCol.Name = "OrdQtyCol";
-            this.OrdQtyCol.Width = 102;
+            this.OrdQtyCol.Width = 77;
             // 
             // Column12
             // 
             this.Column12.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Column12.HeaderText = "Sale Quantity";
-            this.Column12.MinimumWidth = 100;
+            this.Column12.MinimumWidth = 75;
             this.Column12.Name = "Column12";
+            // 
+            // Column13
+            // 
+            this.Column13.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Column13.HeaderText = "Comments";
+            this.Column13.MinimumWidth = 50;
+            this.Column13.Name = "Column13";
             // 
             // Column14
             // 
@@ -980,12 +1000,14 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PriceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn QuantityCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CommentsCol;
         private System.Windows.Forms.DataGridViewCheckBoxColumn SelectCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
         private System.Windows.Forms.DataGridViewTextBoxColumn OrdQtyCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column13;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column14;
         private System.Windows.Forms.ComboBox cmbBxOrdersDeliveryLine;
         private System.Windows.Forms.Label lblOrdersDeliveryLine;
