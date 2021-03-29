@@ -35,7 +35,7 @@ namespace SalesOrdersReport.Models
         public Int32 OrderItemCount = 0;
         public Int32 DeliveryLineID = -1;
         public string DeliveryLineName = "";
-        
+
 
         public OrderDetails Clone()
         {
@@ -122,6 +122,7 @@ namespace SalesOrdersReport.Models
                 return new Object[] {
                     ObjOrderDetails.OrderID,
                     ObjOrderDetails.CustomerID,
+                    ObjOrderDetails.DeliveryLineID,
                     ObjOrderDetails.OrderNumber,
                     new MySql.Data.Types.MySqlDateTime(ObjOrderDetails.OrderDate),
                     ObjOrderDetails.CustomerName,
@@ -131,7 +132,8 @@ namespace SalesOrdersReport.Models
                     new MySql.Data.Types.MySqlDateTime(ObjOrderDetails.CreationDate),
                     new MySql.Data.Types.MySqlDateTime(ObjOrderDetails.LastUpdatedDate),
                     new MySql.Data.Types.MySqlDateTime(ObjOrderDetails.DateDelivered),
-                    new MySql.Data.Types.MySqlDateTime(ObjOrderDetails.DateInvoiceCreated)
+                    new MySql.Data.Types.MySqlDateTime(ObjOrderDetails.DateInvoiceCreated),
+                    ObjOrderDetails.DeliveryLineName
                 };
             }
             catch (Exception ex)
@@ -162,7 +164,7 @@ namespace SalesOrdersReport.Models
             try
             {
                 String[] ArrDtColumns1 = new string[] { "OrderID", "CustomerID", "DeliveryLineID", "OrderNumber", "OrderDate" };
-                String[] ArrDtColumns2 = new string[] { "OrderItemCount", "EstimateOrderAmount", "OrderStatus", "CreationDate", "LastUpdatedDate", "DateDelivered", "DateInvoiceCreated"};
+                String[] ArrDtColumns2 = new string[] { "OrderItemCount", "EstimateOrderAmount", "OrderStatus", "CreationDate", "LastUpdatedDate", "DateDelivered", "DateInvoiceCreated" };
 
                 String[] ArrColumns = new string[] { "OrderID", "CustomerID","DeliveryLineID", "Order Number", "Order Date", "Customer Name", "Order Item Count", "Estimate Order Amount",
                                                     "Order Status", "Creation Date", "Last Updated Date", "Delivered Date", "Invoice Created Date","DeliveryLine"};
@@ -269,7 +271,8 @@ namespace SalesOrdersReport.Models
                     tmpOrderItem.OrderItemStatus = ORDERITEMSTATUS.Delivered;
                     ObjOrderDetails.EstimateOrderAmount = 0;
 
-                    InvoiceItemDetails tmpInvoiceItem = new InvoiceItemDetails() {
+                    InvoiceItemDetails tmpInvoiceItem = new InvoiceItemDetails()
+                    {
                         ProductName = tmpOrderItem.ProductName,
                         ProductID = tmpOrderItem.ProductID,
                         OrderQty = tmpOrderItem.OrderQty,
@@ -295,9 +298,9 @@ namespace SalesOrdersReport.Models
                     DiscountValue = CustomerDiscountGroup.Discount;
 
                 Double Discount = DiscountValue;
-                if (DiscountPerc > 0) Discount = ObjOrderDetails.EstimateOrderAmount* DiscountPerc;
-                
-                InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(ObjOrderDetails.CustomerID, ObjOrderDetails.OrderID, DateTime.Now, ObjInvoicesModel.GenerateNewInvoiceNumber(),ObjOrderDetails.DeliveryLineName, ListInvoiceItems, Discount);
+                if (DiscountPerc > 0) Discount = ObjOrderDetails.EstimateOrderAmount * DiscountPerc;
+
+                InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.CreateNewInvoiceForCustomer(ObjOrderDetails.CustomerID, ObjOrderDetails.OrderID, DateTime.Now, ObjInvoicesModel.GenerateNewInvoiceNumber(), ObjOrderDetails.DeliveryLineName, ListInvoiceItems, Discount);
 
                 if (ObjInvoiceDetails != null) return 0;
                 else return -1;
@@ -313,7 +316,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                ObjMySQLHelper.UpdateTableDetails("Orders", new List<string>() { "OrderStatus" }, new List<string>() { ORDERSTATUS.Cancelled.ToString() }, 
+                ObjMySQLHelper.UpdateTableDetails("Orders", new List<string>() { "OrderStatus" }, new List<string>() { ORDERSTATUS.Cancelled.ToString() },
                                             new List<Types>() { Types.String }, $"OrderID = {OrderID}");
 
                 ObjMySQLHelper.UpdateTableDetails("OrderItems", new List<string>() { "OrderItemStatus" }, new List<string>() { ORDERITEMSTATUS.Cancelled.ToString() },
@@ -411,7 +414,7 @@ namespace SalesOrdersReport.Models
                 if (ListOrders.Count == 0) LoadOrderDetails(DateTime.MinValue, DateTime.MinValue, ORDERSTATUS.Created, "OrderID", OrderID.ToString());
                 if (ListOrders.Count == 0) return null;
 
-                Int32 Index = ListOrders.FindIndex(e => e.OrderID == OrderID); 
+                Int32 Index = ListOrders.FindIndex(e => e.OrderID == OrderID);
                 if (Index < 0) return null;
 
                 FillOrderItemDetails(ListOrders[Index]);
@@ -556,8 +559,8 @@ namespace SalesOrdersReport.Models
                 InsertOrderItems(ListItemsAdded, ObjOrderDetails.OrderID);
 
                 //Update OrderItemCount
-                ObjMySQLHelper.UpdateTableDetails("Orders", new List<String>() { "OrderItemCount", "EstimateOrderAmount", "OrderStatus" ,"DeliveryLineID" },
-                                            new List<String>() { OrderItemCount.ToString(), EstimatedOrderAmount.ToString(), ObjOrderDetails.OrderStatus.ToString(),  ObjOrderDetails.DeliveryLineID.ToString() },
+                ObjMySQLHelper.UpdateTableDetails("Orders", new List<String>() { "OrderItemCount", "EstimateOrderAmount", "OrderStatus", "DeliveryLineID" },
+                                            new List<String>() { OrderItemCount.ToString(), EstimatedOrderAmount.ToString(), ObjOrderDetails.OrderStatus.ToString(), ObjOrderDetails.DeliveryLineID.ToString() },
                                             new List<Types>() { Types.Number, Types.Number, Types.String, Types.Number }, $"OrderID = {ObjOrderDetails.OrderID}");
 
                 FillOrderItemDetails(ObjOrderDetails);

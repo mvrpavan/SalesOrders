@@ -118,8 +118,8 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="createUser2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\createUser2_32.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="role332" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\role332.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="delete-icon_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\delete-icon_24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -132,6 +132,12 @@
   </data>
   <data name="database_upload_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\database_upload_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="export-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\export-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Search-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Search-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -151,17 +157,14 @@
   <data name="UploadFile2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\UploadFile2_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="delete_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\delete-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="adduser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\adduser.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="math-add-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\math-add-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="close-shop_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\close-shop_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="edit-icon 32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\edit-icon 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="list (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\list (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -169,14 +172,17 @@
   <data name="math-add-icon_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\math-add-icon_48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="delete-icon_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\delete-icon_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="close-shop_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\close-shop_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="discount1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\discount.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="CreateLine_323" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreateLine_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="editrole23_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\editrole23_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="rolenew32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\rolenew32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -187,8 +193,8 @@
   <data name="arrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="addPrice_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\addPrice_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="close_40" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\close_40.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="UploadFile32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\UploadFile32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -198,9 +204,6 @@
   </data>
   <data name="Trash-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Trash-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="gtk_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\gtk_refresh.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="addDiscount_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\addDiscount_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -226,6 +229,9 @@
   <data name="arrow2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow2_32.jfif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="import-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\import-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="loading" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\loading.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -240,7 +246,7 @@
   </data>
   <data name="math-add-icon 32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\math-add-icon 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
+  </data>createUser2_32
   <data name="list" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\list.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -262,17 +268,14 @@
   <data name="edituser3_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\edituser3_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="reset_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\reset_small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="edit_user" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\edit_user.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="delete-icon 32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\delete-icon 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="role332" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\role332.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="reset_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\reset_small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="create-user_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\create-user_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -283,11 +286,11 @@
   <data name="Close_Black_VerySmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\Close_Black_VerySmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="exporttoexcel32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\exporttoexcel32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="user_add32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\user_add32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="EditLine32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\EditLine32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="add_user (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\add_user (1).ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -307,9 +310,6 @@
   <data name="open-archive" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\open-archive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="editrole23_321" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\editrole23_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Refresh-icon 32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Refresh-icon 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -318,6 +318,9 @@
   </data>
   <data name="edit-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\edit-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Refresh-icon 321" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Refresh-icon 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="3c-gradient-background" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\3c-gradient-background.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -337,11 +340,11 @@
   <data name="tax_menu" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tax_menu.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="export-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\export-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="EditLine32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EditLine32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Refresh-icon 321" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Refresh-icon 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="gtk_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gtk_refresh.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="edit-icon 321" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\edit-icon 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -349,14 +352,17 @@
   <data name="addDelivery_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\addDelivery_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="EditLine1_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EditLine1_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="store_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\store_32.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="editstore5_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\editstore5_32.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="editrole23_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\editrole23_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="delete-icon_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete-icon_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="remove" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\remove.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -379,17 +385,17 @@
   <data name="CreateUser_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreateUser_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="createUser2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\createUser2_32.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="edit-icon 322" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\edit-icon 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="edit-icon 32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\edit-icon 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="addPrice_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\addPrice_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="import-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\import-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="delete_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="delete-icon 321" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\delete-icon 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -403,10 +409,10 @@
   <data name="delete-icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\delete-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="EditLine1_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\EditLine1_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="editrole23_321" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\editrole23_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="close_40" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\close_40.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="exporttoexcel321" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\exporttoexcel32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

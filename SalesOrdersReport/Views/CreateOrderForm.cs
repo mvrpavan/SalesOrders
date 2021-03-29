@@ -1050,6 +1050,11 @@ namespace SalesOrdersReport.Views
                 cmbBoxCustomers.Enabled = enable;
                 cmbBoxProdCat.Enabled = enable;
                 cmbBoxProduct.Enabled = enable;
+                if (enable)
+                {
+                    cmbBoxProdCat.SelectedIndex = 0;
+                    cmbBoxProduct.SelectedIndex = 0;
+                }
                 cmbBoxOrderNumber.Enabled = enable;
             }
             catch (Exception ex)

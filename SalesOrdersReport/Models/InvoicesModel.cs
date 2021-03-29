@@ -82,7 +82,7 @@ namespace SalesOrdersReport.Models
         ProductMasterModel ObjProductMasterModel;
         Boolean IsBill = false;
         PaymentsModel ObjPaymentsModel;
-
+        public Int32 CurrInvoiceID = -1;
         public void Initialize()
         {
             try
@@ -490,6 +490,7 @@ namespace SalesOrdersReport.Models
 
                 NewInvoiceDetails.CustomerName = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CustomerID).CustomerName;
                 NewInvoiceDetails.InvoiceID = InsertInvoiceDetails(NewInvoiceDetails);
+                CurrInvoiceID = NewInvoiceDetails.InvoiceID;
                 if (IsBill) ObjMySQLHelper.UpdateIDValue("Bills", InvoiceNumber);
                 else ObjMySQLHelper.UpdateIDValue("Invoices", InvoiceNumber);
 
@@ -559,9 +560,30 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                return new Object[] {
+                 
+                //return new Object[] {
+                //    ObjInvoiceDetails.InvoiceID,
+                //    ObjInvoiceDetails.CustomerID,
+                //    ObjInvoiceDetails.DeliveryLineID,
+                //    ObjInvoiceDetails.OrderID,
+                //    ObjInvoiceDetails.InvoiceNumber,
+                //    new MySql.Data.Types.MySqlDateTime(ObjInvoiceDetails.InvoiceDate),
+                //    ObjInvoiceDetails.CustomerName,
+                //    ObjInvoiceDetails.InvoiceItemCount,
+                //    ObjInvoiceDetails.GrossInvoiceAmount,
+                //    ObjInvoiceDetails.DiscountAmount,
+                //    ObjInvoiceDetails.NetInvoiceAmount,
+                //    ObjInvoiceDetails.InvoiceStatus,
+
+                //    new MySql.Data.Types.MySqlDateTime(ObjInvoiceDetails.CreationDate),
+                //    new MySql.Data.Types.MySqlDateTime(ObjInvoiceDetails.LastUpdatedDate),
+                //   ObjInvoiceDetails.DeliveryLineName
+                //};
+
+                List<Object> ListTempObject = new List<object> {
                     ObjInvoiceDetails.InvoiceID,
                     ObjInvoiceDetails.CustomerID,
+                    ObjInvoiceDetails.DeliveryLineID,
                     ObjInvoiceDetails.OrderID,
                     ObjInvoiceDetails.InvoiceNumber,
                     new MySql.Data.Types.MySqlDateTime(ObjInvoiceDetails.InvoiceDate),
@@ -571,9 +593,15 @@ namespace SalesOrdersReport.Models
                     ObjInvoiceDetails.DiscountAmount,
                     ObjInvoiceDetails.NetInvoiceAmount,
                     ObjInvoiceDetails.InvoiceStatus,
-                    new MySql.Data.Types.MySqlDateTime(ObjInvoiceDetails.CreationDate),
-                    new MySql.Data.Types.MySqlDateTime(ObjInvoiceDetails.LastUpdatedDate)
+
                 };
+                ListTempObject.AddRange(GetPaymentsRowFromInvoiceID(ObjInvoiceDetails.InvoiceID));
+                ListTempObject.AddRange(new List<Object> {
+                    new MySql.Data.Types.MySqlDateTime(ObjInvoiceDetails.CreationDate),
+                    new MySql.Data.Types.MySqlDateTime(ObjInvoiceDetails.LastUpdatedDate),
+                   ObjInvoiceDetails.DeliveryLineName});
+
+                return ListTempObject.ToArray();
             }
             catch (Exception ex)
             {
@@ -582,6 +610,42 @@ namespace SalesOrdersReport.Models
             }
         }
 
+        string[] GetPaymentsRowFromInvoiceID(int InvoiceID)
+        {
+            try
+            {
+                List<String> ListPaymentModes = ObjPaymentsModel.GetPaymentModesList();
+                List<Int32> ListPaymentModeIDs = ListPaymentModes.Select(e => ObjPaymentsModel.GetPaymentModeDetails(e).PaymentModeID).ToList();
+
+                String PaymentsQuery = "";
+                for (int i = 0; i < ListPaymentModeIDs.Count; i++)
+                {
+                    PaymentsQuery += $"Sum(Case When PaymentModeID = {ListPaymentModeIDs[i]} then PaymentAmount else null end) '{ListPaymentModes[i]}',";
+                }
+                PaymentsQuery = PaymentsQuery.Remove(PaymentsQuery.Length - 1, 1);
+                string Query = "Select " + PaymentsQuery + " from PAYMENTS Where InvoiceID = " + InvoiceID + ";";
+                //string Result = "";
+               
+               foreach(var item in ObjMySQLHelper.ExecuteQuery(Query))
+                {
+                    //for (int i = 0; i < item.Length; i++)
+                    //{
+                    //    Result += item[i] + ",";
+                    //}
+                    return item;
+                    //break;
+                }
+                return null;
+                //if (Result.Length > 0) Result = Result.Remove(Result.Length - 1, 1);
+
+                //return Result;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetPaymentsRowFromInvoiceID()", ex);
+                return null;
+            }
+        }
         Int32 InsertInvoiceDetails(InvoiceDetails ObjInvoiceDetails)
         {
             try
@@ -643,8 +707,9 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                //Find Items Modified & Added
-                InvoiceDetails ObjInvoiceDetailsOrig = GetInvoiceDetailsForInvoiceID(ObjInvoiceDetails.InvoiceID);
+                CurrInvoiceID = ObjInvoiceDetails.InvoiceID;
+               //Find Items Modified & Added
+               InvoiceDetails ObjInvoiceDetailsOrig = GetInvoiceDetailsForInvoiceID(ObjInvoiceDetails.InvoiceID);
                 List<InvoiceItemDetails> ListItemsModified = new List<InvoiceItemDetails>();
                 List<InvoiceItemDetails> ListItemsAdded = new List<InvoiceItemDetails>();
                 Int32 InvoiceItemCount = 0;

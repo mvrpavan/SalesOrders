@@ -741,6 +741,7 @@
     <None Include="Resources\database_upload_32.png" />
     <None Include="Resources\close-shop_32.png" />
     <None Include="Resources\close_40.png" />
+    <None Include="Resources\exporttoexcel32.png" />
     <Content Include="SQLScripts\ProductMasterTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnCreatePayment = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnExportToExcel = new System.Windows.Forms.Button();
             this.btnImportFromExcel = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.checkBoxApplyFilterPayment = new System.Windows.Forms.CheckBox();
@@ -53,7 +55,8 @@
             this.btnAddToDB = new System.Windows.Forms.Button();
             this.lblPaymentSummary = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.btnExportToExcel = new System.Windows.Forms.Button();
+            this.btnPaymentSummaryExportToExcel = new System.Windows.Forms.Button();
+            this.toolTipForEPaymentSummaryxportToExcel = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewPayments)).BeginInit();
@@ -97,6 +100,23 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1181, 84);
             this.panel1.TabIndex = 1;
+            // 
+            // btnExportToExcel
+            // 
+            this.btnExportToExcel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnExportToExcel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnExportToExcel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnExportToExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExportToExcel.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnExportToExcel.Image = global::SalesOrdersReport.Properties.Resources.export_icon;
+            this.btnExportToExcel.Location = new System.Drawing.Point(628, 3);
+            this.btnExportToExcel.Name = "btnExportToExcel";
+            this.btnExportToExcel.Size = new System.Drawing.Size(83, 73);
+            this.btnExportToExcel.TabIndex = 13;
+            this.btnExportToExcel.Text = "Export to Excel";
+            this.btnExportToExcel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnExportToExcel.UseVisualStyleBackColor = false;
+            this.btnExportToExcel.Click += new System.EventHandler(this.btnExportToExcel_Click);
             // 
             // btnImportFromExcel
             // 
@@ -377,22 +397,21 @@
             this.panel2.Size = new System.Drawing.Size(1164, 42);
             this.panel2.TabIndex = 11;
             // 
-            // btnExportToExcel
+            // btnPaymentSummaryExportToExcel
             // 
-            this.btnExportToExcel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btnExportToExcel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            this.btnExportToExcel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.btnExportToExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExportToExcel.Font = new System.Drawing.Font("Calibri", 10F);
-            this.btnExportToExcel.Image = global::SalesOrdersReport.Properties.Resources.export_icon;
-            this.btnExportToExcel.Location = new System.Drawing.Point(628, 3);
-            this.btnExportToExcel.Name = "btnExportToExcel";
-            this.btnExportToExcel.Size = new System.Drawing.Size(83, 73);
-            this.btnExportToExcel.TabIndex = 13;
-            this.btnExportToExcel.Text = "Export to Excel";
-            this.btnExportToExcel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnExportToExcel.UseVisualStyleBackColor = false;
-            this.btnExportToExcel.Click += new System.EventHandler(this.btnExportToExcel_Click);
+            this.btnPaymentSummaryExportToExcel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnPaymentSummaryExportToExcel.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnPaymentSummaryExportToExcel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnPaymentSummaryExportToExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPaymentSummaryExportToExcel.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnPaymentSummaryExportToExcel.Image = global::SalesOrdersReport.Properties.Resources.exporttoexcel321;
+            this.btnPaymentSummaryExportToExcel.Location = new System.Drawing.Point(519, 385);
+            this.btnPaymentSummaryExportToExcel.Name = "btnPaymentSummaryExportToExcel";
+            this.btnPaymentSummaryExportToExcel.Size = new System.Drawing.Size(43, 32);
+            this.btnPaymentSummaryExportToExcel.TabIndex = 14;
+            this.btnPaymentSummaryExportToExcel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPaymentSummaryExportToExcel.UseVisualStyleBackColor = false;
+            this.btnPaymentSummaryExportToExcel.Click += new System.EventHandler(this.btnPaymentSummaryExportToExcel_Click);
             // 
             // PaymentsForm
             // 
@@ -401,6 +420,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1184, 745);
+            this.Controls.Add(this.btnPaymentSummaryExportToExcel);
             this.Controls.Add(this.lblPaymentSummary);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.lblSelectDeliveryLine);
@@ -457,5 +477,7 @@
         private System.Windows.Forms.Label lblPaymentSummary;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button btnExportToExcel;
+        private System.Windows.Forms.Button btnPaymentSummaryExportToExcel;
+        private System.Windows.Forms.ToolTip toolTipForEPaymentSummaryxportToExcel;
     }
 }

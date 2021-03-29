@@ -33,10 +33,10 @@ namespace SalesOrdersReport.Views
 
                 //dTimePickerFrom.Value = DateTime.Today.AddDays(-30);
                 //dTimePickerTo.Value = DateTime.Today.AddDays(30);
-                dTimePickerFrom.Value = DateTime.Today;
-                dTimePickerTo.Value = DateTime.Today;
-                FilterFromDate = DateTime.MinValue;
-                FilterToDate = DateTime.MinValue;
+                dTimePickerFrom.Value = FilterFromDate = DateTime.Today;
+                dTimePickerTo.Value = FilterToDate = DateTime.Today;
+                //FilterFromDate = DateTime.MinValue;
+                //FilterToDate = DateTime.MinValue;
                 CurrInvoiceStatus = INVOICESTATUS.All;
 
                 cmbBoxInvoiceStatus.DropDownStyle = ComboBoxStyle.DropDownList;

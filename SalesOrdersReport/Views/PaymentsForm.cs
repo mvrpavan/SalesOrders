@@ -55,6 +55,10 @@ namespace SalesOrdersReport.Views
                 cmbxStaffName.DataSource = CommonFunctions.ObjUserMasterModel.GetAllUsers();
                 cmbxStaffName.SelectedItem = CommonFunctions.CurrentUserName;
 
+                toolTipForEPaymentSummaryxportToExcel.AutoPopDelay = 5000;
+                toolTipForEPaymentSummaryxportToExcel.InitialDelay = 1000;
+                toolTipForEPaymentSummaryxportToExcel.ReshowDelay = 500;
+                toolTipForEPaymentSummaryxportToExcel.SetToolTip(btnPaymentSummaryExportToExcel, "Export To Excel");
 
                 LoadInputPaymentSummaryGridView();
                 List<string> ListTempNames = new List<string>() { "All" };
@@ -946,6 +950,84 @@ namespace SalesOrdersReport.Views
             {
                 CommonFunctions.ShowErrorDialog($"{this}.ExportPaymentssData()", ex);
                 return -1;
+            }
+        }
+
+        private Int32 ExportPaymentsSummaryData(String ExcelFilePath, Object ObjDetails, Boolean Append)
+        {
+            try
+            {
+                DialogResult result = MessageBox.Show(this, $"Export Payments Summary data to Excel File. {dgvPaymentSummary.Rows.Count} rows of Payments Summary Data will be Exported.\n\nDo you want to continue to Export this data?",
+                                "Export Status", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+
+                if (result == DialogResult.No) return 1;
+
+                DataTable dtTempPayment = new DataTable();
+                List<string> ListOfColumnsToBeExcluded = new List<string>() { "INVOICEID" };
+                List<int> ListOfColumnIndexesNotAdded = new List<int>();
+                foreach (DataGridViewColumn col in dgvPaymentSummary.Columns)
+                {
+                    if (!ListOfColumnsToBeExcluded.Contains(col.Name))
+                    {
+                        dtTempPayment.Columns.Add(col.Name);
+                    }
+                    else ListOfColumnIndexesNotAdded.Add(col.Index);
+                }
+
+                foreach (DataGridViewRow row in dgvPaymentSummary.Rows)
+                {
+                    DataRow dRow = dtTempPayment.NewRow();
+                    int index = 0;
+                    foreach (DataGridViewCell cell in row.Cells)
+                    {
+                        if (!ListOfColumnIndexesNotAdded.Contains(cell.ColumnIndex))
+                        {
+                            dRow[index] = cell.Value;
+                            index++;
+                        }
+                    }
+                    dtTempPayment.Rows.Add(dRow);
+                }
+
+                string ExportStatus = ""; dtTempPayment.TableName = "PaymentsSummaryDetails";
+                Int32 RetVal = CommonFunctions.ExportDataTableToExcelFile(dtTempPayment, ExcelFilePath, dtTempPayment.TableName, Append);
+
+                if (RetVal < 0) ExportStatus += $"{(!String.IsNullOrEmpty(ExportStatus) ? "\n" : "")}Payments:: Failed export";
+                else ExportStatus += $"{(!String.IsNullOrEmpty(ExportStatus) ? "\n" : "")}Payments:: Exported:{dtTempPayment.Rows.Count}";
+
+                if (RetVal == 0)
+                {
+                    MessageBox.Show(this, $"Exported Payments Summary data to Excel File. Following is the Export status:\n{ExportStatus}",
+                                    "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    return 0;
+                }
+                else
+                {
+                    MessageBox.Show(this, $"Following error occurred while exporting Payments Summary data to Excel File.\n{ExportStatus}\n\nPlease check.",
+                                    "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExportPaymentsSummaryData()", ex);
+                return -1;
+            }
+        }
+        private void btnPaymentSummaryExportToExcel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgvPaymentSummary.Rows.Count == 0)
+                {
+                    MessageBox.Show("No Data in the grid! Pls Choose another Delivery line and fill the grid", "ERROR NO DATA", MessageBoxButtons.OK);
+                    return;
+                }
+                CommonFunctions.ShowDialog(new ExportToExcelForm(ExportDataTypes.Payments, UpdatePaymentsOnClose, ExportPaymentsSummaryData), this);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnPaymentSummaryExportToExcel_Click()", ex);
             }
         }
     }

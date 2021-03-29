@@ -71,10 +71,10 @@ namespace SalesOrdersReport.Views
                         chkBoxAppend.Visible = false;
                         break;
                     case ExportDataTypes.Payments:
-                        this.Text = "Export Payments Data to Excel";
-                        chkListBoxDataToExport.Items.Add("Payment Details", true);
+                        this.Text = "Export Payments/Summary Data to Excel";
+                        chkListBoxDataToExport.Items.Add("Payment/Summary Details", true);
                         lblExport.Text = "Export to File";
-                        btnExportToExcelFile.Text = "Export Payments Data to Excel File";
+                        btnExportToExcelFile.Text = "Export Payments/Summary Data to Excel File";
                         saveFileDialogExportToExcel.Title = "Save Exported file as";
                         chkBoxAppend.Visible = false;
                         break;
@@ -382,17 +382,17 @@ namespace SalesOrdersReport.Views
 
                         if (Retval == 0)
                         {
-                            MessageBox.Show(this, "Exporting Payments data to Excel File is successful!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                            MessageBox.Show(this, "Exporting Payments/Summary data to Excel File is successful!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                             ExportResult = 0;
                         }
                         else if (Retval == 1)
                         {
-                            MessageBox.Show(this, "No Payments data available to export!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                            MessageBox.Show(this, "No Payments/Summary data available to export!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                             ExportResult = 1;
                         }
                         else
                         {
-                            MessageBox.Show(this, "Exporting Payments data to Excel file failed!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                            MessageBox.Show(this, "Exporting Payments/Summary data to Excel file failed!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                             ExportResult = -1;
                         }
                         break;

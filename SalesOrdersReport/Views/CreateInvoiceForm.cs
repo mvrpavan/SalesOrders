@@ -533,7 +533,14 @@ namespace SalesOrdersReport.Views
                         picBoxLoading.Visible = false;
                         EnableItemsPanel(false);
                         cmbBoxCustomers.Enabled = true;
-                        MessageBox.Show(this, "Created Customer Invoice successfully", "Sales Invoice", MessageBoxButtons.OK);
+                        DialogResult dialogResult =  MessageBox.Show(this, "Created Customer Invoice successfully.Do you want to Print Invoice?", "Sales Invoice", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            Int32 InvoiceID = ObjInvoicesModel.CurrInvoiceID;
+                            InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
+                            CommonFunctions.PrintOrderInvoiceQuotation(ReportType.INVOICE, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, 1, false, false, ReportProgressFunc);
+                        }
                         lblStatus.Text = "Choose a Customer to create Sales Invoice";
                         cmbBoxInvoiceNumber.Items.Clear();
                         OriginalBalanceAmount = -1;
@@ -1065,6 +1072,11 @@ namespace SalesOrdersReport.Views
                 cmbBoxCustomers.Enabled = enable;
                 cmbBoxProdCat.Enabled = enable;
                 cmbBoxProduct.Enabled = enable;
+                if (enable)
+                {
+                    cmbBoxProdCat.SelectedIndex = 0;
+                    cmbBoxProduct.SelectedIndex = 0;
+                }
                 cmbBoxInvoiceNumber.Enabled = enable;
             }
             catch (Exception ex)

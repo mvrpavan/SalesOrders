@@ -29,10 +29,10 @@ namespace SalesOrdersReport.Views
                 ObjOrdersModel = new OrdersModel();
                 ObjOrdersModel.Initialize();
 
-                dTimePickerFrom.Value = DateTime.Today;
-                dTimePickerTo.Value = dTimePickerFrom.Value.AddDays(1);
-                FilterFromDate = DateTime.MinValue;
-                FilterToDate = DateTime.MinValue;
+                dTimePickerFrom.Value = FilterFromDate = DateTime.Today;
+                dTimePickerTo.Value = FilterToDate = dTimePickerFrom.Value.AddDays(1);
+                //FilterFromDate = DateTime.MinValue;
+                //FilterToDate = DateTime.MinValue;
                 CurrOrderStatus = ORDERSTATUS.Created;
 
                 cmbBoxOrderStatus.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -214,21 +214,26 @@ namespace SalesOrdersReport.Views
                 //    return;
                 //}
 
-                DialogResult dialogResult = MessageBox.Show(this, "All Orders below will be created as Invoice. Do you want to continue?", "Convert Order", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                DialogResult dialogResult = MessageBox.Show(this, "All Orders which is not Completed/Cancelled below will be created as Invoice. Do you want to continue?", "Convert Order", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.No) return;
 
                 List<string> ListSuccessfulOrderIDs = new List<string>(), ListNotSuccessfulOrderIDs = new List<string>();
+                int CompletedRCancelledCount = 0;
                 for (int i = 0; i < dtGridViewOrders.Rows.Count; i++)
                 {
-                    Int32 OrderID = Int32.Parse(dtGridViewOrders.Rows[i].Cells["OrderID"].Value.ToString());
-
-                    Int32 RetVal = ObjOrdersModel.ConvertOrderToInvoice(OrderID);
-                    if (RetVal == 0)
+                    if (dtGridViewOrders.Rows[i].Cells["Order Status"].Value.ToString().Equals(ORDERSTATUS.Created.ToString()))
                     {
-                        ListSuccessfulOrderIDs.Add(ObjOrdersModel.GetOrderDetailsForOrderID(OrderID).OrderNumber);
-                        dtAllOrders.Select($"OrderID = {OrderID}")[0]["Order Status"] = ORDERSTATUS.Completed;
+                        Int32 OrderID = Int32.Parse(dtGridViewOrders.Rows[i].Cells["OrderID"].Value.ToString());
+
+                        Int32 RetVal = ObjOrdersModel.ConvertOrderToInvoice(OrderID);
+                        if (RetVal == 0)
+                        {
+                            ListSuccessfulOrderIDs.Add(ObjOrdersModel.GetOrderDetailsForOrderID(OrderID).OrderNumber);
+                            dtAllOrders.Select($"OrderID = {OrderID}")[0]["Order Status"] = ORDERSTATUS.Completed;
+                        }
+                        else ListNotSuccessfulOrderIDs.Add(ObjOrdersModel.GetOrderDetailsForOrderID(OrderID).OrderNumber);
                     }
-                    else ListNotSuccessfulOrderIDs.Add(ObjOrdersModel.GetOrderDetailsForOrderID(OrderID).OrderNumber);
+                    else CompletedRCancelledCount++;
                 }
                 //Int32 OrderID = Int32.Parse(dtGridViewOrders.SelectedRows[0].Cells["OrderID"].Value.ToString());
 
@@ -256,6 +261,7 @@ namespace SalesOrdersReport.Views
                 {
                     MessageBox.Show(this, "Following Order/s failed to get converted to Invoice" + string.Join("\n", ListNotSuccessfulOrderIDs), "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                if(CompletedRCancelledCount== dtGridViewOrders.Rows.Count) MessageBox.Show(this, "Unable to  convert the orders to Invoice as all the orders are either Completed or Cancelled", "Convert Order", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
