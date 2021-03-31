@@ -16,6 +16,7 @@ namespace SalesOrdersReport.Models
         public String UnitsOfMeasurement;
         public TaxDetails CGSTDetails, SGSTDetails, IGSTDetails;
         public DiscountGroupDetails DiscountGroup;
+        public string Comments = "";
     }
 
     class TaxDetails

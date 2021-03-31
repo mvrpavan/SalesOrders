@@ -484,7 +484,7 @@ namespace SalesOrdersReport.Models
                     ListInvoiceItems = ListInvoiceItems.Select(e => e.Clone()).ToList(),
                     CreationDate = DateTime.Now,
                     InvoiceItemCount = ListInvoiceItems.Count(e => e.OrderQty > 0),
-                    DeliveryLineName = DeliveryLineName,
+                    DeliveryLineName = DeliveryLineName == "" ? CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CustomerID).LineName : DeliveryLineName,
                     DeliveryLineID = DeliveryLineName == "" ? -1 : CommonFunctions.ObjCustomerMasterModel.GetLineID(DeliveryLineName),
                 };
 

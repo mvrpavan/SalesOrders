@@ -157,7 +157,7 @@ namespace SalesOrdersReport.Views
                 {
                     dtPaymentSummary.Columns.Add(new DataColumn(ListColumns[i], ListColumnsType[i]));
                 }
-                DataTable tmpdt = ObjPaymentsModel.GetPaymentSummaryTable();
+                DataTable tmpdt = ObjPaymentsModel.GetPaymentSummaryTable(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
 
                 for (int i = 0; i < tmpdt.Rows.Count; i++)
                 {
@@ -694,6 +694,7 @@ namespace SalesOrdersReport.Views
                     dTimePickerToPayments.Value = dTimePickerFromPayments.Value;
                 }
                 LoadPaymentsGridView(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
+                LoadInputPaymentSummaryGridView();
             }
             catch (Exception ex)
             {
@@ -1020,7 +1021,7 @@ namespace SalesOrdersReport.Views
             {
                 if (dgvPaymentSummary.Rows.Count == 0)
                 {
-                    MessageBox.Show("No Data in the grid! Pls Choose another Delivery line and fill the grid", "ERROR NO DATA", MessageBoxButtons.OK);
+                    MessageBox.Show("No Data in the grid! Pls Choose another Delivery line or Date Filter and fill the grid", "ERROR NO DATA", MessageBoxButtons.OK);
                     return;
                 }
                 CommonFunctions.ShowDialog(new ExportToExcelForm(ExportDataTypes.Payments, UpdatePaymentsOnClose, ExportPaymentsSummaryData), this);

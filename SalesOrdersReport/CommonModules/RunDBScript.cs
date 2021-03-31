@@ -542,6 +542,7 @@ namespace SalesOrdersReport.CommonModules
                     "Price, float DEFAULT NULL",
                     "DeliveryLineID, smallint Null",
                     "OrderItemStatus, varchar(20) DEFAULT NULL",
+                    "Comments, Varchar(200) Null",
                     "PRIMARY KEY, OrderItemID"
                 };
                 ObjMySQLHelper.CreateTable("OrderItems", TableColumns);

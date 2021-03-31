@@ -230,16 +230,24 @@ namespace SalesOrdersReport.Models
         }
 
 
-        public DataTable GetPaymentSummaryTable()
+        public DataTable GetPaymentSummaryTable(DateTime FromDate, DateTime ToDate)
         {
             try
             {
+                String WhereConditionQuery = "";
+                if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) WhereConditionQuery = "  (a.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "')";
+                else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
+                else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
+                else WhereConditionQuery = " 1 = 1";
+
+
+
                 DataTable dt = new DataTable();
                 String Query = "SELECT a.INVOICEID,a.INVOICENUMBER as 'INVOICE#',b.CUSTOMERNAME,c.LINENAME,a.GROSSINVOICEAMOUNT as SALE,a.NETINVOICEAMOUNT as 'NET SALE',a.DISCOUNTAMOUNT as DISCOUNT,e.BALANCEAMOUNT as OB "
                           + " FROM Invoices a INNER JOIN CUSTOMERMASTER b on a.CUSTOMERID = b.CUSTOMERID "
                           + " Left Outer Join LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
                           + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = a.CUSTOMERID "
-                          + " WHERE a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered'; ";
+                          + " WHERE (a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered') AND " + WhereConditionQuery + "; ";
 
                 dt = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 return dt;

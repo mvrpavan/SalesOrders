@@ -390,8 +390,8 @@ namespace SalesOrdersReport.Views
                 if (ObjOrderDetails.ListOrderItems == null || ObjOrderDetails.ListOrderItems.Count == 0) return;
 
                 DataTable dtOrderProducts = new DataTable();
-                String[] ArrColumns = new String[] { "ProductID", "Product Name", "Ordered Qty", "Price", "Order Item Status" };
-                Type[] ArrColumnTypes = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeString };
+                String[] ArrColumns = new String[] { "ProductID", "Product Name", "Ordered Qty", "Price", "Order Item Status","Comments" };
+                Type[] ArrColumnTypes = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeString, CommonFunctions.TypeString };
 
                 for (int i = 0; i < ArrColumns.Length; i++)
                 {
@@ -407,7 +407,8 @@ namespace SalesOrdersReport.Views
                         tmpOrderItem.ProductName,
                         tmpOrderItem.OrderQty,
                         tmpOrderItem.Price,
-                        tmpOrderItem.OrderItemStatus
+                        tmpOrderItem.OrderItemStatus,
+                        tmpOrderItem.Comments
                     };
                     dtOrderProducts.Rows.Add(ArrObjects);
                 }

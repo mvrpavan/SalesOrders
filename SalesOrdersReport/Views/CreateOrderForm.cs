@@ -17,12 +17,11 @@ namespace SalesOrdersReport.Views
         CustomerDetails CurrCustomerDetails;
         DiscountGroupDetails CurrCustomerDiscountGroup;
         CustomerOrderInvoiceDetails CurrOrderDetails;
-        Int32 CategoryColIndex = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4, OrdQtyColIndex = 3, SaleQtyColIndex = 4, CommentsColIndex = 4, ItemSelectionSelectColIndex = 5;
+        Int32 CategoryColIndex = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4, OrdQtyColIndex = 3, SaleQtyColIndex = 4, CommentsColInListGridIndex = 5, ItemSelectionSelectColIndex = 6;
         Int32 PaddingSpace = 6;
         Char PaddingChar = CommonFunctions.PaddingChar, CurrencyChar = CommonFunctions.CurrencyChar;
         Int32 BackgroundTask = -1;
         List<Int32> ListSelectedRowIndexesToAdd = new List<Int32>();
-        List<Int32> ListSelectedColIndexesToAdd = new List<Int32>();
         Dictionary<String, DataGridViewRow> DictItemsSelected = new Dictionary<String, DataGridViewRow>();
         Boolean ValueChanged = false;
         Double DiscountPerc = 0, DiscountValue = 0;
@@ -241,7 +240,8 @@ namespace SalesOrdersReport.Views
                         ProductName = ItemName,
                         OrderQty = Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString()),
                         Price = Double.Parse(item.Cells[PriceColIndex].Value.ToString()),
-                        OrderItemStatus = ORDERITEMSTATUS.Ordered
+                        OrderItemStatus = ORDERITEMSTATUS.Ordered,
+                        Comments = item.Cells[CommentsColInListGridIndex].Value.ToString()
                     };
                     CurrOrderDetails.CurrOrderDetails.ListOrderItems.Add(tmpOrderItemDetails);
 
@@ -371,7 +371,7 @@ namespace SalesOrdersReport.Views
                         row[ItemColIndex] = item.ProductName;
                         row[PriceColIndex] = item.Price.ToString("F");
                         row[OrdQtyColIndex] = item.OrderQty; row[SaleQtyColIndex] = item.OrderQty; row[ItemSelectionSelectColIndex] = false;
-                        row[CommentsColIndex] = item.Comments;
+                        row[CommentsColInListGridIndex] = item.Comments;
                         Int32 Index = dtGridViewOrdProdList.Rows.Add(row);
                         DictItemsSelected.Add(item.ProductName, dtGridViewOrdProdList.Rows[Index]);
                     }
@@ -398,7 +398,6 @@ namespace SalesOrdersReport.Views
                 dtGridViewOrdProdList.Rows.Clear();
                 dtGridViewProdListForSelection.Rows.Clear();
                 ListSelectedRowIndexesToAdd.Clear();
-                ListSelectedColIndexesToAdd.Clear();
                 ListSelectedRowIndexesToRemove.Clear();
                 DictItemsSelected.Clear();
                 DiscountPerc = 0; DiscountValue = 0;
@@ -561,12 +560,11 @@ namespace SalesOrdersReport.Views
                     Price = Price * ((CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(tmpListProducts[i].ItemName).Sum() + 100) / 100);
 
                     Object[] row = { tmpListProducts[i].CategoryName, tmpListProducts[i].ItemName,
-                                     Price.ToString("F"), 0, " " , false};
+                                     Price.ToString("F"), 0, false};
 
                     dtGridViewProdListForSelection.Rows.Add(row);
                 }
                 ListSelectedRowIndexesToAdd.Clear();
-                ListSelectedColIndexesToAdd.Clear();
             }
             catch (Exception ex)
             {
@@ -631,7 +629,8 @@ namespace SalesOrdersReport.Views
                     row[ItemSelectionSelectColIndex] = false;
                     row[OrdQtyColIndex] = ListSelectedRows[j].Cells[QtyColIndex].Value;
                     row[SaleQtyColIndex] = ListSelectedRows[j].Cells[QtyColIndex].Value;
-                    row[CommentsColIndex] = ListSelectedRows[j].Cells[CommentsColIndex].Value;
+                    //row[CommentsColInListGridIndex] = ListSelectedRows[j].Cells[CommentsColInSelectionGridIndex].Value;
+                    row[CommentsColInListGridIndex] = "";
                     ListSelectedRows[j].Cells[SelectColIndex].Value = false;
                     ListSelectedRows[j].Cells[QtyColIndex].Value = 0;
 
@@ -647,7 +646,6 @@ namespace SalesOrdersReport.Views
                 }
 
                 ListSelectedRowIndexesToAdd.Clear();
-                ListSelectedColIndexesToAdd.Clear();
                 dtGridViewProdListForSelection.CommitEdit(DataGridViewDataErrorContexts.Commit);
 
                 UpdateSummaryDetails();
@@ -1010,7 +1008,6 @@ namespace SalesOrdersReport.Views
                 Boolean Checked = false;
                 if (ListSelectedRowIndexesToAdd.Count != dtGridViewProdListForSelection.Rows.Count) Checked = true;
                 ListSelectedRowIndexesToAdd.Clear();
-                ListSelectedColIndexesToAdd.Clear();
                 Int32 Index = 0;
                 foreach (DataGridViewRow item in dtGridViewProdListForSelection.Rows)
                 {
@@ -1175,8 +1172,7 @@ namespace SalesOrdersReport.Views
                 if (e.ColumnIndex < 3 || e.ColumnIndex > 4 || e.RowIndex < 0 || !ValueChanged) return;
 
                 if (!ListSelectedRowIndexesToAdd.Contains(e.RowIndex)) ListSelectedRowIndexesToAdd.Add(e.RowIndex);
-                if (!ListSelectedColIndexesToAdd.Contains(e.ColumnIndex)) ListSelectedColIndexesToAdd.Add(e.ColumnIndex);//only column index 3 and 4 shud be added
-                if (ListSelectedColIndexesToAdd.Count < 2) return;
+
                 btnAddItem_Click(null, null);
 
                 ValueChanged = false;

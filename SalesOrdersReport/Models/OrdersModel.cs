@@ -370,7 +370,8 @@ namespace SalesOrdersReport.Models
                         ProductID = Int32.Parse(item["ProductID"].ToString()),
                         OrderQty = Double.Parse(item["OrderQty"].ToString()),
                         Price = Double.Parse(item["Price"].ToString()),
-                        OrderItemStatus = (ORDERITEMSTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.ORDERITEMSTATUS"), item["OrderItemStatus"].ToString())
+                        OrderItemStatus = (ORDERITEMSTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.ORDERITEMSTATUS"), item["OrderItemStatus"].ToString()),
+                        Comments = item["Comments"].ToString()
                     };
                     tmpOrderItem.ProductName = ObjProductMasterModel.GetProductDetails(tmpOrderItem.ProductID).ItemName;
 
@@ -495,8 +496,8 @@ namespace SalesOrdersReport.Models
                 String Query = "";
                 foreach (var item in ListOrderItems)
                 {
-                    Query = "Insert into OrderItems(OrderID, ProductID, OrderQty, Price, OrderItemStatus) Values (";
-                    Query += $"{OrderID}, {item.ProductID}, {item.OrderQty}, {item.Price}, '{item.OrderItemStatus}'";
+                    Query = "Insert into OrderItems(OrderID, ProductID, OrderQty, Price, OrderItemStatus,Comments) Values (";
+                    Query += $"{OrderID}, {item.ProductID}, {item.OrderQty}, {item.Price}, '{item.OrderItemStatus}','{item.Comments}'";
                     Query += ")";
                     ObjMySQLHelper.ExecuteNonQuery(Query);
                 }
@@ -541,9 +542,9 @@ namespace SalesOrdersReport.Models
                 //Update Modified Items
                 for (int i = 0; i < ListItemsModified.Count; i++)
                 {
-                    ObjMySQLHelper.UpdateTableDetails("OrderItems", new List<String>() { "OrderQty", "Price", "OrderItemStatus" },
-                                                new List<String>() { ListItemsModified[i].OrderQty.ToString(), ListItemsModified[i].Price.ToString(), ListItemsModified[i].OrderItemStatus.ToString() },
-                                                new List<Types>() { Types.Number, Types.Number, Types.String },
+                    ObjMySQLHelper.UpdateTableDetails("OrderItems", new List<String>() { "OrderQty", "Price", "OrderItemStatus","Comments" },
+                                                new List<String>() { ListItemsModified[i].OrderQty.ToString(), ListItemsModified[i].Price.ToString(), ListItemsModified[i].OrderItemStatus.ToString(), ListItemsModified[i].Comments.ToString() },
+                                                new List<Types>() { Types.Number, Types.Number, Types.String, Types.String },
                                                 $"OrderID = {ObjOrderDetails.OrderID} and ProductID = {ListItemsModified[i].ProductID}");
                 }
 
@@ -594,6 +595,7 @@ namespace SalesOrdersReport.Models
                 Int32 Counter = 0, SLNo = 0;
                 Double Quantity, Price;
                 String OrderQuantity = "";
+                string Comments = "";
 
                 SLNo = 0;
                 CustomerDetails ObjCurrentSeller = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(ObjOrderDetails.CustomerName);
@@ -633,6 +635,7 @@ namespace SalesOrdersReport.Models
                     if (Quantity == 0) continue;
                     Price = ObjOrderDetails.ListOrderItems[i].Price;
                     Price = Price / ((CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(ItemName).Sum() + 100) / 100);
+                    Comments = ObjOrderDetails.ListOrderItems[i].Comments;
 
                     SLNo++;
                     ProductDetailsForInvoice ObjProductDetailsForInvoice = new ProductDetailsForInvoice();
@@ -644,7 +647,7 @@ namespace SalesOrdersReport.Models
                     ObjProductDetailsForInvoice.OrderQuantity = OrderQuantity;
                     ObjProductDetailsForInvoice.SaleQuantity = (IsDummyBill ? 0 : Quantity);
                     ObjProductDetailsForInvoice.Rate = Price; //CommonFunctions.ObjProductMaster.GetPriceForProduct(ObjProductDetails.ItemName, ObjCurrentSeller.PriceGroupIndex);
-
+                    ObjProductDetailsForInvoice.Comments = Comments;
                     Double[] TaxRates = CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(ObjProductDetails.ItemName);
                     ObjProductDetailsForInvoice.CGSTDetails = new TaxDetails();
                     ObjProductDetailsForInvoice.CGSTDetails.TaxRate = TaxRates[0] / 100;

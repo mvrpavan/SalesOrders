@@ -39,7 +39,6 @@
             this.ItemCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.QuantityCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CommentsCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SelectCol = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.cmbBoxProduct = new System.Windows.Forms.ComboBox();
@@ -144,7 +143,6 @@
             this.ItemCol,
             this.PriceCol,
             this.QuantityCol,
-            this.CommentsCol,
             this.SelectCol});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
@@ -198,19 +196,10 @@
             // 
             this.QuantityCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.QuantityCol.HeaderText = "Quantity";
-            this.QuantityCol.MinimumWidth = 150;
+            this.QuantityCol.MinimumWidth = 200;
             this.QuantityCol.Name = "QuantityCol";
             this.QuantityCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.QuantityCol.Width = 150;
-
-            // 
-            // CommentsCol
-            //
-            this.CommentsCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.CommentsCol.HeaderText = "Comments";
-            this.CommentsCol.MinimumWidth = 50;
-            this.CommentsCol.Name = "CommentsCol";
-            this.CommentsCol.Width = 50;
+            this.QuantityCol.Width = 200;
             // 
             // SelectCol
             // 
@@ -1000,7 +989,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PriceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn QuantityCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CommentsCol;
         private System.Windows.Forms.DataGridViewCheckBoxColumn SelectCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
