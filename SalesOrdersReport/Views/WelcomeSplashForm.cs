@@ -63,6 +63,7 @@ namespace SalesOrdersReport.Views
                     ObjRunDBScript.CreateMasterTables();
                     ObjRunDBScript.CreateRunningTables();
                     ObjRunDBScript.ExecuteOneTimeExecutionScript();
+                    ObjRunDBScript.CreateTempPaymentsSummaryTableIfNot();
                     lblLoadingStatus.Text = "Creating required tables...completed";
                 }
 

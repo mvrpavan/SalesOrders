@@ -57,11 +57,14 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnPaymentSummaryExportToExcel = new System.Windows.Forms.Button();
             this.toolTipForEPaymentSummaryxportToExcel = new System.Windows.Forms.ToolTip(this.components);
+            this.btnSaveSummaryDB = new System.Windows.Forms.Button();
+            this.dtGridViewPaymentsSummaryTotal = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewPayments)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPaymentSummary)).BeginInit();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtGridViewPaymentsSummaryTotal)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCreatePayment
@@ -319,11 +322,12 @@
             this.dgvPaymentSummary.Location = new System.Drawing.Point(12, 423);
             this.dgvPaymentSummary.MultiSelect = false;
             this.dgvPaymentSummary.Name = "dgvPaymentSummary";
-            this.dgvPaymentSummary.Size = new System.Drawing.Size(1164, 244);
+            this.dgvPaymentSummary.Size = new System.Drawing.Size(1164, 214);
             this.dgvPaymentSummary.TabIndex = 5;
             this.dgvPaymentSummary.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPaymentSummary_CellEndEdit);
             this.dgvPaymentSummary.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPaymentSummary_CellValueChanged);
             this.dgvPaymentSummary.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgvPaymentSummary_DataError);
+            this.dgvPaymentSummary.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dgvPaymentSummary_Scroll);
             // 
             // cmbxDeliveryLine
             // 
@@ -392,7 +396,7 @@
             this.panel2.Controls.Add(this.btnAddToDB);
             this.panel2.Controls.Add(this.lblStaffName);
             this.panel2.Controls.Add(this.cmbxStaffName);
-            this.panel2.Location = new System.Drawing.Point(12, 673);
+            this.panel2.Location = new System.Drawing.Point(12, 691);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1164, 42);
             this.panel2.TabIndex = 11;
@@ -405,13 +409,40 @@
             this.btnPaymentSummaryExportToExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPaymentSummaryExportToExcel.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnPaymentSummaryExportToExcel.Image = global::SalesOrdersReport.Properties.Resources.exporttoexcel321;
-            this.btnPaymentSummaryExportToExcel.Location = new System.Drawing.Point(519, 385);
+            this.btnPaymentSummaryExportToExcel.Location = new System.Drawing.Point(551, 387);
             this.btnPaymentSummaryExportToExcel.Name = "btnPaymentSummaryExportToExcel";
             this.btnPaymentSummaryExportToExcel.Size = new System.Drawing.Size(43, 32);
             this.btnPaymentSummaryExportToExcel.TabIndex = 14;
             this.btnPaymentSummaryExportToExcel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnPaymentSummaryExportToExcel.UseVisualStyleBackColor = false;
             this.btnPaymentSummaryExportToExcel.Click += new System.EventHandler(this.btnPaymentSummaryExportToExcel_Click);
+            // 
+            // btnSaveSummaryDB
+            // 
+            this.btnSaveSummaryDB.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btnSaveSummaryDB.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.btnSaveSummaryDB.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.btnSaveSummaryDB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSaveSummaryDB.Font = new System.Drawing.Font("Calibri", 10F);
+            this.btnSaveSummaryDB.Image = global::SalesOrdersReport.Properties.Resources.save_32;
+            this.btnSaveSummaryDB.Location = new System.Drawing.Point(502, 387);
+            this.btnSaveSummaryDB.Name = "btnSaveSummaryDB";
+            this.btnSaveSummaryDB.Size = new System.Drawing.Size(43, 32);
+            this.btnSaveSummaryDB.TabIndex = 15;
+            this.btnSaveSummaryDB.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSaveSummaryDB.UseCompatibleTextRendering = true;
+            this.btnSaveSummaryDB.UseVisualStyleBackColor = false;
+            this.btnSaveSummaryDB.Click += new System.EventHandler(this.btnSaveSummaryDB_Click);
+            // 
+            // dtGridViewInvoiceTotal
+            // 
+            this.dtGridViewPaymentsSummaryTotal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtGridViewPaymentsSummaryTotal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtGridViewPaymentsSummaryTotal.Location = new System.Drawing.Point(12, 643);
+            this.dtGridViewPaymentsSummaryTotal.Name = "dtGridViewInvoiceTotal";
+            this.dtGridViewPaymentsSummaryTotal.Size = new System.Drawing.Size(1164, 39);
+            this.dtGridViewPaymentsSummaryTotal.TabIndex = 16;
             // 
             // PaymentsForm
             // 
@@ -420,6 +451,8 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1184, 745);
+            this.Controls.Add(this.dtGridViewPaymentsSummaryTotal);
+            this.Controls.Add(this.btnSaveSummaryDB);
             this.Controls.Add(this.btnPaymentSummaryExportToExcel);
             this.Controls.Add(this.lblPaymentSummary);
             this.Controls.Add(this.panel2);
@@ -444,6 +477,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvPaymentSummary)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtGridViewPaymentsSummaryTotal)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -479,5 +513,7 @@
         private System.Windows.Forms.Button btnExportToExcel;
         private System.Windows.Forms.Button btnPaymentSummaryExportToExcel;
         private System.Windows.Forms.ToolTip toolTipForEPaymentSummaryxportToExcel;
+        private System.Windows.Forms.Button btnSaveSummaryDB;
+        private System.Windows.Forms.DataGridView dtGridViewPaymentsSummaryTotal;
     }
 }

@@ -45,8 +45,9 @@ namespace SalesOrdersReport.Models
                             + " Inner Join Invoices d on a.INVOICEID = d.INVOICEID "
                             + " Inner Join USERMASTER e on a.USERID = e.USERID ";
 
+        DataTable DtTempSummary = new DataTable();
 
-   
+
         public PaymentsModel()
         {
             try
@@ -229,11 +230,24 @@ namespace SalesOrdersReport.Models
             }
         }
 
-
+        public void LoadTempPaymentSummaryTableinDT()
+        {
+            try
+            {
+               string Query = "Select * from TempPaymentsSummary";
+               DtTempSummary = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.LoadTempPaymentSummaryTableinDT()", ex);
+            }
+        }
         public DataTable GetPaymentSummaryTable(DateTime FromDate, DateTime ToDate)
         {
             try
             {
+                LoadTempPaymentSummaryTableinDT();
+
                 String WhereConditionQuery = "";
                 if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) WhereConditionQuery = "  (a.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "')";
                 else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
@@ -241,15 +255,54 @@ namespace SalesOrdersReport.Models
                 else WhereConditionQuery = " 1 = 1";
 
 
-
+                string PaymentModesColNames = string.Join(",", ListPaymentModes.Select(e => " IFNULL(f.`" + e.PaymentMode + "`,0) as `" + e.PaymentMode + "`").ToList());
                 DataTable dt = new DataTable();
-                String Query = "SELECT a.INVOICEID,a.INVOICENUMBER as 'INVOICE#',b.CUSTOMERNAME,c.LINENAME,a.GROSSINVOICEAMOUNT as SALE,a.NETINVOICEAMOUNT as 'NET SALE',a.DISCOUNTAMOUNT as DISCOUNT,e.BALANCEAMOUNT as OB "
+                String Query = "SELECT a.INVOICEID,a.INVOICENUMBER as 'INVOICE#',b.CUSTOMERNAME,c.LINENAME,a.GROSSINVOICEAMOUNT as SALE,a.NETINVOICEAMOUNT as 'NET SALE',a.DISCOUNTAMOUNT as DISCOUNT,f.`Cancel` as Cancel,f.`Return` as `Return`,e.BALANCEAMOUNT as OB , " + PaymentModesColNames
                           + " FROM Invoices a INNER JOIN CUSTOMERMASTER b on a.CUSTOMERID = b.CUSTOMERID "
                           + " Left Outer Join LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
                           + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = a.CUSTOMERID "
+                          + " Left Outer Join TempPaymentsSummary f on a.InvoiceID = f.InvoiceID "
                           + " WHERE (a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered') AND " + WhereConditionQuery + "; ";
 
                 dt = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+                int CountFoundInDtTempSummary = 0;
+                if (DtTempSummary.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        if (CountFoundInDtTempSummary == DtTempSummary.Rows.Count) break;
+                        DataRow dr = dt.Rows[i];
+                        for (int j = 0; j < DtTempSummary.Rows.Count; j++)
+                        {
+                            if (dr["InvoiceID"].ToString() == DtTempSummary.Rows[j]["InvoiceID"].ToString())
+                            {
+                                dr["CANCEL"] = DtTempSummary.Rows[j]["Cancel"];
+                                dr["RETURN"] = DtTempSummary.Rows[j]["Return"];
+                                dr["DISCOUNT"] = DtTempSummary.Rows[j]["Discount"];
+                                dr["NET SALE"] = Double.Parse(dr["SALE"].ToString())
+                                                 - Double.Parse(dr["DISCOUNT"].ToString())
+                                                 - Double.Parse(dr["Cancel"].ToString())  //&&&&&
+                                                 - Double.Parse(dr["Return"].ToString()); //&&&&&
+                                CountFoundInDtTempSummary++;
+                                break;
+                            }
+                        }
+                    }
+                    dt.AcceptChanges();
+                }
+                //var JoinResult = (from p in dt.AsEnumerable()
+                //                  join t in DtTempSummary.AsEnumerable()
+                //                  on p.Field<int>("InvoiceID") equals t.Field<int>("InvoiceID")
+                //                  select new
+                //                  {
+                //                      Cancel = t.Field<string>("Cancel"),
+                //                      Return = p.Field<string>("Return"),
+                //                      Discount = t.Field<string>("Discount")
+
+
+                //                  }).ToList();
+
+
                 return dt;
             }
             catch (Exception ex)

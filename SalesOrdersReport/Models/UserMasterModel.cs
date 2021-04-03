@@ -1020,11 +1020,11 @@ namespace SalesOrdersReport
 
 
 
-        public Int32 AlterTblColBasedOnMultipleRowsFrmAnotherTbl(String SourceTable, string DestinationTable, string ColumnNameFromAnotherTble)
+        public Int32 AlterTblColBasedOnMultipleRowsFrmAnotherTbl(String SourceTable, string DestinationTable, string ColumnNameFromAnotherTble,string DataType= "TINYTEXT")
         {
             try
             {
-                string Query = "SELECT @S:= CONCAT('ALTER TABLE " + DestinationTable + " ADD COLUMN (', GROUP_CONCAT( " + ColumnNameFromAnotherTble + ", ' TINYTEXT'), ')') FROM " + SourceTable + ";"
+                string Query = "SELECT @S:= CONCAT('ALTER TABLE " + DestinationTable + " ADD COLUMN (', GROUP_CONCAT("+ "CONCAT(CHAR(96)," + ColumnNameFromAnotherTble + ",CHAR(96)), ' "+ DataType + "'), ')') FROM " + SourceTable + ";"
                  + " PREPARE STMT FROM @S;"
                 + " EXECUTE STMT;"
                + " DEALLOCATE PREPARE STMT;"

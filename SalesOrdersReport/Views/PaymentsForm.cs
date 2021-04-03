@@ -27,6 +27,7 @@ namespace SalesOrdersReport.Views
             {
                 InitializeComponent();
                 ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+             
                 CommonFunctions.SetDataGridViewProperties(dtGridViewPayments);
                 CommonFunctions.SetDataGridViewProperties(dgvPaymentSummary);
                 dgvPaymentSummary.SelectionMode = DataGridViewSelectionMode.CellSelect;
@@ -34,6 +35,7 @@ namespace SalesOrdersReport.Views
 
                 ObjPaymentsModel = new PaymentsModel();
                 ObjPaymentsModel.LoadPaymentModes();
+                ObjPaymentsModel.LoadTempPaymentSummaryTableinDT();
                 ListPaymentModeNames = ObjPaymentsModel.GetAllPaymentsModeNames();
                 ListPaymentModeColTypes = new List<Type>();
                 for (int i = 0; i < ListPaymentModeNames.Count; i++)
@@ -59,7 +61,7 @@ namespace SalesOrdersReport.Views
                 toolTipForEPaymentSummaryxportToExcel.InitialDelay = 1000;
                 toolTipForEPaymentSummaryxportToExcel.ReshowDelay = 500;
                 toolTipForEPaymentSummaryxportToExcel.SetToolTip(btnPaymentSummaryExportToExcel, "Export To Excel");
-
+                toolTipForEPaymentSummaryxportToExcel.SetToolTip(btnSaveSummaryDB, "Save Changes To DB");
                 LoadInputPaymentSummaryGridView();
                 List<string> ListTempNames = new List<string>() { "All" };
                 ListTempNames.AddRange(CommonFunctions.ObjCustomerMasterModel.GetAllLineNames());
@@ -170,15 +172,15 @@ namespace SalesOrdersReport.Views
                     ArrRowItems[col++] = dr["INVOICE#"].ToString();
                     ArrRowItems[col++] = dr["CUSTOMERNAME"].ToString();
                     ArrRowItems[col++] = dr["SALE"].ToString();
-                    ArrRowItems[col++] = "0";  //cancel
-                    ArrRowItems[col++] = "0";   //return
+                    ArrRowItems[col++] = (dr["CANCEL"].ToString()==null || dr["CANCEL"].ToString()=="")?"0": dr["CANCEL"].ToString();  //cancel
+                    ArrRowItems[col++] = (dr["RETURN"].ToString()==null|| dr["RETURN"].ToString()=="")?"0": dr["RETURN"].ToString();   //return
                     ArrRowItems[col++] = dr["DISCOUNT"].ToString();
                     ArrRowItems[col++] = "0";  //total tax
                     ArrRowItems[col++] = dr["NET SALE"].ToString();
                     ArrRowItems[col++] = dr["OB"].ToString();
                     for (int mn = 0; mn < ListPaymentModeNames.Count; mn++)
                     {
-                        ArrRowItems[col++] = "0";
+                        ArrRowItems[col++] = dr[ListPaymentModeNames[mn]].ToString();
                     }
                     dtPaymentSummary.Rows.Add(ArrRowItems);
                 }
@@ -220,7 +222,7 @@ namespace SalesOrdersReport.Views
                 {
                     item.ReadOnly = true;
                     if (item.HeaderText.Equals("InvoiceID") || item.HeaderText.Equals("Sl#")) item.Visible = false;
-                    if (item.Name.Equals("Cancel") || item.Name.Equals("Return")
+                    if (item.Name.Equals("Cancel") || item.Name.Equals("Return") || item.Name.Equals("Discount")
                         || ListPaymentModeNames.Contains(item.Name))
                     {
                         item.ReadOnly = false;
@@ -237,6 +239,36 @@ namespace SalesOrdersReport.Views
                         }
                     }
                 }
+
+                //Add Totals Row at the bottom of Grid
+                dtGridViewPaymentsSummaryTotal.Rows.Clear();
+                dtGridViewPaymentsSummaryTotal.Columns.Clear();
+                dtGridViewPaymentsSummaryTotal.ColumnHeadersVisible = false;
+                CommonFunctions.SetDataGridViewProperties(dtGridViewPaymentsSummaryTotal);
+                dtGridViewPaymentsSummaryTotal.SelectionMode = DataGridViewSelectionMode.CellSelect;
+                dtGridViewPaymentsSummaryTotal.DefaultCellStyle.Font = new System.Drawing.Font(dgvPaymentSummary.Font, System.Drawing.FontStyle.Bold);
+                foreach (DataGridViewColumn item in dgvPaymentSummary.Columns)
+                {
+                    DataGridViewColumn newColumn = new DataGridViewColumn(item.CellTemplate);
+                    newColumn.Name = item.Name;
+                    newColumn.Width = item.Width;
+                    newColumn.Visible = item.Visible;
+                    dtGridViewPaymentsSummaryTotal.Columns.Add(newColumn);
+                }
+                // "Sl#", "InvoiceID", "Line", "Invoice#", "Customer Name", "Sale", "Cancel", "Return", "Discount", "Total Tax", "Net Sale", "OB" };// Cash, UPI, Credit Card, Debit Card, Check};
+                Object[] ArrObjects = dtPaymentSummary.NewRow().ItemArray;
+                ArrObjects[dtPaymentSummary.Columns["Customer Name"].Ordinal] = "Total";
+                List<String> ListSumColumns = new List<String>() { "Sale", "Cancel","Return", "Discount", "Total Tax", "Net Sale" , "OB" };
+                ListSumColumns.AddRange(ListPaymentModeNames);
+                for (int i = 0; i < ListSumColumns.Count; i++)
+                {
+                    String Value = dtPaymentSummary.Compute($"Sum([{ListSumColumns[i]}])", "").ToString();
+                    ArrObjects[dtPaymentSummary.Columns[ListSumColumns[i]].Ordinal] = (String.IsNullOrEmpty(Value) ? 0.ToString("F") : Double.Parse(Value).ToString("F"));
+                }
+                dtGridViewPaymentsSummaryTotal.Rows.Add(ArrObjects);
+
+                dgvPaymentSummary.ClearSelection();
+
             }
             catch (Exception ex)
             {
@@ -674,7 +706,8 @@ namespace SalesOrdersReport.Views
             try
             {
                 checkBoxApplyFilterPayment.Checked = false;
-                LoadPaymentsGridView(DateTime.MinValue, DateTime.MinValue);
+                LoadPaymentsGridView(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
+                LoadInputPaymentSummaryGridView();
             }
             catch (Exception ex)
             {
@@ -748,7 +781,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                if (e.ColumnIndex < 6 || (e.ColumnIndex > 7 && e.ColumnIndex <= 11) || e.RowIndex < 0) return;
+                if (e.ColumnIndex < 6 || (e.ColumnIndex > 8 && e.ColumnIndex <= 11) || e.RowIndex < 0) return;
 
                 Double result;
                 DataGridViewCell cell = dgvPaymentSummary.Rows[e.RowIndex].Cells[e.ColumnIndex];
@@ -758,6 +791,7 @@ namespace SalesOrdersReport.Views
                     cell.ErrorText = "Must be a number";
                     return;
                 }
+
 
                 ValueChanged = true;
             }
@@ -771,11 +805,18 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                if (e.ColumnIndex < 6 || (e.ColumnIndex > 7 && e.ColumnIndex <= 11) || e.RowIndex < 0 || !ValueChanged) return;
+                if (e.ColumnIndex < 6 || (e.ColumnIndex > 8 && e.ColumnIndex <= 11) || e.RowIndex < 0 || !ValueChanged) return;
 
                 Int32 InvoiceID = Int32.Parse(dgvPaymentSummary["INVOICEID", e.RowIndex].Value.ToString());
                 if (!ListEditedInvoiceIDs.Contains(InvoiceID)) ListEditedInvoiceIDs.Add(InvoiceID);
 
+                if (e.ColumnIndex>=6 && e.ColumnIndex <= 8)
+                {
+                    dgvPaymentSummary["Net Sale", e.RowIndex].Value = Double.Parse(dgvPaymentSummary["SALE", e.RowIndex].Value.ToString()) //- Double.Parse(dgvPaymentSummary[e.ColumnIndex, e.RowIndex].Value.ToString());
+                                                                    - Double.Parse(dgvPaymentSummary["DISCOUNT", e.RowIndex].Value.ToString())
+                                                                    - Double.Parse(dgvPaymentSummary["Cancel", e.RowIndex].Value.ToString())
+                                                                    - Double.Parse(dgvPaymentSummary["Return", e.RowIndex].Value.ToString());
+                }
                 ValueChanged = false;
             }
             catch (Exception ex)
@@ -800,21 +841,40 @@ namespace SalesOrdersReport.Views
             }
         }
 
+        private bool CheckPaymentsModeColValue(DataGridViewRow dr)
+        {
+            try
+            {
+                for (int mk = 0; mk < ListPaymentModeNames.Count; mk++)
+                {
+                    if (dr.Cells[ListPaymentModeNames[mk]].Value.ToString() != "0") return true;
+                }
+
+              return false;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.CheckPaymentsModeColValue()", ex);
+                return false;
+            }
+        }
         private void btnAddToDB_Click(object sender, EventArgs e)
         {
             try
             {
-                for (int i = 0; i < ListEditedInvoiceIDs.Count; i++)
-                {
-
+                List<int> ListSuccessfulID = new List<int>();
+                //for (int i = 0; i < ListEditedInvoiceIDs.Count; i++)
+                //{
+                
                     for (int j = 0; j < dgvPaymentSummary.Rows.Count; j++)
                     {
-                        if (dgvPaymentSummary["INVOICEID", j].Value.ToString().Equals(ListEditedInvoiceIDs[i].ToString()))
+                        if (dgvPaymentSummary["Cancel", j].Value.ToString()!="0" || dgvPaymentSummary["Return", j].Value.ToString() != "0"|| dgvPaymentSummary["Discount", j].Value.ToString() != "0"
+                        || CheckPaymentsModeColValue(dgvPaymentSummary.Rows[j]))
                         {
                             PaymentDetails tmpPaymentDetails = new PaymentDetails();
                             tmpPaymentDetails.CustomerID = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(dgvPaymentSummary["CUSTOMER NAME", j].Value.ToString()).CustomerID;
                             tmpPaymentDetails.AccountID = CommonFunctions.ObjAccountsMasterModel.GetAccDtlsFromCustID(tmpPaymentDetails.CustomerID).AccountID;
-                            tmpPaymentDetails.InvoiceID = ListEditedInvoiceIDs[i];
+                            tmpPaymentDetails.InvoiceID = int.Parse(dgvPaymentSummary["INVOICEID", j].Value.ToString());
                             tmpPaymentDetails.InvoiceNumber = dgvPaymentSummary["INVOICE#", j].Value.ToString();
                             tmpPaymentDetails.PaidOn = DateTime.Parse(MySQLHelper.GetDateTimeStringForDB(DateTime.Now));
                             tmpPaymentDetails.Amount = 0;
@@ -830,8 +890,6 @@ namespace SalesOrdersReport.Views
                             tmpCustomerAccountHistoryDetails.CancelAmount = Double.Parse(dgvPaymentSummary["Cancel", j].Value.ToString());
                             tmpCustomerAccountHistoryDetails.RefundAmount = Double.Parse(dgvPaymentSummary["Return", j].Value.ToString());
 
-
-
                             tmpCustomerAccountHistoryDetails.NetSaleAmount = Double.Parse(dgvPaymentSummary["NET SALE", j].Value.ToString());
                             tmpCustomerAccountHistoryDetails.TotalTaxAmount = 0.0;
 
@@ -842,7 +900,7 @@ namespace SalesOrdersReport.Views
 
                                 string AmountReceived = dgvPaymentSummary[ListPaymentModeNames[mk], j].Value.ToString().Trim();
                                 string Balance = (dgvPaymentSummary["OB", j].Value.ToString() == string.Empty) ? "0.0" : dgvPaymentSummary["OB", j].Value.ToString();
-                                tmpCustomerAccountHistoryDetails.AmountReceived = (AmountReceived == string.Empty) ? 0.0 : Double.Parse(AmountReceived);
+                                tmpCustomerAccountHistoryDetails.AmountReceived= tmpPaymentDetails.Amount = (AmountReceived == string.Empty) ? 0.0 : Double.Parse(AmountReceived);
                                 if (tmpCustomerAccountHistoryDetails.AmountReceived != 0.0)
                                 {
                                     tmpPaymentDetails.PaymentModeID = ObjPaymentsModel.GetPaymentModeDetails(ListPaymentModeNames[mk]).PaymentModeID;
@@ -858,16 +916,23 @@ namespace SalesOrdersReport.Views
                                         tmpCustomerAccountHistoryDetails.NetSaleAmount = 0;
                                         tmpCustomerAccountHistoryDetails.TotalTaxAmount = 0.0;
                                     }
-                                    ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails, ref tmpCustomerAccountHistoryDetails);
+                                   int resultVal = ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails, ref tmpCustomerAccountHistoryDetails);
+                                    if (resultVal == 0) ListSuccessfulID.Add(tmpPaymentDetails.InvoiceID);
                                     Found = true;
                                 }
                             }
-                            break;
+                            //break;
                         }
                     }
-                }
+                //}
 
-                ListEditedInvoiceIDs.Clear();
+                for (int i = 0; i < ListSuccessfulID.Count; i++)
+                {
+                    ObjMySQLHelper.DeleteRow("TempPaymentsSummary", "InvoiceID", ListSuccessfulID[i].ToString(), Types.Number);
+                }
+             
+               // ListEditedInvoiceIDs.Clear();
+                LoadPaymentsGridView(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
                 LoadInputPaymentSummaryGridView();
             }
             catch (Exception ex)
@@ -1029,6 +1094,108 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.btnPaymentSummaryExportToExcel_Click()", ex);
+            }
+        }
+
+        private void btnSaveSummaryDB_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (ListEditedInvoiceIDs.Count == 0)
+                {
+                    DialogResult dialogResult = MessageBox.Show(this, "No changes have been made to Payment Summary.Pls Edit atleast one column value to Save", "No Change In Payments",MessageBoxButtons.OK);
+                    return;
+                }
+
+                ////         public Int32 InvoiceID;
+                ////public String InvoiceNumber;
+                ////public DateTime InvoiceDate, CreationDate, LastUpdatedDate;
+                ////public Int32 CustomerID, OrderID;
+                ////public String CustomerName;
+                ////public Double GrossInvoiceAmount, DiscountAmount, NetInvoiceAmount;
+                ////public INVOICESTATUS InvoiceStatus;
+                ////public List<InvoiceItemDetails> ListInvoiceItems;
+                ////public Int32 InvoiceItemCount = 0;
+                ////public Int32 DeliveryLineID = -1;
+                ////public string DeliveryLineName = "";
+                ////String Query = "SELECT a.INVOICEID,a.INVOICENUMBER as 'INVOICE#',b.CUSTOMERNAME,c.LINENAME,a.GROSSINVOICEAMOUNT as SALE,a.NETINVOICEAMOUNT as 'NET SALE',a.DISCOUNTAMOUNT as DISCOUNT,e.BALANCEAMOUNT as OB "
+                ////       + " FROM Invoices a INNER JOIN CUSTOMERMASTER b on a.CUSTOMERID = b.CUSTOMERID "
+                ////       + " Left Outer Join LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
+                ////       + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = a.CUSTOMERID "
+                ////       + " WHERE (a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered') AND " + WhereConditionQuery + "; ";
+                ////ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceItemCount", "NetInvoiceAmount", "InvoiceStatus", "DeliveryLineID" },
+                ////                       new List<String>() { InvoiceItemCount.ToString(), NetInvoiceAmount.ToString(), ObjInvoiceDetails.InvoiceStatus.ToString(), ObjInvoiceDetails.DeliveryLineID.ToString() },
+                ////                       new List<Types>() { Types.Number, Types.Number, Types.String, Types.Number }, $"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
+
+                List<int> ListUnsuccessfulID = new List<int>();
+
+                for (int i = 0; i < ListEditedInvoiceIDs.Count; i++)
+                {
+                    List<string> ListColumnValues = new List<string>(), ListColumnNames = new List<string>();
+                    List<Types> ListTypes = new List<Types>();
+                    for (int j = 0; j < dgvPaymentSummary.Rows.Count; j++)
+                    {
+                        if (dgvPaymentSummary["INVOICEID", j].Value.ToString().Equals(ListEditedInvoiceIDs[i].ToString()))
+                        {                       
+
+                            ListColumnValues.Add(ListEditedInvoiceIDs[i].ToString());
+                            ListColumnNames.Add("InvoiceID");
+                            ListTypes.Add(Types.Number);
+
+                            ListColumnValues.Add(dgvPaymentSummary["INVOICE#", j].Value.ToString());
+                            ListColumnNames.Add("InvoiceNumber");
+                            ListTypes.Add(Types.String);
+
+                           
+                            ListColumnValues.Add(dgvPaymentSummary["DISCOUNT", j].Value.ToString());
+                            ListColumnNames.Add("DISCOUNT");
+                            ListTypes.Add(Types.Number);
+
+                            ListColumnValues.Add(dgvPaymentSummary["CANCEL", j].Value.ToString());
+                            ListColumnNames.Add("CANCEL");
+                            ListTypes.Add(Types.Number);
+
+                            ListColumnValues.Add(dgvPaymentSummary["RETURN", j].Value.ToString());
+                            ListColumnNames.Add("`RETURN`");
+                            ListTypes.Add(Types.Number);
+
+                            for (int mk = 0; mk < ListPaymentModeNames.Count; mk++)
+                            {
+                                ListColumnValues.Add(dgvPaymentSummary[ListPaymentModeNames[mk], j].Value.ToString().Trim());
+                                ListColumnNames.Add("`" + ListPaymentModeNames[mk] + "`");
+                                ListTypes.Add(Types.Number);
+                            }
+
+                            int ResultVal = ObjMySQLHelper.DecideWhetherInsertOrUpdate("InvoiceID",ListEditedInvoiceIDs[i].ToString(), "TempPaymentsSummary", ListColumnNames, ListColumnValues, ListTypes);
+                            if (ResultVal <= 0)
+                            {
+                                ListUnsuccessfulID.Add(ListEditedInvoiceIDs[i]);
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                if (ListUnsuccessfulID.Count > 0) MessageBox.Show("Follwing Invoice/s were not saved " + string.Join("\n", ListUnsuccessfulID), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnSaveSummaryDB_Click()", ex);
+            }
+        }
+
+        private void dgvPaymentSummary_Scroll(object sender, ScrollEventArgs e)
+        {
+            try
+            {
+                if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
+                    dtGridViewPaymentsSummaryTotal.HorizontalScrollingOffset = e.NewValue;
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
     }

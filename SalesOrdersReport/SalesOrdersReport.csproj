@@ -742,6 +742,7 @@
     <None Include="Resources\close-shop_32.png" />
     <None Include="Resources\close_40.png" />
     <None Include="Resources\exporttoexcel32.png" />
+    <None Include="Resources\save_32.jfif" />
     <Content Include="SQLScripts\ProductMasterTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

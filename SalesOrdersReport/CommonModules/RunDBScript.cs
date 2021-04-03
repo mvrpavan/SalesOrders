@@ -111,6 +111,38 @@ namespace SalesOrdersReport.CommonModules
                 throw;
             }
         }
+        public void CreateTempPaymentsSummaryTableIfNot()
+        {
+            try
+            {
+                //            CREATE TABLE test(a INT NOT NULL AUTO_INCREMENT,
+                //->PRIMARY KEY(a), KEY(b))
+                //->ENGINE = InnoDB SELECT b, c FROM test2;
+
+                //"InvoiceID.Invoice#", "Cancel", "Return", "Discount","PaymentModes"
+
+                //string Query= "CREATE TABLE TempPaymentsSummary ("
+                //   + "InvoiceID BIGINT unsigned NULL,"
+                //   + "InvoiceNumber varchar(20) NOT NULL,"
+                //   + "
+                //   + "Cancel FLOAT DEFAULT 0,"
+                //   + "Return FLOAT DEFAULT 0"
+                //   + "PRIMARY KEY ( InvoiceID) ENGINE = InnoDB SELECT  PaymentMode FROM PaymentModeMaster Order by PaymentModeID";
+
+                //   ObjMySQLHelper.ExecuteNonQuery(Query);
+                //CreateTable(String TableName, List<String> Columns,
+                //Boolean InMemory = false, Boolean DropIfExists = true, Boolean TruncateIfExists = false)
+                List<string> ListTableCol = new List<string>() { "InvoiceID,BIGINT unsigned Not NULL", "InvoiceNumber,varchar(20) NOT NULL", "Cancel, FLOAT DEFAULT 0", "Return, FLOAT DEFAULT 0", "Discount, FLOAT DEFAULT 0", "PRIMARY KEY,InvoiceID" };
+                int val = ObjMySQLHelper.CreateTable("TempPaymentsSummary", ListTableCol, false, false, false);
+                if (val != 1) CommonFunctions.ObjUserMasterModel.AlterTblColBasedOnMultipleRowsFrmAnotherTbl("PaymentModeMaster", "TempPaymentsSummary", "PaymentMode","FLOAT");
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("RunDBScript.CreateDiscountGrpTable()", ex);
+                throw;
+            }
+
+        }
         private void CreatePriceGrpTable()
         {
             try
@@ -661,6 +693,7 @@ namespace SalesOrdersReport.CommonModules
                     "PRIMARY KEY, PaymentID"
                 };
                 ObjMySQLHelper.CreateTable("PAYMENTS", TableColumns);
+
 
                 TableColumns = new List<String>
                 {

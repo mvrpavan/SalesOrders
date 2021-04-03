@@ -210,6 +210,26 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
+
+        public Int32 DecideWhetherInsertOrUpdate(string KeyColumn,string KeyColumnValue,String TableName, List<String> ListColumnNames, List<String> ListColumnValues, List<Types> ListColumnTypes)
+        {
+            try
+            {
+                Int32 ResultVal = 0;
+                string Query = "Select Count(*) From " + TableName + " where `" + KeyColumn + "`=" + KeyColumnValue;    //single quotes will be included KeyColumnValue when its necessary by the calling function itself
+
+                Int32 Count = int.Parse(ExecuteScalar(Query).ToString());
+                if (Count == 0) ResultVal = InsertIntoTable(TableName, ListColumnNames, ListColumnValues, ListColumnTypes);
+                else ResultVal = UpdateTableDetails(TableName, ListColumnNames, ListColumnValues, ListColumnTypes, KeyColumn + " = " + KeyColumnValue);
+
+                return ResultVal;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.DecideWhetherInsertOrUpdate()", ex);
+                throw ex;
+            }
+        }
         public Int32 InsertIntoTable(String TableName, List<String> ListColumnNames, List<String> ListColumnValues, List<Types> ListColumnTypes)
         {
             try
