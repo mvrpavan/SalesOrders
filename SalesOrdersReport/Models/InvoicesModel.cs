@@ -470,23 +470,22 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                InvoiceDetails NewInvoiceDetails = new InvoiceDetails()
-                {
-                    InvoiceDate = InvoiceDate,
-                    InvoiceNumber = InvoiceNumber,
-                    InvoiceStatus = INVOICESTATUS.Created,
-                    GrossInvoiceAmount = ListInvoiceItems.Sum(e => e.Price * e.SaleQty),
-                    DiscountAmount = Discount,
-                    NetInvoiceAmount = ListInvoiceItems.Sum(e => e.Price * e.SaleQty) - Discount,
-                    LastUpdatedDate = DateTime.Now,
-                    CustomerID = CustomerID,
-                    OrderID = OrderID,
-                    ListInvoiceItems = ListInvoiceItems.Select(e => e.Clone()).ToList(),
-                    CreationDate = DateTime.Now,
-                    InvoiceItemCount = ListInvoiceItems.Count(e => e.OrderQty > 0),
-                    DeliveryLineName = DeliveryLineName == "" ? CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CustomerID).LineName : DeliveryLineName,
-                    DeliveryLineID = DeliveryLineName == "" ? -1 : CommonFunctions.ObjCustomerMasterModel.GetLineID(DeliveryLineName),
-                };
+                InvoiceDetails NewInvoiceDetails = new InvoiceDetails();
+                NewInvoiceDetails.InvoiceDate = InvoiceDate;
+                NewInvoiceDetails.InvoiceNumber = InvoiceNumber;
+                NewInvoiceDetails.InvoiceStatus = INVOICESTATUS.Created;
+                NewInvoiceDetails.GrossInvoiceAmount = ListInvoiceItems.Sum(e => e.Price * e.SaleQty);
+                NewInvoiceDetails.DiscountAmount = Discount;
+                NewInvoiceDetails.NetInvoiceAmount = ListInvoiceItems.Sum(e => e.Price * e.SaleQty) - Discount;
+                NewInvoiceDetails.LastUpdatedDate = DateTime.Now;
+                NewInvoiceDetails.CustomerID = CustomerID;
+                NewInvoiceDetails.OrderID = OrderID;
+                NewInvoiceDetails.ListInvoiceItems = ListInvoiceItems.Select(e => e.Clone()).ToList();
+                NewInvoiceDetails.CreationDate = DateTime.Now;
+                NewInvoiceDetails.InvoiceItemCount = ListInvoiceItems.Count(e => e.OrderQty > 0);
+                NewInvoiceDetails.DeliveryLineName = DeliveryLineName == "" ? CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CustomerID).LineName : DeliveryLineName;
+                NewInvoiceDetails.DeliveryLineID = NewInvoiceDetails.DeliveryLineName == "" ? -1 : CommonFunctions.ObjCustomerMasterModel.GetLineID(NewInvoiceDetails.DeliveryLineName);
+
 
                 NewInvoiceDetails.CustomerName = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CustomerID).CustomerName;
                 NewInvoiceDetails.InvoiceID = InsertInvoiceDetails(NewInvoiceDetails);
