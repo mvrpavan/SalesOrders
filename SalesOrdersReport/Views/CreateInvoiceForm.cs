@@ -285,6 +285,12 @@ namespace SalesOrdersReport.Views
                         }
                     }
                 }
+
+                if (cmbBxInvoiceDeliveryLine.SelectedIndex > 0)
+                {
+                    CurrInvoiceDetails.CurrInvoiceDetails.DeliveryLineName = cmbBxInvoiceDeliveryLine.SelectedItem.ToString();
+                    CurrInvoiceDetails.CurrInvoiceDetails.DeliveryLineID = CommonFunctions.ObjCustomerMasterModel.GetLineID(CurrInvoiceDetails.CurrInvoiceDetails.DeliveryLineName);
+                }
                 CurrInvoiceDetails.CurrInvoiceDetails.InvoiceItemCount = CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems.Count;
                 CurrInvoiceDetails.OrderItemCount = CurrInvoiceDetails.CurrInvoiceDetails.InvoiceItemCount;
 
