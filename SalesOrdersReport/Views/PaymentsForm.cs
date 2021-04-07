@@ -20,6 +20,7 @@ namespace SalesOrdersReport.Views
         List<string> ListPaymentModeNames;
         List<Type> ListPaymentModeColTypes;
         List<int> ListEditedInvoiceIDs = new List<int>();
+        List<string> ListCustomerNamesAlreadyInGrid = new List<string>();
         Boolean ValueChanged = false;
         public PaymentsForm()
         {
@@ -62,6 +63,7 @@ namespace SalesOrdersReport.Views
                 toolTipForEPaymentSummaryxportToExcel.ReshowDelay = 500;
                 toolTipForEPaymentSummaryxportToExcel.SetToolTip(btnPaymentSummaryExportToExcel, "Export To Excel");
                 toolTipForEPaymentSummaryxportToExcel.SetToolTip(btnSaveSummaryDB, "Save Changes To DB");
+                toolTipForEPaymentSummaryxportToExcel.SetToolTip(btnAddPaymentSummaryRow, "Add Payment Summary Row");
                 LoadInputPaymentSummaryGridView();
                 List<string> ListTempNames = new List<string>() { "All" };
                 ListTempNames.AddRange(CommonFunctions.ObjCustomerMasterModel.GetAllLineNames());
@@ -160,7 +162,7 @@ namespace SalesOrdersReport.Views
                     dtPaymentSummary.Columns.Add(new DataColumn(ListColumns[i], ListColumnsType[i]));
                 }
                 DataTable tmpdt = ObjPaymentsModel.GetPaymentSummaryTable(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
-
+                ListCustomerNamesAlreadyInGrid = new List<string>();
                 for (int i = 0; i < tmpdt.Rows.Count; i++)
                 {
                     DataRow dr = tmpdt.Rows[i];
@@ -171,9 +173,10 @@ namespace SalesOrdersReport.Views
                     ArrRowItems[col++] = dr["LINENAME"].ToString();
                     ArrRowItems[col++] = dr["INVOICE#"].ToString();
                     ArrRowItems[col++] = dr["CUSTOMERNAME"].ToString();
+                    ListCustomerNamesAlreadyInGrid.Add(dr["CUSTOMERNAME"].ToString());
                     ArrRowItems[col++] = dr["SALE"].ToString();
-                    ArrRowItems[col++] = (dr["CANCEL"].ToString()==null || dr["CANCEL"].ToString()=="")?"0": dr["CANCEL"].ToString();  //cancel
-                    ArrRowItems[col++] = (dr["RETURN"].ToString()==null|| dr["RETURN"].ToString()=="")?"0": dr["RETURN"].ToString();   //return
+                    ArrRowItems[col++] = (dr["CANCEL"].ToString() == null || dr["CANCEL"].ToString() == "") ? "0" : dr["CANCEL"].ToString();  //cancel
+                    ArrRowItems[col++] = (dr["RETURN"].ToString() == null || dr["RETURN"].ToString() == "") ? "0" : dr["RETURN"].ToString();   //return
                     ArrRowItems[col++] = dr["DISCOUNT"].ToString();
                     ArrRowItems[col++] = "0";  //total tax
                     ArrRowItems[col++] = dr["NET SALE"].ToString();
@@ -258,7 +261,7 @@ namespace SalesOrdersReport.Views
                 // "Sl#", "InvoiceID", "Line", "Invoice#", "Customer Name", "Sale", "Cancel", "Return", "Discount", "Total Tax", "Net Sale", "OB" };// Cash, UPI, Credit Card, Debit Card, Check};
                 Object[] ArrObjects = dtPaymentSummary.NewRow().ItemArray;
                 ArrObjects[dtPaymentSummary.Columns["Customer Name"].Ordinal] = "Total";
-                List<String> ListSumColumns = new List<String>() { "Sale", "Cancel","Return", "Discount", "Total Tax", "Net Sale" , "OB" };
+                List<String> ListSumColumns = new List<String>() { "Sale", "Cancel", "Return", "Discount", "Total Tax", "Net Sale", "OB" };
                 ListSumColumns.AddRange(ListPaymentModeNames);
                 for (int i = 0; i < ListSumColumns.Count; i++)
                 {
@@ -547,9 +550,10 @@ namespace SalesOrdersReport.Views
                 switch (Mode)
                 {
                     case 1:     //Add Payment
-                        LoadPaymentsGridView(dTimePickerToPayments.Value, dTimePickerToPayments.Value);
+                        LoadPaymentsGridView(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
                         break;
                     case 2:
+                        LoadInputPaymentSummaryGridView((cmbxDeliveryLine.SelectedIndex > 0) ? $"LINE = '{cmbxDeliveryLine.SelectedItem.ToString()}'" : "");
                         break;
                     case 3:     //Reload 
                         break;
@@ -810,7 +814,7 @@ namespace SalesOrdersReport.Views
                 Int32 InvoiceID = Int32.Parse(dgvPaymentSummary["INVOICEID", e.RowIndex].Value.ToString());
                 if (!ListEditedInvoiceIDs.Contains(InvoiceID)) ListEditedInvoiceIDs.Add(InvoiceID);
 
-                if (e.ColumnIndex>=6 && e.ColumnIndex <= 8)
+                if (e.ColumnIndex >= 6 && e.ColumnIndex <= 8)
                 {
                     dgvPaymentSummary["Net Sale", e.RowIndex].Value = Double.Parse(dgvPaymentSummary["SALE", e.RowIndex].Value.ToString()) //- Double.Parse(dgvPaymentSummary[e.ColumnIndex, e.RowIndex].Value.ToString());
                                                                     - Double.Parse(dgvPaymentSummary["DISCOUNT", e.RowIndex].Value.ToString())
@@ -868,7 +872,7 @@ namespace SalesOrdersReport.Views
                 
                     for (int j = 0; j < dgvPaymentSummary.Rows.Count; j++)
                     {
-                        if (dgvPaymentSummary["Cancel", j].Value.ToString()!="0" || dgvPaymentSummary["Return", j].Value.ToString() != "0"|| dgvPaymentSummary["Discount", j].Value.ToString() != "0"
+                    if (dgvPaymentSummary["Cancel", j].Value.ToString() != "0" || dgvPaymentSummary["Return", j].Value.ToString() != "0" || dgvPaymentSummary["Discount", j].Value.ToString() != "0"
                         || CheckPaymentsModeColValue(dgvPaymentSummary.Rows[j]))
                         {
                             PaymentDetails tmpPaymentDetails = new PaymentDetails();
@@ -900,7 +904,7 @@ namespace SalesOrdersReport.Views
 
                                 string AmountReceived = dgvPaymentSummary[ListPaymentModeNames[mk], j].Value.ToString().Trim();
                                 string Balance = (dgvPaymentSummary["OB", j].Value.ToString() == string.Empty) ? "0.0" : dgvPaymentSummary["OB", j].Value.ToString();
-                                tmpCustomerAccountHistoryDetails.AmountReceived= tmpPaymentDetails.Amount = (AmountReceived == string.Empty) ? 0.0 : Double.Parse(AmountReceived);
+                            tmpCustomerAccountHistoryDetails.AmountReceived = tmpPaymentDetails.Amount = (AmountReceived == string.Empty) ? 0.0 : Double.Parse(AmountReceived);
                                 if (tmpCustomerAccountHistoryDetails.AmountReceived != 0.0)
                                 {
                                     tmpPaymentDetails.PaymentModeID = ObjPaymentsModel.GetPaymentModeDetails(ListPaymentModeNames[mk]).PaymentModeID;
@@ -1103,7 +1107,7 @@ namespace SalesOrdersReport.Views
             {
                 if (ListEditedInvoiceIDs.Count == 0)
                 {
-                    DialogResult dialogResult = MessageBox.Show(this, "No changes have been made to Payment Summary.Pls Edit atleast one column value to Save", "No Change In Payments",MessageBoxButtons.OK);
+                    DialogResult dialogResult = MessageBox.Show(this, "No changes have been made to Payment Summary.Pls Edit atleast one column value to Save", "No Change In Payments", MessageBoxButtons.OK);
                     return;
                 }
 
@@ -1166,7 +1170,7 @@ namespace SalesOrdersReport.Views
                                 ListTypes.Add(Types.Number);
                             }
 
-                            int ResultVal = ObjMySQLHelper.DecideWhetherInsertOrUpdate("InvoiceID",ListEditedInvoiceIDs[i].ToString(), "TempPaymentsSummary", ListColumnNames, ListColumnValues, ListTypes);
+                            int ResultVal = ObjMySQLHelper.DecideWhetherInsertOrUpdate("InvoiceID", ListEditedInvoiceIDs[i].ToString(), "TempPaymentsSummary", ListColumnNames, ListColumnValues, ListTypes);
                             if (ResultVal <= 0)
                             {
                                 ListUnsuccessfulID.Add(ListEditedInvoiceIDs[i]);
@@ -1192,10 +1196,27 @@ namespace SalesOrdersReport.Views
                 if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
                     dtGridViewPaymentsSummaryTotal.HorizontalScrollingOffset = e.NewValue;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                CommonFunctions.ShowErrorDialog($"{this}.dgvPaymentSummary_Scroll()", ex);
+            }
+        }
 
-                throw;
+        private void btnAddPaymentSummaryRow_Click(object sender, EventArgs e)
+            {
+            try
+            {
+                //List<string> ListOfCustomersInGrid = dgvPaymentSummary.Rows
+                //   .OfType<DataGridViewRow>()
+                //   .Where(x => x.Cells["Customer Name"].Value != null)
+                //   .Select(x => x.Cells["Customer Name"].Value.ToString())
+                //   .ToList();
+
+                CommonFunctions.ShowDialog(new AddPaymentSummaryForm(UpdatePaymentsOnClose, ListCustomerNamesAlreadyInGrid), this);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnAddPaymentSummaryRow_Click()", ex);
             }
         }
     }

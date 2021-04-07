@@ -104,10 +104,10 @@ namespace SalesOrdersReport.Views
                 cmbxcreatePaymentStaffName.SelectedIndex = 0;
                 if (this.Text == "Update Payment")
                 {
-                    cmbxCreatePaymentNumber.SelectedItem = ObjPaymentDeatilsToBeEdited.StaffName;
+                    cmbxCreatePaymentNumber.SelectedItem = ObjPaymentDeatilsToBeEdited.InvoiceNumber;
                     txtCreatePaymentDesc.Text = ObjPaymentDeatilsToBeEdited.Description;
                 }
-                else cmbxCreatePaymentNumber.SelectedItem = 0;
+                else cmbxCreatePaymentNumber.SelectedIndex = 0;
                 cmbxCreatePaymentPaymentAgainst.SelectedIndex = 0;
                 txtbxCreatePaymentAmount.Text = "0";
                 cmbBoxPaymentModes.SelectedIndex = 0;
@@ -525,7 +525,7 @@ namespace SalesOrdersReport.Views
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"{this}.cmbxCreatePaymentCustomerNames_SelectedIndexChanged()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.FillPaymentAgainst()", ex);
             }
         }
         private void cmbxCreatePaymentPaymentAgainst_SelectedIndexChanged(object sender, EventArgs e)
