@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreatePOSBillForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.lblSelectName = new System.Windows.Forms.Label();
             this.cmbBoxCustomers = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -92,6 +92,9 @@
             this.Column14 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.panelOrderControls = new System.Windows.Forms.Panel();
             this.btnSaveBill = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtBoxBarcode = new System.Windows.Forms.TextBox();
+            this.btnSearchBarcode = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxLoading)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -204,7 +207,7 @@
             this.btnCancelChanges.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancelChanges.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelChanges.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnCancelChanges.Location = new System.Drawing.Point(842, 234);
+            this.btnCancelChanges.Location = new System.Drawing.Point(842, 237);
             this.btnCancelChanges.Name = "btnCancelChanges";
             this.btnCancelChanges.Size = new System.Drawing.Size(89, 38);
             this.btnCancelChanges.TabIndex = 3;
@@ -220,7 +223,7 @@
             this.btnDiscount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDiscount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDiscount.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnDiscount.Location = new System.Drawing.Point(728, 234);
+            this.btnDiscount.Location = new System.Drawing.Point(728, 237);
             this.btnDiscount.Name = "btnDiscount";
             this.btnDiscount.Size = new System.Drawing.Size(108, 38);
             this.btnDiscount.TabIndex = 1;
@@ -237,7 +240,7 @@
             this.btnRemItem.FlatAppearance.BorderSize = 0;
             this.btnRemItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRemItem.Image = ((System.Drawing.Image)(resources.GetObject("btnRemItem.Image")));
-            this.btnRemItem.Location = new System.Drawing.Point(659, 73);
+            this.btnRemItem.Location = new System.Drawing.Point(659, 75);
             this.btnRemItem.Name = "btnRemItem";
             this.btnRemItem.Size = new System.Drawing.Size(30, 27);
             this.btnRemItem.TabIndex = 4;
@@ -252,7 +255,7 @@
             this.btnItemDiscount.FlatAppearance.BorderSize = 0;
             this.btnItemDiscount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnItemDiscount.Image = ((System.Drawing.Image)(resources.GetObject("btnItemDiscount.Image")));
-            this.btnItemDiscount.Location = new System.Drawing.Point(659, 103);
+            this.btnItemDiscount.Location = new System.Drawing.Point(659, 105);
             this.btnItemDiscount.Name = "btnItemDiscount";
             this.btnItemDiscount.Size = new System.Drawing.Size(30, 27);
             this.btnItemDiscount.TabIndex = 4;
@@ -268,7 +271,7 @@
             this.btnSelectAllToRemove.FlatAppearance.BorderSize = 0;
             this.btnSelectAllToRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSelectAllToRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectAllToRemove.Image")));
-            this.btnSelectAllToRemove.Location = new System.Drawing.Point(659, 40);
+            this.btnSelectAllToRemove.Location = new System.Drawing.Point(659, 42);
             this.btnSelectAllToRemove.Name = "btnSelectAllToRemove";
             this.btnSelectAllToRemove.Size = new System.Drawing.Size(30, 27);
             this.btnSelectAllToRemove.TabIndex = 4;
@@ -283,7 +286,7 @@
             this.btnAddItem.FlatAppearance.BorderSize = 0;
             this.btnAddItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddItem.Image = ((System.Drawing.Image)(resources.GetObject("btnAddItem.Image")));
-            this.btnAddItem.Location = new System.Drawing.Point(659, 60);
+            this.btnAddItem.Location = new System.Drawing.Point(659, 61);
             this.btnAddItem.Name = "btnAddItem";
             this.btnAddItem.Size = new System.Drawing.Size(30, 27);
             this.btnAddItem.TabIndex = 4;
@@ -298,7 +301,7 @@
             this.btnSelectAll.FlatAppearance.BorderSize = 0;
             this.btnSelectAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSelectAll.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectAll.Image")));
-            this.btnSelectAll.Location = new System.Drawing.Point(659, 27);
+            this.btnSelectAll.Location = new System.Drawing.Point(659, 28);
             this.btnSelectAll.Name = "btnSelectAll";
             this.btnSelectAll.Size = new System.Drawing.Size(30, 27);
             this.btnSelectAll.TabIndex = 4;
@@ -316,7 +319,7 @@
             this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(9, 576);
+            this.label10.Location = new System.Drawing.Point(9, 612);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(55, 16);
             this.label10.TabIndex = 13;
@@ -327,7 +330,7 @@
             this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatus.Location = new System.Drawing.Point(70, 576);
+            this.lblStatus.Location = new System.Drawing.Point(70, 612);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(51, 16);
             this.lblStatus.TabIndex = 13;
@@ -389,7 +392,7 @@
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnClose.Location = new System.Drawing.Point(937, 234);
+            this.btnClose.Location = new System.Drawing.Point(937, 237);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(99, 38);
             this.btnClose.TabIndex = 4;
@@ -559,7 +562,7 @@
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.lblCustomerDetails);
             this.panel2.Controls.Add(this.label9);
-            this.panel2.Location = new System.Drawing.Point(728, 278);
+            this.panel2.Location = new System.Drawing.Point(728, 284);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(308, 157);
             this.panel2.TabIndex = 9;
@@ -593,7 +596,7 @@
             this.btnCreateBill.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCreateBill.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCreateBill.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnCreateBill.Location = new System.Drawing.Point(728, 190);
+            this.btnCreateBill.Location = new System.Drawing.Point(728, 193);
             this.btnCreateBill.Name = "btnCreateBill";
             this.btnCreateBill.Size = new System.Drawing.Size(149, 38);
             this.btnCreateBill.TabIndex = 0;
@@ -626,8 +629,8 @@
             this.splitContainer1.Panel2.Controls.Add(this.btnItemDiscount);
             this.splitContainer1.Panel2.Controls.Add(this.btnRemItem);
             this.splitContainer1.Panel2.Controls.Add(this.dtGridViewInvOrdProdList);
-            this.splitContainer1.Size = new System.Drawing.Size(722, 432);
-            this.splitContainer1.SplitterDistance = 207;
+            this.splitContainer1.Size = new System.Drawing.Size(722, 438);
+            this.splitContainer1.SplitterDistance = 209;
             this.splitContainer1.TabIndex = 7;
             // 
             // dtGridViewProdListForSelection
@@ -647,22 +650,22 @@
             this.PriceCol,
             this.QuantityCol,
             this.SelectCol});
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle7.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dtGridViewProdListForSelection.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dtGridViewProdListForSelection.DefaultCellStyle = dataGridViewCellStyle5;
             this.dtGridViewProdListForSelection.Location = new System.Drawing.Point(3, 3);
             this.dtGridViewProdListForSelection.MultiSelect = false;
             this.dtGridViewProdListForSelection.Name = "dtGridViewProdListForSelection";
             this.dtGridViewProdListForSelection.RowTemplate.Height = 30;
             this.dtGridViewProdListForSelection.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.dtGridViewProdListForSelection.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dtGridViewProdListForSelection.Size = new System.Drawing.Size(650, 191);
+            this.dtGridViewProdListForSelection.Size = new System.Drawing.Size(650, 193);
             this.dtGridViewProdListForSelection.TabIndex = 0;
             this.dtGridViewProdListForSelection.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewProdListForSelection_CellContentClick);
             this.dtGridViewProdListForSelection.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewProdListForSelection_CellEndEdit);
@@ -727,22 +730,22 @@
             this.Column11,
             this.Column12,
             this.Column14});
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.Padding = new System.Windows.Forms.Padding(1);
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dtGridViewInvOrdProdList.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dtGridViewInvOrdProdList.DefaultCellStyle = dataGridViewCellStyle6;
             this.dtGridViewInvOrdProdList.Location = new System.Drawing.Point(3, 6);
             this.dtGridViewInvOrdProdList.MultiSelect = false;
             this.dtGridViewInvOrdProdList.Name = "dtGridViewInvOrdProdList";
             this.dtGridViewInvOrdProdList.RowTemplate.Height = 30;
             this.dtGridViewInvOrdProdList.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.dtGridViewInvOrdProdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dtGridViewInvOrdProdList.Size = new System.Drawing.Size(650, 204);
+            this.dtGridViewInvOrdProdList.Size = new System.Drawing.Size(650, 208);
             this.dtGridViewInvOrdProdList.TabIndex = 0;
             this.dtGridViewInvOrdProdList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewInvOrdProdList_CellContentClick);
             this.dtGridViewInvOrdProdList.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtGridViewInvOrdProdList_CellEndEdit);
@@ -800,9 +803,9 @@
             this.panelOrderControls.Controls.Add(this.btnCancelChanges);
             this.panelOrderControls.Controls.Add(this.btnClose);
             this.panelOrderControls.Enabled = false;
-            this.panelOrderControls.Location = new System.Drawing.Point(12, 123);
+            this.panelOrderControls.Location = new System.Drawing.Point(12, 153);
             this.panelOrderControls.Name = "panelOrderControls";
-            this.panelOrderControls.Size = new System.Drawing.Size(1055, 441);
+            this.panelOrderControls.Size = new System.Drawing.Size(1055, 447);
             this.panelOrderControls.TabIndex = 12;
             // 
             // btnSaveBill
@@ -812,7 +815,7 @@
             this.btnSaveBill.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSaveBill.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSaveBill.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnSaveBill.Location = new System.Drawing.Point(886, 190);
+            this.btnSaveBill.Location = new System.Drawing.Point(886, 193);
             this.btnSaveBill.Name = "btnSaveBill";
             this.btnSaveBill.Size = new System.Drawing.Size(149, 38);
             this.btnSaveBill.TabIndex = 0;
@@ -821,17 +824,50 @@
             this.btnSaveBill.UseVisualStyleBackColor = false;
             this.btnSaveBill.Click += new System.EventHandler(this.btnSaveBill_Click);
             // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(49, 126);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(96, 20);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "Enter Barcode";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // txtBoxBarcode
+            // 
+            this.txtBoxBarcode.Location = new System.Drawing.Point(151, 123);
+            this.txtBoxBarcode.Name = "txtBoxBarcode";
+            this.txtBoxBarcode.Size = new System.Drawing.Size(212, 20);
+            this.txtBoxBarcode.TabIndex = 13;
+            this.txtBoxBarcode.TextChanged += new System.EventHandler(this.txtBoxBarcode_TextChanged);
+            // 
+            // btnSearchBarcode
+            // 
+            this.btnSearchBarcode.FlatAppearance.BorderSize = 0;
+            this.btnSearchBarcode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearchBarcode.Image = global::SalesOrdersReport.Properties.Resources.Search_icon;
+            this.btnSearchBarcode.Location = new System.Drawing.Point(369, 120);
+            this.btnSearchBarcode.Name = "btnSearchBarcode";
+            this.btnSearchBarcode.Size = new System.Drawing.Size(22, 23);
+            this.btnSearchBarcode.TabIndex = 15;
+            this.toolTip1.SetToolTip(this.btnSearchBarcode, "Search Barcode");
+            this.btnSearchBarcode.UseVisualStyleBackColor = true;
+            this.btnSearchBarcode.Click += new System.EventHandler(this.btnSearchBarcode_Click);
+            // 
             // CreatePOSBillForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1079, 601);
+            this.ClientSize = new System.Drawing.Size(1079, 637);
+            this.Controls.Add(this.btnSearchBarcode);
             this.Controls.Add(this.btnAddCustomer);
             this.Controls.Add(this.picBoxLoading);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.label10);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.txtBoxBarcode);
             this.Controls.Add(this.txtBoxInvOrdNumber);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.dtTmPckrInvOrdDate);
@@ -931,5 +967,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column14;
         private System.Windows.Forms.Button btnSaveBill;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox txtBoxBarcode;
+        private System.Windows.Forms.Button btnSearchBarcode;
     }
 }

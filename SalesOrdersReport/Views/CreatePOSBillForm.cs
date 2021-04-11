@@ -531,6 +531,7 @@ namespace SalesOrdersReport.Views
                                 picBoxLoading.Visible = false;
                                 cmbBoxProdCat.Focus();
                                 cmbBoxProdCat.SelectedIndex = 0;
+                                txtBoxBarcode.Focus();
                             }
                         }
                         else
@@ -539,6 +540,7 @@ namespace SalesOrdersReport.Views
                             picBoxLoading.Visible = false;
                             cmbBoxProdCat.Focus();
                             cmbBoxProdCat.SelectedIndex = 0;
+                            txtBoxBarcode.Focus();
                         }
                         break;
                     case 3:     //Update or Create Bill
@@ -793,6 +795,40 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.btnAddItem_Click()", ex);
+            }
+        }
+
+        private void AddItemForProductID(Int32 ProductID)
+        {
+            try
+            {
+                ProductDetails tmpProductDetails = ObjProductMasterModel.GetProductDetails(ProductID);
+
+                Object[] row = new Object[dtGridViewInvOrdProdList.Columns.Count];
+                row[CategoryColIndex] = tmpProductDetails.CategoryName;
+                row[ItemColIndex] = tmpProductDetails.ItemName;
+                row[PriceColIndex] = ObjProductMasterModel.GetPriceForProduct(tmpProductDetails.ItemName, CurrCustomerDetails.PriceGroupIndex);
+                row[ItemSelectionSelectColIndex] = false;
+                row[SaleQtyColIndex] = 1;
+
+                if (!DictItemsSelected.ContainsKey(row[ItemColIndex].ToString()))
+                {
+                    Int32 RowIndex = dtGridViewInvOrdProdList.Rows.Add(row);
+                    DictItemsSelected.Add(row[ItemColIndex].ToString(), dtGridViewInvOrdProdList.Rows[RowIndex]);
+                }
+                else
+                {
+                    DictItemsSelected[row[ItemColIndex].ToString()].Cells[SaleQtyColIndex].Value = Double.Parse(DictItemsSelected[row[ItemColIndex].ToString()].Cells[SaleQtyColIndex].Value.ToString()) + Double.Parse(row[SaleQtyColIndex].ToString());
+                }
+
+                dtGridViewProdListForSelection.CommitEdit(DataGridViewDataErrorContexts.Commit);
+
+                UpdateSummaryDetails();
+                txtBoxBarcode.Focus();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.AddItemForProductID()", ex);
             }
         }
 
@@ -1113,14 +1149,13 @@ namespace SalesOrdersReport.Views
             {
                 CommonFunctions.ShowErrorDialog($"{this}.cmbBoxPhoneNumbers_SelectedIndexChanged()", ex);
             }
-
         }
 
         private void btnAddCustomer_Click(object sender, EventArgs e)
         {
             try
             {
-                CommonFunctions.ShowDialog(new CreateCustomerForm(null, UpdateCustomersOnClose, true), this);
+                CommonFunctions.ShowDialog(new CreateCustomerForm(null, UpdateFormOnClose, true), this);
             }
             catch (Exception ex)
             {
@@ -1128,7 +1163,7 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void UpdateCustomersOnClose(Int32 Mode, object ObjAddUpdated)
+        private void UpdateFormOnClose(Int32 Mode, object ObjAddUpdated)
         {
             try
             {
@@ -1169,6 +1204,9 @@ namespace SalesOrdersReport.Views
                         cmbBoxPhoneNumbers.SelectedIndexChanged += cmbBoxPhoneNumbers_SelectedIndexChanged;
                         cmbBoxCustomers.SelectedIndex = ListCustomerNames.FindIndex(e => e == tmpCustomerDetails.CustomerName);
                         cmbBoxPhoneNumbers.SelectedIndex = ListCustomerPhoneNumbers.FindIndex(e => e == tmpCustomerDetails.PhoneNo);
+                        break;
+                    case 2:         //Add Product for Barcode
+                        AddItemForProductID((Int32)ObjAddUpdated);
                         break;
                     default:
                         break;
@@ -1422,6 +1460,41 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.btnSaveBill_Click()", ex);
+            }
+        }
+
+        private void txtBoxBarcode_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                String Barcode = txtBoxBarcode.Text.Trim();
+                if (String.IsNullOrEmpty(Barcode)) return;
+
+                List<Int32> ListProductIDs = ObjProductMasterModel.GetProductIDListForBarcode(Barcode);
+                if (ListProductIDs == null || ListProductIDs.Count == 0) return;
+
+                if (ListProductIDs.Count > 0)
+                {
+                    //Display a Form to let user to select one of the Listed Products
+                    CommonFunctions.ShowDialog(new BarcodeProductSelectionForm(txtBoxBarcode.Text, UpdateFormOnClose), this);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.txtBoxBarcode_TextChanged()", ex);
+            }
+        }
+
+        private void btnSearchBarcode_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //Display a Form to let user to select one of the Listed Products
+                CommonFunctions.ShowDialog(new BarcodeProductSelectionForm(null, UpdateFormOnClose), this);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnSearchBarcode_Click()", ex);
             }
         }
     }

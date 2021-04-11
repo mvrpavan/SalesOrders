@@ -485,13 +485,13 @@ namespace SalesOrdersReport.Views
                 DataTable dtProducts = new DataTable();
                 String[] ArrColumns = new String[] { "ID", "Product SKU", "Name", "SortName", "Description", "Category", "Purchase Price", "Wholesale Price",
                                                 "Retail Price", "Max. Retail Price", "Units", "Current Stock", "ReOrder Stock Level",
-                                                "ReOrder Stock Qty", "Vendor Name", "HSN Code", "Active" };
+                                                "ReOrder Stock Qty", "Vendor Name", "HSN Code", "Barcode", "Active" };
                 Type[] ArrColumnsType = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeString,
                                                     CommonFunctions.TypeString, CommonFunctions.TypeString, CommonFunctions.TypeString,
                                                     CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble,
                                                     CommonFunctions.TypeDouble, CommonFunctions.TypeString, CommonFunctions.TypeString,
                                                     CommonFunctions.TypeString, CommonFunctions.TypeString, CommonFunctions.TypeString,
-                                                    CommonFunctions.TypeString, CommonFunctions.TypeString };
+                                                    CommonFunctions.TypeString, CommonFunctions.TypeString, CommonFunctions.TypeString };
                 for (int i = 0; i < ArrColumns.Length; i++)
                 {
                     dtProducts.Columns.Add(new DataColumn(ArrColumns[i], ArrColumnsType[i]));
@@ -518,6 +518,7 @@ namespace SalesOrdersReport.Views
                     ArrRowItems[col++] = (productInventoryDetails.ReOrderStockQty * productInventoryDetails.Units) + " " + productInventoryDetails.UnitsOfMeasurement; ;
                     ArrRowItems[col++] = ListProducts[i].VendorName;
                     ArrRowItems[col++] = ListProducts[i].HSNCode;
+                    ArrRowItems[col++] = String.Join(",", ListProducts[i].ArrBarcodes);
                     ArrRowItems[col++] = ListProducts[i].Active.ToString();
 
                     dtProducts.Rows.Add(ArrRowItems);

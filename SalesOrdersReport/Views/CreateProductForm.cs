@@ -110,6 +110,9 @@ namespace SalesOrdersReport.Views
                     txtBoxRetailPrice.Text = tmpProductDetails.RetailPrice.ToString("F");
                     txtBoxMaxRetailPrice.Text = tmpProductDetails.MaxRetailPrice.ToString("F");
 
+                    if (tmpProductDetails.ArrBarcodes.Length > 0)
+                        txtBoxBarcodes.Text = String.Join(",", tmpProductDetails.ArrBarcodes);
+
                     btnOK.Text = "Update and Close";
                     btnOK.Enabled = false;
                     btnCreateUpdateClose.Text = "Update and Close";
@@ -251,6 +254,7 @@ namespace SalesOrdersReport.Views
                     WholesalePrice = Double.Parse(txtBoxWholePrice.Text),
                     RetailPrice = Double.Parse(txtBoxRetailPrice.Text),
                     MaxRetailPrice = Double.Parse(txtBoxMaxRetailPrice.Text),
+                    ArrBarcodes = txtBoxBarcodes.Text.Trim().Split(','),
                     Active = chkBoxIsActive.Checked
                 };
 

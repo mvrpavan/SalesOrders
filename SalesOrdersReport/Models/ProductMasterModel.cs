@@ -22,6 +22,8 @@ namespace SalesOrdersReport.Models
         List<String> ListPriceGroupColumns;
         const String SKUPrefix = "SKU";
         string ProdInvColumnsQueryStr = "ProductInvID, StockName, Inventory, Units, UnitsOfMeasurement, ReOrderStockLevel, ReOrderStockQty, LastPODate, LastUpdateDate, CASE WHEN Active = 1 THEN 'true' ELSE 'false' END as Active";
+        List<BarcodeDetails> ListBarcodeDetails;
+
         public void Initialize()
         {
             try
@@ -33,6 +35,7 @@ namespace SalesOrdersReport.Models
                 ListHSNCodeDetails = new List<HSNCodeDetails>();
                 ListTaxGroupDetails = new List<TaxGroupDetails>();
                 ListPriceGroupColumns = new List<String>();
+                ListBarcodeDetails = new List<BarcodeDetails>();
                 DefaultPriceGroupIndex = -1;
 
                 ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
@@ -87,6 +90,7 @@ namespace SalesOrdersReport.Models
                 if (ProductIndex < 0)
                 {
                     ListProducts.Insert(~ProductIndex, ObjProductDetails);
+                    AddToBarcodeDetails(ObjProductDetails.ProductID);
                     //ObjProductDetails.FillMissingPricesForPriceGroups(ListPriceGroups);
                 }
             }
@@ -232,11 +236,13 @@ namespace SalesOrdersReport.Models
                     ObjProductDetails.Active = (Int32.Parse(dtRow["Active"].ToString()) == 1);
                     ObjProductDetails.AddedDate = DateTime.Parse(dtRow["AddedDate"].ToString());
                     ObjProductDetails.LastUpdateDate = DateTime.Parse(dtRow["LastUpdateDate"].ToString());
+                    ObjProductDetails.ArrBarcodes = ((DBNull.Value == dtRow["Barcode"]) ? new String[0] : dtRow["Barcode"].ToString().Split('|'));
                     AddProductToCache(ObjProductDetails);
                 }
 
                 UpdateStockProductIndexes();
                 UpdateHSNProductIndexes();
+                //UpdateBarcodeIndexes();
             }
             catch (Exception ex)
             {
@@ -500,6 +506,91 @@ namespace SalesOrdersReport.Models
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("ProductMasterModel.UpdateHSNProductIndexes()", ex);
+            }
+        }
+
+        //void UpdateBarcodeIndexes()
+        //{
+        //    try
+        //    {
+        //        ListBarcodeDetails.Clear();
+
+        //        for (int i = 0; i < ListProducts.Count; i++)
+        //        {
+        //            foreach (var Barcode in ListProducts[i].ArrBarcodes)
+        //            {
+        //                AddToBarcodeDetails(Barcode, ListProducts[i].ProductID);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CommonFunctions.ShowErrorDialog($"{this}.UpdateBarcodeIndexes()", ex);
+        //    }
+        //}
+
+        void AddToBarcodeDetails(Int32 ProductID)
+        {
+            try
+            {
+                ProductDetails tmpProductDetails = GetProductDetails(ProductID);
+                foreach (var Barcode in tmpProductDetails.ArrBarcodes)
+                {
+                    BarcodeDetails ObjBarcodeDetails = new BarcodeDetails();
+                    ObjBarcodeDetails.Barcode = Barcode;
+                    Int32 BarcodeIndex = ListBarcodeDetails.BinarySearch(ObjBarcodeDetails, ObjBarcodeDetails);
+                    if (BarcodeIndex < 0)
+                    {
+                        ListBarcodeDetails.Insert(~BarcodeIndex, ObjBarcodeDetails);
+                        ObjBarcodeDetails.ListProductIDs = new List<Int32>();
+                    }
+                    else
+                    {
+                        ObjBarcodeDetails = ListBarcodeDetails[BarcodeIndex];
+                    }
+                    if (!ObjBarcodeDetails.ListProductIDs.Contains(ProductID)) ObjBarcodeDetails.ListProductIDs.Add(ProductID);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.AddToBarcodeDetails()", ex);
+            }
+        }
+
+        public List<Int32> GetProductIDListForBarcode(String Barcode)
+        {
+            try
+            {
+                BarcodeDetails ObjBarcodeDetails = new BarcodeDetails();
+                ObjBarcodeDetails.Barcode = Barcode;
+
+                Int32 Index = ListBarcodeDetails.BinarySearch(ObjBarcodeDetails, ObjBarcodeDetails);
+                if (Index < 0) return null;
+                //List<Int32> ListProductIDs = new List<Int32>();
+                //foreach (var index in ListBarcodeDetails[Index].ListProductIDs)
+                //{
+                //    ListProductIDs.Add(ListProducts[index].ProductID);
+                //}
+
+                return ListBarcodeDetails[Index].ListProductIDs;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetProductIDListForBarcode()", ex);
+                return null;
+            }
+        }
+
+        public List<String> GetAllBarcodes()
+        {
+            try
+            {
+                return ListBarcodeDetails.Select(e => e.Barcode).ToList();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.GetAllBarcodes()", ex);
+                return null;
             }
         }
 
@@ -1403,12 +1494,13 @@ namespace SalesOrdersReport.Models
                 tmpProductDetails.VendorID = (tmpVendorDetails != null) ? tmpVendorDetails.VendorID : -1;
 
                 Query = "Insert into ProductMaster(ProductSKU, ProductName, Description, CategoryID, Units, UnitsOfMeasurement, " +
-                        "SortName, TaxID, ProductInvID, VendorID, Active, AddedDate, PurchasePrice, WholesalePrice, RetailPrice, MaxRetailPrice)";
+                        "SortName, TaxID, ProductInvID, VendorID, Active, AddedDate, PurchasePrice, WholesalePrice, RetailPrice, MaxRetailPrice, Barcode)";
                 Query += $" Values ('{tmpProductDetails.ProductSKU}', '{tmpProductDetails.ItemName}', '{tmpProductDetails.ProductDesc}', " +
                          $"{tmpProductDetails.CategoryID}, {tmpProductDetails.Units}, '{tmpProductDetails.UnitsOfMeasurement}', " +
                          $"'{tmpProductDetails.SortName}', {tmpProductDetails.TaxID}, {tmpProductDetails.ProductInvID}, {tmpProductDetails.VendorID}, " +
                          $"{(tmpProductDetails.Active ? 1 : 0)}, '{MySQLHelper.GetDateStringForDB(tmpProductDetails.AddedDate)}', " +
-                         $"{tmpProductDetails.PurchasePrice}, {tmpProductDetails.WholesalePrice}, {tmpProductDetails.RetailPrice}, {tmpProductDetails.MaxRetailPrice})";
+                         $"{tmpProductDetails.PurchasePrice}, {tmpProductDetails.WholesalePrice}, {tmpProductDetails.RetailPrice}, {tmpProductDetails.MaxRetailPrice}, " +
+                         $"'{(tmpProductDetails.ArrBarcodes.Length > 0 ? String.Join("|", tmpProductDetails.ArrBarcodes) : "")}')";
                 ObjMySQLHelper.ExecuteNonQuery(Query);
                 ObjMySQLHelper.UpdateIDValue("ProductMaster", tmpProductDetails.ProductSKU);
                 tmpProductDetails.ProductID = ((ListProducts.Count > 0) ? ListProducts.Max(e => e.ProductID) : 0) + 1;
@@ -1502,12 +1594,24 @@ namespace SalesOrdersReport.Models
                 CurProductDetails.RetailPrice = tmpProductDetails.RetailPrice;
                 CurProductDetails.MaxRetailPrice = tmpProductDetails.MaxRetailPrice;
 
+                if (!String.Join("|", CurProductDetails.ArrBarcodes).Equals(String.Join("|", tmpProductDetails.ArrBarcodes)))
+                {
+                    foreach (var Barcode in CurProductDetails.ArrBarcodes)
+                    {
+                        List<Int32> ListProductIDs = GetProductIDListForBarcode(Barcode);
+                        ListProductIDs.Remove(CurProductDetails.ProductID);
+                    }
+                    CurProductDetails.ArrBarcodes = tmpProductDetails.ArrBarcodes;
+                    AddToBarcodeDetails(CurProductDetails.ProductID);
+                }
+
                 String Query = "Update ProductMaster Set ";
                 Query += $" ProductName = '{CurProductDetails.ItemName}', Description = '{CurProductDetails.ProductDesc}', CategoryID = {CurProductDetails.CategoryID}," +
                          $" Units = '{CurProductDetails.Units}', UnitsOfMeasurement = '{CurProductDetails.UnitsOfMeasurement}', SortName = '{CurProductDetails.SortName}'," +
                          $" TaxID = {CurProductDetails.TaxID}, ProductInvID = {CurProductDetails.ProductInvID}, VendorID = {CurProductDetails.VendorID}, Active = {(CurProductDetails.Active ? 1 : 0)}," +
                          $" PurchasePrice = {CurProductDetails.PurchasePrice}, WholesalePrice = {CurProductDetails.WholesalePrice}," +
-                         $" RetailPrice = {CurProductDetails.RetailPrice}, MaxRetailPrice = {CurProductDetails.MaxRetailPrice}";
+                         $" RetailPrice = {CurProductDetails.RetailPrice}, MaxRetailPrice = {CurProductDetails.MaxRetailPrice}," +
+                         $" Barcode = {(CurProductDetails.ArrBarcodes.Length > 0 ? String.Join("|", CurProductDetails.ArrBarcodes) : "")}";
                 Query += $" Where ProductID = {CurProductDetails.ProductID}";
                 ObjMySQLHelper.ExecuteNonQuery(Query);
 

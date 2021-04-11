@@ -83,6 +83,17 @@ namespace SalesOrdersReport
         }
     }
 
+    class BarcodeDetails : IComparer<BarcodeDetails>
+    {
+        public String Barcode;
+        public List<Int32> ListProductIDs;
+
+        public int Compare(BarcodeDetails x, BarcodeDetails y)
+        {
+            return x.Barcode.CompareTo(y.Barcode);
+        }
+    }
+
     class ProductDetails : IComparer<ProductDetails>, IEquatable<ProductDetails>
     {
         public Int32 ProductID, CategoryID, TaxID, ProductInvID, VendorID;
@@ -91,6 +102,7 @@ namespace SalesOrdersReport
         public Int32 StockProductIndex, HSNCodeIndex;
         public DateTime AddedDate, LastUpdateDate;
         public Boolean Active;
+        public String[] ArrBarcodes;
 
         public int Compare(ProductDetails x, ProductDetails y)
         {
@@ -121,6 +133,7 @@ namespace SalesOrdersReport
             {
                 ProductDetails tmpProductDetails = (ProductDetails)this.MemberwiseClone();
                 //tmpProductDetails.ListPrices = this.ListPrices.ToArray();
+                tmpProductDetails.ArrBarcodes = this.ArrBarcodes.ToArray();
 
                 return tmpProductDetails;
             }
@@ -157,7 +170,8 @@ namespace SalesOrdersReport
                    RetailPrice == other.RetailPrice &&
                    MaxRetailPrice == other.MaxRetailPrice &&
                    Units == other.Units &&
-                   Active == other.Active;
+                   Active == other.Active &&
+                   ArrBarcodes == other.ArrBarcodes;
         }
 
         public override int GetHashCode()
@@ -182,6 +196,7 @@ namespace SalesOrdersReport
             hashCode = hashCode * -1521134295 + MaxRetailPrice.GetHashCode();
             hashCode = hashCode * -1521134295 + Units.GetHashCode();
             hashCode = hashCode * -1521134295 + Active.GetHashCode();
+            hashCode = hashCode * -1521134295 + ArrBarcodes.GetHashCode();
             return hashCode;
         }
     }

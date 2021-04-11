@@ -48,6 +48,7 @@
             this.txtBoxStockName = new System.Windows.Forms.TextBox();
             this.cmbBoxStockList = new System.Windows.Forms.ComboBox();
             this.cmbBoxStockMeasurementUnitList = new System.Windows.Forms.ComboBox();
+            this.cmbBoxVendors = new System.Windows.Forms.ComboBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
@@ -57,6 +58,7 @@
             this.label13 = new System.Windows.Forms.Label();
             this.txtBoxStockQty = new System.Windows.Forms.TextBox();
             this.txtBoxStockUnits = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.chkBoxIsActive = new System.Windows.Forms.CheckBox();
             this.btnEditHSNCode = new System.Windows.Forms.Button();
             this.btnAddHSNCode = new System.Windows.Forms.Button();
@@ -79,8 +81,9 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.errorProviderAddProductForm = new System.Windows.Forms.ErrorProvider(this.components);
             this.btnCreateUpdateClose = new System.Windows.Forms.Button();
-            this.label20 = new System.Windows.Forms.Label();
-            this.cmbBoxVendors = new System.Windows.Forms.ComboBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.txtBoxBarcodes = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -115,6 +118,7 @@
             this.groupBox1.Controls.Add(this.btnAddCategory);
             this.groupBox1.Controls.Add(this.cmbBoxHSNCodeList);
             this.groupBox1.Controls.Add(this.cmbBoxMeasurementUnitList);
+            this.groupBox1.Controls.Add(this.txtBoxBarcodes);
             this.groupBox1.Controls.Add(this.txtBoxSortName);
             this.groupBox1.Controls.Add(this.cmbBoxCategoryList);
             this.groupBox1.Controls.Add(this.txtBoxUnits);
@@ -128,10 +132,12 @@
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label22);
+            this.groupBox1.Controls.Add(this.label21);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(536, 528);
+            this.groupBox1.Size = new System.Drawing.Size(536, 551);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Product Details";
@@ -146,7 +152,7 @@
             this.groupBox3.Controls.Add(this.txtBoxMaxRetailPrice);
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.txtBoxPurchasePrice);
-            this.groupBox3.Location = new System.Drawing.Point(7, 414);
+            this.groupBox3.Location = new System.Drawing.Point(7, 441);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(529, 104);
             this.groupBox3.TabIndex = 13;
@@ -240,7 +246,7 @@
             this.groupBox2.Controls.Add(this.txtBoxStockQty);
             this.groupBox2.Controls.Add(this.txtBoxStockUnits);
             this.groupBox2.Controls.Add(this.label20);
-            this.groupBox2.Location = new System.Drawing.Point(6, 225);
+            this.groupBox2.Location = new System.Drawing.Point(6, 252);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(524, 183);
             this.groupBox2.TabIndex = 12;
@@ -303,6 +309,16 @@
             this.cmbBoxStockMeasurementUnitList.Name = "cmbBoxStockMeasurementUnitList";
             this.cmbBoxStockMeasurementUnitList.Size = new System.Drawing.Size(121, 21);
             this.cmbBoxStockMeasurementUnitList.TabIndex = 6;
+            // 
+            // cmbBoxVendors
+            // 
+            this.cmbBoxVendors.CausesValidation = false;
+            this.cmbBoxVendors.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxVendors.FormattingEnabled = true;
+            this.cmbBoxVendors.Location = new System.Drawing.Point(94, 156);
+            this.cmbBoxVendors.Name = "cmbBoxVendors";
+            this.cmbBoxVendors.Size = new System.Drawing.Size(195, 21);
+            this.cmbBoxVendors.TabIndex = 9;
             // 
             // label14
             // 
@@ -380,6 +396,15 @@
             this.txtBoxStockUnits.Size = new System.Drawing.Size(121, 20);
             this.txtBoxStockUnits.TabIndex = 5;
             this.txtBoxStockUnits.Validating += new System.ComponentModel.CancelEventHandler(this.Value_Validating);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(16, 159);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(72, 13);
+            this.label20.TabIndex = 0;
+            this.label20.Text = "Vendor Name";
             // 
             // chkBoxIsActive
             // 
@@ -590,26 +615,34 @@
             this.btnCreateUpdateClose.UseVisualStyleBackColor = true;
             this.btnCreateUpdateClose.Click += new System.EventHandler(this.btnCreateUpdateClose_Click);
             // 
-            // label20
+            // label21
             // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(16, 159);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(72, 13);
-            this.label20.TabIndex = 0;
-            this.label20.Text = "Vendor Name";
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(47, 228);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(47, 13);
+            this.label21.TabIndex = 0;
+            this.label21.Text = "Barcode";
             // 
-            // cmbBoxVendors
+            // txtBoxBarcodes
             // 
-            this.cmbBoxVendors.CausesValidation = false;
-            this.cmbBoxVendors.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBoxVendors.FormattingEnabled = true;
-            this.cmbBoxVendors.Location = new System.Drawing.Point(94, 156);
-            this.cmbBoxVendors.Name = "cmbBoxVendors";
-            this.cmbBoxVendors.Size = new System.Drawing.Size(195, 21);
-            this.cmbBoxVendors.TabIndex = 9;
+            this.txtBoxBarcodes.Location = new System.Drawing.Point(100, 225);
+            this.txtBoxBarcodes.Name = "txtBoxBarcodes";
+            this.txtBoxBarcodes.Size = new System.Drawing.Size(273, 20);
+            this.txtBoxBarcodes.TabIndex = 8;
+            this.txtBoxBarcodes.Validating += new System.ComponentModel.CancelEventHandler(this.Name_Validating);
             // 
-            // AddProductForm
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(388, 228);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(125, 13);
+            this.label22.TabIndex = 0;
+            this.label22.Text = "comma separated values";
+            // 
+            // CreateProductForm
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -621,7 +654,7 @@
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "AddProductForm";
+            this.Name = "CreateProductForm";
             this.Text = "Title";
             this.Shown += new System.EventHandler(this.AddProductForm_Shown);
             this.groupBox1.ResumeLayout(false);
@@ -689,5 +722,8 @@
         private System.Windows.Forms.Button btnEditHSNCode;
         private System.Windows.Forms.ComboBox cmbBoxVendors;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox txtBoxBarcodes;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
     }
 }

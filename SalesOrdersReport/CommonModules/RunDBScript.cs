@@ -383,6 +383,7 @@ namespace SalesOrdersReport.CommonModules
                 TableColumns.Add("TaxID, smallint(5) unsigned DEFAULT NULL");
                 TableColumns.Add("ProductInvID, mediumint unsigned DEFAULT NULL");
                 TableColumns.Add("VendorID, smallint unsigned DEFAULT NULL");
+                TableColumns.Add("Barcode, varchar(200) NULL");
                 TableColumns.Add("Active, tinyint(4) NOT NULL DEFAULT '1'");
                 TableColumns.Add("AddedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP");
                 TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
