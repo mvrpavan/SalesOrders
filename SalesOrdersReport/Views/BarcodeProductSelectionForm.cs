@@ -33,6 +33,7 @@ namespace SalesOrdersReport.Views
                 {
                     //txtBoxBarcode.Focus();
                     cmbBoxBarcodes.Focus();
+                    cmbBoxBarcodes.SelectedIndex = 0;
                 }
                 else
                 {
@@ -86,7 +87,7 @@ namespace SalesOrdersReport.Views
                     return;
                 }
 
-                dtGridViewProducts.Rows.Clear();
+                //dtGridViewProducts.Rows.Clear();
                 dtGridViewProducts.DataSource = dtProducts;
                 dtGridViewProducts.ReadOnly = true;
                 dtGridViewProducts.Columns["ProductID"].Visible = false;
@@ -106,7 +107,7 @@ namespace SalesOrdersReport.Views
             {
                 if (dtGridViewProducts.SelectedRows.Count == 0) return;
 
-                updateFormOnClose(2, Int32.Parse(dtGridViewProducts["ProductID", dtGridViewProducts.SelectedRows[0].Index].ToString()));
+                updateFormOnClose(2, Int32.Parse(dtGridViewProducts["ProductID", dtGridViewProducts.SelectedRows[0].Index].Value.ToString()));
                 btnCancel.PerformClick();
             }
             catch (Exception ex)

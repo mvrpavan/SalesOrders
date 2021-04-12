@@ -1261,6 +1261,8 @@ namespace SalesOrdersReport.Views
 
                 dtGridViewInvOrdProdList.CommitEdit(DataGridViewDataErrorContexts.Commit);
                 UpdateSummaryDetails();
+
+                txtBoxBarcode.Focus();
             }
             catch (Exception ex)
             {
@@ -1336,6 +1338,8 @@ namespace SalesOrdersReport.Views
                 cmbBoxProdCat.Enabled = enable;
                 cmbBoxProduct.Enabled = enable;
                 cmbBoxBillNumber.Enabled = enable;
+                txtBoxBarcode.Enabled = enable;
+                btnSearchBarcode.Enabled = enable;
             }
             catch (Exception ex)
             {
@@ -1473,11 +1477,18 @@ namespace SalesOrdersReport.Views
                 List<Int32> ListProductIDs = ObjProductMasterModel.GetProductIDListForBarcode(Barcode);
                 if (ListProductIDs == null || ListProductIDs.Count == 0) return;
 
-                if (ListProductIDs.Count > 0)
+                if (ListProductIDs.Count > 1)
                 {
                     //Display a Form to let user to select one of the Listed Products
                     CommonFunctions.ShowDialog(new BarcodeProductSelectionForm(txtBoxBarcode.Text, UpdateFormOnClose), this);
                 }
+                else
+                {
+                    AddItemForProductID(ListProductIDs[0]);
+                }
+
+                txtBoxBarcode.Text = "";
+                txtBoxBarcode.Focus();
             }
             catch (Exception ex)
             {

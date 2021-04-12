@@ -64,6 +64,40 @@ namespace SalesOrdersReport.Models
                 g.DrawString("POS#: " + ObjPrintDetails.POSNumber, ItemParticularsFont, Brushes.Black, StartX + 150, StartY + CurrOffset);
 
                 //Print Items
+                List<String> ListTaxGroups = new List<String>();
+                List<List<Int32>> ListTaxGroupItemIndexes = new List<List<Int32>>();
+                List<Tuple<Double, Double, Double, Double>> ListTaxGroupAmounts = new List<Tuple<Double, Double, Double, Double>>();
+                for (int i = 0; i < ObjPrintDetails.ListPrintItemDetails.Count; i++)
+                {
+                    PrintItemDetails tmpItem = ObjPrintDetails.ListPrintItemDetails[i];
+                    String TaxGroup = $"SGST@{tmpItem.SGSTPerc.ToString("N1")}% CGST@{tmpItem.CGSTPerc.ToString("N1")}%";
+                    Int32 Index = ListTaxGroups.BinarySearch(TaxGroup);
+                    if (Index >= 0)
+                    {
+                        ListTaxGroupItemIndexes[Index].Add(i);
+                    }
+                    else
+                    {
+                        ListTaxGroups.Insert(~Index, TaxGroup);
+                        ListTaxGroupItemIndexes.Insert(~Index, new List<Int32>());
+                        ListTaxGroupItemIndexes[~Index].Add(i);
+                    }
+                }
+                for (int i = 0; i < ListTaxGroupItemIndexes.Count; i++)
+                {
+                    Double TotalAmountBeforeTax = 0, TotalSGSTAmount = 0, TotalCGSTAmount = 0, TotalAmountAfterTax = 0;
+                    for (int j = 0; j < ListTaxGroupItemIndexes[i].Count; j++)
+                    {
+                        PrintItemDetails tmpItem = ObjPrintDetails.ListPrintItemDetails[ListTaxGroupItemIndexes[i][j]];
+                        TotalAmountBeforeTax += tmpItem.Amount - (tmpItem.CGSTAmout + tmpItem.SGSTAmout);
+                        TotalSGSTAmount += tmpItem.SGSTAmout;
+                        TotalCGSTAmount += tmpItem.CGSTAmout;
+                        TotalAmountAfterTax += tmpItem.Amount;
+                    }
+                    Tuple<Double, Double, Double, Double> tmpTaxGroupTotal = Tuple.Create(TotalAmountBeforeTax, TotalSGSTAmount, TotalCGSTAmount, TotalAmountAfterTax);
+                    ListTaxGroupAmounts.Add(tmpTaxGroupTotal);
+                }
+
                 CurrOffset += Offset; g.DrawLine(new Pen(Brushes.Black), StartX, StartY + CurrOffset, PaperWidthInPixel - StartX, StartY + CurrOffset);
                 CurrOffset += 2;
                 g.DrawString("HSN", ItemParticularsHeader, Brushes.Black, StartX, StartY + CurrOffset);
@@ -75,20 +109,28 @@ namespace SalesOrdersReport.Models
                 CurrOffset += Offset; g.DrawLine(new Pen(Brushes.Black), StartX, StartY + CurrOffset, PaperWidthInPixel - StartX, StartY + CurrOffset);
                 CurrOffset += 2;
 
-                for (int i = 0; i < ObjPrintDetails.ListPrintItemDetails.Count; i++)
+                for (int j = 0; j < ListTaxGroups.Count; j++)
                 {
-                    PrintItemDetails item = ObjPrintDetails.ListPrintItemDetails[i];
-                    g.DrawString(item.HSNCode, ItemParticularsFont, Brushes.Black, StartX, StartY + CurrOffset);
-                    if (item.ItemName.Length > 22)
-                        g.DrawString(item.ItemName.Substring(0, Math.Min(44, item.ItemName.Length)), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 25, StartY + CurrOffset, 85, 20), stringFormat1);
-                    else
-                        g.DrawString(item.ItemName, ItemParticularsFont, Brushes.Black, StartX + 25, StartY + CurrOffset);
-                    g.DrawString(item.SaleQty.ToString(), ItemParticularsFont, Brushes.Black, StartX + 110, StartY + CurrOffset);
-                    g.DrawString(item.ItemMRP.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 130, StartY + CurrOffset, 35, 10), stringFormat);
-                    g.DrawString(item.ItemRate.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 170, StartY + CurrOffset, 35, 10), stringFormat);
-                    g.DrawString(item.Amount.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 210, StartY + CurrOffset, 35, 10), stringFormat);
-                    if (item.ItemName.Length > 22) CurrOffset += Offset - 2;
+                    g.DrawString((j + 1).ToString(), ItemParticularsFont, Brushes.Black, StartX, StartY + CurrOffset);
+                    g.DrawString(ListTaxGroups[j], ItemParticularsFont, Brushes.Black, StartX + 10, StartY + CurrOffset);
                     CurrOffset += Offset - 2;
+
+                    for (int i = 0; i < ObjPrintDetails.ListPrintItemDetails.Count; i++)
+                    {
+                        if (!ListTaxGroupItemIndexes[j].Contains(i)) continue;
+                        PrintItemDetails item = ObjPrintDetails.ListPrintItemDetails[i];
+                        g.DrawString(item.HSNCode, ItemParticularsFont, Brushes.Black, StartX, StartY + CurrOffset);
+                        if (item.ItemName.Length > 22)
+                            g.DrawString(item.ItemName.Substring(0, Math.Min(44, item.ItemName.Length)), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 25, StartY + CurrOffset, 85, 20), stringFormat1);
+                        else
+                            g.DrawString(item.ItemName, ItemParticularsFont, Brushes.Black, StartX + 25, StartY + CurrOffset);
+                        g.DrawString(item.SaleQty.ToString(), ItemParticularsFont, Brushes.Black, StartX + 110, StartY + CurrOffset);
+                        g.DrawString(item.ItemMRP.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 130, StartY + CurrOffset, 35, 10), stringFormat);
+                        g.DrawString(item.ItemRate.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 170, StartY + CurrOffset, 35, 10), stringFormat);
+                        g.DrawString(item.Amount.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 210, StartY + CurrOffset, 35, 10), stringFormat);
+                        if (item.ItemName.Length > 22) CurrOffset += Offset - 2;
+                        CurrOffset += Offset - 2;
+                    }
                 }
 
                 //Print Totals
@@ -97,20 +139,43 @@ namespace SalesOrdersReport.Models
                 g.DrawString("Items:" + ObjPrintDetails.ListPrintItemDetails.Count, ItemParticularsHeader, Brushes.Black, StartX + 40, StartY + CurrOffset);
                 g.DrawString("Qty:" + ObjPrintDetails.ListPrintItemDetails.Sum(e => e.SaleQty), ItemParticularsHeader, Brushes.Black, StartX + 100, StartY + CurrOffset);
                 g.DrawString("Amt:", ItemParticularsHeader, Brushes.Black, StartX + 180, StartY + CurrOffset);
-                g.DrawString((ObjPrintDetails.GrossAmount + ObjPrintDetails.TotalTaxAmount).ToString("F"), ItemParticularsHeader, Brushes.Black, new RectangleF(StartX + 190, StartY + CurrOffset, 55, 10), stringFormat);
+                g.DrawString(ObjPrintDetails.GrossAmount.ToString("F"), ItemParticularsHeader, Brushes.Black, new RectangleF(StartX + 190, StartY + CurrOffset, 55, 10), stringFormat);
                 CurrOffset += Offset; g.DrawLine(new Pen(Brushes.Black), StartX, StartY + CurrOffset, PaperWidthInPixel - StartX, StartY + CurrOffset);
                 CurrOffset += 2;
                 g.DrawString("Discount:", ItemParticularsHeader, Brushes.Black, StartX + 170, StartY + CurrOffset);
                 g.DrawString(ObjPrintDetails.DiscountAmount.ToString("F"), ItemParticularsHeader, Brushes.Black, new RectangleF(StartX + 190, StartY + CurrOffset, 55, 10), stringFormat);
                 CurrOffset += Offset;
+                //g.DrawString("Tax Amount:", ItemParticularsHeader, Brushes.Black, StartX + 170, StartY + CurrOffset);
+                //g.DrawString(ObjPrintDetails.TotalTaxAmount.ToString("F"), ItemParticularsHeader, Brushes.Black, new RectangleF(StartX + 190, StartY + CurrOffset, 55, 10), stringFormat);
+                //CurrOffset += Offset;
                 g.DrawString("Net Total:", ItemParticularsHeader, Brushes.Black, StartX + 170, StartY + CurrOffset);
                 g.DrawString(ObjPrintDetails.NetAmount.ToString("F"), ItemParticularsHeader, Brushes.Black, new RectangleF(StartX + 190, StartY + CurrOffset, 55, 10), stringFormat);
                 CurrOffset += Offset; g.DrawLine(new Pen(Brushes.Black), StartX, StartY + CurrOffset, PaperWidthInPixel - StartX, StartY + CurrOffset);
                 CurrOffset += 2;
 
+                //Print GST Summary
+                g.DrawString("Sl#", ItemParticularsFont, Brushes.Black, StartX, StartY + CurrOffset);
+                g.DrawString("Amount", ItemParticularsFont, Brushes.Black, StartX + 35, StartY + CurrOffset);
+                g.DrawString("SGST", ItemParticularsFont, Brushes.Black, StartX + 90, StartY + CurrOffset);
+                g.DrawString("CGST", ItemParticularsFont, Brushes.Black, StartX + 140, StartY + CurrOffset);
+                g.DrawString("Total Amount", ItemParticularsFont, Brushes.Black, StartX + 200, StartY + CurrOffset);
+                //CurrOffset += Offset; g.DrawLine(new Pen(Brushes.Black), StartX, StartY + CurrOffset, PaperWidthInPixel - StartX, StartY + CurrOffset);
+                CurrOffset += Offset - 2;
+                for (int i = 0; i < ListTaxGroupAmounts.Count; i++)
+                {
+                    g.DrawString((i + 1).ToString(), ItemParticularsFont, Brushes.Black, StartX, StartY + CurrOffset);
+                    g.DrawString(ListTaxGroupAmounts[i].Item1.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 30, StartY + CurrOffset, 35, 10), stringFormat);
+                    g.DrawString(ListTaxGroupAmounts[i].Item2.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 80, StartY + CurrOffset, 35, 10), stringFormat);
+                    g.DrawString(ListTaxGroupAmounts[i].Item3.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 130, StartY + CurrOffset, 35, 10), stringFormat);
+                    g.DrawString(ListTaxGroupAmounts[i].Item4.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 210, StartY + CurrOffset, 35, 10), stringFormat);
+                    CurrOffset += Offset - 2;
+                }
+                g.DrawLine(new Pen(Brushes.Black), StartX, StartY + CurrOffset, PaperWidthInPixel - StartX, StartY + CurrOffset);
+                CurrOffset += 2;
+
                 //Print Payment Modes
                 g.DrawString("Payment Mode", ItemParticularsFont, Brushes.Black, StartX + 140, StartY + CurrOffset);
-                g.DrawString("Amount", ItemParticularsFont, Brushes.Black, StartX + 210, StartY + CurrOffset);
+                g.DrawString("Amount", ItemParticularsFont, Brushes.Black, StartX + 215, StartY + CurrOffset);
                 CurrOffset += Offset - 2;
                 foreach (var item in ObjPrintDetails.ListPrintPaymentDetails)
                 {

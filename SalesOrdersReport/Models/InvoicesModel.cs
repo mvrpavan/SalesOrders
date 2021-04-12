@@ -1285,7 +1285,7 @@ namespace SalesOrdersReport.Models
                     InvoiceNumber = ObjInvoiceDetails.InvoiceNumber,
                     GrossAmount = ObjInvoiceDetails.GrossInvoiceAmount,
                     DiscountAmount = ObjInvoiceDetails.DiscountAmount,
-                    TotalTaxAmount = 0,
+                    TotalTaxAmount = ObjInvoiceDetails.ListInvoiceItems.Sum(e => e.SGST + e.CGST + e.IGST),
                     NetAmount = ObjInvoiceDetails.NetInvoiceAmount,
                     StaffName = CommonFunctions.ObjUserMasterModel.GetUserDtlsObjBasedOnUsrName(MySQLHelper.GetMySqlHelperObj().CurrentUser).FullName,
                     POSNumber = CommonFunctions.ObjApplicationSettings.POSNumber,
@@ -1304,7 +1304,10 @@ namespace SalesOrdersReport.Models
                         ItemMRP = CommonFunctions.ObjProductMaster.GetPriceForProduct(item.ProductName, 2),
                         ItemRate = item.Price,
                         SaleQty = item.SaleQty,
-                        Tax = 0,
+                        SGSTPerc = item.SGST / item.TaxableValue * 100,
+                        SGSTAmout = item.SGST,
+                        CGSTPerc = item.CGST / item.TaxableValue * 100,
+                        CGSTAmout = item.CGST,
                         Amount = item.Price * item.SaleQty,
                         HSNCode = CommonFunctions.ObjProductMaster.GetProductDetails(item.ProductID).HSNCode
                     });

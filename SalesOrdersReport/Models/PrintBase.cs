@@ -13,7 +13,7 @@ namespace SalesOrdersReport.Models
     class PrintItemDetails
     {
         public String ItemName, HSNCode;
-        public Double SaleQty, ItemMRP, ItemRate, Tax, Amount;
+        public Double SaleQty, ItemMRP, ItemRate, SGSTPerc, SGSTAmout, CGSTAmout, CGSTPerc, Amount;
     }
 
     class PrintPaymentDetails

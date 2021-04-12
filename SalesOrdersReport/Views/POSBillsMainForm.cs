@@ -119,7 +119,8 @@ namespace SalesOrdersReport.Views
                 for (int i = 0; i < dtGridViewBills.Columns.Count; i++)
                 {
                     DataGridViewColumn column = dtGridViewBills.Columns[i];
-                    if (column.Name.Equals("InvoiceID") || column.Name.Equals("OrderID") || column.Name.Equals("CustomerID"))
+                    if (column.Name.Equals("InvoiceID") || column.Name.Equals("OrderID") || column.Name.Equals("CustomerID") 
+                        || column.Name.Equals("Delivery Line") || column.Name.Equals("DeliveryLineID"))
                         column.Visible = false;
 
                     if (ListPaymentModes.Contains(column.Name))
