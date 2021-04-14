@@ -109,6 +109,12 @@
     <Compile Include="Views\BarcodeProductSelectionForm.Designer.cs">
       <DependentUpon>BarcodeProductSelectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\CreateReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CreateReportForm.Designer.cs">
+      <DependentUpon>CreateReportForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\CreateUpdateStockForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -334,6 +340,12 @@
     <Compile Include="Views\PurchaseOrdersMainForm.Designer.cs">
       <DependentUpon>PurchaseOrdersMainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ReportsMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ReportsMainForm.Designer.cs">
+      <DependentUpon>ReportsMainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\VendorsMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -512,6 +524,9 @@
     <EmbeddedResource Include="Views\BarcodeProductSelectionForm.resx">
       <DependentUpon>BarcodeProductSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\CreateReportForm.resx">
+      <DependentUpon>CreateReportForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\CreateUpdateStockForm.resx">
       <DependentUpon>CreateUpdateStockForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -622,6 +637,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\PurchaseOrdersMainForm.resx">
       <DependentUpon>PurchaseOrdersMainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ReportsMainForm.resx">
+      <DependentUpon>ReportsMainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\VendorsMainForm.resx">
       <DependentUpon>VendorsMainForm.cs</DependentUpon>
@@ -761,6 +779,8 @@
     <None Include="Resources\close_40.png" />
     <None Include="Resources\exporttoexcel32.png" />
     <None Include="Resources\save_32.jfif" />
+    <None Include="Resources\background-left-arrow-32.png" />
+    <None Include="Resources\left-arrow.png" />
     <Content Include="SQLScripts\ProductMasterTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

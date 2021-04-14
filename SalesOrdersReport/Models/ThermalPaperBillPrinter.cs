@@ -156,8 +156,8 @@ namespace SalesOrdersReport.Models
                 //Print GST Summary
                 g.DrawString("Sl#", ItemParticularsFont, Brushes.Black, StartX, StartY + CurrOffset);
                 g.DrawString("Amount", ItemParticularsFont, Brushes.Black, StartX + 35, StartY + CurrOffset);
-                g.DrawString("SGST", ItemParticularsFont, Brushes.Black, StartX + 90, StartY + CurrOffset);
-                g.DrawString("CGST", ItemParticularsFont, Brushes.Black, StartX + 140, StartY + CurrOffset);
+                g.DrawString("SGST", ItemParticularsFont, Brushes.Black, StartX + 95, StartY + CurrOffset);
+                g.DrawString("CGST", ItemParticularsFont, Brushes.Black, StartX + 145, StartY + CurrOffset);
                 g.DrawString("Total Amount", ItemParticularsFont, Brushes.Black, StartX + 200, StartY + CurrOffset);
                 //CurrOffset += Offset; g.DrawLine(new Pen(Brushes.Black), StartX, StartY + CurrOffset, PaperWidthInPixel - StartX, StartY + CurrOffset);
                 CurrOffset += Offset - 2;
@@ -165,8 +165,8 @@ namespace SalesOrdersReport.Models
                 {
                     g.DrawString((i + 1).ToString(), ItemParticularsFont, Brushes.Black, StartX, StartY + CurrOffset);
                     g.DrawString(ListTaxGroupAmounts[i].Item1.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 30, StartY + CurrOffset, 35, 10), stringFormat);
-                    g.DrawString(ListTaxGroupAmounts[i].Item2.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 80, StartY + CurrOffset, 35, 10), stringFormat);
-                    g.DrawString(ListTaxGroupAmounts[i].Item3.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 130, StartY + CurrOffset, 35, 10), stringFormat);
+                    g.DrawString(ListTaxGroupAmounts[i].Item2.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 80, StartY + CurrOffset, 38, 10), stringFormat);
+                    g.DrawString(ListTaxGroupAmounts[i].Item3.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 130, StartY + CurrOffset, 38, 10), stringFormat);
                     g.DrawString(ListTaxGroupAmounts[i].Item4.ToString("F"), ItemParticularsFont, Brushes.Black, new RectangleF(StartX + 210, StartY + CurrOffset, 35, 10), stringFormat);
                     CurrOffset += Offset - 2;
                 }

@@ -50,6 +50,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.dateTimePickerParamValue = new System.Windows.Forms.DateTimePicker();
             this.btnReset = new System.Windows.Forms.Button();
+            this.cmbBoxParamValue = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewReportData)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewParams)).BeginInit();
@@ -58,7 +59,7 @@
             // dtGridViewReportData
             // 
             this.dtGridViewReportData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtGridViewReportData.Location = new System.Drawing.Point(12, 275);
+            this.dtGridViewReportData.Location = new System.Drawing.Point(12, 313);
             this.dtGridViewReportData.Name = "dtGridViewReportData";
             this.dtGridViewReportData.Size = new System.Drawing.Size(838, 262);
             this.dtGridViewReportData.TabIndex = 0;
@@ -215,7 +216,7 @@
             this.cmbBoxParamNames.FormattingEnabled = true;
             this.cmbBoxParamNames.Location = new System.Drawing.Point(429, 111);
             this.cmbBoxParamNames.Name = "cmbBoxParamNames";
-            this.cmbBoxParamNames.Size = new System.Drawing.Size(110, 21);
+            this.cmbBoxParamNames.Size = new System.Drawing.Size(161, 21);
             this.cmbBoxParamNames.TabIndex = 4;
             this.cmbBoxParamNames.SelectedIndexChanged += new System.EventHandler(this.cmbBoxParamNames_SelectedIndexChanged);
             // 
@@ -223,7 +224,7 @@
             // 
             this.txtBoxParamValue.Location = new System.Drawing.Point(429, 138);
             this.txtBoxParamValue.Name = "txtBoxParamValue";
-            this.txtBoxParamValue.Size = new System.Drawing.Size(110, 20);
+            this.txtBoxParamValue.Size = new System.Drawing.Size(161, 20);
             this.txtBoxParamValue.TabIndex = 5;
             // 
             // label3
@@ -237,9 +238,9 @@
             // 
             // btnAddParamValue
             // 
-            this.btnAddParamValue.Location = new System.Drawing.Point(545, 136);
+            this.btnAddParamValue.Location = new System.Drawing.Point(429, 221);
             this.btnAddParamValue.Name = "btnAddParamValue";
-            this.btnAddParamValue.Size = new System.Drawing.Size(45, 23);
+            this.btnAddParamValue.Size = new System.Drawing.Size(161, 21);
             this.btnAddParamValue.TabIndex = 6;
             this.btnAddParamValue.Text = "Add";
             this.btnAddParamValue.UseVisualStyleBackColor = true;
@@ -248,14 +249,14 @@
             // dtGridViewParams
             // 
             this.dtGridViewParams.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtGridViewParams.Location = new System.Drawing.Point(599, 102);
+            this.dtGridViewParams.Location = new System.Drawing.Point(596, 102);
             this.dtGridViewParams.Name = "dtGridViewParams";
-            this.dtGridViewParams.Size = new System.Drawing.Size(251, 147);
+            this.dtGridViewParams.Size = new System.Drawing.Size(254, 140);
             this.dtGridViewParams.TabIndex = 7;
             // 
             // btnGenerateReport
             // 
-            this.btnGenerateReport.Location = new System.Drawing.Point(340, 205);
+            this.btnGenerateReport.Location = new System.Drawing.Point(341, 263);
             this.btnGenerateReport.Name = "btnGenerateReport";
             this.btnGenerateReport.Size = new System.Drawing.Size(127, 44);
             this.btnGenerateReport.TabIndex = 8;
@@ -284,7 +285,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(14, 259);
+            this.label5.Location = new System.Drawing.Point(9, 297);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(76, 13);
             this.label5.TabIndex = 3;
@@ -299,7 +300,7 @@
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(508, 205);
+            this.btnReset.Location = new System.Drawing.Point(508, 263);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(82, 44);
             this.btnReset.TabIndex = 8;
@@ -307,11 +308,20 @@
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
+            // cmbBoxParamValue
+            // 
+            this.cmbBoxParamValue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxParamValue.FormattingEnabled = true;
+            this.cmbBoxParamValue.Location = new System.Drawing.Point(429, 194);
+            this.cmbBoxParamValue.Name = "cmbBoxParamValue";
+            this.cmbBoxParamValue.Size = new System.Drawing.Size(161, 21);
+            this.cmbBoxParamValue.TabIndex = 4;
+            // 
             // ReportsMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(862, 549);
+            this.ClientSize = new System.Drawing.Size(862, 587);
             this.Controls.Add(this.dateTimePickerParamValue);
             this.Controls.Add(this.txtBoxReportDesc);
             this.Controls.Add(this.btnReset);
@@ -319,6 +329,7 @@
             this.Controls.Add(this.dtGridViewParams);
             this.Controls.Add(this.btnAddParamValue);
             this.Controls.Add(this.txtBoxParamValue);
+            this.Controls.Add(this.cmbBoxParamValue);
             this.Controls.Add(this.cmbBoxParamNames);
             this.Controls.Add(this.cmbBoxReportName);
             this.Controls.Add(this.label3);
@@ -362,5 +373,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.DateTimePicker dateTimePickerParamValue;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.ComboBox cmbBoxParamValue;
     }
 }

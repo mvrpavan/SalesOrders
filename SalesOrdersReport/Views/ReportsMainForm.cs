@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalesOrdersReport.CommonModules;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,7 +20,15 @@ namespace SalesOrdersReport.Views
 
         private void btnAddReport_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnAddReport_Click()", ex);
+                throw;
+            }
         }
 
         private void btnViewEditReport_Click(object sender, EventArgs e)
