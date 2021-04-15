@@ -2051,6 +2051,7 @@ namespace SalesOrdersReport.Models
                 //Import Vendors
                 if (ArrDataToImport[4])
                 {
+                    DateTime NowDate = DateTime.Now;
                     foreach (DataRow item in dtVendorsToImport.Rows)
                     {
                         VendorDetails tmpVendorDetails = new VendorDetails()
@@ -2060,7 +2061,9 @@ namespace SalesOrdersReport.Models
                             PhoneNo = item["PhoneNo"].ToString(),
                             GSTIN = item["GSTIN"].ToString(),
                             StateID = CommonFunctions.ObjCustomerMasterModel.GetStateID(item["State"].ToString()),
-                            Active = Boolean.Parse(item["Active"].ToString())
+                            Active = Boolean.Parse(item["Active"].ToString()),
+                            LastUpdateDate = NowDate ,
+                            AddedDate = NowDate
                         };
 
                         if (CommonFunctions.ObjVendorMaster.CreateNewVendor(tmpVendorDetails) == null) ErrorVendorsCount++;
