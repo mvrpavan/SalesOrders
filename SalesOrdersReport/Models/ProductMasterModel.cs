@@ -1500,7 +1500,7 @@ namespace SalesOrdersReport.Models
                          $"'{tmpProductDetails.SortName}', {tmpProductDetails.TaxID}, {tmpProductDetails.ProductInvID}, {tmpProductDetails.VendorID}, " +
                          $"{(tmpProductDetails.Active ? 1 : 0)}, '{MySQLHelper.GetDateStringForDB(tmpProductDetails.AddedDate)}', " +
                          $"{tmpProductDetails.PurchasePrice}, {tmpProductDetails.WholesalePrice}, {tmpProductDetails.RetailPrice}, {tmpProductDetails.MaxRetailPrice}, " +
-                         $"'{(tmpProductDetails.ArrBarcodes.Length > 0 ? String.Join("|", tmpProductDetails.ArrBarcodes) : "")}')";
+                         $"'{((tmpProductDetails.ArrBarcodes!= null && tmpProductDetails.ArrBarcodes.Length > 0) ? String.Join("|", tmpProductDetails.ArrBarcodes) : "")}')";
                 ObjMySQLHelper.ExecuteNonQuery(Query);
                 ObjMySQLHelper.UpdateIDValue("ProductMaster", tmpProductDetails.ProductSKU);
                 tmpProductDetails.ProductID = ((ListProducts.Count > 0) ? ListProducts.Max(e => e.ProductID) : 0) + 1;
@@ -1525,10 +1525,10 @@ namespace SalesOrdersReport.Models
                 if (dtInvDetails.Rows.Count == 0)
                 {
                     //Insert new record
-                    Query = "Insert into ProductInventory(StockName, Inventory, Units, UnitsOfMeasurement, ReOrderStockLevel, ReOrderStockQty)";
+                    Query = "Insert into ProductInventory(StockName, Inventory, Units, UnitsOfMeasurement, ReOrderStockLevel, ReOrderStockQty,LastPODate, LastUpdateDate)";
                     Query += $" Values ('{tmpProductInventoryDetails.StockName}', {tmpProductInventoryDetails.Inventory}," +
                              $"{tmpProductInventoryDetails.Units}, '{tmpProductInventoryDetails.UnitsOfMeasurement}'," +
-                             $"{tmpProductInventoryDetails.ReOrderStockLevel}, {tmpProductInventoryDetails.ReOrderStockQty},{tmpProductInventoryDetails.LastPODate})";
+                             $"{tmpProductInventoryDetails.ReOrderStockLevel}, {tmpProductInventoryDetails.ReOrderStockQty},'{ MySQLHelper.GetDateTimeStringForDB(tmpProductInventoryDetails.LastPODate)}','{ MySQLHelper.GetDateTimeStringForDB(tmpProductInventoryDetails.LastUpdateDate)}')";
                     ObjMySQLHelper.ExecuteNonQuery(Query);
                     //Query = "Select * from ProductInventory Order by StockName";
                     //LoadProductInventory(ObjMySQLHelper.GetQueryResultInDataTable(Query));
@@ -2114,11 +2114,11 @@ namespace SalesOrdersReport.Models
                             tmpProductInventoryDetails.UnitsOfMeasurement = item["UnitsOfMeasurement"].ToString();
                             tmpProductInventoryDetails.ReOrderStockLevel = Double.Parse(item["ReOrderStockLevel"].ToString());
                             tmpProductInventoryDetails.ReOrderStockQty = Double.Parse(item["ReOrderStockQty"].ToString());
-
+                            tmpProductInventoryDetails.LastUpdateDate = DateTime.Now;
                             UpdateProductInventoryDetails(tmpProductInventoryDetails);
                         }
                     }
-
+                    DateTime NowDate = DateTime.Now;
                     foreach (DataRow item in dtProductInventoryToImport.Rows)
                     {
                         ProductInventoryDetails tmpProductInventoryDetails = new ProductInventoryDetails()
@@ -2128,7 +2128,9 @@ namespace SalesOrdersReport.Models
                             Units = Double.Parse(item["Units"].ToString()),
                             UnitsOfMeasurement = item["UnitsOfMeasurement"].ToString(),
                             ReOrderStockLevel = Double.Parse(item["ReOrderStockLevel"].ToString()),
-                            ReOrderStockQty = Double.Parse(item["ReOrderStockQty"].ToString())
+                            ReOrderStockQty = Double.Parse(item["ReOrderStockQty"].ToString()),
+                            LastPODate = NowDate,
+                            LastUpdateDate = NowDate
                         };
 
                         if (AddNewProductInventoryDetails(tmpProductInventoryDetails) == null) ErrorInventoryCount++;
@@ -2196,7 +2198,7 @@ namespace SalesOrdersReport.Models
                             HSNCode = item["HSNCode"].ToString(),
                             StockName = item["StockName"].ToString(),
                             VendorName = item["VendorName"].ToString(),
-                            Active = Boolean.Parse(item["Active"].ToString())
+                            Active = Boolean.Parse(item["Active"].ToString() == "1" ? "true" : "false")
                         };
                         ProductInventoryDetails tmpProductInventoryDetails = GetStockProductDetails(tmpProductDetails.StockName);
 

@@ -257,7 +257,7 @@ namespace SalesOrdersReport.Views
                     ArrBarcodes = txtBoxBarcodes.Text.Trim().Split(','),
                     Active = chkBoxIsActive.Checked
                 };
-
+                DateTime NowDate = DateTime.Now;
                 ProductInventoryDetails tmpProductInventoryDetails = new ProductInventoryDetails()
                 {
                     StockName = tmpProductDetails.StockName,
@@ -266,6 +266,8 @@ namespace SalesOrdersReport.Views
                     UnitsOfMeasurement = cmbBoxStockMeasurementUnitList.SelectedItem.ToString(),
                     ReOrderStockLevel = Double.Parse(txtBoxReOrderLevel.Text),
                     ReOrderStockQty = Double.Parse(txtBoxReOrderQty.Text),
+                    LastUpdateDate = NowDate,
+                    LastPODate = NowDate
                 };
 
                 tmpProductDetails = ObjProductMaster.AddUpdateProductDetails(tmpProductDetails, tmpProductInventoryDetails);

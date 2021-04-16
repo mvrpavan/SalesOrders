@@ -124,7 +124,8 @@ namespace SalesOrdersReport
                 tmpProductInventoryDetails.ReOrderStockLevel = (txtBoxReOrderLevel.Text.Trim() == string.Empty) ? 0 : Double.Parse(txtBoxReOrderLevel.Text.Trim());
                 tmpProductInventoryDetails.ReOrderStockQty = (txtBoxReOrderQty.Text.Trim() == string.Empty) ? 0 : Double.Parse(txtBoxReOrderQty.Text.Trim());
                 tmpProductInventoryDetails.Active = (rdbtnStockActiveNo.Checked == true) ? false : true;
-                tmpProductInventoryDetails.LastPODate = DateTime.Now;
+                tmpProductInventoryDetails.LastPODate = tmpProductInventoryDetails.LastPODate = DateTime.Now;
+                
                 if (this.Text == "Create Stock Product")
                 {
                     if (ObjProductMaster.AddNewProductInventoryDetails(tmpProductInventoryDetails) != null)
