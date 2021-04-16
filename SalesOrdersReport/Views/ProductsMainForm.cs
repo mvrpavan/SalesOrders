@@ -518,7 +518,7 @@ namespace SalesOrdersReport.Views
                     ArrRowItems[col++] = (productInventoryDetails.ReOrderStockQty * productInventoryDetails.Units) + " " + productInventoryDetails.UnitsOfMeasurement; ;
                     ArrRowItems[col++] = ListProducts[i].VendorName;
                     ArrRowItems[col++] = ListProducts[i].HSNCode;
-                    ArrRowItems[col++] = String.Join(",", ListProducts[i].ArrBarcodes);
+                    ArrRowItems[col++] = (ListProducts[i].ArrBarcodes == null) ? "" : String.Join(",", ListProducts[i].ArrBarcodes);
                     ArrRowItems[col++] = ListProducts[i].Active.ToString();
 
                     dtProducts.Rows.Add(ArrRowItems);

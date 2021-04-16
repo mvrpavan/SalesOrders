@@ -175,7 +175,7 @@ namespace SalesOrdersReport.Views
                             ArrOptionsSelected[i] = chkListBoxDataToImport.GetItemChecked(i);
                         }
 
-                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, ArrOptionsSelected, ReportProgress);
+                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, ArrOptionsSelected, ReportProgressFunc);
                         if (Retval == 0)
                         {
                             MessageBox.Show(this, "Importing Products data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
@@ -193,7 +193,7 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case ImportDataTypes.Customers:
-                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgress);
+                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgressFunc);
                         if (Retval == 0)
                         {
                             MessageBox.Show(this, "Importing Customers data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
@@ -206,7 +206,7 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case ImportDataTypes.Payments:
-                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgress);
+                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgressFunc);
                         if (Retval == 0)
                         {
                             MessageBox.Show(this, "Importing Payments data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
@@ -219,7 +219,7 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case ImportDataTypes.Vendors:
-                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgress);
+                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgressFunc);
                         if (Retval == 0)
                         {
                             MessageBox.Show(this, "Importing Vendors data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
@@ -232,7 +232,7 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case ImportDataTypes.Stocks:
-                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgress);
+                        Retval = ImportDataFromFile(txtImportFrmExclFilePath.Text, null, ReportProgressFunc);
                         if (Retval == 0)
                         {
                             MessageBox.Show(this, "Importing Stocks data from File to Database is successful!!!", "Import Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);

@@ -534,6 +534,7 @@ namespace SalesOrdersReport.Models
             try
             {
                 ProductDetails tmpProductDetails = GetProductDetails(ProductID);
+                if (tmpProductDetails.ArrBarcodes == null) return;
                 foreach (var Barcode in tmpProductDetails.ArrBarcodes)
                 {
                     BarcodeDetails ObjBarcodeDetails = new BarcodeDetails();
@@ -1500,7 +1501,7 @@ namespace SalesOrdersReport.Models
                          $"'{tmpProductDetails.SortName}', {tmpProductDetails.TaxID}, {tmpProductDetails.ProductInvID}, {tmpProductDetails.VendorID}, " +
                          $"{(tmpProductDetails.Active ? 1 : 0)}, '{MySQLHelper.GetDateStringForDB(tmpProductDetails.AddedDate)}', " +
                          $"{tmpProductDetails.PurchasePrice}, {tmpProductDetails.WholesalePrice}, {tmpProductDetails.RetailPrice}, {tmpProductDetails.MaxRetailPrice}, " +
-                         $"'{((tmpProductDetails.ArrBarcodes!= null && tmpProductDetails.ArrBarcodes.Length > 0) ? String.Join("|", tmpProductDetails.ArrBarcodes) : "")}')";
+                         $"'{((tmpProductDetails.ArrBarcodes != null && tmpProductDetails.ArrBarcodes.Length > 0) ? String.Join("|", tmpProductDetails.ArrBarcodes) : "")}')";
                 ObjMySQLHelper.ExecuteNonQuery(Query);
                 ObjMySQLHelper.UpdateIDValue("ProductMaster", tmpProductDetails.ProductSKU);
                 tmpProductDetails.ProductID = ((ListProducts.Count > 0) ? ListProducts.Max(e => e.ProductID) : 0) + 1;
@@ -2198,7 +2199,8 @@ namespace SalesOrdersReport.Models
                             HSNCode = item["HSNCode"].ToString(),
                             StockName = item["StockName"].ToString(),
                             VendorName = item["VendorName"].ToString(),
-                            Active = Boolean.Parse(item["Active"].ToString() == "1" ? "true" : "false")
+                            Active = Boolean.Parse(item["Active"].ToString() == "1" ? "true" : "false"),
+                            ArrBarcodes = item["Barcode"].ToString().Split(',').ToArray()
                         };
                         ProductInventoryDetails tmpProductInventoryDetails = GetStockProductDetails(tmpProductDetails.StockName);
 
