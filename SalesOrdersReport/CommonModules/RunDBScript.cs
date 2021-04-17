@@ -132,7 +132,7 @@ namespace SalesOrdersReport.CommonModules
                 //   ObjMySQLHelper.ExecuteNonQuery(Query);
                 //CreateTable(String TableName, List<String> Columns,
                 //Boolean InMemory = false, Boolean DropIfExists = true, Boolean TruncateIfExists = false)
-                List<string> ListTableCol = new List<string>() { "InvoiceID,BIGINT unsigned Not NULL", "InvoiceNumber,varchar(20) NOT NULL", "Cancel, FLOAT DEFAULT 0", "Return, FLOAT DEFAULT 0", "Discount, FLOAT DEFAULT 0", "PRIMARY KEY,InvoiceID" };
+                List<string> ListTableCol = new List<string>() { "InvoiceID,BIGINT unsigned Not NULL", "InvoiceNumber,varchar(20) NOT NULL", "Cancel, FLOAT DEFAULT 0", "Return, FLOAT DEFAULT 0", "Discount, FLOAT DEFAULT 0", "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP", "PRIMARY KEY,InvoiceID" };
                 int val = ObjMySQLHelper.CreateTable("TempPaymentsSummary", ListTableCol, false, false, false);
                 if (val != 1) CommonFunctions.ObjUserMasterModel.AlterTblColBasedOnMultipleRowsFrmAnotherTbl("PaymentModeMaster", "TempPaymentsSummary", "PaymentMode","FLOAT");
             }

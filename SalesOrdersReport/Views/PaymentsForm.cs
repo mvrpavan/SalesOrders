@@ -1212,7 +1212,7 @@ namespace SalesOrdersReport.Views
                 //   .Select(x => x.Cells["Customer Name"].Value.ToString())
                 //   .ToList();
 
-                CommonFunctions.ShowDialog(new AddPaymentSummaryForm(UpdatePaymentsOnClose, ListCustomerNamesAlreadyInGrid), this);
+                CommonFunctions.ShowDialog(new AddPaymentSummaryForm(UpdatePaymentsOnClose, ListCustomerNamesAlreadyInGrid, dTimePickerToPayments.Value), this);
             }
             catch (Exception ex)
             {

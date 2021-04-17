@@ -25,9 +25,9 @@ namespace SalesOrdersReport.Views
         int CurrInvoiceCacheIndex = -1;
         MySQLHelper ObjMySQLHelper;
         List<string> ListCustomerNamesToBeExcluded = new List<string>();
+        DateTime CreationDate = DateTime.MinValue;
 
-
-        public AddPaymentSummaryForm(UpdateOnCloseDel UpdatePaymentOnClose,List<string> ListCustomerNamesAlreadyInGrid)
+        public AddPaymentSummaryForm(UpdateOnCloseDel UpdatePaymentOnClose,List<string> ListCustomerNamesAlreadyInGrid,DateTime ToDate)
         {
             try
             {
@@ -37,6 +37,7 @@ namespace SalesOrdersReport.Views
                 ObjInvoicesModel = new InvoicesModel();
                 ObjInvoicesModel.Initialize();
                 ListCustomerNamesToBeExcluded = ListCustomerNamesAlreadyInGrid;
+                CreationDate = ToDate;
             }
             catch (Exception ex)
             {
@@ -124,6 +125,10 @@ namespace SalesOrdersReport.Views
 
                 ListColumnValues.Add(ListInvoiceDtls[CurrInvoiceCacheIndex].InvoiceNumber.ToString());
                 ListColumnNames.Add("InvoiceNumber");
+                ListTypes.Add(Types.String);
+               
+                ListColumnValues.Add(MySQLHelper.GetDateTimeStringForDB(CreationDate).ToString());
+                ListColumnNames.Add("CreationDate");
                 ListTypes.Add(Types.String);
 
                 int ResultVal = ObjMySQLHelper.InsertIntoTable("TempPaymentsSummary", ListColumnNames, ListColumnValues, ListTypes);

@@ -249,9 +249,9 @@ namespace SalesOrdersReport.Models
                 LoadTempPaymentSummaryTableinDT();
 
                 String WhereConditionQuery = "";
-                if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) WhereConditionQuery = "  (a.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "')";
-                else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
-                else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
+                if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) WhereConditionQuery = "  (a.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "') AND (f.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "')";
+                else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')  AND  (f.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
+                else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')  AND  (f.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
                 else WhereConditionQuery = " 1 = 1";
 
 
@@ -261,8 +261,17 @@ namespace SalesOrdersReport.Models
                           + " FROM Invoices a INNER JOIN CUSTOMERMASTER b on a.CUSTOMERID = b.CUSTOMERID "
                           + " Left Outer Join LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
                           + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = a.CUSTOMERID "
-                          + " Left Outer Join TempPaymentsSummary f on a.InvoiceID = f.InvoiceID "
-                          + " WHERE (a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered') AND " + WhereConditionQuery + "; ";
+                          + " Left Join TempPaymentsSummary f on a.InvoiceID = f.InvoiceID "
+                          + " WHERE (a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered') AND " + WhereConditionQuery 
+
+                          + " UNION "
+
+                          + " SELECT a.INVOICEID,a.INVOICENUMBER as 'INVOICE#',b.CUSTOMERNAME,c.LINENAME,a.GROSSINVOICEAMOUNT as SALE,a.NETINVOICEAMOUNT as 'NET SALE',a.DISCOUNTAMOUNT as DISCOUNT,f.`Cancel` as Cancel,f.`Return` as `Return`,e.BALANCEAMOUNT as OB , " + PaymentModesColNames
+                          + " FROM Invoices a INNER JOIN CUSTOMERMASTER b on a.CUSTOMERID = b.CUSTOMERID "
+                          + " Left Outer Join LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
+                          + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = a.CUSTOMERID "
+                          + " Right Join TempPaymentsSummary f on a.InvoiceID = f.InvoiceID "
+                          + " WHERE (a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered') AND " + WhereConditionQuery + ";";
 
                 dt = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 int CountFoundInDtTempSummary = 0;
