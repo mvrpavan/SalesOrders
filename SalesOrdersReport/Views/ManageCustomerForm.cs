@@ -300,14 +300,13 @@ namespace SalesOrdersReport.Views
             try
             {
                 if (ReloadFromDB) CommonFunctions.ObjCustomerMasterModel.LoadAllCustomerMasterTables();
-
-                dgvCustomerCache.Rows.Clear();
-                dgvCustomerCache.Columns.Clear();
                 List<CustomerDetails> ListCustDtlsCache = new List<CustomerDetails>();
                 if (TypeID == 0) ListCustDtlsCache = CommonFunctions.ObjCustomerMasterModel.GetListCustomerCache();
                 else ListCustDtlsCache = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetailsFrmType(TypeID);
                 if (ListCustDtlsCache.Count > 0)
                 {
+                    if (dgvCustomerCache.Rows.Count > 0) dgvCustomerCache.Rows.Clear();
+                    dgvCustomerCache.Columns.Clear();
                     String[] ArrColumnNames = new String[] { "CUSTOMERID", "LINEID", "DISCOUNTGROUPID", "PRICEGROUPID", "STATEID", "CUSTOMERTYPEID", "CUSTOMERNAME", "ADDRESS", "STATE", "PHONENO", "CUSTOMERTYPE", "GSTIN", "ORDERDAYS", "LINENAME", "DISCOUNTGROUPNAME", "PRICEGROUPNAME", "ACTIVE", "ADDEDDATE", "LASTUPDATEDATE" };
                     String[] ArrColumnHeaders = new String[] { "CustomerID", "LineID", "Discount Group ID", "Price Group ID", "State ID", "Customer Type ID", "Customer Name", "Address", "State", "Phone No", "Customer Type", "GSTIN", "OrderDays", "Line", "Discount Group Name", "Price Group Name", "Active", "Added Date", "Last Update Date" };
                     for (int i = 0; i < ArrColumnNames.Length; i++)
@@ -1051,9 +1050,11 @@ namespace SalesOrdersReport.Views
                 {
                     TypeID = CommonFunctions.ObjCustomerMasterModel.GetCustomerTypeDtlsFromTypeName(cmbxSelectCustomerType.SelectedItem.ToString()).CustomerTypeID;
                 }
-                LoadCustomerDetailsDataGridView(false, TypeID);
-                AddCheckBoxToDGV();
-
+                Int32 ReturnVal = LoadCustomerDetailsDataGridView(false, TypeID);
+                if (ReturnVal > 0)
+                {
+                    AddCheckBoxToDGV();
+                }
             }
             catch (Exception ex)
             {
