@@ -51,6 +51,8 @@
             this.dateTimePickerParamValue = new System.Windows.Forms.DateTimePicker();
             this.btnReset = new System.Windows.Forms.Button();
             this.cmbBoxParamValue = new System.Windows.Forms.ComboBox();
+            this.ParamNameCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ParamValueCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewReportData)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewParams)).BeginInit();
@@ -249,6 +251,9 @@
             // dtGridViewParams
             // 
             this.dtGridViewParams.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtGridViewParams.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ParamNameCol,
+            this.ParamValueCol});
             this.dtGridViewParams.Location = new System.Drawing.Point(596, 102);
             this.dtGridViewParams.Name = "dtGridViewParams";
             this.dtGridViewParams.Size = new System.Drawing.Size(254, 140);
@@ -317,6 +322,18 @@
             this.cmbBoxParamValue.Size = new System.Drawing.Size(161, 21);
             this.cmbBoxParamValue.TabIndex = 4;
             // 
+            // ParamNameCol
+            // 
+            this.ParamNameCol.HeaderText = "Name";
+            this.ParamNameCol.Name = "ParamNameCol";
+            this.ParamNameCol.ReadOnly = true;
+            // 
+            // ParamValueCol
+            // 
+            this.ParamValueCol.HeaderText = "Value";
+            this.ParamValueCol.Name = "ParamValueCol";
+            this.ParamValueCol.ReadOnly = true;
+            // 
             // ReportsMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -374,5 +391,7 @@
         private System.Windows.Forms.DateTimePicker dateTimePickerParamValue;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.ComboBox cmbBoxParamValue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ParamNameCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ParamValueCol;
     }
 }
