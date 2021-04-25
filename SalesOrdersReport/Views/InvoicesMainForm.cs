@@ -569,6 +569,57 @@ namespace SalesOrdersReport.Views
             }
         }
 
+        private Int32 ExportQuotation(String FilePath, Object ObjDetails, Boolean Append)
+        {
+            try
+            {
+                ExportOption = (Int32)ObjDetails;
+                ExportFolderPath = FilePath;
+
+                if ((ExportOption & 2) > 0 && dtGridViewInvoices.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show(this, "No Invoice was selected. Please select an Invoice.", "Export Qutotaion", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+
+                if ((ExportOption & 1) > 0)      //Export all displayed Invoices
+                {
+                    Int32 PendingInvoicesCount = 0, CompletedInvoiceCount = 0, CancelledInvoiceCount = 0;
+                    for (int i = 0; i < dtGridViewInvoices.Rows.Count; i++)
+                    {
+                        String InvoiceStatus = dtGridViewInvoices.Rows[i].Cells["Invoice Status"].Value.ToString();
+                        if (InvoiceStatus.Equals(INVOICESTATUS.Created)) PendingInvoicesCount++;
+                        else if (InvoiceStatus.Equals(INVOICESTATUS.Cancelled)) CancelledInvoiceCount++;
+                        else CompletedInvoiceCount++;
+                    }
+
+                    if ((PendingInvoicesCount > 0 && (CompletedInvoiceCount > 0 || CancelledInvoiceCount > 0))
+                        || (CompletedInvoiceCount > 0 && CancelledInvoiceCount > 0))
+                    {
+                        MessageBox.Show(this, "Unable to export Quotation with multiple Invoice Status. Please filter Invoices with same status.", "Export Quotation", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        return 2;
+                    }
+                }
+
+                BackgroundTask = 5;
+#if DEBUG
+                backgroundWorkerInvoices_DoWork(null, null);
+                backgroundWorkerInvoices_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerInvoices.ReportProgress;
+                backgroundWorkerInvoices.RunWorkerAsync();
+                backgroundWorkerInvoices.WorkerReportsProgress = true;
+#endif
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ExportInvoices()", ex);
+                return -1;
+            }
+        }
+
+
         Int32 BackgroundTask = 0;
         ReportProgressDel ReportProgress = null;
 
@@ -639,6 +690,35 @@ namespace SalesOrdersReport.Views
                         break;
                     case 4: //Mark Invoices as Delivered
                         MarkInvoicesAsDelivered();
+                        break;
+                    case 5: //Export Quotation
+                        {
+                            ReportType EnumReportType = ReportType.QUOTATION;
+                            Boolean PrintOldBalance = true;
+                            Boolean CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 0) || ((ExportOption & 4) > 0);
+
+                            List<Object> ListInvoicesToExport = new List<Object>();
+                            if ((ExportOption & 1) > 0)      //Export all displayed Invoices
+                            {
+                                for (int i = 0; i < dtGridViewInvoices.Rows.Count; i++)
+                                {
+                                    Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.Rows[i].Cells["InvoiceID"].Value.ToString());
+                                    InvoiceDetails tmpInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
+                                    ListInvoicesToExport.Add(tmpInvoiceDetails);
+                                }
+                            }
+                            else if ((ExportOption & 2) > 0) //Export only selected Invoice
+                            {
+                                Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
+                                InvoiceDetails tmpInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
+                                ListInvoicesToExport.Add(tmpInvoiceDetails);
+                            }
+                            String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, false,
+                                        ((InvoiceDetails)ListInvoicesToExport[0]).InvoiceDate, ObjInvoicesModel, ListInvoicesToExport, ExportFolderPath,
+                                        CreateSummary, PrintOldBalance, ReportProgressFunc, true);
+
+                            MessageBox.Show(this, $"Exported Quotation file is created successfully at:{ExportedFilePath}", "Export Quotation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                         break;
                     default:
                         break;
@@ -756,6 +836,18 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.dtGridViewInvoices_Scroll()", ex);
+            }
+        }
+
+        private void btnExportQuotation_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CommonFunctions.ShowDialog(new ExportToExcelForm(ExportDataTypes.Invoices, null, ExportQuotation), this);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnExportQuotation_Click()", ex);
             }
         }
 

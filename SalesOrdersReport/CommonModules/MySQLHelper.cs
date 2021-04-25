@@ -127,8 +127,31 @@ namespace SalesOrdersReport.CommonModules
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("MySQLHelper.BuildQueryParams()", ex);
+                CommonFunctions.ShowErrorDialog("MySQLHelper.BuildNExceuteQueryWithParams()", ex);
                 throw;
+            }
+        }
+        public DataTable BuildNReturnQueryResultWithParams(string Query, List<string> ListColumnNames, List<string> ListColDataTypes, List<string> ListColumnValues)
+        {
+            try
+            {
+                CheckAndReconnectToDB();
+                ObjDbCommand.CommandText = Query;
+                ObjDbCommand.Parameters.Clear();
+                for (int i = 0; i < ListColumnNames.Count; i++)
+                {
+                    ObjDbCommand.Parameters.Add(ListColumnNames[i].Replace(",", ""), MySQLHelper.GetMySqlDbType(ListColDataTypes[i])).Value = ListColumnValues[i];
+                }
+
+                DbDataAdapter dbAdapter = new MySqlDataAdapter((MySqlCommand)ObjDbCommand);
+                DataTable dtResult = new DataTable();
+                dbAdapter.Fill(dtResult);
+                return dtResult;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.BuildNReturnQueryResultWithParams()", ex);
+                return null;
             }
         }
 
@@ -538,7 +561,7 @@ namespace SalesOrdersReport.CommonModules
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("MySQLHelper.GetQueryResultInDataTable()", ex);
-                throw ex;
+                return null;
             }
         }
 

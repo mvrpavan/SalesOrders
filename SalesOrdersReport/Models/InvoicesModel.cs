@@ -34,6 +34,7 @@ namespace SalesOrdersReport.Models
         public Int32 InvoiceItemCount = 0;
         public Int32 DeliveryLineID = -1;
         public string DeliveryLineName = "";
+        public Double BalanceAmount = 0.0;
 
         public InvoiceDetails Clone()
         {
@@ -144,7 +145,7 @@ namespace SalesOrdersReport.Models
 
                 List<String> ListColumns = new List<String>() { "InvoiceID", "CustomerID","DeliveryLineID", "OrderID", "Invoice Number", "Invoice Date", "Customer Name", "Invoice Item Count", "Gross Invoice Amount", "Discount Amount", "Net Invoice Amount" };
                 ListColumns.AddRange(ListPaymentModes);
-                ListColumns.AddRange(new string[] { "Invoice Status", "Creation Date", "Last Updated Date ","Delivery Line" });
+                ListColumns.AddRange(new string[] { "Invoice Status", "Creation Date", "Last Updated Date ", "Delivery Line", "Balance Amount" });
 
                 List<Int32> ListPaymentModeIDs = ListPaymentModes.Select(e => ObjPaymentsModel.GetPaymentModeDetails(e).PaymentModeID).ToList();
 
@@ -155,7 +156,7 @@ namespace SalesOrdersReport.Models
                 }
 
                 String Query = $"Select a.{String.Join(", a.", ArrDtColumns1)}, b.CustomerName, a.{String.Join(", a.", ArrDtColumns2)}, " +
-                            $"d.`{String.Join("`, d.`", ListPaymentModes)}`, a.{String.Join(", a.", ArrDtColumns3)} , e.LineName as DeliveryLine " +
+                            $"d.`{String.Join("`, d.`", ListPaymentModes)}`, a.{String.Join(", a.", ArrDtColumns3)} , e.LineName as DeliveryLine , f.BalanceAmount " +
                             $"from Invoices a Inner Join CUSTOMERMASTER b on a.CustomerID = b.CustomerID " +
                             $"Left Join (Select InvoiceID{PaymentsQuery} from PAYMENTS Where InvoiceID > 0 and Active = 1 Group by InvoiceID) d on a.InvoiceID = d.InvoiceID "  
                           ;
@@ -203,7 +204,7 @@ namespace SalesOrdersReport.Models
                             break;
                     }
                 }
-                Query += $" left Join LINEMASTER e on a.DeliveryLineID = e.LineID";
+                Query += $" left Join LINEMASTER e on a.DeliveryLineID = e.LineID left Join ACCOUNTSMASTER f on a.CustomerID = f.CustomerID";
                 Query += WhereClause + " Order by a.InvoiceID";
                 DataTable dtInvoices = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 dtAllInvoices = dtInvoices;
@@ -226,6 +227,7 @@ namespace SalesOrdersReport.Models
                         InvoiceStatus = (INVOICESTATUS)Enum.Parse(Type.GetType("SalesOrdersReport.Models.INVOICESTATUS"), dtRow["InvoiceStatus"].ToString()),
                         CreationDate = DateTime.Parse(dtRow["CreationDate"].ToString()),
                         LastUpdatedDate = DateTime.Parse(dtRow["LastUpdatedDate"].ToString()),
+                        BalanceAmount = Double.Parse(dtRow["BalanceAmount"].ToString()),
                         DeliveryLineID = (dtRow["DeliveryLineID"].ToString() == string.Empty || dtRow["DeliveryLineID"].ToString() == null) ? -1 : Int32.Parse(dtRow["DeliveryLineID"].ToString()),
                         DeliveryLineName = dtRow["DeliveryLine"].ToString()
                     };
@@ -816,7 +818,7 @@ namespace SalesOrdersReport.Models
                         break;
                     case ReportType.QUOTATION:
                         CurrReportSettings = CommonFunctions.ObjQuotationSettings;
-                        PrintOldBalance = false;
+                        PrintOldBalance = true;
                         BillNumberText = "Quotation#";
                         CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 1);
                         break;
@@ -843,7 +845,8 @@ namespace SalesOrdersReport.Models
                 ObjInvoice.SerialNumber = ObjInvoiceDetails.InvoiceNumber;
                 ObjInvoice.InvoiceNumberText = BillNumberText;
                 ObjInvoice.ObjSellerDetails = ObjCurrentSeller.Clone();
-                ObjInvoice.OldBalance = 0;//TODO:Double.Parse(lblBalanceAmountValue.Text);
+                //ObjInvoice.OldBalance = 0;//TODO:Double.Parse(lblBalanceAmountValue.Text);
+                ObjInvoice.OldBalance = ObjInvoiceDetails.BalanceAmount;
                 ObjInvoice.CurrReportSettings = CurrReportSettings;
                 ObjInvoice.DateOfInvoice = ObjInvoiceDetails.InvoiceDate;
                 ObjInvoice.PrintOldBalance = PrintOldBalance;
@@ -1026,7 +1029,8 @@ namespace SalesOrdersReport.Models
                 ObjInvoice.SerialNumber = ObjInvoiceDetails.InvoiceNumber;
                 ObjInvoice.InvoiceNumberText = BillNumberText;
                 ObjInvoice.ObjSellerDetails = ObjCurrentSeller.Clone();
-                ObjInvoice.OldBalance = 0;//TODO:Double.Parse(lblBalanceAmountValue.Text);
+                //ObjInvoice.OldBalance = 0;//TODO:Double.Parse(lblBalanceAmountValue.Text);
+                ObjInvoice.OldBalance = ObjInvoiceDetails.BalanceAmount;
                 ObjInvoice.CurrReportSettings = CurrReportSettings;
                 ObjInvoice.DateOfInvoice = ObjInvoiceDetails.InvoiceDate;
                 ObjInvoice.PrintOldBalance = PrintOldBalance;

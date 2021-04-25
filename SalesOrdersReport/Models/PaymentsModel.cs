@@ -249,9 +249,9 @@ namespace SalesOrdersReport.Models
                 LoadTempPaymentSummaryTableinDT();
 
                 String WhereConditionQuery = "";
-                if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) WhereConditionQuery = "  (a.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "') AND (f.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "')";
-                else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')  AND  (f.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
-                else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')  AND  (f.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')";
+                if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) WhereConditionQuery = "  (a.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "') AND ((f.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "') OR f.CreationDate  is null ) ";
+                else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')  AND  (f.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') OR f.CreationDate  is null ) ";
+                else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')  AND  ((f.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') OR f.CreationDate  is null ) ";
                 else WhereConditionQuery = " 1 = 1";
 
 

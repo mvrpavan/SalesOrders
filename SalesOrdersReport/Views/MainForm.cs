@@ -483,5 +483,17 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog($"{this}.ExpensesToolStripMenuItem_Click()", ex);
             }
         }
+
+        private void reportsMenu_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowChildForm(new ReportsMainForm());
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.reportsMenu_Click()", ex);
+            }
+        }
     }
 }

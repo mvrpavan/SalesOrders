@@ -406,6 +406,7 @@ namespace SalesOrdersReport.Views
                 {
                     //Load Invoice details for selected InvoiceID
                     CurrentInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(CurrentInvoiceID);
+                    lblBalanceAmountValue.Text = CurrentInvoiceDetails.BalanceAmount.ToString("F");
                     CurrInvoiceDetails.CurrInvoiceDetails = CurrentInvoiceDetails.Clone();
                     CurrInvoiceDetails.CurrInvoiceDetailsOrig = CurrentInvoiceDetails.Clone();
                     if (CurrentInvoiceDetails.InvoiceStatus == INVOICESTATUS.Cancelled)
@@ -440,6 +441,7 @@ namespace SalesOrdersReport.Views
                             CurrentInvoiceID = ListCustomerInvoices[Index].InvoiceID;
                             CurrInvoiceDetails.CurrInvoiceDetails = ListCustomerInvoices[Index].Clone();
                             CurrInvoiceDetails.CurrInvoiceDetailsOrig = ListCustomerInvoices[Index].Clone();
+                            lblBalanceAmountValue.Text = ListCustomerInvoices[Index].BalanceAmount.ToString("F");
                         }
                         cmbBoxInvoiceNumber.SelectedIndex = cmbBoxInvoiceNumberIndex;
                     }
@@ -452,6 +454,9 @@ namespace SalesOrdersReport.Views
                     CurrInvoiceDetails.CurrInvoiceDetails = new InvoiceDetails();
                     CurrInvoiceDetails.CurrInvoiceDetails.InvoiceID = -1;
                     CurrInvoiceDetails.CurrInvoiceDetails.CustomerID = CurrCustomerDetails.CustomerID;
+                    AccountDetails ObjAccountDetails = CommonFunctions.ObjAccountsMasterModel.GetAccDtlsFromCustID(CurrCustomerDetails.CustomerID);
+                    CurrInvoiceDetails.CurrInvoiceDetails.BalanceAmount = ObjAccountDetails.BalanceAmount;
+                    lblBalanceAmountValue.Text = ObjAccountDetails.BalanceAmount.ToString("F");
                     CurrInvoiceDetails.CurrInvoiceDetails.InvoiceNumber = txtBoxInvNumber.Text;
                     CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems = new List<InvoiceItemDetails>();
                     if (cmbBxInvoiceDeliveryLine.SelectedIndex > 0) CurrInvoiceDetails.CurrInvoiceDetails.DeliveryLineName = cmbBxInvoiceDeliveryLine.SelectedItem.ToString();
@@ -461,6 +466,7 @@ namespace SalesOrdersReport.Views
                 else
                 {
                     txtBoxInvNumber.Text = CurrInvoiceDetails.CurrInvoiceDetails.InvoiceNumber;
+                    lblBalanceAmountValue.Text = CurrInvoiceDetails.CurrInvoiceDetails.BalanceAmount.ToString("F");
                     cmbBxInvoiceDeliveryLine.SelectedItem = CurrInvoiceDetails.CurrInvoiceDetails.DeliveryLineName;
                     if (CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems == null || CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems.Count == 0)
                         ObjInvoicesModel.FillInvoiceItemDetails(CurrInvoiceDetails.CurrInvoiceDetails);
@@ -544,7 +550,9 @@ namespace SalesOrdersReport.Views
                         if (dialogResult == DialogResult.Yes)
                         {
                             Int32 InvoiceID = ObjInvoicesModel.CurrInvoiceID;
+
                             InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
+                            ObjInvoiceDetails.BalanceAmount = Double.Parse(lblBalanceAmountValue.Text);
                             CommonFunctions.PrintOrderInvoiceQuotation(ReportType.INVOICE, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, 1, false, false, ReportProgressFunc);
                         }
                         lblStatus.Text = "Choose a Customer to create Sales Invoice";

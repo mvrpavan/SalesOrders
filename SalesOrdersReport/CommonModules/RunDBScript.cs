@@ -58,6 +58,7 @@ namespace SalesOrdersReport.CommonModules
                 CreateTransactionTables();
                 CreateInventoryTables();
                 CreatePurchaseOrderInvoiceTables();
+                CreateReportTables();
             }
             catch (Exception ex)
             {
@@ -558,6 +559,7 @@ namespace SalesOrdersReport.CommonModules
                     "OrderItemCount, smallint(5) DEFAULT 0",
                     "EstimateOrderAmount, float DEFAULT 0",
                     "OrderStatus, varchar(20) DEFAULT NULL",      //Placed/Completed/Cancelled/Void
+                    "DeliveryLineID, smallint Null",
                     "DateDelivered, datetime NULL",
                     "DateInvoiceCreated, datetime NULL",
                     "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
@@ -573,7 +575,6 @@ namespace SalesOrdersReport.CommonModules
                     "ProductID, smallint(5) NOT NULL",
                     "OrderQty, float DEFAULT NULL",
                     "Price, float DEFAULT NULL",
-                    "DeliveryLineID, smallint Null",
                     "OrderItemStatus, varchar(20) DEFAULT NULL",
                     "Comments, Varchar(200) Null",
                     "PRIMARY KEY, OrderItemID"
@@ -586,6 +587,70 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
+        public void CreateReportTables()
+        {
+            try
+            {
+                //List<String> TableColumns = new List<String>
+                //{
+                //    "ReportID, BIGINT unsigned NOT NULL AUTO_INCREMENT",
+                //    "ReportName, varchar(20) NULL",
+                //    "Description, varchar(1000) NULL",
+                //    "Query, varchar(100) NULL",
+                //    "PreDefinedParamID, Varchar(20) NULL DEFAULT NULL",
+                //    "UserDefinedParamID, Varchar(20) NULL DEFAULT NULL",
+                //    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                //    "LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+                //    "Active, tinyint(4) NOT NULL DEFAULT '1'",
+                //    "PRIMARY KEY, ReportID"
+                //};
+                List<String> TableColumns = new List<String>
+                {
+                    "ReportID, BIGINT unsigned NOT NULL AUTO_INCREMENT",
+                    "ReportName, varchar(20) NULL",
+                    "Description, varchar(80) NULL",
+                    "Query, varchar(1200) NULL",
+                    "ParamID, Varchar(20) NULL DEFAULT NULL",
+                    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                    "LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+                    "Active, tinyint(4) NOT NULL DEFAULT '1'",
+                    "PRIMARY KEY, ReportID"
+                };
+                ObjMySQLHelper.CreateTable("Reports", TableColumns);
+
+
+                TableColumns = new List<String>
+                {
+                    "ParamID, smallint unsigned NOT NULL AUTO_INCREMENT",
+                    "ParamName, varchar(20) Not NULL",
+                    "ActualColumnName, varchar(20) Not NULL",
+                    "Type, varchar(10) not NULL Default 'String'",
+                    "DataType, varchar(10) not NULL Default 'String'",
+                    "TableNameToLookInto, varchar(30) Not NULL",
+                    "ParamValue, varchar(30) NULL Default NULL",
+                    "IsPreDefinedParam, tinyint(4) NOT NULL DEFAULT '1'",
+                    "PRIMARY KEY, ParamID"
+                };
+                ObjMySQLHelper.CreateTable("ReportDefinedParams", TableColumns);
+
+                //TableColumns = new List<String>
+                //{
+                //    "UserDefinedParamID, smallint unsigned NOT NULL AUTO_INCREMENT",
+                //    "ParamName, varchar(20) Not NULL",
+                //    "ActualColumnName, varchar(20)Not NULL",
+                //    "Type, varchar(10) not NULL Default 'String'",
+                //     "ParamValue, varchar(30) Not NULL",
+                //    "DataType, varchar(10) not NULL Default 'String'",
+                //    "TableNameToLookInto, varchar(30) Not NULL",
+                //    "PRIMARY KEY, UserDefinedParamID"
+                //};
+                //ObjMySQLHelper.CreateTable("ReportUserDefinedParams", TableColumns);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.CreateReportTables()", ex);
+            }
+        }
         public void CreateInvoiceTables()
         {
             try

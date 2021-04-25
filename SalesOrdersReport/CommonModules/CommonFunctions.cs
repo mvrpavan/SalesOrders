@@ -1069,6 +1069,41 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
+        public static void PrintAfile(string ExcelFilePath)
+        {
+            try
+            {
+                Excel.Application xlApp = new Excel.Application();
+                try
+                {
+                    xlApp.Visible = false;
+                    xlApp.DisplayAlerts = false;
+
+                    Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(ExcelFilePath);
+
+                    xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, 1);
+
+                    xlWorkbook.Close(false);
+                    CommonFunctions.ReleaseCOMObject(xlWorkbook);
+                }
+                catch (Exception ex)
+                {
+                    CommonFunctions.ShowErrorDialog($"CommonFunctions.PrintAfile()", ex);
+                }
+                finally
+                {
+                    xlApp.Quit();
+                    CommonFunctions.ReleaseCOMObject(xlApp);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"CommonFunctions.PrintAfile()", ex);
+                throw;
+            }
+        }
+
         public static void PrintOrderInvoiceQuotation(ReportType EnumReportType, Boolean IsDummyBill, Object ObjectModel, List<Object> ListObjects, 
             DateTime OrdInvQuotDate, Int32 PrintCopies = 1, Boolean CreateSummary = false, Boolean PrintOldBalance = false, ReportProgressDel ReportProgress = null)
         {
@@ -1079,28 +1114,29 @@ namespace SalesOrdersReport.CommonModules
 
                 if (PrintCopies > 0)
                 {
-                    Excel.Application xlApp = new Excel.Application();
-                    try
-                    {
-                        xlApp.Visible = false;
-                        xlApp.DisplayAlerts = false;
+                    //Excel.Application xlApp = new Excel.Application();
+                    //try
+                    //{
+                    //    xlApp.Visible = false;
+                    //    xlApp.DisplayAlerts = false;
 
-                        Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(ExcelFilePath);
+                    //    Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(ExcelFilePath);
 
-                        xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, PrintCopies);
+                    //    xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, PrintCopies);
 
-                        xlWorkbook.Close(false);
-                        CommonFunctions.ReleaseCOMObject(xlWorkbook);
-                    }
-                    catch (Exception ex)
-                    {
-                        CommonFunctions.ShowErrorDialog($"CommonFunctions.PrintOrderInvoiceQuotation()", ex);
-                    }
-                    finally
-                    {
-                        xlApp.Quit();
-                        CommonFunctions.ReleaseCOMObject(xlApp);
-                    }
+                    //    xlWorkbook.Close(false);
+                    //    CommonFunctions.ReleaseCOMObject(xlWorkbook);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    CommonFunctions.ShowErrorDialog($"CommonFunctions.PrintOrderInvoiceQuotation()", ex);
+                    //}
+                    //finally
+                    //{
+                    //    xlApp.Quit();
+                    //    CommonFunctions.ReleaseCOMObject(xlApp);
+                    //}
+                    PrintAfile(ExcelFilePath);
                 }
             }
             catch (Exception ex)

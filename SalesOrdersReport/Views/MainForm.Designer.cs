@@ -46,7 +46,6 @@ namespace SalesOrdersReport.Views
             this.PaymentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExpensesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reportsMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.sellerHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.administrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageUsersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.appSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -192,18 +191,10 @@ namespace SalesOrdersReport.Views
             // 
             // reportsMenu
             // 
-            this.reportsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sellerHistoryToolStripMenuItem});
             this.reportsMenu.Name = "reportsMenu";
             this.reportsMenu.Size = new System.Drawing.Size(59, 20);
             this.reportsMenu.Text = "&Reports";
-            // 
-            // sellerHistoryToolStripMenuItem
-            // 
-            this.sellerHistoryToolStripMenuItem.Name = "sellerHistoryToolStripMenuItem";
-            this.sellerHistoryToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
-            this.sellerHistoryToolStripMenuItem.Text = "&Seller History";
-            this.sellerHistoryToolStripMenuItem.Click += new System.EventHandler(this.sellerHistoryToolStripMenuItem_Click);
+            this.reportsMenu.Click += new System.EventHandler(this.reportsMenu_Click);
             // 
             // administrationToolStripMenuItem
             // 
@@ -450,7 +441,6 @@ namespace SalesOrdersReport.Views
         private System.Windows.Forms.ToolStripMenuItem createOrderSheetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reportsMenu;
-        private System.Windows.Forms.ToolStripMenuItem sellerHistoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripProgress;
         private System.Windows.Forms.ContextMenuStrip cntxtMenuStripUserProfile;

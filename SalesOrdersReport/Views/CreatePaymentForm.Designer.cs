@@ -67,6 +67,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.grpbxCreatePaymentCustDtls = new System.Windows.Forms.GroupBox();
+            this.txtCreatePaymentsCustPhoneNo = new System.Windows.Forms.TextBox();
+            this.lblCreatePaymentCustPhoneno = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.txtCreatePaymentCustAddress = new System.Windows.Forms.TextBox();
             this.txtCreatePaymentOB = new System.Windows.Forms.TextBox();
@@ -79,8 +81,6 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
             this.lblValidateErrMsg = new System.Windows.Forms.Label();
-            this.lblCreatePaymentCustPhoneno = new System.Windows.Forms.Label();
-            this.txtCreatePaymentsCustPhoneNo = new System.Windows.Forms.TextBox();
             this.grpbxCreatePaymentPaymentDtls.SuspendLayout();
             this.grpbxCreatePaymentInvoiceDtls.SuspendLayout();
             this.grpbxCreatePaymentCustDtls.SuspendLayout();
@@ -482,6 +482,23 @@
             this.grpbxCreatePaymentCustDtls.TabStop = false;
             this.grpbxCreatePaymentCustDtls.Text = "Customer Details";
             // 
+            // txtCreatePaymentsCustPhoneNo
+            // 
+            this.txtCreatePaymentsCustPhoneNo.Enabled = false;
+            this.txtCreatePaymentsCustPhoneNo.Location = new System.Drawing.Point(105, 50);
+            this.txtCreatePaymentsCustPhoneNo.Name = "txtCreatePaymentsCustPhoneNo";
+            this.txtCreatePaymentsCustPhoneNo.Size = new System.Drawing.Size(105, 20);
+            this.txtCreatePaymentsCustPhoneNo.TabIndex = 6;
+            // 
+            // lblCreatePaymentCustPhoneno
+            // 
+            this.lblCreatePaymentCustPhoneno.AutoSize = true;
+            this.lblCreatePaymentCustPhoneno.Location = new System.Drawing.Point(14, 53);
+            this.lblCreatePaymentCustPhoneno.Name = "lblCreatePaymentCustPhoneno";
+            this.lblCreatePaymentCustPhoneno.Size = new System.Drawing.Size(85, 13);
+            this.lblCreatePaymentCustPhoneno.TabIndex = 5;
+            this.lblCreatePaymentCustPhoneno.Text = "Customer Phone";
+            // 
             // label22
             // 
             this.label22.AutoSize = true;
@@ -591,23 +608,6 @@
             this.lblValidateErrMsg.Size = new System.Drawing.Size(0, 13);
             this.lblValidateErrMsg.TabIndex = 4;
             this.lblValidateErrMsg.Visible = false;
-            // 
-            // lblCreatePaymentCustPhoneno
-            // 
-            this.lblCreatePaymentCustPhoneno.AutoSize = true;
-            this.lblCreatePaymentCustPhoneno.Location = new System.Drawing.Point(14, 53);
-            this.lblCreatePaymentCustPhoneno.Name = "lblCreatePaymentCustPhoneno";
-            this.lblCreatePaymentCustPhoneno.Size = new System.Drawing.Size(85, 13);
-            this.lblCreatePaymentCustPhoneno.TabIndex = 5;
-            this.lblCreatePaymentCustPhoneno.Text = "Customer Phone";
-            // 
-            // txtCreatePaymentsCustPhoneNo
-            // 
-            this.txtCreatePaymentsCustPhoneNo.Enabled = false;
-            this.txtCreatePaymentsCustPhoneNo.Location = new System.Drawing.Point(105, 50);
-            this.txtCreatePaymentsCustPhoneNo.Name = "txtCreatePaymentsCustPhoneNo";
-            this.txtCreatePaymentsCustPhoneNo.Size = new System.Drawing.Size(105, 20);
-            this.txtCreatePaymentsCustPhoneNo.TabIndex = 6;
             // 
             // CreatePaymentForm
             // 

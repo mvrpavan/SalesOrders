@@ -44,6 +44,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.btnAddParamValue = new System.Windows.Forms.Button();
             this.dtGridViewParams = new System.Windows.Forms.DataGridView();
+            this.ParamNameCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ParamValueCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnGenerateReport = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.txtBoxReportDesc = new System.Windows.Forms.TextBox();
@@ -51,8 +53,7 @@
             this.dateTimePickerParamValue = new System.Windows.Forms.DateTimePicker();
             this.btnReset = new System.Windows.Forms.Button();
             this.cmbBoxParamValue = new System.Windows.Forms.ComboBox();
-            this.ParamNameCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ParamValueCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.backgroundWorkerReports = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewReportData)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewParams)).BeginInit();
@@ -60,6 +61,10 @@
             // 
             // dtGridViewReportData
             // 
+            this.dtGridViewReportData.AllowUserToAddRows = false;
+            this.dtGridViewReportData.AllowUserToDeleteRows = false;
+            this.dtGridViewReportData.AllowUserToResizeColumns = false;
+            this.dtGridViewReportData.AllowUserToResizeRows = false;
             this.dtGridViewReportData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtGridViewReportData.Location = new System.Drawing.Point(12, 313);
             this.dtGridViewReportData.Name = "dtGridViewReportData";
@@ -259,6 +264,18 @@
             this.dtGridViewParams.Size = new System.Drawing.Size(254, 140);
             this.dtGridViewParams.TabIndex = 7;
             // 
+            // ParamNameCol
+            // 
+            this.ParamNameCol.HeaderText = "Name";
+            this.ParamNameCol.Name = "ParamNameCol";
+            this.ParamNameCol.ReadOnly = true;
+            // 
+            // ParamValueCol
+            // 
+            this.ParamValueCol.HeaderText = "Value";
+            this.ParamValueCol.Name = "ParamValueCol";
+            this.ParamValueCol.ReadOnly = true;
+            // 
             // btnGenerateReport
             // 
             this.btnGenerateReport.Location = new System.Drawing.Point(341, 263);
@@ -321,23 +338,14 @@
             this.cmbBoxParamValue.Name = "cmbBoxParamValue";
             this.cmbBoxParamValue.Size = new System.Drawing.Size(161, 21);
             this.cmbBoxParamValue.TabIndex = 4;
-            // 
-            // ParamNameCol
-            // 
-            this.ParamNameCol.HeaderText = "Name";
-            this.ParamNameCol.Name = "ParamNameCol";
-            this.ParamNameCol.ReadOnly = true;
-            // 
-            // ParamValueCol
-            // 
-            this.ParamValueCol.HeaderText = "Value";
-            this.ParamValueCol.Name = "ParamValueCol";
-            this.ParamValueCol.ReadOnly = true;
+            this.cmbBoxParamValue.SelectedIndexChanged += new System.EventHandler(this.cmbBoxParamValue_SelectedIndexChanged);
             // 
             // ReportsMainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScroll = true;
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(862, 587);
             this.Controls.Add(this.dateTimePickerParamValue);
             this.Controls.Add(this.txtBoxReportDesc);
@@ -356,8 +364,13 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dtGridViewReportData);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ReportsMainForm";
+            this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Reports";
+            this.Load += new System.EventHandler(this.ReportsMainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewReportData)).EndInit();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewParams)).EndInit();
@@ -393,5 +406,6 @@
         private System.Windows.Forms.ComboBox cmbBoxParamValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn ParamNameCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ParamValueCol;
+        private System.ComponentModel.BackgroundWorker backgroundWorkerReports;
     }
 }

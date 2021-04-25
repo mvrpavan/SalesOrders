@@ -35,6 +35,13 @@ Insert into CUSTOMERTYPEMASTER (CustomerType, Description) Values('Regular', 'Re
 Insert into CUSTOMERTYPEMASTER (CustomerType, Description) Values('Retailer', 'Retailer');
 Insert into CUSTOMERTYPEMASTER (CustomerType, Description) Values('Wholesaler', 'Wholesaler');
 
+--ReportDefinedParams
+INSERT INTO ReportDefinedParams (ParamID, ParamName, ActualColumnName, Type, DataType, TableNameToLookInto, IsPreDefinedParam) VALUES ('1','@CustomerName','CustomerName',	'String','String','CUSTOMERMASTER','1');
+INSERT INTO ReportDefinedParams (ParamID, ParamName, ActualColumnName, Type, DataType, TableNameToLookInto, IsPreDefinedParam) VALUES ('2','@Amount','NETINVOICEAMOUNT','Value','Number','Invoices','1');
+INSERT INTO ReportDefinedParams (ParamID, ParamName, ActualColumnName, Type, DataType, TableNameToLookInto, IsPreDefinedParam) VALUES ('3', '@InvoiceCreationDate', 'CreationDate', 'Date', 'string', 'Invoices', '1');
+INSERT INTO ReportDefinedParams (ParamID, ParamName, ActualColumnName, Type, DataType, TableNameToLookInto, IsPreDefinedParam) VALUES ('4', '@OrderDate', 'CreationDate', 'Date', 'string', 'Orders', '1');
+INSERT INTO ReportDefinedParams (ParamID, ParamName, ActualColumnName, Type, DataType, TableNameToLookInto, IsPreDefinedParam) VALUES ('5', '@InvoiceDate', 'InvoiceDate', 'Date', 'string', 'Invoices', '1');
+
 
 
 

@@ -107,7 +107,10 @@ namespace SalesOrdersReport.Views
                     cmbxCreatePaymentNumber.SelectedItem = ObjPaymentDeatilsToBeEdited.InvoiceNumber;
                     txtCreatePaymentDesc.Text = ObjPaymentDeatilsToBeEdited.Description;
                 }
-                else cmbxCreatePaymentNumber.SelectedIndex = 0;
+                else
+                {
+                    if (cmbxCreatePaymentNumber.Items.Count > 0) cmbxCreatePaymentNumber.SelectedIndex = 0;
+                }
                 cmbxCreatePaymentPaymentAgainst.SelectedIndex = 0;
                 txtbxCreatePaymentAmount.Text = "0";
                 cmbBoxPaymentModes.SelectedIndex = 0;

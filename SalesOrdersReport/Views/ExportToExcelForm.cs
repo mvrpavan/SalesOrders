@@ -9,7 +9,7 @@ namespace SalesOrdersReport.Views
 
     public enum ExportDataTypes
     {
-        Products, Customers, Orders, Invoices, Payments, Stocks
+        Products, Customers, Orders, Invoices, Payments, Stocks ,Reports
     };
 
     public delegate Int32 ExportDataToFileDel(String FilePath, Object ObjDetails, Boolean Append);
@@ -86,6 +86,14 @@ namespace SalesOrdersReport.Views
                         saveFileDialogExportToExcel.Title = "Save Exported file as";
                         chkBoxAppend.Visible = false;
                         break;
+                    case ExportDataTypes.Reports:
+                        this.Text = "Export Reports Data to Excel";
+                        chkListBoxDataToExport.Items.Add("Reports Details", true);
+                        lblExport.Text = "Export to File";
+                        btnExportToExcelFile.Text = "Export Reports Data to Excel File";
+                        saveFileDialogExportToExcel.Title = "Save Exported file as";
+                        chkBoxAppend.Visible = false;
+                        break;
                     default:
                         break;
                 }
@@ -126,6 +134,13 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case ExportDataTypes.Stocks:
+                        result = saveFileDialogExportToExcel.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            txtExportToExcelFilePath.Text = saveFileDialogExportToExcel.FileName;
+                        }
+                        break;
+                    case ExportDataTypes.Reports:
                         result = saveFileDialogExportToExcel.ShowDialog();
                         if (result == DialogResult.OK)
                         {
@@ -201,6 +216,7 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case ExportDataTypes.Stocks:
+                    case ExportDataTypes.Reports:
                         if (chkListBoxDataToExport.CheckedItems.Count == 0)
                         {
                             MessageBox.Show(this, "Choose atleast one dataset to Export.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
@@ -249,6 +265,7 @@ namespace SalesOrdersReport.Views
                             }
                             break;
                         case ExportDataTypes.Stocks:
+                        case ExportDataTypes.Reports:
                             if (!Directory.Exists(Path.GetDirectoryName(FilePath)))
                             {
                                 MessageBox.Show(this, "Choose a valid directory to Save file to.", "Export data", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
@@ -397,22 +414,22 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case ExportDataTypes.Stocks:
-
+                    case ExportDataTypes.Reports:
                         Retval = ExportDataToFile(txtExportToExcelFilePath.Text, null, chkBoxAppend.Checked);
-
+                        string strVal = (ExportDataType == ExportDataTypes.Stocks) ? "Stocks" : "Reports";
                         if (Retval == 0)
                         {
-                            MessageBox.Show(this, "Exporting Stocks data to Excel File is successful!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                            MessageBox.Show(this, "Exporting " + strVal + " data to Excel File is successful!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                             ExportResult = 0;
                         }
                         else if (Retval == 1)
                         {
-                            MessageBox.Show(this, "No Stocks data available to export!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                            MessageBox.Show(this, "No " + strVal + " data available to export!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                             ExportResult = 1;
                         }
                         else
                         {
-                            MessageBox.Show(this, "Exporting Stocks data to Excel file failed!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                            MessageBox.Show(this, "Exporting " + strVal + " data to Excel file failed!!!", "Export Status", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                             ExportResult = -1;
                         }
                         break;
