@@ -489,7 +489,7 @@ namespace SalesOrdersReport.Views
                 if (!entryFound)
                 {
                     dtGridViewParams.Rows.Add(cmbBoxParamNames.SelectedItem.ToString(), CurrentParamValue);
-                    CountOfPramsAdded += 1;
+                    CountOfParamsAdded += 1;
                 }
             }
             catch (Exception ex)
@@ -503,7 +503,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                if ((CountOfPramsAdded != cmbBoxParamNames.Items.Count - 1) || cmbBoxReportName.SelectedIndex == 0)
+                if ((CountOfParamsAdded != cmbBoxParamNames.Items.Count - 1) || cmbBoxReportName.SelectedIndex == 0)
                 {
                     MessageBox.Show(this, "Please add all Params required for this Report", "Incomplete Param Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
