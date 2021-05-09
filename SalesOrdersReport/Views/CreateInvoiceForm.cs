@@ -617,7 +617,7 @@ namespace SalesOrdersReport.Views
                 for (int i = 0; i < tmpListProducts.Count; i++)
                 {
                     Double Price = CommonFunctions.ObjProductMaster.GetPriceForProduct(tmpListProducts[i].ItemName, CurrCustomerDetails.PriceGroupIndex);
-                    Price = Price * ((CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(tmpListProducts[i].ItemName).Sum() + 100) / 100);
+                   // Price = Price * ((CommonFunctions.ObjProductMaster.GetTaxRatesForProduct(tmpListProducts[i].ItemName).Sum() + 100) / 100);
 
                     Object[] row = { tmpListProducts[i].CategoryName, tmpListProducts[i].ItemName,
                                      Price.ToString("F"), 0, false};
