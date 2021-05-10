@@ -553,7 +553,7 @@ namespace SalesOrdersReport.Views
 
                             InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
                             ObjInvoiceDetails.BalanceAmount = Double.Parse(lblBalanceAmountValue.Text);
-                            CommonFunctions.PrintOrderInvoiceQuotation(ReportType.INVOICE, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, 1, false, false, ReportProgressFunc);
+                            CommonFunctions.PrintOrderInvoiceQuotation(ReportType.INVOICE, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, 1, false, false, CommonFunctions.UpdateProgressBar);
                         }
                         lblStatus.Text = "Choose a Customer to create Sales Invoice";
                         cmbBoxInvoiceNumber.Items.Clear();
