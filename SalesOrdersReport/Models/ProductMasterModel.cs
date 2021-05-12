@@ -1612,7 +1612,7 @@ namespace SalesOrdersReport.Models
                          $" TaxID = {CurProductDetails.TaxID}, ProductInvID = {CurProductDetails.ProductInvID}, VendorID = {CurProductDetails.VendorID}, Active = {(CurProductDetails.Active ? 1 : 0)}," +
                          $" PurchasePrice = {CurProductDetails.PurchasePrice}, WholesalePrice = {CurProductDetails.WholesalePrice}," +
                          $" RetailPrice = {CurProductDetails.RetailPrice}, MaxRetailPrice = {CurProductDetails.MaxRetailPrice}," +
-                         $" Barcode = {(CurProductDetails.ArrBarcodes.Length > 0 ? String.Join("|", CurProductDetails.ArrBarcodes) : "")}";
+                         $" Barcode = '{(CurProductDetails.ArrBarcodes.Length > 0 ? String.Join("|", CurProductDetails.ArrBarcodes) : "")}'";
                 Query += $" Where ProductID = {CurProductDetails.ProductID}";
                 ObjMySQLHelper.ExecuteNonQuery(Query);
 

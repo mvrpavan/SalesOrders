@@ -83,13 +83,16 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void LoadDataGridViews()
+        private void LoadDataGridViews(bool ReloadFromDB = false)
         {
             try
             {
-                LoadProductCategoryDataGridView(false);
+                //LoadProductCategoryDataGridView(false);
 
-                LoadProductsDataGridView(false);
+                //LoadProductsDataGridView(false);
+                LoadProductCategoryDataGridView(ReloadFromDB);
+
+                LoadProductsDataGridView(ReloadFromDB);
 
                 cmbBoxCategoryFilterList.Items.Clear();
                 cmbBoxCategoryFilterList.Items.Add(AllKeyword);
@@ -797,7 +800,7 @@ namespace SalesOrdersReport.Views
                 switch (BackgroundTask)
                 {
                     case 1:     //Load Products DataGrid View
-                        LoadDataGridViews();
+                        LoadDataGridViews(true);
                         break;
                     case 2:     //Update Products Prices
                         ProductDetails ObjProductDetails = new ProductDetails();

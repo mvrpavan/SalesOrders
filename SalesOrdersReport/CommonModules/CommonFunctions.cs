@@ -866,7 +866,7 @@ namespace SalesOrdersReport.CommonModules
                 ListUOM.Add("GM");
                 ListUOM.Add("LITRE");
                 ListUOM.Add("ML");
-
+                ListUOM.Add("Nos");
                 return ListUOM;
             }
             catch (Exception ex)

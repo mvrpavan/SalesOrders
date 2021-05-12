@@ -258,7 +258,9 @@ namespace SalesOrdersReport.Views
                     ArrBarcodes = txtBoxBarcodes.Text.Trim().Split(','),
                     Active = chkBoxIsActive.Checked
                 };
-                DateTime NowDate = DateTime.Now;
+                VendorDetails tmpVendorDtls = CommonFunctions.ObjVendorMaster.GetVendorDetails(tmpProductDetails.VendorName);
+                if (tmpVendorDtls != null) tmpProductDetails.VendorID = tmpVendorDtls.VendorID;
+                 DateTime NowDate = DateTime.Now;
                 ProductInventoryDetails tmpProductInventoryDetails = new ProductInventoryDetails()
                 {
                     StockName = tmpProductDetails.StockName,
