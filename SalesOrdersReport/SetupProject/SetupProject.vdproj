@@ -261,12 +261,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9C79FB1D5EFBDB19C65BF77A67F2E4FD"
-        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9D29BCCB905939158D0FB6C867E1DE59"
         "OwnerKey" = "8:_B44D9FBD296F48C38BDA77E518B27B77"
         "MsmSig" = "8:_UNDEFINED"
@@ -393,12 +387,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_D2F6191C4CE1533D6EC408FD6303171C"
         "OwnerKey" = "8:_B44D9FBD296F48C38BDA77E518B27B77"
         "MsmSig" = "8:_UNDEFINED"
@@ -509,18 +497,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_B44D9FBD296F48C38BDA77E518B27B77"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D2C5570EEE2149E2A969AF0EE4969D93"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9C79FB1D5EFBDB19C65BF77A67F2E4FD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1997,37 +1973,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9C79FB1D5EFBDB19C65BF77A67F2E4FD"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ExcelDna.Integration, Version=0.34.6373.42344, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_9C79FB1D5EFBDB19C65BF77A67F2E4FD"
-                    {
-                    "Name" = "8:ExcelDna.Integration.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ExcelDna.Integration.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9D29BCCB905939158D0FB6C867E1DE59"
             {
             "AssemblyRegister" = "3:1"
@@ -3076,15 +3021,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Sales Orders Invoice V8"
-        "ProductCode" = "8:{ABAD327B-60AE-46D3-8001-0A9B3F01E708}"
-        "PackageCode" = "8:{FC43F01E-9531-42CD-9AC6-7CD51305EE2C}"
+        "ProductCode" = "8:{95D08F6C-8359-4D01-994D-B45BCACD875D}"
+        "PackageCode" = "8:{73E7742F-6FF0-4961-B172-45863AEF2D52}"
         "UpgradeCode" = "8:{FFDA7AE5-FF53-41D9-A997-A97DFE7A980C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:8.4.1"
+        "ProductVersion" = "8:8.4.2"
         "Manufacturer" = "8:Freelance Projects Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -3675,34 +3620,6 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{942C7724-0535-491A-9247-F9350A670C4D}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D2C5570EEE2149E2A969AF0EE4969D93"
-            {
-            "SourcePath" = "8:..\\SalesOrdersExcelToolPack\\obj\\Release\\SalesOrdersExcelToolPack.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C439DF3983E543BFBF5F3163B4C372D6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{6F467268-1809-4AD6-9BD8-2D980D8A5951}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

@@ -277,11 +277,11 @@ namespace SalesOrdersReport.Models
                         ProductName = tmpOrderItem.ProductName,
                         ProductID = tmpOrderItem.ProductID,
                         OrderQty = tmpOrderItem.OrderQty,
-                        SaleQty = tmpOrderItem.OrderQty,
+                        //SaleQty = tmpOrderItem.OrderQty,
                         Price = tmpOrderItem.Price,
-                        InvoiceItemStatus = INVOICEITEMSTATUS.Invoiced,
-                        TaxableValue = tmpOrderItem.Price * tmpOrderItem.OrderQty,
-                        NetTotal = tmpOrderItem.Price * tmpOrderItem.OrderQty
+                        InvoiceItemStatus = INVOICEITEMSTATUS.Invoiced
+                        //TaxableValue = tmpOrderItem.Price * tmpOrderItem.OrderQty,
+                        //NetTotal = tmpOrderItem.Price * tmpOrderItem.OrderQty
                     };
 
                     ListInvoiceItems.Add(tmpInvoiceItem);

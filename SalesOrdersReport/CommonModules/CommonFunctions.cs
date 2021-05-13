@@ -1110,7 +1110,7 @@ namespace SalesOrdersReport.CommonModules
             try
             {
                 String OutputFolder = Path.GetDirectoryName(Path.GetTempPath());
-                String ExcelFilePath = ExportOrdInvQuotToExcel(EnumReportType, IsDummyBill, OrdInvQuotDate, ObjectModel, ListObjects, OutputFolder, CreateSummary, PrintOldBalance, ReportProgress);
+                String ExcelFilePath = ExportOrdInvQuotToExcel(EnumReportType, IsDummyBill, OrdInvQuotDate, ObjectModel, ListObjects, OutputFolder, CreateSummary, PrintOldBalance, ReportProgress, true);
 
                 if (PrintCopies > 0)
                 {
