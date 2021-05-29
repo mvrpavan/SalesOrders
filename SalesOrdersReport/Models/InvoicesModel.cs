@@ -665,7 +665,7 @@ namespace SalesOrdersReport.Models
                 Query = $"Select Max(InvoiceID) from Invoices where CustomerID = {ObjInvoiceDetails.CustomerID} and InvoiceDate = '{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.InvoiceDate)}'";
                 foreach (var item in ObjMySQLHelper.ExecuteQuery(Query)) InvoiceID = Int32.Parse(item[0].ToString());
 
-                InsertInvoiceItems(ObjInvoiceDetails.ListInvoiceItems, InvoiceID);
+                InsertInvoiceItems(ObjInvoiceDetails.ListInvoiceItems, InvoiceID, ObjInvoiceDetails.DiscountAmount);
 
                 return InvoiceID;
             }
@@ -676,7 +676,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        private void InsertInvoiceItems(List<InvoiceItemDetails> ListInvoiceItems, Int32 InvoiceID)
+        private void InsertInvoiceItems(List<InvoiceItemDetails> ListInvoiceItems, Int32 InvoiceID,Double DiscountAmount)
         {
             try
             {
@@ -684,7 +684,8 @@ namespace SalesOrdersReport.Models
                 foreach (var item in ListInvoiceItems)
                 {
                     Double[] TaxRates = ObjProductMasterModel.GetTaxRatesForProduct(item.ProductName);
-                    item.TaxableValue = item.SaleQty * item.Price / ((100.0 + TaxRates.Sum()) / 100.0);
+                    //item.TaxableValue = item.SaleQty * item.Price / ((100.0 + TaxRates.Sum()) / 100.0);
+                    item.TaxableValue = ((item.SaleQty * item.Price) - DiscountAmount) / ((100.0 + TaxRates.Sum()) / 100.0);
                     item.CGST = item.TaxableValue * TaxRates[0] / 100.0;
                     item.SGST = item.TaxableValue * TaxRates[1] / 100.0;
                     item.IGST = item.TaxableValue * TaxRates[2] / 100.0;
@@ -767,7 +768,7 @@ namespace SalesOrdersReport.Models
                 }
 
                 //Insert New Items
-                InsertInvoiceItems(ListItemsAdded, ObjInvoiceDetails.InvoiceID);
+                InsertInvoiceItems(ListItemsAdded, ObjInvoiceDetails.InvoiceID, ObjInvoiceDetails.DiscountAmount);
 
                 //Update InvoiceItemCount
                 ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceItemCount", "NetInvoiceAmount", "InvoiceStatus","DeliveryLineID" },

@@ -439,7 +439,7 @@ namespace SalesOrdersReport.Models
                 string WhereCondition = "ACCOUNTID = '" + ObjPaymentDetails.AccountID.ToString() + "'";
                 ResultVal = ObjMySQLHelper.UpdateTableDetails("ACCOUNTSMASTER", ListTempColNames, ListTempColValues, new List<Types>() { Types.Number, Types.String }, WhereCondition);
 
-                return 0;
+                return ResultVal;
             }
             catch (Exception ex)
             {

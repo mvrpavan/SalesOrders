@@ -47,16 +47,16 @@ namespace SalesOrdersReport.Views
             try
             {
                 LoadDataGridViews();
-//                BackgroundTask = 1;
+                //                BackgroundTask = 1;
 
-//#if DEBUG
-//                backgroundWorkerProducts_DoWork(null, null);
-//                backgroundWorkerProducts_RunWorkerCompleted(null, null);
-//#else
-//                ReportProgress = backgroundWorkerProducts.ReportProgress;
-//                backgroundWorkerProducts.RunWorkerAsync();
-//                backgroundWorkerProducts.WorkerReportsProgress = true;
-//#endif
+                //#if DEBUG
+                //                backgroundWorkerProducts_DoWork(null, null);
+                //                backgroundWorkerProducts_RunWorkerCompleted(null, null);
+                //#else
+                //                ReportProgress = backgroundWorkerProducts.ReportProgress;
+                //                backgroundWorkerProducts.RunWorkerAsync();
+                //                backgroundWorkerProducts.WorkerReportsProgress = true;
+                //#endif
             }
             catch (Exception ex)
             {
@@ -88,12 +88,11 @@ namespace SalesOrdersReport.Views
             try
             {
                 //LoadProductCategoryDataGridView(false);
-
                 //LoadProductsDataGridView(false);
                 LoadProductCategoryDataGridView(ReloadFromDB);
+                if (ReloadFromDB) ReloadFromDB = false;
 
                 LoadProductsDataGridView(ReloadFromDB);
-
                 cmbBoxCategoryFilterList.Items.Clear();
                 cmbBoxCategoryFilterList.Items.Add(AllKeyword);
                 foreach (DataGridViewRow item in dtGridViewProductCategory.Rows)
@@ -105,6 +104,7 @@ namespace SalesOrdersReport.Views
             {
                 CommonFunctions.ShowErrorDialog($"{this}.LoadDataGridViews()", ex);
             }
+
         }
 
         private void ProductsMainForm_Shown(object sender, EventArgs e)
@@ -332,7 +332,6 @@ namespace SalesOrdersReport.Views
                     if (i == 0) CurrentCol.Visible = false;
                     //if (i == 2) CurrentCol.CellTemplate = new DataGridViewCheckBoxCell();
                 }
-
                 foreach (Int32 CategoryID in ObjProductMaster.GetProductCategoryIDList())
                 {
                     Object[] ArrRowItems = new Object[4];
@@ -423,7 +422,6 @@ namespace SalesOrdersReport.Views
             try
             {
                 if (ReloadFromDB) CurrProductLine.LoadAllProductMasterTables();
-
                 List<ProductDetails> ListAllProducts = ObjProductMaster.GetProductListForCategory(AllKeyword);
                 dtAllProducts = GetProductsDataTable(ListAllProducts);
                 LoadProductsDataGridViewFromDataTable(null);
@@ -444,18 +442,22 @@ namespace SalesOrdersReport.Views
                     if (dialogResult == DialogResult.No) return;
                     ListEditedProductIDs.Clear();
                 }
-
                 List<Int32> ListSelectedIDs = new List<Int32>();
                 foreach (DataGridViewRow item in dtGridViewProducts.SelectedRows)
                 {
                     ListSelectedIDs.Add(Int32.Parse(item.Cells["ID"].Value.ToString()));
                 }
-
-                if (DataFilter != null) dtAllProducts.DefaultView.RowFilter = DataFilter;
-                if (Sort != null) dtAllProducts.DefaultView.Sort = Sort;
+                if (DataFilter != null && DataFilter != "")
+                {
+                    dtAllProducts.DefaultView.RowFilter = DataFilter;
+                }
+                if (Sort != null & Sort != "")
+                {
+                    dtAllProducts.DefaultView.Sort = Sort;
+                }
+                dtGridViewProducts.DataSource = null;
                 dtGridViewProducts.DataSource = dtAllProducts.DefaultView;
                 lblProductCount.Text = $"[Displaying {dtAllProducts.DefaultView.Count} of {dtAllProducts.Rows.Count} Products]";
-
                 foreach (DataGridViewColumn item in dtGridViewProducts.Columns)
                 {
                     item.ReadOnly = true;
@@ -518,7 +520,7 @@ namespace SalesOrdersReport.Views
                     ProductInventoryDetails productInventoryDetails = ObjProductMaster.GetProductInventoryDetails(ListProducts[i].ProductInvID);
                     ArrRowItems[col++] = (productInventoryDetails.Inventory * productInventoryDetails.Units) + " " + productInventoryDetails.UnitsOfMeasurement;
                     ArrRowItems[col++] = (productInventoryDetails.ReOrderStockLevel * productInventoryDetails.Units) + " " + productInventoryDetails.UnitsOfMeasurement;
-                    ArrRowItems[col++] = (productInventoryDetails.ReOrderStockQty * productInventoryDetails.Units) + " " + productInventoryDetails.UnitsOfMeasurement; ;
+                    ArrRowItems[col++] = (productInventoryDetails.ReOrderStockQty * productInventoryDetails.Units) + " " + productInventoryDetails.UnitsOfMeasurement;
                     ArrRowItems[col++] = ListProducts[i].VendorName;
                     ArrRowItems[col++] = ListProducts[i].HSNCode;
                     ArrRowItems[col++] = (ListProducts[i].ArrBarcodes == null) ? "" : String.Join(",", ListProducts[i].ArrBarcodes);
@@ -553,7 +555,7 @@ namespace SalesOrdersReport.Views
         private void btnEditProduct_Click(object sender, EventArgs e)
         {
             try
-            {                
+            {
                 if (dtGridViewProducts.SelectedCells.Count == 0)
                 {
                     MessageBox.Show(this, "Please select a Product to edit", "Product", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -634,16 +636,17 @@ namespace SalesOrdersReport.Views
             try
             {
                 //LoadProductsDataGridView(true);
+                LoadDataGridViews(true);
 
-                BackgroundTask = 1;
-#if DEBUG
-                backgroundWorkerProducts_DoWork(null, null);
-                backgroundWorkerProducts_RunWorkerCompleted(null, null);
-#else
-                ReportProgress = backgroundWorkerProducts.ReportProgress;
-                backgroundWorkerProducts.RunWorkerAsync();
-                backgroundWorkerProducts.WorkerReportsProgress = true;
-#endif
+                //                BackgroundTask = 1;
+                //#if DEBUG
+                //                backgroundWorkerProducts_DoWork(null, null);
+                //                backgroundWorkerProducts_RunWorkerCompleted(null, null);
+                //#else
+                //                ReportProgress = backgroundWorkerProducts.ReportProgress;
+                //                backgroundWorkerProducts.RunWorkerAsync();
+                //                backgroundWorkerProducts.WorkerReportsProgress = true;
+                //#endif
             }
             catch (Exception ex)
             {

@@ -6,6 +6,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
 using SalesOrdersReport.CommonModules;
 using SalesOrdersReport.Views;
+using System.Windows.Forms;
 
 namespace SalesOrdersReport.Models
 {
@@ -84,8 +85,8 @@ namespace SalesOrdersReport.Models
                 ObjProductDetails.StockName = GetProductInventoryDetails(ObjProductDetails.ProductInvID).StockName;
                 ObjProductDetails.HSNCode = GetTaxDetails(ObjProductDetails.TaxID).HSNCode;
                 VendorDetails tmpVendorDetails = CommonFunctions.ObjVendorMaster.GetVendorDetails(ObjProductDetails.VendorID);
-                ObjProductDetails.VendorName = (tmpVendorDetails?.VendorName);
-
+                //ObjProductDetails.VendorName = (tmpVendorDetails?.VendorName);
+                ObjProductDetails.VendorName = (tmpVendorDetails == null) ? "" : tmpVendorDetails.VendorName;
                 Int32 ProductIndex = ListProducts.BinarySearch(ObjProductDetails, ObjProductDetails);
                 if (ProductIndex < 0)
                 {

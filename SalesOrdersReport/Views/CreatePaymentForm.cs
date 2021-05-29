@@ -201,7 +201,14 @@ namespace SalesOrdersReport.Views
                     TotalTaxAmount = Double.Parse(txtCreatePaymentTotalTax.Text == string.Empty ? "0" : txtCreatePaymentTotalTax.Text)
                 };
 
-                ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails, ref tmpCustomerAccountHistoryDetails);
+                int ResultVal = ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails, ref tmpCustomerAccountHistoryDetails);
+                if (ResultVal < 0) MessageBox.Show("Wasnt able to create new payment", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else
+                {
+                    MessageBox.Show("New Payment for :: " + cmbxCreatePaymentCustomerNames.SelectedItem.ToString() + " added successfully", "Payment Added");
+                    btnReset.PerformClick();
+                }
+
             }
             catch (Exception ex)
             {
@@ -443,10 +450,16 @@ namespace SalesOrdersReport.Views
                 cmbxCreatePaymentCustomerNames.SelectedIndex = 0;
                 txtCreatePaymentDesc.Text = "";
                 txtbxCreatePaymentAmount.Text = "0";
-                txtCreatePaymentRefundAmt.Text = txtCreatePaymentDiscAmt.Text = txtCreatePaymentTotalTax.Text = txtCreatePaymentCancelAmt.Text = "0";
+                txtCreatePaymentRefundAmt.Text = txtCreatePaymentDiscAmt.Text = txtCreatePaymentNetSaleAmt.Text = txtCreatePaymentSaleAmount.Text = txtCreatePaymentTotalTax.Text = txtCreatePaymentCancelAmt.Text = "0";
                 txtCreatePaymentInvoiceNum.Text = "";
                 txtCreatePaymentInvoiceDate.Text = "";
                 txtCreatePaymentInvoiceItems.Text = "";
+                cmbxCreatePaymentNumber.DataSource = null ;
+                txtCreatePaymentCustName.Text = "";
+                txtCreatePaymentBA.Text = "";
+                txtCreatePaymentCustAddress.Text = "";
+                txtCreatePaymentOB.Text = "";
+                txtCreatePaymentsCustPhoneNo.Text = "";
             }
             catch (Exception ex)
             {
@@ -625,6 +638,7 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog($"{this}.chckbxCreatePaymentMarkInvoiceAsPaid_CheckedChanged()", ex);
             }
         }
+
 
 
         private void CreatePaymentForm_FormClosed(object sender, FormClosedEventArgs e)
