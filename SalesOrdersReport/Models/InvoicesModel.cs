@@ -775,6 +775,8 @@ namespace SalesOrdersReport.Models
                                             new List<String>() { InvoiceItemCount.ToString(), NetInvoiceAmount.ToString(), ObjInvoiceDetails.InvoiceStatus.ToString(), ObjInvoiceDetails.DeliveryLineID.ToString() },
                                             new List<Types>() { Types.Number, Types.Number, Types.String, Types.Number }, $"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
 
+                ObjInvoiceDetails.NetInvoiceAmount = NetInvoiceAmount;
+                ObjInvoiceDetails.InvoiceItemCount = InvoiceItemCount;
                 FillInvoiceItemDetails(ObjInvoiceDetails);
 
                 return ObjInvoiceDetails;
@@ -1281,24 +1283,22 @@ namespace SalesOrdersReport.Models
 
                 InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
                 CustomerDetails ObjCustomerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(ObjInvoiceDetails.CustomerID);
-
-                PrintDetails ObjPrintDetails = new PrintDetails()
-                {
-                    CustomerName = ObjCustomerDetails.CustomerName,
-                    CustomerPhone = ObjCustomerDetails.PhoneNo.ToString(),
-                    DateValue = ObjInvoiceDetails.InvoiceDate,
-                    InvoiceNumber = ObjInvoiceDetails.InvoiceNumber,
-                    GrossAmount = ObjInvoiceDetails.GrossInvoiceAmount,
-                    DiscountAmount = ObjInvoiceDetails.DiscountAmount,
-                    TotalTaxAmount = ObjInvoiceDetails.ListInvoiceItems.Sum(e => e.SGST + e.CGST + e.IGST),
-                    NetAmount = ObjInvoiceDetails.NetInvoiceAmount,
-                    StaffName = CommonFunctions.ObjUserMasterModel.GetUserDtlsObjBasedOnUsrName(MySQLHelper.GetMySqlHelperObj().CurrentUser).FullName,
-                    POSNumber = CommonFunctions.ObjApplicationSettings.POSNumber,
-                    Header1 = CommonFunctions.ObjInvoiceSettings.HeaderTitle,
-                    Header2 = CommonFunctions.ObjInvoiceSettings.ReportTitle,
-                    ListSubHeaderLines = new List<string>() { CommonFunctions.ObjInvoiceSettings.HeaderSubTitle, $"Phone: {CommonFunctions.ObjInvoiceSettings.PhoneNumber}" },
-                    ListFooterLines = new List<string>() { CommonFunctions.ObjInvoiceSettings.FooterTitle }
-                };
+                PrintDetails ObjPrintDetails = new PrintDetails();
+       
+                ObjPrintDetails.CustomerName = ObjCustomerDetails.CustomerName;
+                ObjPrintDetails.CustomerPhone = ObjCustomerDetails.PhoneNo.ToString();
+                ObjPrintDetails.DateValue = ObjInvoiceDetails.InvoiceDate;
+                ObjPrintDetails.InvoiceNumber = ObjInvoiceDetails.InvoiceNumber;
+                ObjPrintDetails.GrossAmount = ObjInvoiceDetails.GrossInvoiceAmount;
+                ObjPrintDetails.DiscountAmount = ObjInvoiceDetails.DiscountAmount;
+                ObjPrintDetails.TotalTaxAmount = ObjInvoiceDetails.ListInvoiceItems.Sum(e => e.SGST + e.CGST + e.IGST);
+                ObjPrintDetails.NetAmount = ObjInvoiceDetails.NetInvoiceAmount;
+                ObjPrintDetails.StaffName = CommonFunctions.ObjUserMasterModel.GetUserDtlsObjBasedOnUsrName(MySQLHelper.GetMySqlHelperObj().CurrentUser).FullName;
+                ObjPrintDetails.POSNumber = CommonFunctions.ObjApplicationSettings.POSNumber;
+                ObjPrintDetails.Header1 = CommonFunctions.ObjInvoiceSettings.HeaderTitle;
+                ObjPrintDetails.Header2 = CommonFunctions.ObjInvoiceSettings.ReportTitle;
+                ObjPrintDetails.ListSubHeaderLines = new List<string>() { CommonFunctions.ObjInvoiceSettings.HeaderSubTitle, $"Phone: {CommonFunctions.ObjInvoiceSettings.PhoneNumber}" };
+                ObjPrintDetails.ListFooterLines = new List<string>() { CommonFunctions.ObjInvoiceSettings.FooterTitle };
 
                 for (int i = 0; i < ObjInvoiceDetails.ListInvoiceItems.Count; i++)
                 {

@@ -551,7 +551,9 @@ namespace SalesOrdersReport.Views
                         {
                             while (true)
                             {
-                                dialogResult = CommonFunctions.ShowDialog(new PaymentModeSelectionForm(AddUpdatedInvoiceDetails.NetInvoiceAmount, UpdatePaymentsOnClose), this);
+                                //dialogResult = CommonFunctions.ShowDialog(new PaymentModeSelectionForm(AddUpdatedInvoiceDetails.NetInvoiceAmount, UpdatePaymentsOnClose), this);
+                                string GrandTotal = lblGrandTtl.Text.Replace(CurrencyChar, ' ').Trim();
+                                dialogResult = CommonFunctions.ShowDialog(new PaymentModeSelectionForm(double.Parse((GrandTotal == string.Empty || GrandTotal == "0.00") ? "0" : GrandTotal), UpdatePaymentsOnClose), this);
                                 if (dialogResult == DialogResult.OK)
                                 {
                                     dialogResult = MessageBox.Show(this, "Would you like to print the Bill?", "Create Bill", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
