@@ -665,7 +665,8 @@ namespace SalesOrdersReport.Models
                 Query = $"Select Max(InvoiceID) from Invoices where CustomerID = {ObjInvoiceDetails.CustomerID} and InvoiceDate = '{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.InvoiceDate)}'";
                 foreach (var item in ObjMySQLHelper.ExecuteQuery(Query)) InvoiceID = Int32.Parse(item[0].ToString());
 
-                InsertInvoiceItems(ObjInvoiceDetails.ListInvoiceItems, InvoiceID, ObjInvoiceDetails.DiscountAmount);
+                Double DiscountPerc = ObjInvoiceDetails.DiscountAmount / ObjInvoiceDetails.GrossInvoiceAmount;
+                InsertInvoiceItems(ObjInvoiceDetails.ListInvoiceItems, InvoiceID, DiscountPerc);
 
                 return InvoiceID;
             }
@@ -676,7 +677,7 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        private void InsertInvoiceItems(List<InvoiceItemDetails> ListInvoiceItems, Int32 InvoiceID,Double DiscountAmount)
+        private void InsertInvoiceItems(List<InvoiceItemDetails> ListInvoiceItems, Int32 InvoiceID, Double DiscountPerc)
         {
             try
             {
@@ -685,15 +686,16 @@ namespace SalesOrdersReport.Models
                 {
                     Double[] TaxRates = ObjProductMasterModel.GetTaxRatesForProduct(item.ProductName);
                     //item.TaxableValue = item.SaleQty * item.Price / ((100.0 + TaxRates.Sum()) / 100.0);
+                    Double DiscountAmount = item.SaleQty * item.Price * DiscountPerc;
                     item.TaxableValue = ((item.SaleQty * item.Price) - DiscountAmount) / ((100.0 + TaxRates.Sum()) / 100.0);
                     item.CGST = item.TaxableValue * TaxRates[0] / 100.0;
                     item.SGST = item.TaxableValue * TaxRates[1] / 100.0;
                     item.IGST = item.TaxableValue * TaxRates[2] / 100.0;
                     item.NetTotal = item.TaxableValue + (item.TaxableValue * TaxRates.Sum() / 100.0);
 
-                    Query = "Insert into InvoiceItems(InvoiceID, ProductID, OrderQty, SaleQty, Price, " +
+                    Query = "Insert into InvoiceItems(InvoiceID, ProductID, OrderQty, SaleQty, Price, Discount, " +
                             "TaxableValue, CGST, SGST, IGST, NetTotal, InvoiceItemStatus) Values (";
-                    Query += $"{InvoiceID}, {item.ProductID}, {item.OrderQty}, {item.SaleQty}, {item.Price}, " +
+                    Query += $"{InvoiceID}, {item.ProductID}, {item.OrderQty}, {item.SaleQty}, {item.Price}, {DiscountAmount}, " +
                             $"{item.TaxableValue}, {item.CGST}, {item.SGST}, {item.IGST}, {item.NetTotal}, '{item.InvoiceItemStatus}')";
                     ObjMySQLHelper.ExecuteNonQuery(Query);
                 }
@@ -768,7 +770,8 @@ namespace SalesOrdersReport.Models
                 }
 
                 //Insert New Items
-                InsertInvoiceItems(ListItemsAdded, ObjInvoiceDetails.InvoiceID, ObjInvoiceDetails.DiscountAmount);
+                Double DiscountPerc = ObjInvoiceDetails.DiscountAmount / ObjInvoiceDetails.GrossInvoiceAmount;
+                InsertInvoiceItems(ListItemsAdded, ObjInvoiceDetails.InvoiceID, DiscountPerc);
 
                 //Update InvoiceItemCount
                 ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceItemCount", "NetInvoiceAmount", "InvoiceStatus","DeliveryLineID" },
