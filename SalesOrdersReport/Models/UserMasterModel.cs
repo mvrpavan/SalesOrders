@@ -34,10 +34,13 @@ namespace SalesOrdersReport
             }
         }
 
-        public Int32 LoginCheck(string txtUserName, string txtPassword, MySqlConnection myConnection)
+        public Int32 LoginCheck(string txtUserName, string txtPassword)
         {
             try
             {
+                MySQLHelper ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+                ObjMySQLHelper.CheckAndReconnectToDB();
+                MySqlConnection myConnection = ObjMySQLHelper.GetDbConnection();
 
                 int ReturnVal = 0;
                 MySqlCommand MySQLCommand = new MySqlCommand("SELECT USERNAME,PASSWORD,USERGUID,ACTIVE FROM USERMASTER WHERE USERNAME = @Username", myConnection);

@@ -1,6 +1,7 @@
 ﻿using SalesOrdersReport.CommonModules;
 using System;
 using System.Drawing;
+using System.Net.Sockets;
 using System.Windows.Forms;
 
 namespace SalesOrdersReport.Views
@@ -25,7 +26,6 @@ namespace SalesOrdersReport.Views
 #endif
             this.Text = CommonFunctions.ObjApplicationSettings.MainFormTitleText;
 
-            toolStripOrderMasterPath.Text = "";
             CommonFunctions.ToolStripProgressBarMainForm = this.toolStripProgressBar;
             CommonFunctions.ToolStripProgressBarMainFormStatus = this.toolStripProgress;
             this.toolStripProgress.Text = "";
@@ -37,6 +37,7 @@ namespace SalesOrdersReport.Views
             //reportsMenu.Visible = true;
 
             FillShortcuts();
+            statusStrip.ShowItemToolTips = true;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -152,38 +153,6 @@ namespace SalesOrdersReport.Views
                 return false;
             }
         }
-
-        #region File Menu Item
-        private void chooseMasterFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                OrderMasterForm ObjOrderMasterForm = new OrderMasterForm();
-                ObjOrderMasterForm.FormClosed += new FormClosedEventHandler(OrderMasterForm_FormClosed);
-                ShowChildForm(ObjOrderMasterForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.chooseMasterFileToolStripMenuItem_Click()", ex);
-            }
-        }
-
-        void OrderMasterForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                if (!String.IsNullOrEmpty(CommonFunctions.MasterFilePath))
-                {
-                    toolStripOrderMasterPath.Text = CommonFunctions.MasterFilePath;
-                    MasterSheetSelected = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.OrderMasterForm_FormClosed()", ex);
-            }
-        }
-        #endregion
 
         #region Products Menu Item
         private void productMenu_Click(object sender, EventArgs e)
@@ -304,6 +273,7 @@ namespace SalesOrdersReport.Views
             try
             {
                 this.IsLoggedOut = true;
+                timerDBConnection.Enabled = false;
                 this.Close();
                 DialogResult = DialogResult.OK;
             }
@@ -493,6 +463,53 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.reportsMenu_Click()", ex);
+            }
+        }
+
+        Boolean IsConnected = false;
+        private void timerDBConnection_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!timerDBConnection.Enabled) return;
+
+                Boolean tmpIsConnected = false;
+                using (TcpClient tcpClient = new TcpClient())
+                {
+                    try
+                    {
+                        tcpClient.Connect(CommonFunctions.ObjApplicationSettings.Server, 3306);
+                        tmpIsConnected = true;
+                    }
+                    catch (Exception)
+                    {
+                        tmpIsConnected = false;
+                    }
+                }
+
+                if (IsConnected != tmpIsConnected)
+                {
+                    IsConnected = tmpIsConnected;
+                    toolStripConnStatusLabel.Image = IsConnected ? Properties.Resources.connected_icon_2_16 : Properties.Resources.disconnected_icon_14_16;
+                    toolStripConnStatusLabel.ToolTipText = IsConnected ? "Connected" : "Disconnected";
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.timerDBConnection_Tick()", ex);
+            }
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            try
+            {
+                timerDBConnection.Enabled = true;
+                timerDBConnection_Tick(null, null);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.MainForm_Shown()", ex);
             }
         }
     }

@@ -220,6 +220,7 @@ namespace SalesOrdersReport.Models
         public Boolean IsCustomerBillGenFormatInvoice, IsCustomerBillGenFormatQuotation;
         public Boolean IsCustomerBillPrintFormatInvoice, IsCustomerBillPrintFormatQuotation;
         public Int32 InvoiceQuotPrintCopies = 1;
+        public String PrinterName;
 
         public void ReadSettingsFromNode(XmlNode Node)
         {
@@ -233,6 +234,13 @@ namespace SalesOrdersReport.Models
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "CustomerBillPrintFormatInvoice", out Value)) IsCustomerBillPrintFormatInvoice = Boolean.Parse(Value);
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "CustomerBillPrintFormatQuotation", out Value)) IsCustomerBillPrintFormatQuotation = Boolean.Parse(Value);
                 if (XMLFileUtils.GetChildNodeValue(SettingsNode, "InvoiceQuotationNoOfCopiesToPrint", out Value)) InvoiceQuotPrintCopies = Int32.Parse(Value);
+                if (XMLFileUtils.GetChildNodeValue(SettingsNode, "PrinterName", out Value)) PrinterName = Value;
+                else
+                {
+                    XmlNode ChildNode;
+                    if (!XMLFileUtils.GetChildNode(SettingsNode, "PrinterName", out ChildNode))
+                        XMLFileUtils.AddChildNodeToNodeRecusrive(SettingsNode, "/PrinterName");
+                }
             }
             catch (Exception ex)
             {
@@ -250,6 +258,7 @@ namespace SalesOrdersReport.Models
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "CustomerBillPrintFormatInvoice", IsCustomerBillPrintFormatInvoice.ToString());
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "CustomerBillPrintFormatQuotation", IsCustomerBillPrintFormatQuotation.ToString());
                 XMLFileUtils.SetChildNodeValue(SettingsNode, "InvoiceQuotationNoOfCopiesToPrint", InvoiceQuotPrintCopies.ToString());
+                XMLFileUtils.SetChildNodeValue(SettingsNode, "PrinterName", PrinterName);
             }
             catch (Exception ex)
             {

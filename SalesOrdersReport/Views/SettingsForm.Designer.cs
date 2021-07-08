@@ -32,8 +32,10 @@
             this.tabControlSettings = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtBoxPrintCopies = new System.Windows.Forms.TextBox();
             this.label32 = new System.Windows.Forms.Label();
             this.chkBoxInstBillPrintQuot = new System.Windows.Forms.CheckBox();
+            this.label34 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
             this.chkBoxInstBillGenQuot = new System.Windows.Forms.CheckBox();
             this.chkBoxInstBillGenInvoice = new System.Windows.Forms.CheckBox();
@@ -133,8 +135,8 @@
             this.colorDialogSettings = new System.Windows.Forms.ColorDialog();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbBoxProductLines = new System.Windows.Forms.ComboBox();
-            this.label34 = new System.Windows.Forms.Label();
-            this.txtBoxPrintCopies = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.cmbBoxPrinters = new System.Windows.Forms.ComboBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -160,9 +162,11 @@
             // tabPageGeneral
             // 
             this.tabPageGeneral.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabPageGeneral.Controls.Add(this.cmbBoxPrinters);
             this.tabPageGeneral.Controls.Add(this.groupBox1);
             this.tabPageGeneral.Controls.Add(this.ddlSummaryLocation);
             this.tabPageGeneral.Controls.Add(this.lblSummaryLocation);
+            this.tabPageGeneral.Controls.Add(this.label35);
             this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
@@ -184,10 +188,17 @@
             this.groupBox1.Controls.Add(this.chkBoxInstBillPrintInvoice);
             this.groupBox1.Location = new System.Drawing.Point(75, 97);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(334, 119);
+            this.groupBox1.Size = new System.Drawing.Size(334, 124);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Customer Bill Settings";
+            // 
+            // txtBoxPrintCopies
+            // 
+            this.txtBoxPrintCopies.Location = new System.Drawing.Point(127, 88);
+            this.txtBoxPrintCopies.Name = "txtBoxPrintCopies";
+            this.txtBoxPrintCopies.Size = new System.Drawing.Size(26, 20);
+            this.txtBoxPrintCopies.TabIndex = 6;
             // 
             // label32
             // 
@@ -207,6 +218,15 @@
             this.chkBoxInstBillPrintQuot.TabIndex = 5;
             this.chkBoxInstBillPrintQuot.Text = "Quotation";
             this.chkBoxInstBillPrintQuot.UseVisualStyleBackColor = true;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(40, 91);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(63, 13);
+            this.label34.TabIndex = 4;
+            this.label34.Text = "Print Copies";
             // 
             // label33
             // 
@@ -253,7 +273,7 @@
             // 
             this.ddlSummaryLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlSummaryLocation.FormattingEnabled = true;
-            this.ddlSummaryLocation.Location = new System.Drawing.Point(247, 32);
+            this.ddlSummaryLocation.Location = new System.Drawing.Point(181, 32);
             this.ddlSummaryLocation.Name = "ddlSummaryLocation";
             this.ddlSummaryLocation.Size = new System.Drawing.Size(121, 21);
             this.ddlSummaryLocation.TabIndex = 3;
@@ -1166,21 +1186,23 @@
             this.cmbBoxProductLines.TabIndex = 0;
             this.cmbBoxProductLines.SelectedIndexChanged += new System.EventHandler(this.cmbBoxProductLines_SelectedIndexChanged);
             // 
-            // label34
+            // label35
             // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(40, 91);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(63, 13);
-            this.label34.TabIndex = 4;
-            this.label34.Text = "Print Copies";
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(90, 69);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(76, 13);
+            this.label35.TabIndex = 4;
+            this.label35.Text = "Choose Printer";
             // 
-            // txtBoxPrintCopies
+            // cmbBoxPrinters
             // 
-            this.txtBoxPrintCopies.Location = new System.Drawing.Point(127, 88);
-            this.txtBoxPrintCopies.Name = "txtBoxPrintCopies";
-            this.txtBoxPrintCopies.Size = new System.Drawing.Size(26, 20);
-            this.txtBoxPrintCopies.TabIndex = 6;
+            this.cmbBoxPrinters.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxPrinters.FormattingEnabled = true;
+            this.cmbBoxPrinters.Location = new System.Drawing.Point(181, 66);
+            this.cmbBoxPrinters.Name = "cmbBoxPrinters";
+            this.cmbBoxPrinters.Size = new System.Drawing.Size(202, 21);
+            this.cmbBoxPrinters.TabIndex = 7;
             // 
             // SettingsForm
             // 
@@ -1327,5 +1349,7 @@
         private System.Windows.Forms.CheckBox chkBoxInstBillPrintInvoice;
         private System.Windows.Forms.TextBox txtBoxPrintCopies;
         private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.ComboBox cmbBoxPrinters;
+        private System.Windows.Forms.Label label35;
     }
 }

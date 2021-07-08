@@ -61,7 +61,7 @@ namespace SalesOrdersReport.Views
             this.updatePurchasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cntxtMenuStripUserProfile = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.toolStripOrderMasterPath = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripConnStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripProgress = new System.Windows.Forms.ToolStripStatusLabel();
@@ -70,6 +70,7 @@ namespace SalesOrdersReport.Views
             this.picBoxBackgroundLogo = new System.Windows.Forms.PictureBox();
             this.pnlShortcuts = new System.Windows.Forms.Panel();
             this.lblShortcuts = new System.Windows.Forms.Label();
+            this.timerDBConnection = new System.Windows.Forms.Timer(this.components);
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -311,7 +312,7 @@ namespace SalesOrdersReport.Views
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripOrderMasterPath,
+            this.toolStripConnStatusLabel,
             this.toolStripStatusLabel,
             this.toolStripProgressBar,
             this.toolStripProgress});
@@ -322,17 +323,19 @@ namespace SalesOrdersReport.Views
             this.statusStrip.Text = "Status Strip";
             this.statusStrip.SizeChanged += new System.EventHandler(this.statusStrip_SizeChanged);
             // 
-            // toolStripOrderMasterPath
+            // toolStripConnStatusLabel
             // 
-            this.toolStripOrderMasterPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.toolStripOrderMasterPath.Name = "toolStripOrderMasterPath";
-            this.toolStripOrderMasterPath.Size = new System.Drawing.Size(32, 17);
-            this.toolStripOrderMasterPath.Text = "Path";
+            this.toolStripConnStatusLabel.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStripConnStatusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripConnStatusLabel.Image = global::SalesOrdersReport.Properties.Resources.connected_icon_2_16;
+            this.toolStripConnStatusLabel.Name = "toolStripConnStatusLabel";
+            this.toolStripConnStatusLabel.Size = new System.Drawing.Size(16, 17);
+            this.toolStripConnStatusLabel.Text = "toolStripConnStatusLabel";
             // 
             // toolStripStatusLabel
             // 
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(972, 17);
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(988, 17);
             this.toolStripStatusLabel.Spring = true;
             this.toolStripStatusLabel.Text = "Status";
             this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -389,6 +392,11 @@ namespace SalesOrdersReport.Views
             this.lblShortcuts.TabIndex = 0;
             this.lblShortcuts.Text = "Shortcuts";
             // 
+            // timerDBConnection
+            // 
+            this.timerDBConnection.Interval = 10000;
+            this.timerDBConnection.Tick += new System.EventHandler(this.timerDBConnection_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -411,6 +419,7 @@ namespace SalesOrdersReport.Views
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -444,7 +453,6 @@ namespace SalesOrdersReport.Views
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripProgress;
         private System.Windows.Forms.ContextMenuStrip cntxtMenuStripUserProfile;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripOrderMasterPath;
         private System.Windows.Forms.ToolStripMenuItem updatePurchasesToolStripMenuItem;
         private System.Windows.Forms.PictureBox picBoxBackgroundLogo;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -468,6 +476,8 @@ namespace SalesOrdersReport.Views
         private System.Windows.Forms.ToolStripMenuItem manageVendorsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem POSbillingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExpensesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripConnStatusLabel;
+        private System.Windows.Forms.Timer timerDBConnection;
     }
 }
 

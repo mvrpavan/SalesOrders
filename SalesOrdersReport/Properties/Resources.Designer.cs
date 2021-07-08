@@ -283,6 +283,36 @@ namespace SalesOrdersReport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap connected_icon_2_16 {
+            get {
+                object obj = ResourceManager.GetObject("connected-icon-2-16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap connected_icon_3_16 {
+            get {
+                object obj = ResourceManager.GetObject("connected-icon-3-16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap connected_icon_blue_16 {
+            get {
+                object obj = ResourceManager.GetObject("connected-icon-blue-16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap create_user_32 {
             get {
                 object obj = ResourceManager.GetObject("create-user_32", resourceCulture);
@@ -436,6 +466,16 @@ namespace SalesOrdersReport.Properties {
         internal static System.Drawing.Bitmap delete_user {
             get {
                 object obj = ResourceManager.GetObject("delete_user", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap disconnected_icon_14_16 {
+            get {
+                object obj = ResourceManager.GetObject("disconnected-icon-14-16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

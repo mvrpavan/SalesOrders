@@ -62,7 +62,7 @@ namespace SalesOrdersReport.Views
                 int ReturnVal = 0;
                 MySQLHelper.GetMySqlHelperObj().CurrentUser = "admin";
 #else
-                int ReturnVal = CommonFunctions.ObjUserMasterModel.LoginCheck(txtUserName.Text, txtPassword.Text, myConnection);
+                int ReturnVal = CommonFunctions.ObjUserMasterModel.LoginCheck(txtUserName.Text, txtPassword.Text);
 #endif
                 if (ReturnVal == 0)
                 {

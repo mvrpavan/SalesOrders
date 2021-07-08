@@ -66,6 +66,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -289,12 +290,6 @@
     </Compile>
     <Compile Include="Views\ExportToExcelForm.Designer.cs">
       <DependentUpon>ExportToExcelForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\GetDBConnectionConfigForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\GetDBConnectionConfigForm.Designer.cs">
-      <DependentUpon>GetDBConnectionConfigForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Invoice.cs" />
     <Compile Include="Models\InvoiceGST.cs" />
@@ -615,9 +610,6 @@
     <EmbeddedResource Include="Views\ExportToExcelForm.resx">
       <DependentUpon>ExportToExcelForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\GetDBConnectionConfigForm.resx">
-      <DependentUpon>GetDBConnectionConfigForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\ImportFromExcelForm.resx">
       <DependentUpon>ImportFromExcelForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -782,6 +774,11 @@
     <None Include="Resources\save_32.jfif" />
     <None Include="Resources\background-left-arrow-32.png" />
     <None Include="Resources\left-arrow.png" />
+    <None Include="Resources\connected-icon-3-16.png" />
+    <None Include="Resources\disconnected-icon-14-16.png" />
+    <None Include="Resources\disconnected-icon-14-161.png" />
+    <None Include="Resources\connected-icon-blue-16.png" />
+    <None Include="Resources\connected-icon-2-16.png" />
     <Content Include="SQLScripts\ProductMasterTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

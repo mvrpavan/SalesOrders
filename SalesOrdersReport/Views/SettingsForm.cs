@@ -104,6 +104,27 @@ namespace SalesOrdersReport
                 txtBoxLastPONumber.Text = CurrSettings.LastNumber.ToString();
                 numUpDownPeriodValue.Value = CurrSettings.PastSalePeriodValue;
                 cmbBoxPeriodUnits.SelectedIndex = (Int32)CurrSettings.PastSalePeriodUnits;
+
+                //Load Printers
+                List<PrinterDetails> ListPrinters = CommonFunctions.GetPrinterList();
+                cmbBoxPrinters.Items.Clear();
+                cmbBoxPrinters.Items.Add("<Select Printer>");
+                foreach (var item in ListPrinters)
+                    cmbBoxPrinters.Items.Add(item.Name);
+
+                Int32 DefaultPrinterIndex = ListPrinters.FindIndex(e => e.IsDefault == true);
+                if (!String.IsNullOrEmpty(CommonFunctions.ObjGeneralSettings.PrinterName))
+                    cmbBoxPrinters.SelectedItem = CommonFunctions.ObjGeneralSettings.PrinterName;
+                else if (DefaultPrinterIndex >= 0)
+                {
+                    cmbBoxPrinters.SelectedItem = ListPrinters[DefaultPrinterIndex].Name;
+                    CommonFunctions.ObjGeneralSettings.PrinterName = ListPrinters[DefaultPrinterIndex].Name;
+                    CommonFunctions.WriteToSettingsFile();
+                }
+                else
+                    cmbBoxPrinters.SelectedIndex = 0;
+
+                if (DefaultPrinterIndex >= 0) cmbBoxPrinters.Items[DefaultPrinterIndex + 1] += " (Default)";
             }
             catch (Exception ex)
             {
@@ -136,6 +157,7 @@ namespace SalesOrdersReport
                 CommonFunctions.ObjGeneralSettings.IsCustomerBillGenFormatQuotation = chkBoxInstBillGenQuot.Checked;
                 CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatInvoice = chkBoxInstBillPrintInvoice.Checked;
                 CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatQuotation = chkBoxInstBillPrintQuot.Checked;
+                if (cmbBoxPrinters.SelectedIndex > 0) CommonFunctions.ObjGeneralSettings.PrinterName = cmbBoxPrinters.SelectedItem.ToString().Replace(" (Default)", "");
 
                 //Apply Invoice Settings to CommonFunctions Module
                 ReportSettings CurrSettings = CommonFunctions.ObjInvoiceSettings;

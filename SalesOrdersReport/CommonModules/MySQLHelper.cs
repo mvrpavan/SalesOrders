@@ -130,7 +130,12 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ShowErrorDialog("MySQLHelper.BuildNExceuteQueryWithParams()", ex);
                 throw;
             }
+            finally
+            {
+                CloseConnection();
+            }
         }
+
         public DataTable BuildNReturnQueryResultWithParams(string Query, List<string> ListColumnNames, List<string> ListColDataTypes, List<string> ListColumnValues)
         {
             try
@@ -152,6 +157,10 @@ namespace SalesOrdersReport.CommonModules
             {
                 CommonFunctions.ShowErrorDialog("MySQLHelper.BuildNReturnQueryResultWithParams()", ex);
                 return null;
+            }
+            finally
+            {
+                CloseConnection();
             }
         }
 
@@ -208,6 +217,10 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ShowErrorDialog("MySQLHelper.UpdateTableDetails()", ex);
                 throw ex;
             }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public Int32 DeleteRow(String TableName, String ColumnName, String ColumnValue, Types ColumnType)
@@ -231,6 +244,10 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ShowErrorDialog("MySQLHelper.DeleteRow()", ex);
                 throw ex;
             }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
 
@@ -253,6 +270,7 @@ namespace SalesOrdersReport.CommonModules
                 throw ex;
             }
         }
+
         public Int32 InsertIntoTable(String TableName, List<String> ListColumnNames, List<String> ListColumnValues, List<Types> ListColumnTypes)
         {
             try
@@ -279,6 +297,10 @@ namespace SalesOrdersReport.CommonModules
             {
                 CommonFunctions.ShowErrorDialog("MySQLHelper.InsertIntoTable()", ex);
                 throw ex;
+            }
+            finally
+            {
+                CloseConnection();
             }
         }
 
@@ -329,6 +351,10 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ShowErrorDialog("MySQLHelper.CreateTable()", ex);
                 throw ex;
             }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public Int32 DropTable(String TableName, Boolean IsTemporary = false)
@@ -347,6 +373,10 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ShowErrorDialog("MySQLHelper.DropTable()", ex);
                 throw ex;
             }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public Int32 DeleteTableContent(String TableName)
@@ -364,6 +394,10 @@ namespace SalesOrdersReport.CommonModules
             {
                 CommonFunctions.ShowErrorDialog("MySQLHelper.DeleteTableContent()", ex);
                 throw ex;
+            }
+            finally
+            {
+                CloseConnection();
             }
         }
 
@@ -400,6 +434,10 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ShowErrorDialog("MySQLHelper.ExecuteNonQuery()", ex);
                 throw ex;
             }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public object ExecuteScalar(String Query)
@@ -414,6 +452,10 @@ namespace SalesOrdersReport.CommonModules
             {
                 CommonFunctions.ShowErrorDialog("MySQLHelper.ExecuteScalar()", ex);
                 throw ex;
+            }
+            finally
+            {
+                CloseConnection();
             }
         }
 
@@ -462,6 +504,10 @@ namespace SalesOrdersReport.CommonModules
             {
                 CommonFunctions.ShowErrorDialog("MySQLHelper.CreateIndex()", ex);
                 throw ex;
+            }
+            finally
+            {
+                CloseConnection();
             }
         }
 
@@ -523,6 +569,10 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ShowErrorDialog("MySQLHelper.BulkLoadToDBTable()", ex);
                 throw ex;
             }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         //public Int32 ImportDataFromExcelFileToDBTable(String ExcelFilePath, String TableName, String SheetName = null, List<FieldDetails> ListTableColumns = null)
@@ -562,6 +612,10 @@ namespace SalesOrdersReport.CommonModules
             {
                 CommonFunctions.ShowErrorDialog("MySQLHelper.GetQueryResultInDataTable()", ex);
                 return null;
+            }
+            finally
+            {
+                CloseConnection();
             }
         }
 
@@ -760,6 +814,10 @@ namespace SalesOrdersReport.CommonModules
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("MySQLHelper.GetLatestColValFromTable()", ex);
+            }
+            finally
+            {
+                CloseConnection();
             }
             return 0;
         }

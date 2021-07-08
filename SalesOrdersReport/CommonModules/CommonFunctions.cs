@@ -13,12 +13,19 @@ using SalesOrdersReport.Models;
 using SalesOrdersReport.Views;
 using System.Net;
 using System.Net.Mail;
+using System.Management;
 
 namespace SalesOrdersReport.CommonModules
 {
     public delegate void ReportProgressDel(Int32 ProgressState);
     public delegate void UpdateUsingObjectOnCloseDel(Int32 Mode, Object ObjAddUpdated = null);
     public delegate void UpdateOnCloseDel(Int32 Mode);
+
+    class PrinterDetails
+    {
+        public String Name, Status;
+        public Boolean IsDefault;
+    }
 
     class CommonFunctions
     {
@@ -58,11 +65,12 @@ namespace SalesOrdersReport.CommonModules
                 ObjCustomerMasterModel = new CustomerMasterModel();
                 ObjCustomerMasterModel.Initialize();
                 ObjAccountsMasterModel = new AccountsMasterModel();
-                if (!File.Exists(CommonFunctions.AppDataFolder + "\\" + CommonFunctions.ObjApplicationSettings.LogoFileName))
+                if (!File.Exists(AppDataFolder + "\\" + ObjApplicationSettings.LogoFileName))
                 {
-                    File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\Images\" + CommonFunctions.ObjApplicationSettings.LogoFileName,
-                        CommonFunctions.AppDataFolder + @"\" + CommonFunctions.ObjApplicationSettings.LogoFileName, false);
+                    File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\Images\" + ObjApplicationSettings.LogoFileName,
+                        AppDataFolder + @"\" + ObjApplicationSettings.LogoFileName, false);
                 }
+                if (String.IsNullOrEmpty(ObjGeneralSettings.PrinterName)) ChooseDefaultPrinter();
 
                 ListSelectedCustomer = new List<String>();
                 ListSelectedVendors = new List<String>();
@@ -515,6 +523,27 @@ namespace SalesOrdersReport.CommonModules
             catch (Exception ex)
             {
                 ShowErrorDialog("CommonFunctions.WriteToSettingsFile()", ex);
+            }
+        }
+
+        private static void ChooseDefaultPrinter()
+        {
+            try
+            {
+                if (!String.IsNullOrEmpty(ObjGeneralSettings.PrinterName)) return;
+
+                List<PrinterDetails> ListPrinters = GetPrinterList();
+                Int32 DefaultPrinterIndex = ListPrinters.FindIndex(e => e.IsDefault == true);
+                if (String.IsNullOrEmpty(ObjGeneralSettings.PrinterName) && DefaultPrinterIndex >= 0)
+                {
+                    ObjGeneralSettings.PrinterName = ListPrinters[DefaultPrinterIndex].Name;
+                    SettingsFileUpdated = true;
+                    WriteToSettingsFile();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.ChoosePrinter()", ex);
             }
         }
         #endregion
@@ -1081,7 +1110,10 @@ namespace SalesOrdersReport.CommonModules
 
                     Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(ExcelFilePath);
 
-                    xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, 1);
+                    if (!String.IsNullOrEmpty(ObjGeneralSettings.PrinterName))
+                        xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, 1, ActivePrinter: ObjGeneralSettings.PrinterName);
+                    else
+                        xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, 1);
 
                     xlWorkbook.Close(false);
                     CommonFunctions.ReleaseCOMObject(xlWorkbook);
@@ -1499,6 +1531,35 @@ namespace SalesOrdersReport.CommonModules
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("CommonFunctions.AddPageHeaderAndFooter()", ex);
+                throw;
+            }
+        }
+
+        public static List<PrinterDetails> GetPrinterList()
+        {
+            try
+            {
+                List<PrinterDetails> ListPrinters = new List<PrinterDetails>();
+                var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
+                foreach (var printer in printerQuery.Get())
+                {
+                    var name = printer.GetPropertyValue("Name");
+                    var status = printer.GetPropertyValue("Status");
+                    var isDefault = printer.GetPropertyValue("Default");
+                    var isNetworkPrinter = printer.GetPropertyValue("Network");
+
+                    ListPrinters.Add(new PrinterDetails() {
+                        Name = name.ToString(),
+                        Status = status.ToString(),
+                        IsDefault = (Boolean)isDefault
+                    });
+                }
+
+                return ListPrinters;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CommonFunctions.GetPrinterList()", ex);
                 throw;
             }
         }
