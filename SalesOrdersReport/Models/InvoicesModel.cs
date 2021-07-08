@@ -57,7 +57,9 @@ namespace SalesOrdersReport.Models
     {
         public Int32 InvoiceID, ProductID;
         public String ProductName;
-        public Double OrderQty, SaleQty, Price, TaxableValue, CGST, SGST, IGST, NetTotal;
+        //public Double OrderQty, SaleQty, Price, TaxableValue, CGST, SGST, IGST, NetTotal;
+        public Double SaleQty, Price, TaxableValue, CGST, SGST, IGST, NetTotal;
+        public string OrderQty = "";
         public INVOICEITEMSTATUS InvoiceItemStatus;
 
         public InvoiceItemDetails Clone()
@@ -276,17 +278,18 @@ namespace SalesOrdersReport.Models
                         }
                         else
                         {
-                            ListAllInvoiceItems[ItemIndex].OrderQty += tmpItem.OrderQty;
+                            //ListAllInvoiceItems[ItemIndex].OrderQty += tmpItem.OrderQty;
                             ListAllInvoiceItems[ItemIndex].SaleQty += tmpItem.SaleQty;
                         }
                     }
 
                     for (int i = 0; i < ListAllInvoiceItems.Count; i++)
                     {
-                        ListAllInvoiceItems[i].OrderQty *= -1;
+                        //ListAllInvoiceItems[i].OrderQty *= -1;
+                        ListAllInvoiceItems[i].OrderQty = "";
                         ListAllInvoiceItems[i].SaleQty *= -1;
                     }
-                    ObjProductMasterModel.UpdateProductInventoryDataFromInvoice(ListAllInvoiceItems, ObjInvoiceDetails.InvoiceDate);
+                    ObjProductMasterModel.UpdateProductInventoryDataFromInvoice(ListAllInvoiceItems, ObjInvoiceDetails.InvoiceDate);//use sale quantity
 
                     //Update InvoiceItems
                     ObjMySQLHelper.UpdateTableDetails("InvoiceItems", new List<String>() { "InvoiceItemStatus" },
@@ -376,7 +379,8 @@ namespace SalesOrdersReport.Models
                     {
                         InvoiceID = Int32.Parse(item["InvoiceID"].ToString()),
                         ProductID = Int32.Parse(item["ProductID"].ToString()),
-                        OrderQty = Double.Parse(item["OrderQty"].ToString()),
+                        //OrderQty = Double.Parse(item["OrderQty"].ToString()),
+                        OrderQty = item["OrderQty"].ToString(),
                         SaleQty = Double.Parse(item["SaleQty"].ToString()),
                         Price = Double.Parse(item["Price"].ToString()),
                         TaxableValue = Double.Parse(item["TaxableValue"].ToString()),
@@ -484,7 +488,8 @@ namespace SalesOrdersReport.Models
                 NewInvoiceDetails.OrderID = OrderID;
                 NewInvoiceDetails.ListInvoiceItems = ListInvoiceItems.Select(e => e.Clone()).ToList();
                 NewInvoiceDetails.CreationDate = DateTime.Now;
-                NewInvoiceDetails.InvoiceItemCount = ListInvoiceItems.Count(e => e.OrderQty > 0);
+                //NewInvoiceDetails.InvoiceItemCount = ListInvoiceItems.Count(e => e.OrderQty > 0);
+                NewInvoiceDetails.InvoiceItemCount = ListInvoiceItems.Count(e => e.OrderQty != string.Empty);//emty
                 NewInvoiceDetails.DeliveryLineName = DeliveryLineName == "" ? CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(CustomerID).LineName : DeliveryLineName;
                 NewInvoiceDetails.DeliveryLineID = NewInvoiceDetails.DeliveryLineName == "" ? -1 : CommonFunctions.ObjCustomerMasterModel.GetLineID(NewInvoiceDetails.DeliveryLineName);
 
@@ -695,7 +700,7 @@ namespace SalesOrdersReport.Models
 
                     Query = "Insert into InvoiceItems(InvoiceID, ProductID, OrderQty, SaleQty, Price, Discount, " +
                             "TaxableValue, CGST, SGST, IGST, NetTotal, InvoiceItemStatus) Values (";
-                    Query += $"{InvoiceID}, {item.ProductID}, {item.OrderQty}, {item.SaleQty}, {item.Price}, {DiscountAmount}, " +
+                    Query += $"{InvoiceID}, {item.ProductID}, '{item.OrderQty}', {item.SaleQty}, {item.Price}, {DiscountAmount}, " +
                             $"{item.TaxableValue}, {item.CGST}, {item.SGST}, {item.IGST}, {item.NetTotal}, '{item.InvoiceItemStatus}')";
                     ObjMySQLHelper.ExecuteNonQuery(Query);
                 }
@@ -754,7 +759,7 @@ namespace SalesOrdersReport.Models
                                                 ListItemsModified[i].NetTotal.ToString(),
                                                 ListItemsModified[i].InvoiceItemStatus.ToString()
                                                 },
-                                                new List<Types>() { Types.Number, Types.Number, Types.Number, Types.Number,
+                                                new List<Types>() { Types.String, Types.Number, Types.Number, Types.Number,
                                                                 Types.Number, Types.Number, Types.Number, Types.Number, Types.String},
                                                 $"InvoiceID = {ObjInvoiceDetails.InvoiceID} and ProductID = {ListItemsModified[i].ProductID}");
                 }
@@ -872,6 +877,7 @@ namespace SalesOrdersReport.Models
                     Counter++;
 
                     OrderQuantity = ObjInvoiceDetails.ListInvoiceItems[i].OrderQty.ToString();
+                    //Quantity = ObjInvoiceDetails.ListInvoiceItems[i].OrderQty;
                     Quantity = ObjInvoiceDetails.ListInvoiceItems[i].SaleQty;
                     ItemName = ObjInvoiceDetails.ListInvoiceItems[i].ProductName;
                     if (Quantity == 0) continue;
@@ -1057,7 +1063,8 @@ namespace SalesOrdersReport.Models
                     Counter++;
 
                     OrderQuantity = ObjInvoiceDetails.ListInvoiceItems[i].OrderQty.ToString();
-                    Quantity = ObjInvoiceDetails.ListInvoiceItems[i].OrderQty;
+                    //Quantity = ObjInvoiceDetails.ListInvoiceItems[i].OrderQty;
+                    Quantity = ObjInvoiceDetails.ListInvoiceItems[i].SaleQty;
                     ItemName = ObjInvoiceDetails.ListInvoiceItems[i].ProductName;
                     if (Quantity == 0) continue;
                     Price = ObjInvoiceDetails.ListInvoiceItems[i].Price;
@@ -1216,7 +1223,7 @@ namespace SalesOrdersReport.Models
                         }
                         else
                         {
-                            ListAllInvoiceItems[ItemIndex].OrderQty += tmpItem.OrderQty;
+                            //ListAllInvoiceItems[ItemIndex].OrderQty += tmpItem.OrderQty;
                             ListAllInvoiceItems[ItemIndex].SaleQty += tmpItem.SaleQty;
                         }
                     }

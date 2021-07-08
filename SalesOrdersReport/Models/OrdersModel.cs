@@ -276,7 +276,8 @@ namespace SalesOrdersReport.Models
                     {
                         ProductName = tmpOrderItem.ProductName,
                         ProductID = tmpOrderItem.ProductID,
-                        OrderQty = tmpOrderItem.OrderQty,
+                        //OrderQty = tmpOrderItem.OrderQty,
+                        OrderQty = tmpOrderItem.OrderQty.ToString(),
                         //SaleQty = tmpOrderItem.OrderQty,
                         Price = tmpOrderItem.Price,
                         InvoiceItemStatus = INVOICEITEMSTATUS.Invoiced

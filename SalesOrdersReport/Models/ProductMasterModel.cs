@@ -903,7 +903,13 @@ namespace SalesOrdersReport.Models
                     ProductDetails ObjProductDetails = GetProductDetails(ListInvoiceItems[i].ProductID);
                     Int32 ProductInvID = ObjProductDetails.ProductInvID;
                     ProductInventoryDetails ObjProductInventoryDetails = GetProductInventoryDetails(ProductInvID);
-                    Double OrderedQty = ObjProductInventoryDetails.ComputeInventory(ListInvoiceItems[i].OrderQty, ObjProductDetails.Units, ObjProductDetails.UnitsOfMeasurement);
+                    //Double OrderedQty = ObjProductInventoryDetails.ComputeInventory(ListInvoiceItems[i].OrderQty, ObjProductDetails.Units, ObjProductDetails.UnitsOfMeasurement);
+                    Double OrderedQty = -1; bool isValid = false;
+                    if (ListInvoiceItems[i].OrderQty != string.Empty) isValid = CommonFunctions.ValidateDoubleORIntVal(ListInvoiceItems[i].OrderQty);
+
+                    if (isValid) OrderedQty = ObjProductInventoryDetails.ComputeInventory(Double.Parse(ListInvoiceItems[i].OrderQty), ObjProductDetails.Units, ObjProductDetails.UnitsOfMeasurement);
+                    else OrderedQty = ObjProductInventoryDetails.ComputeInventory(ListInvoiceItems[i].SaleQty, ObjProductDetails.Units, ObjProductDetails.UnitsOfMeasurement);
+
                     Double ReceivedQty = -1 * ObjProductInventoryDetails.ComputeInventory(ListInvoiceItems[i].SaleQty, ObjProductDetails.Units, ObjProductDetails.UnitsOfMeasurement);
                     Double NetQty = ObjProductInventoryDetails.Inventory + ReceivedQty;
                     String EntryType = "Sale";

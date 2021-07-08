@@ -243,7 +243,8 @@ namespace SalesOrdersReport.Views
                     {
                         ProductID = tmpProductDetails.ProductID,
                         ProductName = ItemName,
-                        OrderQty = Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString()),
+                        //OrderQty = Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString()),
+                        OrderQty = item.Cells[SaleQtyColIndex].Value.ToString(),
                         SaleQty = Double.Parse(item.Cells[SaleQtyColIndex].Value.ToString()),
                         Price = Double.Parse(item.Cells[PriceColIndex].Value.ToString()),
                         InvoiceItemStatus = INVOICEITEMSTATUS.Invoiced
@@ -432,7 +433,8 @@ namespace SalesOrdersReport.Views
                         ObjInvoicesModel.FillInvoiceItemDetails(CurrOrderInvoiceDetails.CurrInvoiceDetails);
                     foreach (var item in CurrOrderInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems)
                     {
-                        if (item.OrderQty <= 0) continue;
+                        //if (item.OrderQty <= 0) continue;
+                        if (item.OrderQty == string.Empty) continue;//empty
                         if (item.InvoiceItemStatus != INVOICEITEMSTATUS.Invoiced) continue;
 
                         Object[] row = new Object[6];
