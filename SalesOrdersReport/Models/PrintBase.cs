@@ -102,6 +102,7 @@ namespace SalesOrdersReport.Models
             {
                 this.ObjPrintDetails = ObjPrintDetails;
                 ObjPrintDocument.DefaultPageSettings.PaperSize = new PaperSize("", (Int32)PaperWidth, 600);
+                ObjPrintDocument.PrinterSettings.PrinterName = CommonFunctions.ObjGeneralSettings.PrinterName;
                 ObjPrintDocument.Print();
             }
             catch (Exception ex)
@@ -116,6 +117,7 @@ namespace SalesOrdersReport.Models
             {
                 this.ObjPrintSummaryDetails = ObjPrintSummaryDetails;
                 ObjPrintDocument.DefaultPageSettings.PaperSize = new PaperSize("", (Int32)PaperWidth, 600);
+                ObjPrintDocument.PrinterSettings.PrinterName = CommonFunctions.ObjGeneralSettings.PrinterName;
                 ObjPrintDocument.Print();
             }
             catch (Exception ex)
