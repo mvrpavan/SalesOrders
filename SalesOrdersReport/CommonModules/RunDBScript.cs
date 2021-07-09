@@ -679,7 +679,7 @@ namespace SalesOrdersReport.CommonModules
                     "InvoiceItemID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
                     "InvoiceID, smallint(5) unsigned NOT NULL",
                     "ProductID, smallint(5) NOT NULL",
-                    "OrderQty, float DEFAULT 0",
+                    "OrderQty, VARCHAR(10) DEFAULT NULL",
                     "SaleQty, float DEFAULT 0",
                     "Price, float DEFAULT 0",
                     "TaxableValue, float DEFAULT 0",
