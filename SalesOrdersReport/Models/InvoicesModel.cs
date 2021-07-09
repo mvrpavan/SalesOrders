@@ -58,7 +58,7 @@ namespace SalesOrdersReport.Models
         public Int32 InvoiceID, ProductID;
         public String ProductName;
         //public Double OrderQty, SaleQty, Price, TaxableValue, CGST, SGST, IGST, NetTotal;
-        public Double SaleQty, Price, TaxableValue, CGST, SGST, IGST, NetTotal;
+        public Double SaleQty, Price, DiscountAmount, TaxableValue, CGST, SGST, IGST, NetTotal;
         public string OrderQty = "";
         public INVOICEITEMSTATUS InvoiceItemStatus;
 
@@ -107,9 +107,9 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                String MaxInvoiceNumber = ObjMySQLHelper.GetIDValue("Invoices");
+                String MaxInvoiceNumber = ObjMySQLHelper.GetIDValue(CommonFunctions.ObjApplicationSettings.POSNumber + "-Invoices");
                 if (String.IsNullOrEmpty(MaxInvoiceNumber)) MaxInvoiceNumber = "0";
-                return CommonFunctions.GenerateNextID(InvoiceNumberPrefix, MaxInvoiceNumber);
+                return CommonFunctions.GenerateNextID(CommonFunctions.ObjApplicationSettings.POSNumber + "-" + InvoiceNumberPrefix, MaxInvoiceNumber);
             }
             catch (Exception ex)
             {
@@ -480,8 +480,10 @@ namespace SalesOrdersReport.Models
                 NewInvoiceDetails.InvoiceDate = InvoiceDate;
                 NewInvoiceDetails.InvoiceNumber = InvoiceNumber;
                 NewInvoiceDetails.InvoiceStatus = INVOICESTATUS.Created;
+                //NewInvoiceDetails.GrossInvoiceAmount = (OrderID > 0) ? ListInvoiceItems.Sum(e => e.Price * Double.Parse(e.OrderQty)) : ListInvoiceItems.Sum(e => e.Price * e.SaleQty);
                 NewInvoiceDetails.GrossInvoiceAmount = ListInvoiceItems.Sum(e => e.Price * e.SaleQty);
                 NewInvoiceDetails.DiscountAmount = Discount;
+                //NewInvoiceDetails.NetInvoiceAmount = ((OrderID > 0) ? ListInvoiceItems.Sum(e => e.Price * Double.Parse(e.OrderQty)) : ListInvoiceItems.Sum(e => e.Price * e.SaleQty)) - Discount;
                 NewInvoiceDetails.NetInvoiceAmount = ListInvoiceItems.Sum(e => e.Price * e.SaleQty) - Discount;
                 NewInvoiceDetails.LastUpdatedDate = DateTime.Now;
                 NewInvoiceDetails.CustomerID = CustomerID;
@@ -498,7 +500,7 @@ namespace SalesOrdersReport.Models
                 NewInvoiceDetails.InvoiceID = InsertInvoiceDetails(NewInvoiceDetails);
                 CurrInvoiceID = NewInvoiceDetails.InvoiceID;
                 if (IsBill) ObjMySQLHelper.UpdateIDValue("Bills", InvoiceNumber);
-                else ObjMySQLHelper.UpdateIDValue("Invoices", InvoiceNumber);
+                else ObjMySQLHelper.UpdateIDValue(CommonFunctions.ObjApplicationSettings.POSNumber + "-Invoices", InvoiceNumber);
 
                 AddInvoiceDetailsToCache(NewInvoiceDetails);
 
@@ -670,7 +672,7 @@ namespace SalesOrdersReport.Models
                 Query = $"Select Max(InvoiceID) from Invoices where CustomerID = {ObjInvoiceDetails.CustomerID} and InvoiceDate = '{MySQLHelper.GetDateTimeStringForDB(ObjInvoiceDetails.InvoiceDate)}'";
                 foreach (var item in ObjMySQLHelper.ExecuteQuery(Query)) InvoiceID = Int32.Parse(item[0].ToString());
 
-                Double DiscountPerc = ObjInvoiceDetails.DiscountAmount / ObjInvoiceDetails.GrossInvoiceAmount;
+                Double DiscountPerc = ObjInvoiceDetails.GrossInvoiceAmount > 0 ? ObjInvoiceDetails.DiscountAmount / ObjInvoiceDetails.GrossInvoiceAmount : 0;
                 InsertInvoiceItems(ObjInvoiceDetails.ListInvoiceItems, InvoiceID, DiscountPerc);
 
                 return InvoiceID;
@@ -682,6 +684,26 @@ namespace SalesOrdersReport.Models
             }
         }
 
+        private void UpdateInvoiceItemDetails(InvoiceItemDetails item, Double DiscountPerc)
+        {
+            try
+            {
+                Double[] TaxRates = ObjProductMasterModel.GetTaxRatesForProduct(item.ProductName);
+                item.DiscountAmount = item.SaleQty * item.Price * DiscountPerc;
+                //item.TaxableValue = item.SaleQty * item.Price / ((100.0 + TaxRates.Sum()) / 100.0);
+                item.TaxableValue = ((item.SaleQty * item.Price) - item.DiscountAmount) / ((100.0 + TaxRates.Sum()) / 100.0);
+                item.CGST = item.TaxableValue * TaxRates[0] / 100.0;
+                item.SGST = item.TaxableValue * TaxRates[1] / 100.0;
+                item.IGST = item.TaxableValue * TaxRates[2] / 100.0;
+                item.NetTotal = item.TaxableValue + (item.TaxableValue * TaxRates.Sum() / 100.0);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdateInvoiceItemDetails()", ex);
+                throw;
+            }
+        }
+
         private void InsertInvoiceItems(List<InvoiceItemDetails> ListInvoiceItems, Int32 InvoiceID, Double DiscountPerc)
         {
             try
@@ -689,18 +711,19 @@ namespace SalesOrdersReport.Models
                 String Query = "";
                 foreach (var item in ListInvoiceItems)
                 {
-                    Double[] TaxRates = ObjProductMasterModel.GetTaxRatesForProduct(item.ProductName);
-                    //item.TaxableValue = item.SaleQty * item.Price / ((100.0 + TaxRates.Sum()) / 100.0);
-                    Double DiscountAmount = item.SaleQty * item.Price * DiscountPerc;
-                    item.TaxableValue = ((item.SaleQty * item.Price) - DiscountAmount) / ((100.0 + TaxRates.Sum()) / 100.0);
-                    item.CGST = item.TaxableValue * TaxRates[0] / 100.0;
-                    item.SGST = item.TaxableValue * TaxRates[1] / 100.0;
-                    item.IGST = item.TaxableValue * TaxRates[2] / 100.0;
-                    item.NetTotal = item.TaxableValue + (item.TaxableValue * TaxRates.Sum() / 100.0);
+                    UpdateInvoiceItemDetails(item, DiscountPerc);
+                    //Double[] TaxRates = ObjProductMasterModel.GetTaxRatesForProduct(item.ProductName);
+                    ////item.TaxableValue = item.SaleQty * item.Price / ((100.0 + TaxRates.Sum()) / 100.0);
+                    //Double DiscountAmount = item.SaleQty * item.Price * DiscountPerc;
+                    //item.TaxableValue = ((item.SaleQty * item.Price) - DiscountAmount) / ((100.0 + TaxRates.Sum()) / 100.0);
+                    //item.CGST = item.TaxableValue * TaxRates[0] / 100.0;
+                    //item.SGST = item.TaxableValue * TaxRates[1] / 100.0;
+                    //item.IGST = item.TaxableValue * TaxRates[2] / 100.0;
+                    //item.NetTotal = item.TaxableValue + (item.TaxableValue * TaxRates.Sum() / 100.0);
 
                     Query = "Insert into InvoiceItems(InvoiceID, ProductID, OrderQty, SaleQty, Price, Discount, " +
                             "TaxableValue, CGST, SGST, IGST, NetTotal, InvoiceItemStatus) Values (";
-                    Query += $"{InvoiceID}, {item.ProductID}, '{item.OrderQty}', {item.SaleQty}, {item.Price}, {DiscountAmount}, " +
+                    Query += $"{InvoiceID}, {item.ProductID}, '{item.OrderQty}', {item.SaleQty}, {item.Price}, {item.DiscountAmount}, " +
                             $"{item.TaxableValue}, {item.CGST}, {item.SGST}, {item.IGST}, {item.NetTotal}, '{item.InvoiceItemStatus}')";
                     ObjMySQLHelper.ExecuteNonQuery(Query);
                 }
@@ -734,9 +757,12 @@ namespace SalesOrdersReport.Models
                         NetInvoiceAmount += (ObjInvoiceDetails.ListInvoiceItems[i].SaleQty * ObjInvoiceDetails.ListInvoiceItems[i].Price);
                     }
                 }
+                Double GrossInvoiceAmount = NetInvoiceAmount;
+                NetInvoiceAmount -= ObjInvoiceDetails.DiscountAmount;
+                Double DiscountPerc = GrossInvoiceAmount > 0 ? ObjInvoiceDetails.DiscountAmount / GrossInvoiceAmount : 0;
 
                 //Find Deleted Items
-                List<InvoiceItemDetails> ListItemsDeleted = new List<InvoiceItemDetails>();
+                List <InvoiceItemDetails> ListItemsDeleted = new List<InvoiceItemDetails>();
                 for (int i = 0; i < ObjInvoiceDetailsOrig.ListInvoiceItems.Count; i++)
                 {
                     Int32 Index = ObjInvoiceDetails.ListInvoiceItems.FindIndex(e => e.ProductID == ObjInvoiceDetailsOrig.ListInvoiceItems[i].ProductID);
@@ -746,12 +772,14 @@ namespace SalesOrdersReport.Models
                 //Update Modified Items
                 for (Int32 i = 0; i < ListItemsModified.Count; i++)
                 {
-                    ObjMySQLHelper.UpdateTableDetails("InvoiceItems", new List<String>() { "OrderQty", "SaleQty", "Price", "TaxableValue",
+                    UpdateInvoiceItemDetails(ListItemsModified[i], DiscountPerc);
+                    ObjMySQLHelper.UpdateTableDetails("InvoiceItems", new List<String>() { "OrderQty", "SaleQty", "Price", "Discount", "TaxableValue",
                                                                                     "CGST", "SGST", "IGST", "NetTotal", "InvoiceItemStatus" },
                                                 new List<String>() {
                                                 ListItemsModified[i].OrderQty.ToString(),
                                                 ListItemsModified[i].SaleQty.ToString(),
                                                 ListItemsModified[i].Price.ToString(),
+                                                ListItemsModified[i].DiscountAmount.ToString(),
                                                 ListItemsModified[i].TaxableValue.ToString(),
                                                 ListItemsModified[i].CGST.ToString(),
                                                 ListItemsModified[i].CGST.ToString(),
@@ -759,7 +787,7 @@ namespace SalesOrdersReport.Models
                                                 ListItemsModified[i].NetTotal.ToString(),
                                                 ListItemsModified[i].InvoiceItemStatus.ToString()
                                                 },
-                                                new List<Types>() { Types.String, Types.Number, Types.Number, Types.Number,
+                                                new List<Types>() { Types.String, Types.Number, Types.Number, Types.Number, Types.Number,
                                                                 Types.Number, Types.Number, Types.Number, Types.Number, Types.String},
                                                 $"InvoiceID = {ObjInvoiceDetails.InvoiceID} and ProductID = {ListItemsModified[i].ProductID}");
                 }
@@ -775,14 +803,14 @@ namespace SalesOrdersReport.Models
                 }
 
                 //Insert New Items
-                Double DiscountPerc = ObjInvoiceDetails.DiscountAmount / ObjInvoiceDetails.GrossInvoiceAmount;
                 InsertInvoiceItems(ListItemsAdded, ObjInvoiceDetails.InvoiceID, DiscountPerc);
 
                 //Update InvoiceItemCount
-                ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceItemCount", "NetInvoiceAmount", "InvoiceStatus","DeliveryLineID" },
-                                            new List<String>() { InvoiceItemCount.ToString(), NetInvoiceAmount.ToString(), ObjInvoiceDetails.InvoiceStatus.ToString(), ObjInvoiceDetails.DeliveryLineID.ToString() },
-                                            new List<Types>() { Types.Number, Types.Number, Types.String, Types.Number }, $"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
+                ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceItemCount", "GrossInvoiceAmount", "DiscountAmount", "NetInvoiceAmount", "InvoiceStatus","DeliveryLineID" },
+                                            new List<String>() { InvoiceItemCount.ToString(), GrossInvoiceAmount.ToString(), ObjInvoiceDetails.DiscountAmount.ToString(), NetInvoiceAmount.ToString(), ObjInvoiceDetails.InvoiceStatus.ToString(), ObjInvoiceDetails.DeliveryLineID.ToString() },
+                                            new List<Types>() { Types.Number, Types.Number, Types.Number, Types.Number, Types.String, Types.Number }, $"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
 
+                ObjInvoiceDetails.GrossInvoiceAmount = GrossInvoiceAmount;
                 ObjInvoiceDetails.NetInvoiceAmount = NetInvoiceAmount;
                 ObjInvoiceDetails.InvoiceItemCount = InvoiceItemCount;
                 FillInvoiceItemDetails(ObjInvoiceDetails);
@@ -845,12 +873,14 @@ namespace SalesOrdersReport.Models
 
                 SLNo = 0;
                 CustomerDetails ObjCurrentSeller = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(ObjInvoiceDetails.CustomerName);
-                DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
-                Double DiscountPerc = 0, DiscountValue = 0;
-                if (ObjDiscountGroup.DiscountType == DiscountTypes.PERCENT)
-                    DiscountPerc = ObjDiscountGroup.Discount;
-                else if (ObjDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
-                    DiscountValue = ObjDiscountGroup.Discount;
+                //DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjCurrentSeller.CustomerName);
+                //Double DiscountPerc = 0, DiscountValue = 0;
+                //if (ObjDiscountGroup.DiscountType == DiscountTypes.PERCENT)
+                //    DiscountPerc = ObjDiscountGroup.Discount;
+                //else if (ObjDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
+                //    DiscountValue = ObjDiscountGroup.Discount;
+
+                Double DiscountPerc = ObjInvoiceDetails.DiscountAmount / ObjInvoiceDetails.GrossInvoiceAmount * 100.0;
 
                 Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
                 ObjInvoice.SerialNumber = ObjInvoiceDetails.InvoiceNumber;
@@ -902,17 +932,18 @@ namespace SalesOrdersReport.Models
                     ObjProductDetailsForInvoice.SGSTDetails.TaxRate = TaxRates[1] / 100;
                     ObjProductDetailsForInvoice.IGSTDetails = new TaxDetails();
                     ObjProductDetailsForInvoice.IGSTDetails.TaxRate = TaxRates[2] / 100;
-                    ObjProductDetailsForInvoice.DiscountGroup = ObjDiscountGroup.Clone();
-                    if (DiscountPerc > 0)
-                    {
-                        ObjProductDetailsForInvoice.DiscountGroup.DiscountType = DiscountTypes.PERCENT;
-                        ObjProductDetailsForInvoice.DiscountGroup.Discount = DiscountPerc;
-                    }
-                    else if (DiscountValue > 0)
-                    {
-                        ObjProductDetailsForInvoice.DiscountGroup.DiscountType = DiscountTypes.ABSOLUTE;
-                        ObjProductDetailsForInvoice.DiscountGroup.Discount = (DiscountValue / ObjInvoiceDetails.ListInvoiceItems.Count);
-                    }
+                    //ObjProductDetailsForInvoice.DiscountGroup = ObjDiscountGroup.Clone();
+                    //if (DiscountPerc > 0)
+                    //{
+                    //    ObjProductDetailsForInvoice.DiscountGroup.DiscountType = DiscountTypes.PERCENT;
+                    //    ObjProductDetailsForInvoice.DiscountGroup.Discount = DiscountPerc;
+                    //}
+                    //else if (DiscountValue > 0)
+                    //{
+                    //    ObjProductDetailsForInvoice.DiscountGroup.DiscountType = DiscountTypes.ABSOLUTE;
+                    //    ObjProductDetailsForInvoice.DiscountGroup.Discount = (DiscountValue / ObjInvoiceDetails.ListInvoiceItems.Count);
+                    //}
+                    ObjProductDetailsForInvoice.DiscountGroup = new DiscountGroupDetails() { DiscountType = DiscountTypes.PERCENT, Discount = DiscountPerc };
                     ObjInvoice.ListProducts.Add(ObjProductDetailsForInvoice);
                 }
                 #endregion

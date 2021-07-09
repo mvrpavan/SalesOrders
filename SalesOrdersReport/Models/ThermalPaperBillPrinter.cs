@@ -94,6 +94,8 @@ namespace SalesOrdersReport.Models
                         TotalCGSTAmount += tmpItem.CGSTAmout;
                         TotalAmountAfterTax += tmpItem.Amount;
                     }
+                    TotalAmountBeforeTax -= ObjPrintDetails.DiscountAmount;
+                    TotalAmountAfterTax -= ObjPrintDetails.DiscountAmount;
                     Tuple<Double, Double, Double, Double> tmpTaxGroupTotal = Tuple.Create(TotalAmountBeforeTax, TotalSGSTAmount, TotalCGSTAmount, TotalAmountAfterTax);
                     ListTaxGroupAmounts.Add(tmpTaxGroupTotal);
                 }

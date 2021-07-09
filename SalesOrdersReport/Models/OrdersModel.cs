@@ -148,9 +148,9 @@ namespace SalesOrdersReport.Models
         {
             try
             {
-                String MaxOrderNumber = ObjMySQLHelper.GetIDValue("Orders");
+                String MaxOrderNumber = ObjMySQLHelper.GetIDValue(CommonFunctions.ObjApplicationSettings.POSNumber + "-Orders");
                 if (String.IsNullOrEmpty(MaxOrderNumber)) MaxOrderNumber = "0";
-                return CommonFunctions.GenerateNextID(OrderNumberPrefix, MaxOrderNumber);
+                return CommonFunctions.GenerateNextID(CommonFunctions.ObjApplicationSettings.POSNumber + "-" + OrderNumberPrefix, MaxOrderNumber);
             }
             catch (Exception ex)
             {
@@ -278,6 +278,7 @@ namespace SalesOrdersReport.Models
                         ProductID = tmpOrderItem.ProductID,
                         //OrderQty = tmpOrderItem.OrderQty,
                         OrderQty = tmpOrderItem.OrderQty.ToString(),
+                        SaleQty = 0,
                         //SaleQty = tmpOrderItem.OrderQty,
                         Price = tmpOrderItem.Price,
                         InvoiceItemStatus = INVOICEITEMSTATUS.Invoiced
@@ -452,7 +453,7 @@ namespace SalesOrdersReport.Models
                 };
 
                 NewOrderDetails.OrderID = InsertOrderDetails(NewOrderDetails);
-                ObjMySQLHelper.UpdateIDValue("Orders", OrderNumber);
+                ObjMySQLHelper.UpdateIDValue(CommonFunctions.ObjApplicationSettings.POSNumber + "-Orders", OrderNumber);
 
                 ListOrders.Insert(0, NewOrderDetails);
 

@@ -198,10 +198,10 @@ namespace SalesOrdersReport.Views
                 switch (Mode)
                 {
                     case 1:     //Add Invoice
+                        btnReloadInvoices.PerformClick();
                         break;
-                    case 2:
-                        break;
-                    case 3:     //Reload Invoices
+                    case 2:     //Reload Invoices
+                        btnReloadInvoices.PerformClick();
                         break;
                     default:
                         break;
@@ -357,14 +357,14 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                IsFormLoaded = false;
-                CurrInvoiceStatus = INVOICESTATUS.Created;
-                FilterFromDate = DateTime.MinValue;
-                FilterToDate = DateTime.MinValue;
-                checkBoxApplyFilter.Checked = false;
-                cmbBoxInvoiceStatus.SelectedIndex = 1;
-                cmbBoxLine.SelectedIndex = 0;
-                IsFormLoaded = true;
+                //IsFormLoaded = false;
+                //CurrInvoiceStatus = INVOICESTATUS.Created;
+                //FilterFromDate = DateTime.MinValue;
+                //FilterToDate = DateTime.MinValue;
+                //checkBoxApplyFilter.Checked = false;
+                //cmbBoxInvoiceStatus.SelectedIndex = 1;
+                //cmbBoxLine.SelectedIndex = 0;
+                //IsFormLoaded = true;
 
                 LoadGridView();
             }
