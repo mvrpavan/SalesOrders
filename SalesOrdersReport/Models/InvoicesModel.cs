@@ -383,6 +383,7 @@ namespace SalesOrdersReport.Models
                         OrderQty = item["OrderQty"].ToString(),
                         SaleQty = Double.Parse(item["SaleQty"].ToString()),
                         Price = Double.Parse(item["Price"].ToString()),
+                        DiscountAmount = Double.Parse(item["Discount"].ToString()),
                         TaxableValue = Double.Parse(item["TaxableValue"].ToString()),
                         CGST = Double.Parse(item["CGST"].ToString()),
                         SGST = Double.Parse(item["SGST"].ToString()),

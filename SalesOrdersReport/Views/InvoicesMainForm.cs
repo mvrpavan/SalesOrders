@@ -407,7 +407,7 @@ namespace SalesOrdersReport.Views
                 DataTable dtInvoiceProducts = new DataTable();
                 String[] ArrColumns = new String[] { "ProductID", "Product Name", "Ordered Qty", "Sale Qty", "Price",
                                                     "Gross Total", "Tax", "Net Total", "Invoice Item Status" };
-                Type[] ArrColumnTypes = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeDouble,
+                Type[] ArrColumnTypes = new Type[] { CommonFunctions.TypeInt32, CommonFunctions.TypeString, CommonFunctions.TypeString,
                                                     CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble,
                                                     CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeString };
 

@@ -482,7 +482,7 @@ namespace SalesOrdersReport.Views
                         row[ItemColIndex] = item.ProductName;
                         row[PriceColIndex] = item.Price.ToString("F");
                         row[OrdQtyColIndex] = item.OrderQty;
-                        row[SaleQtyColIndex] = item.OrderQty;
+                        row[SaleQtyColIndex] = item.SaleQty;
                         row[ItemSelectionSelectColIndex] = false;
 
                         Int32 Index = dtGridViewInvProdList.Rows.Add(row);

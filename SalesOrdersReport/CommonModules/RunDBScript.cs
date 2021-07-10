@@ -682,6 +682,7 @@ namespace SalesOrdersReport.CommonModules
                     "OrderQty, VARCHAR(10) DEFAULT NULL",
                     "SaleQty, float DEFAULT 0",
                     "Price, float DEFAULT 0",
+                    "Discount, float DEFAULT 0",
                     "TaxableValue, float DEFAULT 0",
                     "CGST, float DEFAULT 0",
                     "SGST, float DEFAULT 0",
