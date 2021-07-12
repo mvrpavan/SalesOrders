@@ -478,7 +478,7 @@ namespace SalesOrdersReport.Views
                 {
                     try
                     {
-                        tcpClient.Connect(CommonFunctions.ObjApplicationSettings.Server, 3306);
+                        tcpClient.Connect(CommonFunctions.ObjApplicationSettings.Server, 22);
                         tmpIsConnected = true;
                     }
                     catch (Exception)
