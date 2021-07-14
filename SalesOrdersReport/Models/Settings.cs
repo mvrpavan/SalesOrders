@@ -20,7 +20,7 @@ namespace SalesOrdersReport.Models
         XmlNode SettingsNode;
         public String MainFormTitleText, LogoFileName;
         public Int32 ReportRowsFromTop, ReportAppendRowsAtBottom, LogoImageHeight;
-        public string Server = "", DatabaseName = "", UserName = "", Password = "", Port = "33663";
+        public string Server = "", DatabaseName = "", UserName = "", Password = "", Port = "3306";
         public String SMTPServer = "", SenderMailID = "", SenderMailPassword = "", SenderName = "", ReceiverMailID = "", ReceiverName = "", StoreName = "", POSNumber = "";
         public Int32 SMTPPort = 0;
         public List<String> ListSQLScriptFiles = new List<String>();
