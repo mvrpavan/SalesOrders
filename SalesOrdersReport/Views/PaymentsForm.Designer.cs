@@ -323,7 +323,7 @@
             this.dgvPaymentSummary.Location = new System.Drawing.Point(12, 423);
             this.dgvPaymentSummary.MultiSelect = false;
             this.dgvPaymentSummary.Name = "dgvPaymentSummary";
-            this.dgvPaymentSummary.Size = new System.Drawing.Size(1164, 214);
+            this.dgvPaymentSummary.Size = new System.Drawing.Size(1164, 235);
             this.dgvPaymentSummary.TabIndex = 5;
             this.dgvPaymentSummary.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPaymentSummary_CellEndEdit);
             this.dgvPaymentSummary.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPaymentSummary_CellValueChanged);
@@ -350,16 +350,18 @@
             // 
             // cmbxStaffName
             // 
+            this.cmbxStaffName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbxStaffName.FormattingEnabled = true;
-            this.cmbxStaffName.Location = new System.Drawing.Point(873, 13);
+            this.cmbxStaffName.Location = new System.Drawing.Point(921, 13);
             this.cmbxStaffName.Name = "cmbxStaffName";
             this.cmbxStaffName.Size = new System.Drawing.Size(121, 21);
             this.cmbxStaffName.TabIndex = 8;
             // 
             // lblStaffName
             // 
+            this.lblStaffName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStaffName.AutoSize = true;
-            this.lblStaffName.Location = new System.Drawing.Point(747, 16);
+            this.lblStaffName.Location = new System.Drawing.Point(803, 16);
             this.lblStaffName.Name = "lblStaffName";
             this.lblStaffName.Size = new System.Drawing.Size(112, 13);
             this.lblStaffName.TabIndex = 9;
@@ -367,6 +369,7 @@
             // 
             // btnAddToDB
             // 
+            this.btnAddToDB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAddToDB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnAddToDB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAddToDB.Image = global::SalesOrdersReport.Properties.Resources.math_add_icon_24;
@@ -391,15 +394,14 @@
             // 
             // panel2
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.AutoSize = true;
             this.panel2.Controls.Add(this.btnAddToDB);
             this.panel2.Controls.Add(this.lblStaffName);
             this.panel2.Controls.Add(this.cmbxStaffName);
-            this.panel2.Location = new System.Drawing.Point(12, 691);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 703);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1164, 42);
+            this.panel2.Size = new System.Drawing.Size(1184, 42);
             this.panel2.TabIndex = 11;
             // 
             // btnPaymentSummaryExportToExcel
@@ -437,12 +439,11 @@
             // 
             // dtGridViewPaymentsSummaryTotal
             // 
-            this.dtGridViewPaymentsSummaryTotal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.dtGridViewPaymentsSummaryTotal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtGridViewPaymentsSummaryTotal.Location = new System.Drawing.Point(12, 643);
+            this.dtGridViewPaymentsSummaryTotal.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.dtGridViewPaymentsSummaryTotal.Location = new System.Drawing.Point(0, 664);
             this.dtGridViewPaymentsSummaryTotal.Name = "dtGridViewPaymentsSummaryTotal";
-            this.dtGridViewPaymentsSummaryTotal.Size = new System.Drawing.Size(1164, 39);
+            this.dtGridViewPaymentsSummaryTotal.Size = new System.Drawing.Size(1184, 39);
             this.dtGridViewPaymentsSummaryTotal.TabIndex = 16;
             // 
             // btnAddPaymentSummaryRow

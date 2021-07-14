@@ -862,10 +862,14 @@ namespace SalesOrdersReport.Views
                 return false;
             }
         }
+
         private void btnAddToDB_Click(object sender, EventArgs e)
         {
             try
             {
+                DialogResult dialogResult = MessageBox.Show(this, "Are you sure to add these Payments?", "Add Payments", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (dialogResult == DialogResult.No) return;
+
                 List<int> ListSuccessfulID = new List<int>();
                 //for (int i = 0; i < ListEditedInvoiceIDs.Count; i++)
                 //{

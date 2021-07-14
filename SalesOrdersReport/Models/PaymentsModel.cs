@@ -257,7 +257,7 @@ namespace SalesOrdersReport.Models
                 string tmpWherecondition = "";
                 if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) tmpWherecondition = "  ((f.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "') OR f.CreationDate  is null ) ";
                 else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) tmpWherecondition = " ((f.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') OR f.CreationDate  is null ) ";
-                else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) tmpWherecondition = " ((f.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') OR f.CreationDate  is null ) ";
+                else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) tmpWherecondition = " ((f.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') AND (a.CreationDate NOT BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') OR f.CreationDate  is null ) ";
                 else tmpWherecondition = " 1 = 1";
 
                 string PaymentModesColNames = string.Join(",", ListPaymentModes.Select(e => " IFNULL(f.`" + e.PaymentMode + "`,0) as `" + e.PaymentMode + "`").ToList());
