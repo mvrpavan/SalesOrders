@@ -20,7 +20,7 @@ namespace SalesOrdersReport.Models
         XmlNode SettingsNode;
         public String MainFormTitleText, LogoFileName;
         public Int32 ReportRowsFromTop, ReportAppendRowsAtBottom, LogoImageHeight;
-        public string Server = "", DatabaseName = "", UserName = "", Password = "";
+        public string Server = "", DatabaseName = "", UserName = "", Password = "", Port = "33663";
         public String SMTPServer = "", SenderMailID = "", SenderMailPassword = "", SenderName = "", ReceiverMailID = "", ReceiverName = "", StoreName = "", POSNumber = "";
         public Int32 SMTPPort = 0;
         public List<String> ListSQLScriptFiles = new List<String>();
@@ -46,6 +46,7 @@ namespace SalesOrdersReport.Models
                 XMLFileUtils.GetAttributeValue(DatabaseNode, "DatabaseName", out DatabaseName);
                 XMLFileUtils.GetAttributeValue(DatabaseNode, "UserName", out UserName);
                 XMLFileUtils.GetAttributeValue(DatabaseNode, "Password", out Password);
+                if (XMLFileUtils.GetAttributeValue(DatabaseNode, "Port", out Value)) Port = Value;
 
                 XmlNode SQLScriptsNode;
                 XMLFileUtils.GetChildNode(SettingsNode, "SQLScripts", out SQLScriptsNode);

@@ -20,7 +20,7 @@ namespace SalesOrdersReport.CommonModules
         public string CurrentUser;
         public DateTime LoginTime;
         static MySQLHelper ObjMySqlHelper = new MySQLHelper();
-        String DBServer, DBName, DBUsername, DBPassword;
+        String DBServer, DBName, DBUsername, DBPassword, DBPort;
 
         private MySQLHelper()
         {
@@ -47,7 +47,7 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public void OpenConnection(String DBServer, String DBName, String DBUsername, String DBPassword)
+        public void OpenConnection(String DBServer, String DBName, String DBUsername, String DBPassword, String DBPort)
         {
             try
             {
@@ -55,12 +55,14 @@ namespace SalesOrdersReport.CommonModules
                 this.DBName = DBName;
                 this.DBUsername = DBUsername;
                 this.DBPassword = DBPassword;
+                this.DBPort = DBPort;
 
                 ObjDbConnectionStringBuilder = new MySqlConnectionStringBuilder();
                 ObjDbConnectionStringBuilder.Add("Database", DBName.ToLower());
                 ObjDbConnectionStringBuilder.Add("Data Source", DBServer.ToLower());
                 ObjDbConnectionStringBuilder.Add("User Id", DBUsername);
                 ObjDbConnectionStringBuilder.Add("Password", DBPassword);
+                ObjDbConnectionStringBuilder.Add("Port", DBPort);
                 ObjDbConnectionStringBuilder.Add("persistsecurityinfo", "True");
                 ObjDbConnectionStringBuilder.Add("Allow Zero Datetime", "True");
                 ObjDbConnectionStringBuilder.Add("Allow User Variables", "True");
@@ -89,7 +91,7 @@ namespace SalesOrdersReport.CommonModules
             {
                 if (ObjDbConnection.State != ConnectionState.Open)
                 {
-                    OpenConnection(DBServer, DBName, DBUsername, DBPassword);
+                    OpenConnection(DBServer, DBName, DBUsername, DBPassword, DBPort);
                 }
             }
             catch (Exception ex)

@@ -787,7 +787,7 @@ namespace SalesOrdersReport.CommonModules
                 }
                 else
                 {
-                    ObjMySQLHelper.OpenConnection(ObjApplicationSettings.Server, ObjApplicationSettings.DatabaseName, ObjApplicationSettings.UserName, ObjApplicationSettings.Password);
+                    ObjMySQLHelper.OpenConnection(ObjApplicationSettings.Server, ObjApplicationSettings.DatabaseName, ObjApplicationSettings.UserName, ObjApplicationSettings.Password, ObjApplicationSettings.Port);
                     return true;
                 }
             }
