@@ -148,28 +148,28 @@ namespace SalesOrdersReport.Views
             // manageInventoryToolStripMenuItem
             // 
             this.manageInventoryToolStripMenuItem.Name = "manageInventoryToolStripMenuItem";
-            this.manageInventoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.manageInventoryToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.manageInventoryToolStripMenuItem.Text = "Manage &Inventory";
             this.manageInventoryToolStripMenuItem.Click += new System.EventHandler(this.manageInventoryToolStripMenuItem_Click);
             // 
             // manageVendorsToolStripMenuItem
             // 
             this.manageVendorsToolStripMenuItem.Name = "manageVendorsToolStripMenuItem";
-            this.manageVendorsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.manageVendorsToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.manageVendorsToolStripMenuItem.Text = "Manage &Vendors";
             this.manageVendorsToolStripMenuItem.Click += new System.EventHandler(this.manageVendorsToolStripMenuItem_Click);
             // 
             // purchaseOrdersToolStripMenuItem
             // 
             this.purchaseOrdersToolStripMenuItem.Name = "purchaseOrdersToolStripMenuItem";
-            this.purchaseOrdersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.purchaseOrdersToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.purchaseOrdersToolStripMenuItem.Text = "Purchase &Orders";
             this.purchaseOrdersToolStripMenuItem.Click += new System.EventHandler(this.purchaseOrdersToolStripMenuItem_Click);
             // 
             // purchaseInvoicesToolStripMenuItem
             // 
             this.purchaseInvoicesToolStripMenuItem.Name = "purchaseInvoicesToolStripMenuItem";
-            this.purchaseInvoicesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.purchaseInvoicesToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.purchaseInvoicesToolStripMenuItem.Text = "&Purchase Invoices";
             this.purchaseInvoicesToolStripMenuItem.Click += new System.EventHandler(this.purchaseInvoicesToolStripMenuItem_Click);
             // 
@@ -177,7 +177,7 @@ namespace SalesOrdersReport.Views
             // 
             this.PaymentsToolStripMenuItem.Name = "PaymentsToolStripMenuItem";
             this.PaymentsToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
-            this.PaymentsToolStripMenuItem.Text = "Payments";
+            this.PaymentsToolStripMenuItem.Text = "Pa&yments";
             this.PaymentsToolStripMenuItem.Click += new System.EventHandler(this.PaymentsToolStripMenuItem_Click);
             // 
             // ExpensesToolStripMenuItem

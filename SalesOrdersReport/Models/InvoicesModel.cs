@@ -94,15 +94,28 @@ namespace SalesOrdersReport.Models
         Boolean IsBill = false;
         PaymentsModel ObjPaymentsModel;
         public Int32 CurrInvoiceID = -1;
+
+        public InvoicesModel()
+        {
+            try
+            {
+                ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
+                ObjProductMasterModel = CommonFunctions.ObjProductMaster;
+                ObjPaymentsModel = new PaymentsModel();
+                ObjPaymentsModel.LoadPaymentModes();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.ctor()", ex);
+                throw;
+            }
+        }
+
         public void Initialize()
         {
             try
             {
                 ListInvoices = new List<InvoiceDetails>();
-                ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
-                ObjProductMasterModel = CommonFunctions.ObjProductMaster;
-                ObjPaymentsModel = new PaymentsModel();
-                ObjPaymentsModel.LoadPaymentModes();
             }
             catch (Exception ex)
             {

@@ -60,6 +60,7 @@
             this.btnSaveSummaryDB = new System.Windows.Forms.Button();
             this.dtGridViewPaymentsSummaryTotal = new System.Windows.Forms.DataGridView();
             this.btnAddPaymentSummaryRow = new System.Windows.Forms.Button();
+            this.backgroundWorkerPayments = new System.ComponentModel.BackgroundWorker();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewPayments)).BeginInit();
@@ -463,6 +464,12 @@
             this.btnAddPaymentSummaryRow.UseVisualStyleBackColor = false;
             this.btnAddPaymentSummaryRow.Click += new System.EventHandler(this.btnAddPaymentSummaryRow_Click);
             // 
+            // backgroundWorkerPayments
+            // 
+            this.backgroundWorkerPayments.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerPayments_DoWork);
+            this.backgroundWorkerPayments.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerPayments_ProgressChanged);
+            this.backgroundWorkerPayments.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerPayments_RunWorkerCompleted);
+            // 
             // PaymentsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -536,5 +543,6 @@
         private System.Windows.Forms.Button btnSaveSummaryDB;
         private System.Windows.Forms.DataGridView dtGridViewPaymentsSummaryTotal;
         private System.Windows.Forms.Button btnAddPaymentSummaryRow;
+        private System.ComponentModel.BackgroundWorker backgroundWorkerPayments;
     }
 }

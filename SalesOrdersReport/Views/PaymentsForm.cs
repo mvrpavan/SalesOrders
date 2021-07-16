@@ -515,32 +515,6 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog($"{this}.CreatePaymentTable()", ex);
             }
         }
-        Int32 UpdatePaymentsTable()
-        {
-            try
-            {
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.UpdatePaymentsTable()", ex);
-                return -1;
-            }
-        }
-        DataTable GetPaymentsDataTable(DateTime FromDate, DateTime ToDate, INVOICESTATUS InvoiceStatus)
-        {
-            try
-            {
-                DataTable dtPayments = null;
-
-                return dtPayments;
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.GetPaymentsDataTable()", ex);
-                return null;
-            }
-        }
 
         void UpdatePaymentsOnClose(Int32 Mode)
         {
@@ -579,7 +553,6 @@ namespace SalesOrdersReport.Views
             }
         }
 
-
         private void btnViewEditPayment_Click(object sender, EventArgs e)
         {
             try
@@ -602,8 +575,6 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog($"{this}.btnViewEditPayment_Click()", ex);
             }
         }
-
-
 
         private void btnPrintPayment_Click(object sender, EventArgs e)
         {
@@ -865,13 +836,33 @@ namespace SalesOrdersReport.Views
                 DialogResult dialogResult = MessageBox.Show(this, "Are you sure to add these Payments?", "Add Payments", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (dialogResult == DialogResult.No) return;
 
+                CommonFunctions.ToggleEnabledPropertyOfAllControls(this);
+#if DEBUG
+                backgroundWorkerPayments_DoWork(null, null);
+                backgroundWorkerPayments_RunWorkerCompleted(null, null);
+#else
+                ReportProgress = backgroundWorkerPayments.ReportProgress;
+                backgroundWorkerPayments.RunWorkerAsync();
+                backgroundWorkerPayments.WorkerReportsProgress = true;
+#endif
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.btnAddToDB_Click()", ex);
+            }
+        }
+
+        private void AddPaymentsToDB()
+        {
+            try
+            {
                 List<PaymentDetails> ListSuccessfulID = new List<PaymentDetails>();
                 //for (int i = 0; i < ListEditedInvoiceIDs.Count; i++)
                 //{
                 ObjMySQLHelper.SetAutoCloseConnection(false);
                 for (int j = 0; j < dgvPaymentSummary.Rows.Count; j++)
                 {
-                    if (dgvPaymentSummary["Cancel", j].Value.ToString() != "0" || dgvPaymentSummary["Return", j].Value.ToString() != "0" || dgvPaymentSummary["Discount", j].Value.ToString() != "0"
+                    if (dgvPaymentSummary["Sale", j].Value.ToString() != "0" || dgvPaymentSummary["Cancel", j].Value.ToString() != "0" || dgvPaymentSummary["Return", j].Value.ToString() != "0" || dgvPaymentSummary["Discount", j].Value.ToString() != "0"
                         || CheckPaymentsModeColValue(dgvPaymentSummary.Rows[j]))
                     {
                         PaymentDetails tmpPaymentDetails = new PaymentDetails()
@@ -937,18 +928,24 @@ namespace SalesOrdersReport.Views
                             int resultVal = ObjAccountsMasterModel.UpdateCustomerAccount(ref tmpCustomerAccountHistoryDetails);
                             if (resultVal > 0)
                             {
+                                if (tmpPaymentDetails.InvoiceID > 0)
+                                {
+                                    ObjInvoicesModel.Initialize();
+                                    ObjInvoicesModel.MarkInvoicesAsPaid(new List<Int32>() { tmpPaymentDetails.InvoiceID });
+                                }
                                 dgvPaymentSummary["OB", j].Value = tmpCustomerAccountHistoryDetails.NewBalanceAmount.ToString();
                                 ListSuccessfulID.Add(tmpPaymentDetails);
                             }
                         }
                         //break;
                     }
+                    ReportProgressFunc((Int32)((j + 1) * 1.0 / dgvPaymentSummary.Rows.Count * 100));
                 }
                 //}
 
                 for (int i = 0; i < ListSuccessfulID.Count; i++)
                 {
-                    ObjMySQLHelper.DeleteRow("TempPaymentsSummary", "InvoiceID = " + ListSuccessfulID[i].InvoiceID 
+                    ObjMySQLHelper.DeleteRow("TempPaymentsSummary", "InvoiceID = " + ListSuccessfulID[i].InvoiceID
                                                                 + " and CustomerID = " + ListSuccessfulID[i].CustomerID);
                     ListEditedInvoiceIDs.Remove(ListSuccessfulID[i].CustomerID + "_" + ListSuccessfulID[i].InvoiceID);
                 }
@@ -956,12 +953,13 @@ namespace SalesOrdersReport.Views
                 // ListEditedInvoiceIDs.Clear();
                 LoadPaymentsGridView(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
                 LoadInputPaymentSummaryGridView();
+                ReportProgressFunc(100);
 
                 MessageBox.Show(this, "Payments with either NetSale or Amount received are updated successfully", "Add Payments", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"{this}.btnAddToDB_Click()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.AddPaymentsToDB()", ex);
             }
             finally
             {
@@ -1151,26 +1149,6 @@ namespace SalesOrdersReport.Views
                     return;
                 }
 
-                ////         public Int32 InvoiceID;
-                ////public String InvoiceNumber;
-                ////public DateTime InvoiceDate, CreationDate, LastUpdatedDate;
-                ////public Int32 CustomerID, OrderID;
-                ////public String CustomerName;
-                ////public Double GrossInvoiceAmount, DiscountAmount, NetInvoiceAmount;
-                ////public INVOICESTATUS InvoiceStatus;
-                ////public List<InvoiceItemDetails> ListInvoiceItems;
-                ////public Int32 InvoiceItemCount = 0;
-                ////public Int32 DeliveryLineID = -1;
-                ////public string DeliveryLineName = "";
-                ////String Query = "SELECT a.INVOICEID,a.INVOICENUMBER as 'INVOICE#',b.CUSTOMERNAME,c.LINENAME,a.GROSSINVOICEAMOUNT as SALE,a.NETINVOICEAMOUNT as 'NET SALE',a.DISCOUNTAMOUNT as DISCOUNT,e.BALANCEAMOUNT as OB "
-                ////       + " FROM Invoices a INNER JOIN CUSTOMERMASTER b on a.CUSTOMERID = b.CUSTOMERID "
-                ////       + " Left Outer Join LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
-                ////       + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = a.CUSTOMERID "
-                ////       + " WHERE (a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered') AND " + WhereConditionQuery + "; ";
-                ////ObjMySQLHelper.UpdateTableDetails("Invoices", new List<String>() { "InvoiceItemCount", "NetInvoiceAmount", "InvoiceStatus", "DeliveryLineID" },
-                ////                       new List<String>() { InvoiceItemCount.ToString(), NetInvoiceAmount.ToString(), ObjInvoiceDetails.InvoiceStatus.ToString(), ObjInvoiceDetails.DeliveryLineID.ToString() },
-                ////                       new List<Types>() { Types.Number, Types.Number, Types.String, Types.Number }, $"InvoiceID = {ObjInvoiceDetails.InvoiceID}");
-
                 List<String> ListUnsuccessfulID = new List<String>();
 
                 for (int i = 0; i < ListEditedInvoiceIDs.Count; i++)
@@ -1230,7 +1208,7 @@ namespace SalesOrdersReport.Views
                     }
                 }
 
-                if (ListUnsuccessfulID.Count > 0) MessageBox.Show("Follwing Invoice/s were not saved " + string.Join("\n", ListUnsuccessfulID), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ListUnsuccessfulID.Count > 0) MessageBox.Show("Following Invoice/s were not saved " + string.Join("\n", ListUnsuccessfulID), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
@@ -1252,20 +1230,61 @@ namespace SalesOrdersReport.Views
         }
 
         private void btnAddPaymentSummaryRow_Click(object sender, EventArgs e)
-            {
+        {
             try
             {
-                //List<string> ListOfCustomersInGrid = dgvPaymentSummary.Rows
-                //   .OfType<DataGridViewRow>()
-                //   .Where(x => x.Cells["Customer Name"].Value != null)
-                //   .Select(x => x.Cells["Customer Name"].Value.ToString())
-                //   .ToList();
-
                 CommonFunctions.ShowDialog(new AddPaymentSummaryForm(UpdatePaymentsOnClose, ListCustomerNamesAlreadyInGrid, dTimePickerToPayments.Value), this);
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.btnAddPaymentSummaryRow_Click()", ex);
+            }
+        }
+
+        ReportProgressDel ReportProgress = null;
+
+        private void ReportProgressFunc(Int32 ProgressState)
+        {
+            if (ReportProgress == null) return;
+            ReportProgress(ProgressState);
+        }
+
+        private void backgroundWorkerPayments_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            try
+            {
+                AddPaymentsToDB();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerPayments_DoWork()", ex);
+                throw;
+            }
+        }
+
+        private void backgroundWorkerPayments_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            try
+            {
+                CommonFunctions.UpdateProgressBar(e.ProgressPercentage);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerPayments_ProgressChanged()", ex);
+                throw;
+            }
+        }
+
+        private void backgroundWorkerPayments_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                CommonFunctions.ToggleEnabledPropertyOfAllControls(this);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerPayments_RunWorkerCompleted()", ex);
+                throw;
             }
         }
     }

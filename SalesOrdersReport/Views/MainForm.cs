@@ -56,7 +56,7 @@ namespace SalesOrdersReport.Views
                 lblShortcuts.Text += "F3:Invoices    ";
                 lblShortcuts.Text += "F4:Products    ";
                 lblShortcuts.Text += "F5:Customers    ";
-                lblShortcuts.Text += "F6:Payments & Expenses    ";
+                lblShortcuts.Text += "F6:Payments    ";
                 //lblShortcuts.Text += "F7:Vendors    ";
 
                 POSbillingToolStripMenuItem.ShortcutKeys = Keys.F1;
