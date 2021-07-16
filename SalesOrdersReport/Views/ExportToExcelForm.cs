@@ -73,9 +73,9 @@ namespace SalesOrdersReport.Views
                     case ExportDataTypes.Payments:
                         this.Text = "Export Payments/Summary Data to Excel";
                         chkListBoxDataToExport.Items.Add("Payment/Summary Details", true);
-                        lblExport.Text = "Export to File";
+                        lblExport.Text = "Export to Folder";
                         btnExportToExcelFile.Text = "Export Payments/Summary Data to Excel File";
-                        saveFileDialogExportToExcel.Title = "Save Exported file as";
+                        saveFileDialogExportToExcel.Title = "Save Exported file to";
                         chkBoxAppend.Visible = false;
                         break;
                     case ExportDataTypes.Stocks:
@@ -127,10 +127,10 @@ namespace SalesOrdersReport.Views
                         }
                         break;
                     case ExportDataTypes.Payments:
-                        result = saveFileDialogExportToExcel.ShowDialog();
+                        result = folderBrowserDialogExport.ShowDialog();
                         if (result == DialogResult.OK)
                         {
-                            txtExportToExcelFilePath.Text = saveFileDialogExportToExcel.FileName;
+                            txtExportToExcelFilePath.Text = folderBrowserDialogExport.SelectedPath;
                         }
                         break;
                     case ExportDataTypes.Stocks:
@@ -258,11 +258,11 @@ namespace SalesOrdersReport.Views
                                 return;
                             }
 
-                            if (!chkBoxAppend.Checked && File.Exists(FilePath))
-                            {
-                                DialogResult dialogResult = MessageBox.Show(this, "Do you want to overwrite the file?", "Export data", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
-                                if (dialogResult == DialogResult.No) return;
-                            }
+                            //if (!chkBoxAppend.Checked && File.Exists(FilePath))
+                            //{
+                            //    DialogResult dialogResult = MessageBox.Show(this, "Do you want to overwrite the file?", "Export data", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                            //    if (dialogResult == DialogResult.No) return;
+                            //}
                             break;
                         case ExportDataTypes.Stocks:
                         case ExportDataTypes.Reports:
@@ -395,7 +395,7 @@ namespace SalesOrdersReport.Views
                         break;
                     case ExportDataTypes.Payments:
 
-                        Retval = ExportDataToFile(txtExportToExcelFilePath.Text, null, chkBoxAppend.Checked);
+                        Retval = ExportDataToFile(txtExportToExcelFilePath.Text, null, false);
 
                         if (Retval == 0)
                         {

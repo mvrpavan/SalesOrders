@@ -250,10 +250,6 @@ namespace SalesOrdersReport.Views
             }
         }
 
-
-
-        Int32 ExportOption = -1;
-        String ExportFolderPath = "";
         Int32 BackgroundTask = 0;
         ReportProgressDel ReportProgress = null;
 

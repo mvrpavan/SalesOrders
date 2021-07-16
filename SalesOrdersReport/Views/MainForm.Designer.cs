@@ -56,9 +56,6 @@ namespace SalesOrdersReport.Views
             this.ProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LogOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vendorMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.createOrderSheetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.updatePurchasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cntxtMenuStripUserProfile = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripConnStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -151,28 +148,28 @@ namespace SalesOrdersReport.Views
             // manageInventoryToolStripMenuItem
             // 
             this.manageInventoryToolStripMenuItem.Name = "manageInventoryToolStripMenuItem";
-            this.manageInventoryToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.manageInventoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.manageInventoryToolStripMenuItem.Text = "Manage &Inventory";
             this.manageInventoryToolStripMenuItem.Click += new System.EventHandler(this.manageInventoryToolStripMenuItem_Click);
             // 
             // manageVendorsToolStripMenuItem
             // 
             this.manageVendorsToolStripMenuItem.Name = "manageVendorsToolStripMenuItem";
-            this.manageVendorsToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.manageVendorsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.manageVendorsToolStripMenuItem.Text = "Manage &Vendors";
             this.manageVendorsToolStripMenuItem.Click += new System.EventHandler(this.manageVendorsToolStripMenuItem_Click);
             // 
             // purchaseOrdersToolStripMenuItem
             // 
             this.purchaseOrdersToolStripMenuItem.Name = "purchaseOrdersToolStripMenuItem";
-            this.purchaseOrdersToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.purchaseOrdersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.purchaseOrdersToolStripMenuItem.Text = "Purchase &Orders";
             this.purchaseOrdersToolStripMenuItem.Click += new System.EventHandler(this.purchaseOrdersToolStripMenuItem_Click);
             // 
             // purchaseInvoicesToolStripMenuItem
             // 
             this.purchaseInvoicesToolStripMenuItem.Name = "purchaseInvoicesToolStripMenuItem";
-            this.purchaseInvoicesToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.purchaseInvoicesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.purchaseInvoicesToolStripMenuItem.Text = "&Purchase Invoices";
             this.purchaseInvoicesToolStripMenuItem.Click += new System.EventHandler(this.purchaseInvoicesToolStripMenuItem_Click);
             // 
@@ -275,34 +272,9 @@ namespace SalesOrdersReport.Views
             // 
             // vendorMenu
             // 
-            this.vendorMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createOrderSheetToolStripMenuItem,
-            this.createToolStripMenuItem,
-            this.updatePurchasesToolStripMenuItem});
             this.vendorMenu.Name = "vendorMenu";
             this.vendorMenu.Size = new System.Drawing.Size(61, 20);
             this.vendorMenu.Text = "&Vendors";
-            // 
-            // createOrderSheetToolStripMenuItem
-            // 
-            this.createOrderSheetToolStripMenuItem.Name = "createOrderSheetToolStripMenuItem";
-            this.createOrderSheetToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.createOrderSheetToolStripMenuItem.Text = "Create Vendor &Order Sheet";
-            this.createOrderSheetToolStripMenuItem.Click += new System.EventHandler(this.createOrderSheetToolStripMenuItem_Click);
-            // 
-            // createToolStripMenuItem
-            // 
-            this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-            this.createToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.createToolStripMenuItem.Text = "Create &Purchase Orders";
-            this.createToolStripMenuItem.Click += new System.EventHandler(this.createPurchaseOrderToolStripMenuItem_Click);
-            // 
-            // updatePurchasesToolStripMenuItem
-            // 
-            this.updatePurchasesToolStripMenuItem.Name = "updatePurchasesToolStripMenuItem";
-            this.updatePurchasesToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.updatePurchasesToolStripMenuItem.Text = "&Update Purchases";
-            this.updatePurchasesToolStripMenuItem.Click += new System.EventHandler(this.updatePurchasesToolStripMenuItem_Click);
             // 
             // cntxtMenuStripUserProfile
             // 
@@ -447,13 +419,10 @@ namespace SalesOrdersReport.Views
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.ToolStripMenuItem vendorMenu;
         private System.Windows.Forms.ToolStripMenuItem productMenu;
-        private System.Windows.Forms.ToolStripMenuItem createOrderSheetToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem createToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reportsMenu;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripProgress;
         private System.Windows.Forms.ContextMenuStrip cntxtMenuStripUserProfile;
-        private System.Windows.Forms.ToolStripMenuItem updatePurchasesToolStripMenuItem;
         private System.Windows.Forms.PictureBox picBoxBackgroundLogo;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolStripMenuItem customerToolStripMenuItem;

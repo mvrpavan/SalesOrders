@@ -168,7 +168,7 @@ namespace SalesOrdersReport.Views
         }
         #endregion
 
-        #region Vendor Menu Item
+        /*#region Vendor Menu Item
         private void createOrderSheetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -210,24 +210,7 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog("MainForm.updatePurchasesToolStripMenuItem_Click()", ex);
             }
         }
-        #endregion
-
-        #region Reports Menu Item
-        private void sellerHistoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!IsValidToOpenChildForm()) return;
-
-                SellerHistoryReportForm ObjSellerHistoryReportForm = new SellerHistoryReportForm();
-                ShowChildForm(ObjSellerHistoryReportForm);
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("MainForm.sellerHistoryToolStripMenuItem_Click()", ex);
-            }
-        }
-        #endregion
+        #endregion*/
 
         #region Help Menu Item
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

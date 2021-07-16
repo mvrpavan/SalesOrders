@@ -8,7 +8,6 @@ using SalesOrdersReport.CommonModules;
 
 namespace SalesOrdersReport.Models
 {
-
     public class ReportDetails : IComparer<ReportDetails>
     {
         public int ReportID = -1;
@@ -21,7 +20,6 @@ namespace SalesOrdersReport.Models
         {
             return x.ReportName.ToUpper().CompareTo(y.ReportName.ToUpper());
         }
-
     }
 
     class DefinedParams : IComparer<DefinedParams>
@@ -38,23 +36,15 @@ namespace SalesOrdersReport.Models
         {
             return x.ParamName.ToUpper().CompareTo(y.ParamName.ToUpper());
         }
-
     }
+
     class ReportModel
     {
-
         List<ReportDetails> ListReportDetails = new List<ReportDetails>();
         MySQLHelper ObjMySQLHelper;
         List<DefinedParams> ListReportPreDefinedParams = new List<DefinedParams>();
         List<DefinedParams> ListReportUserDefinedParams = new List<DefinedParams>();
-        string TempQueryStr = " a.*, b.CUSTOMERID, c.CUSTOMERNAME,c.PHONENO,d.INVOICENUMBER,e.USERNAME FROM PAYMENTS a "
-                           + " Inner Join ACCOUNTSMASTER b on a.ACCOUNTID = b.ACCOUNTID "
-                            + " Inner Join CUSTOMERMASTER c on b.CUSTOMERID = c.CUSTOMERID "
-                            + " Inner Join Invoices d on a.INVOICEID = d.INVOICEID "
-                            + " Inner Join USERMASTER e on a.USERID = e.USERID ";
-
         DataTable DtTempSummary = new DataTable();
-
 
         public ReportModel()
         {
@@ -243,6 +233,7 @@ namespace SalesOrdersReport.Models
                 return "";
             }
         }
+
         public ReportDetails GetReportDetailsFromName(string ReportName)
         {
             try
@@ -280,6 +271,7 @@ namespace SalesOrdersReport.Models
                 return -1;
             }
         }
+
         public DataTable LoadDefinedParamsDataTable()
         {
             try
@@ -451,7 +443,6 @@ namespace SalesOrdersReport.Models
                         else ObjReportDetails.ListUserDefinedParamID.Add(int.Parse(tempDefined[mn]));
                     }
 
-
                     int Index = ListReportDetails.BinarySearch(ObjReportDetails, ObjReportDetails);
                     if (Index < 0) ListReportDetails.Insert(~Index, ObjReportDetails);
                 }
@@ -461,6 +452,5 @@ namespace SalesOrdersReport.Models
                 CommonFunctions.ShowErrorDialog($"{this}.ListReportDetails()", ex);
             }
         }
-
     }
 }

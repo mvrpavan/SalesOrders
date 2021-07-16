@@ -230,24 +230,24 @@ namespace SalesOrdersReport.Models
             }
         }
 
-        public void LoadTempPaymentSummaryTableinDT()
+        public DataTable LoadTempPaymentSummaryTableinDT()
         {
             try
             {
                string Query = "Select * from TempPaymentsSummary";
-               DtTempSummary = ObjMySQLHelper.GetQueryResultInDataTable(Query);
+               return ObjMySQLHelper.GetQueryResultInDataTable(Query);
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.LoadTempPaymentSummaryTableinDT()", ex);
+                return null;
             }
         }
+
         public DataTable GetPaymentSummaryTable(DateTime FromDate, DateTime ToDate)
         {
             try
             {
-                LoadTempPaymentSummaryTableinDT();
-
                 String WhereConditionQuery = "";
                 if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) WhereConditionQuery = "  (a.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "') AND ((f.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "') OR f.CreationDate  is null ) ";
                 else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) WhereConditionQuery = "   (a.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "')  AND  (f.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') OR f.CreationDate  is null ) ";
@@ -257,12 +257,15 @@ namespace SalesOrdersReport.Models
                 string tmpWherecondition = "";
                 if (FromDate != DateTime.MinValue && ToDate == DateTime.MinValue) tmpWherecondition = "  ((f.CreationDate >= '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "') OR f.CreationDate  is null ) ";
                 else if (FromDate == DateTime.MinValue && ToDate != DateTime.MinValue) tmpWherecondition = " ((f.CreationDate <= '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') OR f.CreationDate  is null ) ";
-                else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) tmpWherecondition = " ((f.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') AND (a.CreationDate NOT BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') OR f.CreationDate  is null ) ";
+                //else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) tmpWherecondition = " ((f.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') AND (a.CreationDate NOT BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') OR f.CreationDate  is null ) ";
+                else if (FromDate != DateTime.MinValue && ToDate != DateTime.MinValue) tmpWherecondition = " ((f.CreationDate BETWEEN '" + MySQLHelper.GetTimeStampStrForSearch(FromDate) + "' AND '" + MySQLHelper.GetTimeStampStrForSearch(ToDate, false) + "') OR f.CreationDate  is null ) ";
                 else tmpWherecondition = " 1 = 1";
 
                 string PaymentModesColNames = string.Join(",", ListPaymentModes.Select(e => " IFNULL(f.`" + e.PaymentMode + "`,0) as `" + e.PaymentMode + "`").ToList());
                 DataTable dt = new DataTable();
-                String Query = "SELECT a.INVOICEID,a.INVOICENUMBER as 'INVOICE#',b.CUSTOMERNAME,c.LINENAME,a.GROSSINVOICEAMOUNT as SALE,a.NETINVOICEAMOUNT as 'NET SALE',a.DISCOUNTAMOUNT as DISCOUNT,f.`Cancel` as Cancel,f.`Return` as `Return`,e.BALANCEAMOUNT as OB , " + PaymentModesColNames
+                /*String Query = "SELECT a.INVOICEID, a.INVOICENUMBER as 'INVOICE#', b.CUSTOMERNAME, c.LINENAME,"
+                          + " a.GROSSINVOICEAMOUNT as SALE, a.NETINVOICEAMOUNT as 'NET SALE', a.DISCOUNTAMOUNT as DISCOUNT,"
+                          + " f.`Cancel` as Cancel, f.`Return` as `Return`, e.BALANCEAMOUNT as OB, " + PaymentModesColNames
                           + " FROM Invoices a INNER JOIN CUSTOMERMASTER b on a.CUSTOMERID = b.CUSTOMERID "
                           + " Left Outer Join LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
                           + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = a.CUSTOMERID "
@@ -276,10 +279,29 @@ namespace SalesOrdersReport.Models
                           + " Left Outer Join LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
                           + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = a.CUSTOMERID "
                           + " Right Join TempPaymentsSummary f on a.InvoiceID = f.InvoiceID "
-                          + " WHERE (a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered') AND "+ tmpWherecondition + ";";
+                          + " WHERE (a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered') AND "+ tmpWherecondition + ";";*/
 
+                String Query = "SELECT a.CUSTOMERID, a.INVOICEID, a.INVOICENUMBER as 'INVOICE#', b.CUSTOMERNAME, c.LINENAME,"
+                          + " a.GROSSINVOICEAMOUNT as SALE, a.NETINVOICEAMOUNT as 'NET SALE', a.DISCOUNTAMOUNT as DISCOUNT,"
+                          + " f.`Cancel` as Cancel, f.`Return` as `Return`, e.BALANCEAMOUNT as OB, " + PaymentModesColNames
+                          + " FROM Invoices a INNER JOIN CUSTOMERMASTER b on a.CUSTOMERID = b.CUSTOMERID "
+                          + " Left Outer Join LINEMASTER c on a.DELIVERYLINEID = c.LINEID "
+                          + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = a.CUSTOMERID "
+                          + " Left Join TempPaymentsSummary f on a.InvoiceID = f.InvoiceID "
+                          + " WHERE (a.INVOICESTATUS = 'Created' OR a.INVOICESTATUS = 'Delivered') AND " + WhereConditionQuery
+
+                          + " UNION "
+
+                          + " SELECT f.CUSTOMERID, f.INVOICEID, '-1' as 'INVOICE#', b.CUSTOMERNAME, c.LINENAME,"
+                          + " 0 as SALE, 0 as 'NET SALE', f.DISCOUNT as DISCOUNT,"
+                          + " f.`Cancel` as Cancel, f.`Return` as `Return`, e.BALANCEAMOUNT as OB," + PaymentModesColNames
+                          + " FROM TempPaymentsSummary f INNER JOIN CUSTOMERMASTER b on f.CUSTOMERID = b.CUSTOMERID "
+                          + " Left Outer Join LINEMASTER c on f.DELIVERYLINEID = c.LINEID "
+                          + " Inner Join ACCOUNTSMASTER e on e.CUSTOMERID = f.CUSTOMERID "
+                          + " WHERE INVOICEID <= 0 and " + tmpWherecondition + ";";
                 dt = ObjMySQLHelper.GetQueryResultInDataTable(Query);
                 int CountFoundInDtTempSummary = 0;
+                DataTable DtTempSummary = LoadTempPaymentSummaryTableinDT();
                 if (DtTempSummary.Rows.Count > 0)
                 {
                     for (int i = 0; i < dt.Rows.Count; i++)
@@ -288,7 +310,8 @@ namespace SalesOrdersReport.Models
                         DataRow dr = dt.Rows[i];
                         for (int j = 0; j < DtTempSummary.Rows.Count; j++)
                         {
-                            if (dr["InvoiceID"].ToString() == DtTempSummary.Rows[j]["InvoiceID"].ToString())
+                            if (dr["InvoiceID"].ToString() == DtTempSummary.Rows[j]["InvoiceID"].ToString()
+                                && dr["CustomerID"].ToString() == DtTempSummary.Rows[j]["CustomerID"].ToString())
                             {
                                 dr["CANCEL"] = DtTempSummary.Rows[j]["Cancel"];
                                 dr["RETURN"] = DtTempSummary.Rows[j]["Return"];
@@ -304,19 +327,6 @@ namespace SalesOrdersReport.Models
                     }
                     dt.AcceptChanges();
                 }
-                //var JoinResult = (from p in dt.AsEnumerable()
-                //                  join t in DtTempSummary.AsEnumerable()
-                //                  on p.Field<int>("InvoiceID") equals t.Field<int>("InvoiceID")
-                //                  select new
-                //                  {
-                //                      Cancel = t.Field<string>("Cancel"),
-                //                      Return = p.Field<string>("Return"),
-                //                      Discount = t.Field<string>("Discount")
-
-
-                //                  }).ToList();
-
-
                 return dt;
             }
             catch (Exception ex)
@@ -362,15 +372,18 @@ namespace SalesOrdersReport.Models
                 return null;
             }
         }
-        public Int32 CreateNewPaymentDetails(ref PaymentDetails ObjPaymentDetails, ref CustomerAccountHistoryDetails ObjCustomerAccountHistoryDetails)
+
+        public Int32 CreateNewPaymentDetails(ref PaymentDetails ObjPaymentDetails)
         {
             try
             {
                 InvoicesModel ObjInvoicesModel = new InvoicesModel();
                 ObjInvoicesModel.Initialize();
 
-                List<string> ListColumnValues = new List<string>(), ListTempColValues = new List<string>();
-                List<string> ListColumnNames = new List<string>(), ListTempColNames = new List<string>();
+                int ResultVal = -1;
+                string Now = MySQLHelper.GetDateTimeStringForDB(DateTime.Now);
+                //Insert into Payments table
+                List<string> ListColumnValues = new List<string>(), ListColumnNames = new List<string>();
                 List<Types> ListTypes = new List<Types>();
 
                 ListColumnValues.Add(ObjPaymentDetails.AccountID.ToString());
@@ -381,15 +394,16 @@ namespace SalesOrdersReport.Models
                 ListColumnNames.Add("PAYMENTMODEID");
                 ListTypes.Add(Types.Number);
 
-                if (ObjPaymentDetails.InvoiceID <= 0) ObjPaymentDetails.InvoiceID = 0;
-                ListColumnValues.Add(ObjPaymentDetails.InvoiceID.ToString());
+                Int32 InvoiceID = ObjPaymentDetails.InvoiceID;
+                if (InvoiceID <= 0) InvoiceID = 0;
+                ListColumnValues.Add(InvoiceID.ToString());
                 ListColumnNames.Add("INVOICEID");
                 ListTypes.Add(Types.Number);
 
-                if (ObjPaymentDetails.QuotationID <= 0) ObjPaymentDetails.QuotationID = 0;
-                ListColumnValues.Add(ObjPaymentDetails.QuotationID.ToString());
-                ListColumnNames.Add("QUOTATIONID");
-                ListTypes.Add(Types.Number);
+                //if (ObjPaymentDetails.QuotationID <= 0) ObjPaymentDetails.QuotationID = 0;
+                //ListColumnValues.Add(ObjPaymentDetails.QuotationID.ToString());
+                //ListColumnNames.Add("QUOTATIONID");
+                //ListTypes.Add(Types.Number);
 
                 ListColumnValues.Add(MySQLHelper.GetDateTimeStringForDB(ObjPaymentDetails.PaidOn));
                 ListColumnNames.Add("PAYMENTDATE");
@@ -414,7 +428,6 @@ namespace SalesOrdersReport.Models
                     ListTypes.Add(Types.String);
                 }
 
-                string Now = MySQLHelper.GetDateTimeStringForDB(DateTime.Now);
                 ListColumnValues.Add(Now);
                 ListColumnNames.Add("LASTUPDATEDATE");
                 ListTypes.Add(Types.String);
@@ -423,18 +436,29 @@ namespace SalesOrdersReport.Models
                 ListColumnNames.Add("CREATIONDATE");
                 ListTypes.Add(Types.String);
 
-                int ResultVal = ObjMySQLHelper.InsertIntoTable("PAYMENTS", ListColumnNames, ListColumnValues, ListTypes);
+                ResultVal = ObjMySQLHelper.InsertIntoTable("PAYMENTS", ListColumnNames, ListColumnValues, ListTypes);
                 ObjPaymentDetails.PaymentId = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select Max(PaymentID) PaymentID from PAYMENTS Where ACCOUNTID = {ObjPaymentDetails.AccountID}" +
-                                            $" and INVOICEID = {ObjPaymentDetails.InvoiceID} and QUOTATIONID = {ObjPaymentDetails.QuotationID};").ToString());
-
-                if (ObjPaymentDetails.InvoiceID > 0 && ObjCustomerAccountHistoryDetails.SaleAmount > 0) ObjInvoicesModel.MarkInvoicesAsPaid(new List<int>() { ObjPaymentDetails.InvoiceID });
+                                            $" and INVOICEID = {InvoiceID};").ToString());
                 if (ResultVal <= 0) return -1;
 
+                //Update Invoice as Paid
+                //if (ObjPaymentDetails.InvoiceID > 0 && ObjCustomerAccountHistoryDetails.SaleAmount > 0)
+                if (ObjPaymentDetails.InvoiceID > 0) ObjInvoicesModel.MarkInvoicesAsPaid(new List<int>() { ObjPaymentDetails.InvoiceID });
+
+                /*//Insert into CustomerAccountHistory table
                 ObjCustomerAccountHistoryDetails.PaymentID = ObjPaymentDetails.PaymentId;
+                ObjCustomerAccountHistoryDetails.NewBalanceAmount = ObjCustomerAccountHistoryDetails.BalanceAmount
+                                                                + ObjCustomerAccountHistoryDetails.SaleAmount
+                                                                - ObjCustomerAccountHistoryDetails.CancelAmount
+                                                                - ObjCustomerAccountHistoryDetails.RefundAmount
+                                                                - ObjCustomerAccountHistoryDetails.DiscountAmount
+                                                                - ObjCustomerAccountHistoryDetails.AmountReceived;
                 CustomerAccountHistoryModel ObjAccountHistoryModel = new CustomerAccountHistoryModel();
                 ObjCustomerAccountHistoryDetails = ObjAccountHistoryModel.CreateNewCustomerAccountHistoryEntry(ObjCustomerAccountHistoryDetails);
                 if (ObjCustomerAccountHistoryDetails == null) return -2;
 
+                //Insert into AccountsMaster table
+                List<string> ListTempColValues = new List<string>(), ListTempColNames = new List<string>();
                 ListTempColValues.Add(ObjCustomerAccountHistoryDetails.NewBalanceAmount.ToString());
                 ListTempColNames.Add("BALANCEAMOUNT");
 
@@ -442,7 +466,8 @@ namespace SalesOrdersReport.Models
                 ListTempColNames.Add("LASTUPDATEDDATE");
 
                 string WhereCondition = "ACCOUNTID = '" + ObjPaymentDetails.AccountID.ToString() + "'";
-                ResultVal = ObjMySQLHelper.UpdateTableDetails("ACCOUNTSMASTER", ListTempColNames, ListTempColValues, new List<Types>() { Types.Number, Types.String }, WhereCondition);
+                ResultVal = ObjMySQLHelper.UpdateTableDetails("ACCOUNTSMASTER", ListTempColNames, ListTempColValues, 
+                                    new List<Types>() { Types.Number, Types.String }, WhereCondition);*/
 
                 return ResultVal;
             }

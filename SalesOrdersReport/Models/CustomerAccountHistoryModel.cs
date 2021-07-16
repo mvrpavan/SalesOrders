@@ -160,7 +160,7 @@ namespace SalesOrdersReport.Models
                 int ResultVal = ObjMySQLHelper.InsertIntoTable("CUSTOMERACCOUNTHISTORY", ListColumnNames, ListColumnValues, ListTypes);
                 if (ResultVal <= 0) return null;
 
-                Int32 HistoryEntryID = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select HISTORYENTRYID from CUSTOMERACCOUNTHISTORY " +
+                Int32 HistoryEntryID = Int32.Parse(ObjMySQLHelper.ExecuteScalar($"Select Max(HISTORYENTRYID) from CUSTOMERACCOUNTHISTORY " +
                                             $"Where PaymentID = {ObjCustomerAccountHistoryDetails.PaymentID} " +
                                             $"and ACCOUNTID = {ObjCustomerAccountHistoryDetails.AccountID}").ToString());
                 ObjCustomerAccountHistoryDetails.HistEntryId = HistoryEntryID;

@@ -647,6 +647,7 @@ namespace SalesOrdersReport.Views
                         CreationDate = DateTime.Now,
                         LastUpdateDate = DateTime.Now
                     };
+                    ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails);
 
                     CustomerAccountHistoryDetails tmpCustomerAccountHistoryDetails = new CustomerAccountHistoryDetails()
                     {
@@ -661,8 +662,9 @@ namespace SalesOrdersReport.Views
                         NetSaleAmount = (FirstEntry ? AddUpdatedInvoiceDetails.NetInvoiceAmount : 0),
                         TotalTaxAmount = 0
                     };
+                    tmpCustomerAccountHistoryDetails.PaymentID = tmpPaymentDetails.PaymentId;
+                    new AccountsMasterModel().UpdateCustomerAccount(ref tmpCustomerAccountHistoryDetails);
 
-                    ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails, ref tmpCustomerAccountHistoryDetails);
                     FirstEntry = false;
                 }
             }

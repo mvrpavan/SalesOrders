@@ -101,5 +101,38 @@ namespace SalesOrdersReport.Models
                 return -1;
             }
         }
+
+        public Int32 UpdateCustomerAccount(ref CustomerAccountHistoryDetails ObjCustomerAccountHistoryDetails)
+        {
+            try
+            {
+                //Insert into CustomerAccountHistory table
+                CustomerAccountHistoryModel ObjAccountHistoryModel = new CustomerAccountHistoryModel();
+                ObjCustomerAccountHistoryDetails.NewBalanceAmount = ObjCustomerAccountHistoryDetails.BalanceAmount
+                                                                + ObjCustomerAccountHistoryDetails.NetSaleAmount
+                                                                - ObjCustomerAccountHistoryDetails.AmountReceived;
+                ObjCustomerAccountHistoryDetails = ObjAccountHistoryModel.CreateNewCustomerAccountHistoryEntry(ObjCustomerAccountHistoryDetails);
+                if (ObjCustomerAccountHistoryDetails == null) return -2;
+
+                //Update AccountsMaster table
+                List<string> ListTempColValues = new List<string>(), ListTempColNames = new List<string>();
+                ListTempColValues.Add(ObjCustomerAccountHistoryDetails.NewBalanceAmount.ToString());
+                ListTempColNames.Add("BALANCEAMOUNT");
+
+                ListTempColValues.Add(MySQLHelper.GetDateTimeStringForDB(DateTime.Now));
+                ListTempColNames.Add("LASTUPDATEDDATE");
+
+                string WhereCondition = "ACCOUNTID = '" + ObjCustomerAccountHistoryDetails.AccountID.ToString() + "'";
+                Int32 ResultVal = ObjMySQLHelper.UpdateTableDetails("ACCOUNTSMASTER", ListTempColNames, ListTempColValues, 
+                                    new List<Types>() { Types.Number, Types.String }, WhereCondition);
+
+                return ResultVal;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.UpdateCustomerAccount()", ex);
+                throw;
+            }
+        }
     }
 }

@@ -1019,28 +1019,6 @@ namespace SalesOrdersReport
                 CommonFunctions.ShowErrorDialog("UserMasterModel.GetStoreDetails()", ex);
             }
             return null;
-        }
-
-
-
-        public Int32 AlterTblColBasedOnMultipleRowsFrmAnotherTbl(String SourceTable, string DestinationTable, string ColumnNameFromAnotherTble,string DataType= "TINYTEXT")
-        {
-            try
-            {
-                string Query = "SELECT @S:= CONCAT('ALTER TABLE " + DestinationTable + " ADD COLUMN (', GROUP_CONCAT("+ "CONCAT(CHAR(96)," + ColumnNameFromAnotherTble + ",CHAR(96)), ' "+ DataType + "'), ')') FROM " + SourceTable + ";"
-                 + " PREPARE STMT FROM @S;"
-                + " EXECUTE STMT;"
-               + " DEALLOCATE PREPARE STMT;"
-               + " SELECT * FROM " + DestinationTable + ";";
-
-                return ObjMySQLHelper.ExecuteNonQuery(Query);
-
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("UserMasterModel.AlterTblColBasedOnRowsFrmAnotherTbl()", ex);
-                throw ex;
-            }
-        }
+        }       
     }
 }

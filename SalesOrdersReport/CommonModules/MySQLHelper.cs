@@ -104,7 +104,7 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                ObjDbConnection.Close();
+                if (AutoCloseConnection) ObjDbConnection.Close();
             }
             catch (Exception ex)
             {
@@ -252,17 +252,40 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
+        public Int32 DeleteRow(String TableName, String WhereCondition = "1 = 1")
+        {
+            try
+            {
+                if (CheckTableExists(TableName))
+                {
+                    String DeleteQuery = "DELETE FROM " + TableName + " WHERE " + WhereCondition;
+                    ObjDbCommand.CommandText = DeleteQuery;
+                    return ObjDbCommand.ExecuteNonQuery();
+                }
 
-        public Int32 DecideWhetherInsertOrUpdate(string KeyColumn,string KeyColumnValue,String TableName, List<String> ListColumnNames, List<String> ListColumnValues, List<Types> ListColumnTypes)
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("MySQLHelper.DeleteRow()", ex);
+                throw ex;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        public Int32 DecideWhetherInsertOrUpdate(String WhereCondition, String TableName, List<String> ListColumnNames, List<String> ListColumnValues, List<Types> ListColumnTypes)
         {
             try
             {
                 Int32 ResultVal = 0;
-                string Query = "Select Count(*) From " + TableName + " where `" + KeyColumn + "`=" + KeyColumnValue;    //single quotes will be included KeyColumnValue when its necessary by the calling function itself
+                string Query = "Select Count(*) From " + TableName + " where " + WhereCondition;
 
                 Int32 Count = int.Parse(ExecuteScalar(Query).ToString());
                 if (Count == 0) ResultVal = InsertIntoTable(TableName, ListColumnNames, ListColumnValues, ListColumnTypes);
-                else ResultVal = UpdateTableDetails(TableName, ListColumnNames, ListColumnValues, ListColumnTypes, KeyColumn + " = " + KeyColumnValue);
+                else ResultVal = UpdateTableDetails(TableName, ListColumnNames, ListColumnValues, ListColumnTypes, WhereCondition);
 
                 return ResultVal;
             }
@@ -822,6 +845,31 @@ namespace SalesOrdersReport.CommonModules
                 CloseConnection();
             }
             return 0;
+        }
+
+        public Int32 AlterTblColBasedOnMultipleRowsFrmAnotherTbl(String SourceTable, string DestinationTable, string ColumnNameFromAnotherTble, string DataType = "TINYTEXT")
+        {
+            try
+            {
+                string Query = "SELECT @S:= CONCAT('ALTER TABLE " + DestinationTable + " ADD COLUMN (', GROUP_CONCAT(" + "CONCAT(CHAR(96)," + ColumnNameFromAnotherTble + ",CHAR(96)), ' " + DataType + "'), ')') FROM " + SourceTable + ";"
+                 + " PREPARE STMT FROM @S;"
+                + " EXECUTE STMT;"
+               + " DEALLOCATE PREPARE STMT;"
+               + " SELECT * FROM " + DestinationTable + ";";
+
+                return ExecuteNonQuery(Query);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("UserMasterModel.AlterTblColBasedOnRowsFrmAnotherTbl()", ex);
+                throw ex;
+            }
+        }
+
+        Boolean AutoCloseConnection = true;
+        public void SetAutoCloseConnection(bool close)
+        {
+            AutoCloseConnection = close;
         }
     }
 }

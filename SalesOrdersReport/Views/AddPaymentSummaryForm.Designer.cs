@@ -33,6 +33,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.cmbxCreatePaymentNumber = new System.Windows.Forms.ComboBox();
             this.grpbxCreatePaymentPaymentDtls = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cmbBoxDeliveryLines = new System.Windows.Forms.ComboBox();
             this.grpbxCreatePaymentCustDtls = new System.Windows.Forms.GroupBox();
             this.txtCreatePaymentsCustPhoneNo = new System.Windows.Forms.TextBox();
             this.lblCreatePaymentCustPhoneno = new System.Windows.Forms.Label();
@@ -70,26 +72,29 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(59, 56);
+            this.label3.Location = new System.Drawing.Point(59, 80);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(44, 13);
             this.label3.TabIndex = 0;
             this.label3.Text = "Number";
+            this.label3.Visible = false;
             // 
             // cmbxCreatePaymentNumber
             // 
             this.cmbxCreatePaymentNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbxCreatePaymentNumber.FormattingEnabled = true;
-            this.cmbxCreatePaymentNumber.Location = new System.Drawing.Point(109, 53);
+            this.cmbxCreatePaymentNumber.Location = new System.Drawing.Point(109, 77);
             this.cmbxCreatePaymentNumber.Name = "cmbxCreatePaymentNumber";
             this.cmbxCreatePaymentNumber.Size = new System.Drawing.Size(134, 21);
             this.cmbxCreatePaymentNumber.TabIndex = 1;
-            this.cmbxCreatePaymentNumber.SelectedIndexChanged += new System.EventHandler(this.cmbxCreatePaymentNumber_SelectedIndexChanged);
+            this.cmbxCreatePaymentNumber.Visible = false;
             // 
             // grpbxCreatePaymentPaymentDtls
             // 
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.label2);
             this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.label1);
             this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.cmbxCreatePaymentNumber);
+            this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.cmbBoxDeliveryLines);
             this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.label3);
             this.grpbxCreatePaymentPaymentDtls.Controls.Add(this.cmbxCreatePaymentCustomerNames);
             this.grpbxCreatePaymentPaymentDtls.Location = new System.Drawing.Point(12, 12);
@@ -98,6 +103,24 @@
             this.grpbxCreatePaymentPaymentDtls.TabIndex = 5;
             this.grpbxCreatePaymentPaymentDtls.TabStop = false;
             this.grpbxCreatePaymentPaymentDtls.Text = "Payment Details";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(35, 50);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(68, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Delivery Line";
+            // 
+            // cmbBoxDeliveryLines
+            // 
+            this.cmbBoxDeliveryLines.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxDeliveryLines.FormattingEnabled = true;
+            this.cmbBoxDeliveryLines.Location = new System.Drawing.Point(109, 47);
+            this.cmbBoxDeliveryLines.Name = "cmbBoxDeliveryLines";
+            this.cmbBoxDeliveryLines.Size = new System.Drawing.Size(134, 21);
+            this.cmbBoxDeliveryLines.TabIndex = 1;
             // 
             // grpbxCreatePaymentCustDtls
             // 
@@ -222,7 +245,6 @@
             this.Controls.Add(this.grpbxCreatePaymentPaymentDtls);
             this.Name = "AddPaymentSummaryForm";
             this.Text = "Add Payment Summary Row";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AddPaymentSummaryForm_FormClosed);
             this.Load += new System.EventHandler(this.AddPaymentSummaryForm_Load);
             this.grpbxCreatePaymentPaymentDtls.ResumeLayout(false);
             this.grpbxCreatePaymentPaymentDtls.PerformLayout();
@@ -251,5 +273,7 @@
         private System.Windows.Forms.Label lblValidateErrMsg;
         private System.Windows.Forms.TextBox txtCreatePaymentsCustPhoneNo;
         private System.Windows.Forms.Label lblCreatePaymentCustPhoneno;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox cmbBoxDeliveryLines;
     }
 }

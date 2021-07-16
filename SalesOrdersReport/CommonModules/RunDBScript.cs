@@ -71,7 +71,13 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<string> ListStateCol = new List<string>() { "STATEID,INT NOT NULL AUTO_INCREMENT", "STATE,VARCHAR(50)", "STATECODE,VARCHAR(4)", "PRIMARY KEY,STATEID" };
+                List<string> ListStateCol = new List<string>()
+                {
+                    "STATEID,INT NOT NULL AUTO_INCREMENT",
+                    "STATE,VARCHAR(50)",
+                    "STATECODE,VARCHAR(4)",
+                    "PRIMARY KEY,STATEID"
+                };
                 ObjMySQLHelper.CreateTable("STATEMASTER", ListStateCol);
                 CommonFunctions.ObjCustomerMasterModel.AddAllStatesToMasterTable();
             }
@@ -86,7 +92,13 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<string> ListLineCol = new List<string>() { "LINEID,INT NOT NULL AUTO_INCREMENT", "LINENAME,VARCHAR(50)", "DESCRIPTION,VARCHAR(50)", "PRIMARY KEY,LINEID" };
+                List<string> ListLineCol = new List<string>()
+                {
+                    "LINEID,INT NOT NULL AUTO_INCREMENT",
+                    "LINENAME,VARCHAR(50)",
+                    "DESCRIPTION,VARCHAR(50)",
+                    "PRIMARY KEY,LINEID"
+                };
                 ObjMySQLHelper.CreateTable("LINEMASTER", ListLineCol);
             }
             catch (Exception ex)
@@ -100,11 +112,17 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<string> ListDisGrpCol = new List<string>() { "DISCOUNTGROUPID,INT NOT NULL AUTO_INCREMENT", "DISCOUNTGROUPNAME,VARCHAR(100) NOT NULL", "DESCRIPTION,VARCHAR(50)", "DISCOUNT,DECIMAL(4,2) DEFAULT 0", "ISDEFAULT,BIT DEFAULT NULL", "DISCOUNTTYPE,VARCHAR(10) DEFAULT 'ABSOLUTE'", "PRIMARY KEY,DISCOUNTGROUPID" };
+                List<string> ListDisGrpCol = new List<string>()
+                {
+                    "DISCOUNTGROUPID,INT NOT NULL AUTO_INCREMENT",
+                    "DISCOUNTGROUPNAME,VARCHAR(100) NOT NULL",
+                    "DESCRIPTION,VARCHAR(50)",
+                    "DISCOUNT,DECIMAL(4,2) DEFAULT 0",
+                    "ISDEFAULT,BIT DEFAULT NULL",
+                    "DISCOUNTTYPE,VARCHAR(10) DEFAULT 'ABSOLUTE'",
+                    "PRIMARY KEY,DISCOUNTGROUPID"
+                };
                 ObjMySQLHelper.CreateTable("DISCOUNTGROUPMASTER", ListDisGrpCol);
-                ////List<string> ListColumnNamesWthDataType = new List<string> { "DISCOUNT,DECIMAL(4,2)", "DEFAULT,TINYTEXT", "DISCOUNTTYPE,VARCHAR", }, ListColumnValues = new List<string>() { "0", "YES", "ABSOLUTE" };
-                ////CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp", ListColumnNamesWthDataType, ListColumnValues);
-                //CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp");
             }
             catch (Exception ex)
             {
@@ -112,54 +130,32 @@ namespace SalesOrdersReport.CommonModules
                 throw;
             }
         }
-        public void CreateTempPaymentsSummaryTableIfNot()
+
+        public void CreateTempPaymentsSummaryTable()
         {
             try
             {
-                //            CREATE TABLE test(a INT NOT NULL AUTO_INCREMENT,
-                //->PRIMARY KEY(a), KEY(b))
-                //->ENGINE = InnoDB SELECT b, c FROM test2;
-
-                //"InvoiceID.Invoice#", "Cancel", "Return", "Discount","PaymentModes"
-
-                //string Query= "CREATE TABLE TempPaymentsSummary ("
-                //   + "InvoiceID BIGINT unsigned NULL,"
-                //   + "InvoiceNumber varchar(20) NOT NULL,"
-                //   + "
-                //   + "Cancel FLOAT DEFAULT 0,"
-                //   + "Return FLOAT DEFAULT 0"
-                //   + "PRIMARY KEY ( InvoiceID) ENGINE = InnoDB SELECT  PaymentMode FROM PaymentModeMaster Order by PaymentModeID";
-
-                //   ObjMySQLHelper.ExecuteNonQuery(Query);
-                //CreateTable(String TableName, List<String> Columns,
-                //Boolean InMemory = false, Boolean DropIfExists = true, Boolean TruncateIfExists = false)
-                List<string> ListTableCol = new List<string>() { "InvoiceID,BIGINT unsigned Not NULL", "InvoiceNumber,varchar(20) NOT NULL", "Cancel, FLOAT DEFAULT 0", "Return, FLOAT DEFAULT 0", "Discount, FLOAT DEFAULT 0", "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP", "PRIMARY KEY,InvoiceID" };
+                List<String> ListTableCol = new List<String>()
+                {
+                    "CustomerID, BIGINT unsigned Not NULL",
+                    "InvoiceID, BIGINT Not NULL",
+                    "DeliveryLineID, BIGINT Not NULL",
+                    "Cancel, FLOAT DEFAULT 0",
+                    "Return, FLOAT DEFAULT 0",
+                    "Discount, FLOAT DEFAULT 0",
+                    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP"
+                    //"PRIMARY KEY, CustomerID"
+                };
                 int val = ObjMySQLHelper.CreateTable("TempPaymentsSummary", ListTableCol, false, false, false);
-                if (val != 1) CommonFunctions.ObjUserMasterModel.AlterTblColBasedOnMultipleRowsFrmAnotherTbl("PaymentModeMaster", "TempPaymentsSummary", "PaymentMode","FLOAT");
+                if (val != 1) ObjMySQLHelper.AlterTblColBasedOnMultipleRowsFrmAnotherTbl("PaymentModeMaster", "TempPaymentsSummary", "PaymentMode","FLOAT");
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog("RunDBScript.CreateDiscountGrpTable()", ex);
+                CommonFunctions.ShowErrorDialog("RunDBScript.CreateTempPaymentsSummaryTable()", ex);
                 throw;
             }
+        }
 
-        }
-        private void CreatePriceGrpTable()
-        {
-            try
-            {
-                List<string> ListPriceGrpCol = new List<string>() { "PRICEGROUPID,INT NOT NULL AUTO_INCREMENT", "PRICEGROUPNAME,VARCHAR(100) NOT NULL", "DESCRIPTION,VARCHAR(50)", "PRICEGROUPCOLUMNNAME, VARCHAR(30) DEFAULT  'Purchase Price'", "DISCOUNT,DECIMAL(4,2) DEFAULT 0", "ISDEFAULT,BIT DEFAULT NULL", "DISCOUNTTYPE,VARCHAR(10) DEFAULT 'ABSOLUTE'", "PRIMARY KEY,PRICEGROUPID" };
-                ObjMySQLHelper.CreateTable("PRICEGROUPMASTER", ListPriceGrpCol);
-                ////List<string> ListColumnNamesWthDataType = new List<string> { "DISCOUNT,DECIMAL(4,2)", "DEFAULT,TINYTEXT", "DISCOUNTTYPE,VARCHAR", }, ListColumnValues = new List<string>() { "0", "YES", "ABSOLUTE" };
-                ////CommonFunctions.ObjCustomerMasterModel.CreateNewDiscountGrp("DisGrp1", "Super Dis Grp", ListColumnNamesWthDataType, ListColumnValues);
-                //CommonFunctions.ObjCustomerMasterModel.CreateNewPriceGrp("PriceGrp1", "Super Price Grp");
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog("RunDBScript.CreatePriceGrpTable()", ex);
-                throw;
-            }
-        }
         private void CreateCustomerTypeTable()
         {
             try
@@ -170,7 +166,6 @@ namespace SalesOrdersReport.CommonModules
                     "CUSTOMERTYPE, VARCHAR(20) NOT NULL",
                     "DESCRIPTION, VARCHAR(100) NULL",
                     "PRIMARY KEY, CUSTOMERTYPEID"
-
                 };
                 ObjMySQLHelper.CreateTable("CUSTOMERTYPEMASTER", TableColumns);
             }
@@ -185,10 +180,26 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<string> ListCustomerCol = new List<string>() { "CUSTOMERID,INT NOT NULL AUTO_INCREMENT", "CUSTOMERNAME,VARCHAR(100) NOT NULL", "ADDRESS,VARCHAR(1000) NULL", "PHONENO, VARCHAR(20) NULL DEFAULT NULL", "CUSTOMERTYPEID,SMALLINT(5) NOT NULL DEFAULT 1 ", "LINEID,INT NULL DEFAULT NULL", "PRICEGROUPID,INT NULL DEFAULT NULL", "DISCOUNTGROUPID,INT NULL DEFAULT NULL", "GSTIN,VARCHAR(20) NULL", "STATEID, VARCHAR(5) NULL DEFAULT NULL", "ADDEDDATE,DATETIME NULL", "LASTUPDATEDATE,DATETIME NULL", "ACTIVE,BIT NULL", "ORDERDAYS, VARCHAR(20) NOT NULL DEFAULT '1'", "PRIMARY KEY,CUSTOMERID" };
+                List<string> ListCustomerCol = new List<string>()
+                {
+                    "CUSTOMERID,INT NOT NULL AUTO_INCREMENT",
+                    "CUSTOMERNAME,VARCHAR(100) NOT NULL",
+                    "ADDRESS,VARCHAR(1000) NULL",
+                    "PHONENO, VARCHAR(20) NULL DEFAULT NULL",
+                    "CUSTOMERTYPEID,SMALLINT(5) NOT NULL DEFAULT 1 ",
+                    "LINEID,INT NULL DEFAULT NULL",
+                    "PRICEGROUPID,INT NULL DEFAULT NULL",
+                    "DISCOUNTGROUPID,INT NULL DEFAULT NULL",
+                    "GSTIN,VARCHAR(20) NULL",
+                    "STATEID, VARCHAR(5) NULL DEFAULT NULL",
+                    "ADDEDDATE,DATETIME NULL",
+                    "LASTUPDATEDATE,DATETIME NULL",
+                    "ACTIVE,BIT NULL",
+                    "ORDERDAYS, VARCHAR(20) NOT NULL DEFAULT '1'",
+                    "PRIMARY KEY,CUSTOMERID"
+                };
                 ObjMySQLHelper.CreateTable("CUSTOMERMASTER", ListCustomerCol);
                 List<string> ListColumnNamesWthDataType = new List<string> { "LASTUPDATEDATE,DATETIME", "ADDEDDATE,DATETIME" }, ListColumnValues = new List<string>() { DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"), DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") };
-               //CommonFunctions.ObjCustomerMasterModel.CreateNewCustomer("customer0", "Line0", "DisGrp1", "PriceGrp1", true, ListColumnNamesWthDataType, ListColumnValues);
             }
             catch (Exception ex)
             {
@@ -201,9 +212,27 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<string> ListUserCol = new List<string>() { "USERID,INT NOT NULL AUTO_INCREMENT", "USERNAME,VARCHAR(100) NOT NULL", "PASSWORD,VARCHAR(100) NOT NULL", "FULLNAME,VARCHAR(100) NOT NULL", "ROLEID,INT NOT NULL", "EMAILID,VARCHAR(50) NULL", "PHONENO, VARCHAR(20) NULL", "STOREID, INT NULL DEFAULT NULL", "LASTLOGIN,DATETIME NULL", "LASTPASSWORDCHANGED,DATETIME NULL", "LASTUPDATEDATE,DATETIME NULL", "CREATEDBY, INT NULL DEFAULT 0", "ACTIVE,BIT NULL", "USERGUID,CHAR(38) NULL", "PRIMARY KEY,USERID" };
+                List<string> ListUserCol = new List<string>()
+                {
+                    "USERID,INT NOT NULL AUTO_INCREMENT",
+                    "USERNAME,VARCHAR(100) NOT NULL",
+                    "PASSWORD,VARCHAR(100) NOT NULL",
+                    "FULLNAME,VARCHAR(100) NOT NULL",
+                    "ROLEID,INT NOT NULL",
+                    "EMAILID,VARCHAR(50) NULL",
+                    "PHONENO, VARCHAR(20) NULL",
+                    "STOREID, INT NULL DEFAULT NULL",
+                    "LASTLOGIN,DATETIME NULL",
+                    "LASTPASSWORDCHANGED,DATETIME NULL",
+                    "LASTUPDATEDATE,DATETIME NULL",
+                    "CREATEDBY, INT NULL DEFAULT 0",
+                    "ACTIVE,BIT NULL",
+                    "USERGUID,CHAR(38) NULL",
+                    "PRIMARY KEY,USERID"
+                };
                 ObjMySQLHelper.CreateTable("USERMASTER", ListUserCol);
-				List<string> ListColumnNamesWthDataType = new List<string> { "LASTLOGIN,DATETIME", "CREATEDBY,INT" }, ListColumnValues = new List<string>() { DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"), "0" };
+				List<string> ListColumnNamesWthDataType = new List<string> { "LASTLOGIN,DATETIME", "CREATEDBY,INT" }, 
+                    ListColumnValues = new List<string>() { DateTime.Now.ToString("yyyy-MM-dd H:mm:ss"), "0" };
                 CommonFunctions.ObjUserMasterModel.CreateNewUser("admin", "admin", "Administrator", true, "admin", ListColumnNamesWthDataType, ListColumnValues);
             }
             catch (Exception ex)
@@ -217,9 +246,15 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {           
-                List<string> ListRoleCol = new List<string>() { "ROLEID,INT NOT NULL AUTO_INCREMENT", "ROLENAME,VARCHAR(50)", "DESCRIPTION,VARCHAR(50)", "PRIMARY KEY,ROLEID" };
+                List<string> ListRoleCol = new List<string>()
+                {
+                    "ROLEID,INT NOT NULL AUTO_INCREMENT",
+                    "ROLENAME,VARCHAR(50)",
+                    "DESCRIPTION,VARCHAR(50)",
+                    "PRIMARY KEY,ROLEID"
+                };
                 ObjMySQLHelper.CreateTable("ROLEMASTER", ListRoleCol);
-                CommonFunctions.ObjUserMasterModel.AlterTblColBasedOnMultipleRowsFrmAnotherTbl("PRIVILEGEMASTER", "ROLEMASTER", "PRIVILEGEID");
+                ObjMySQLHelper.AlterTblColBasedOnMultipleRowsFrmAnotherTbl("PRIVILEGEMASTER", "ROLEMASTER", "PRIVILEGEID");
                 List<string> ListColumnValues = new List<string>();
                 List<string> ListColumnNamesWithDataType = new List<string>();
                 List<string> ListTempPrivID = CommonFunctions.ObjUserMasterModel.GetAllPrivilegeIDs();
@@ -250,10 +285,8 @@ namespace SalesOrdersReport.CommonModules
                     }
                 }
                 CommonFunctions.ObjUserMasterModel.CreateNewRole("RetailUser", "Retail User", ListColumnNamesWithDataType, ListColumnValues);
-
                 //- Disable Orders, Invoices, Administration
                 //- Cannot Cancel anything(Bill, Payments etc)
-
             }
             catch (Exception ex)
             {
@@ -266,9 +299,16 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<string> ListStoreCol = new List<string>() { "STOREID,INT AUTO_INCREMENT NOT NULL", "STORENAME,VARCHAR(50) NOT NULL DEFAULT 1", "ADDRESS,VARCHAR(100) NULL", "PHONENO,VARCHAR(20) NULL DEFAULT NULL", "STOREEXECUTIVE,VARCHAR(50) NULL", "PRIMARY KEY,STOREID" };
+                List<string> ListStoreCol = new List<string>()
+                {
+                    "STOREID,INT AUTO_INCREMENT NOT NULL",
+                    "STORENAME,VARCHAR(50) NOT NULL DEFAULT 1",
+                    "ADDRESS,VARCHAR(100) NULL",
+                    "PHONENO,VARCHAR(20) NULL DEFAULT NULL",
+                    "STOREEXECUTIVE,VARCHAR(50) NULL",
+                    "PRIMARY KEY,STOREID"
+                };
                 ObjMySQLHelper.CreateTable("STOREMASTER", ListStoreCol);
-               // CommonFunctions.ObjUserMasterModel.CreateNewStore("Store1");
             }
             catch (Exception ex)
             {
@@ -281,7 +321,12 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<string> ListPrivilegeCol = new List<string>() { "PRIVILEGEID,VARCHAR(20) NOT NULL", "PRIVILEGENAME,VARCHAR(100)", "PRIMARY KEY,PRIVILEGEID" };
+                List<string> ListPrivilegeCol = new List<string>()
+                {
+                    "PRIVILEGEID,VARCHAR(20) NOT NULL",
+                    "PRIVILEGENAME,VARCHAR(100)",
+                    "PRIMARY KEY,PRIVILEGEID"
+                };
                 ObjMySQLHelper.CreateTable("PRIVILEGEMASTER", ListPrivilegeCol);
 
                 CommonFunctions.ObjUserMasterModel.CreateNewPrivilege("P_1", "CreateUsers");
@@ -323,7 +368,15 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<string> ListPrivilegeControlCol = new List<string>() { "CONTROLID,INT NOT NULL AUTO_INCREMENT", "FORMNAME,VARCHAR(100)", "CONTROLNAME,VARCHAR(100)", "ENABLED,BIT DEFAULT 1", "PRIVILEGEID,TINYTEXT", "PRIMARY KEY,CONTROLID" };
+                List<string> ListPrivilegeControlCol = new List<string>()
+                {
+                    "CONTROLID,INT NOT NULL AUTO_INCREMENT",
+                    "FORMNAME,VARCHAR(100)",
+                    "CONTROLNAME,VARCHAR(100)",
+                    "ENABLED,BIT DEFAULT 1",
+                    "PRIVILEGEID,TINYTEXT",
+                    "PRIMARY KEY,CONTROLID"
+                };
                 ObjMySQLHelper.CreateTable("PRIVILEGECONTROLMASTER", ListPrivilegeControlCol);
 
                 CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageUsersForm", "btnRedirectCreateUser",true, "P_1");
@@ -354,7 +407,6 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnEditLine", true, "P_24");
                 CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnEditPriceGrp", true, "P_25");
                 CommonFunctions.ObjUserMasterModel.CreateNewPrivilegeControl("ManageCustomerForm", "btnEditDiscountGrp", true, "P_26");
-
             }
             catch (Exception ex)
             {
@@ -367,93 +419,105 @@ namespace SalesOrdersReport.CommonModules
         {
             try
             {
-                List<String> TableColumns = new List<String>();
                 #region Create ProductMaster Table
-                TableColumns.Add("ProductID, mediumint unsigned NOT NULL AUTO_INCREMENT");
-                TableColumns.Add("ProductSKU, varchar(15) NOT NULL");
-                TableColumns.Add("ProductName, varchar(50) NOT NULL");
-                TableColumns.Add("Description, varchar(200) NOT NULL");
-                TableColumns.Add("CategoryID, smallint(5) unsigned NOT NULL");
-                TableColumns.Add("PurchasePrice, float DEFAULT NULL");
-                TableColumns.Add("WholesalePrice, float DEFAULT NULL");
-                TableColumns.Add("RetailPrice, float DEFAULT NULL");
-                TableColumns.Add("MaxRetailPrice, float DEFAULT NULL");
-                TableColumns.Add("Units, smallint(5) DEFAULT NULL");
-                TableColumns.Add("UnitsOfMeasurement, varchar(10) DEFAULT NULL");
-                TableColumns.Add("SortName, varchar(50) NOT NULL");
-                TableColumns.Add("TaxID, smallint(5) unsigned DEFAULT NULL");
-                TableColumns.Add("ProductInvID, mediumint unsigned DEFAULT NULL");
-                TableColumns.Add("VendorID, smallint unsigned DEFAULT NULL");
-                TableColumns.Add("Barcode, varchar(200) NULL");
-                TableColumns.Add("Active, tinyint(4) NOT NULL DEFAULT '1'");
-                TableColumns.Add("AddedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP");
-                TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-                TableColumns.Add("PRIMARY KEY, ProductID");
+                List<String> TableColumns = new List<String>()
+                {
+                    "ProductID, mediumint unsigned NOT NULL AUTO_INCREMENT",
+                    "ProductSKU, varchar(15) NOT NULL",
+                    "ProductName, varchar(50) NOT NULL",
+                    "Description, varchar(200) NOT NULL",
+                    "CategoryID, smallint(5) unsigned NOT NULL",
+                    "PurchasePrice, float DEFAULT NULL",
+                    "WholesalePrice, float DEFAULT NULL",
+                    "RetailPrice, float DEFAULT NULL",
+                    "MaxRetailPrice, float DEFAULT NULL",
+                    "Units, smallint(5) DEFAULT NULL",
+                    "UnitsOfMeasurement, varchar(10) DEFAULT NULL",
+                    "SortName, varchar(50) NOT NULL",
+                    "TaxID, smallint(5) unsigned DEFAULT NULL",
+                    "ProductInvID, mediumint unsigned DEFAULT NULL",
+                    "VendorID, smallint unsigned DEFAULT NULL",
+                    "Barcode, varchar(200) NULL",
+                    "Active, tinyint(4) NOT NULL DEFAULT '1'",
+                    "AddedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                    "LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+                    "PRIMARY KEY, ProductID"
+                };
                 ObjMySQLHelper.CreateTable("ProductMaster", TableColumns);
                 #endregion
 
                 #region Create ProductCategoryMaster Table
-                TableColumns.Clear();
-                TableColumns.Add("CategoryID, smallint(5) unsigned NOT NULL AUTO_INCREMENT");
-                TableColumns.Add("CategoryName, varchar(50) NOT NULL");
-                TableColumns.Add("Description, varchar(200) NOT NULL");
-                TableColumns.Add("Active, tinyint(4) NOT NULL DEFAULT '1'");
-                TableColumns.Add("PRIMARY KEY, CategoryID");
+                TableColumns = new List<string>()
+                {
+                    "CategoryID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
+                    "CategoryName, varchar(50) NOT NULL",
+                    "Description, varchar(200) NOT NULL",
+                    "Active, tinyint(4) NOT NULL DEFAULT '1'",
+                    "PRIMARY KEY, CategoryID"
+                };
                 ObjMySQLHelper.CreateTable("ProductCategoryMaster", TableColumns);
                 #endregion
 
                 #region Create ProductInventory Table
-                TableColumns.Clear();
-                TableColumns.Add("ProductInvID, int unsigned NOT NULL AUTO_INCREMENT");
-                TableColumns.Add("StockName, varchar(50) NOT NULL");
-                TableColumns.Add("Inventory, float NOT NULL");
-                TableColumns.Add("Units, smallint(5) DEFAULT NULL");
-                TableColumns.Add("UnitsOfMeasurement, varchar(10) DEFAULT NULL");
-                TableColumns.Add("ReOrderStockLevel, float DEFAULT NULL");
-                TableColumns.Add("ReOrderStockQty, float DEFAULT NULL");
-                TableColumns.Add("Active, tinyint Not NULL DEFAULT '1'");
-                TableColumns.Add("LastPODate, datetime DEFAULT NULL");
-                TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-                TableColumns.Add("PRIMARY KEY, ProductInvID");
+                TableColumns = new List<string>()
+                {
+                    "ProductInvID, int unsigned NOT NULL AUTO_INCREMENT",
+                    "StockName, varchar(50) NOT NULL",
+                    "Inventory, float NOT NULL",
+                    "Units, smallint(5) DEFAULT NULL",
+                    "UnitsOfMeasurement, varchar(10) DEFAULT NULL",
+                    "ReOrderStockLevel, float DEFAULT NULL",
+                    "ReOrderStockQty, float DEFAULT NULL",
+                    "Active, tinyint Not NULL DEFAULT '1'",
+                    "LastPODate, datetime DEFAULT NULL",
+                    "LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+                    "PRIMARY KEY, ProductInvID"
+                };
                 ObjMySQLHelper.CreateTable("ProductInventory", TableColumns);
                 #endregion
 
                 #region Create TaxMaster Table
-                TableColumns.Clear();
-                TableColumns.Add("TaxID, smallint(5) unsigned NOT NULL AUTO_INCREMENT");
-                TableColumns.Add("HSNCode, varchar(20) NOT NULL");
-                TableColumns.Add("CGST, float DEFAULT NULL");
-                TableColumns.Add("SGST, float DEFAULT NULL");
-                TableColumns.Add("IGST, float DEFAULT NULL");
-                TableColumns.Add("PRIMARY KEY, TaxID");
+                TableColumns = new List<string>()
+                {
+                    "TaxID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
+                    "HSNCode, varchar(20) NOT NULL",
+                    "CGST, float DEFAULT NULL",
+                    "SGST, float DEFAULT NULL",
+                    "IGST, float DEFAULT NULL",
+                    "PRIMARY KEY, TaxID"
+                };
                 ObjMySQLHelper.CreateTable("TaxMaster", TableColumns);
                 #endregion
 
                 #region Create PriceGroupMaster Table
-                TableColumns.Clear();
-                TableColumns.Add("PriceGroupID, smallint(5) unsigned NOT NULL AUTO_INCREMENT");
-                TableColumns.Add("PriceGroupName, varchar(50) NOT NULL");
-                TableColumns.Add("Description, varchar(200) DEFAULT NULL");
-                TableColumns.Add("PriceColumn, varchar(50) NOT NULL");
-                TableColumns.Add("Discount, float DEFAULT NULL");
-                TableColumns.Add("DiscountType, varchar(50) DEFAULT NULL");
-                TableColumns.Add("IsDefault, tinyint(4) NOT NULL DEFAULT '1'");
-                TableColumns.Add("PRIMARY KEY, PriceGroupID");
+                TableColumns = new List<string>()
+                {
+                    "PriceGroupID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
+                    "PriceGroupName, varchar(50) NOT NULL",
+                    "Description, varchar(200) DEFAULT NULL",
+                    "PriceColumn, varchar(50) NOT NULL",
+                    "Discount, float DEFAULT NULL",
+                    "DiscountType, varchar(50) DEFAULT NULL",
+                    "IsDefault, tinyint(4) NOT NULL DEFAULT '1'",
+                    "PRIMARY KEY, PriceGroupID"
+                };
                 ObjMySQLHelper.CreateTable("PRICEGROUPMASTER", TableColumns);
                 #endregion
 
                 #region Create VendorMaster Table
-                TableColumns.Clear();
-                TableColumns.Add("VendorID, smallint(5) unsigned NOT NULL AUTO_INCREMENT");
-                TableColumns.Add("VendorName, varchar(100) NOT NULL");
-                TableColumns.Add("Address, varchar(100) NULL");
-                TableColumns.Add("PhoneNo, varchar(20) NULL");
-                TableColumns.Add("GSTIN, varchar(20) NULL");
-                TableColumns.Add("StateID, smallint DEFAULT NULL");
-                TableColumns.Add("Active, tinyint Not NULL DEFAULT '1'");
-                TableColumns.Add("AddedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP");
-                TableColumns.Add("LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-                TableColumns.Add("PRIMARY KEY, VendorID");
+                TableColumns = new List<string>()
+                {
+                    "VendorID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
+                    "VendorName, varchar(100) NOT NULL",
+                    "Address, varchar(100) NULL",
+                    "PhoneNo, varchar(20) NULL",
+                    "GSTIN, varchar(20) NULL",
+                    "StateID, smallint DEFAULT NULL",
+                    "Active, tinyint Not NULL DEFAULT '1'",
+                    "AddedDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                    "LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+                    "PRIMARY KEY, VendorID"
+                };
                 ObjMySQLHelper.CreateTable("VendorMaster", TableColumns);
                 #endregion
             }
@@ -464,22 +528,23 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public void CreateInventoryTables()
+        private void CreateInventoryTables()
         {
             try
             {
-                List<String> TableColumns = new List<String>();
-
                 #region Create ProductStockHistory Table
-                TableColumns.Add("HistoryEntryID, int unsigned NOT NULL AUTO_INCREMENT");
-                TableColumns.Add("ProductInvID, smallint unsigned NOT NULL");
-                TableColumns.Add("Type, varchar(10) DEFAULT NULL");
-                TableColumns.Add("OrderedQty, float DEFAULT NULL");
-                TableColumns.Add("ReceivedQty, float DEFAULT NULL");
-                TableColumns.Add("NetQty, float DEFAULT NULL");
-                TableColumns.Add("PODate, datetime DEFAULT NULL");
-                TableColumns.Add("UpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-                TableColumns.Add("PRIMARY KEY, HistoryEntryID");
+                List<String> TableColumns = new List<String>()
+                {
+                    "HistoryEntryID, int unsigned NOT NULL AUTO_INCREMENT",
+                    "ProductInvID, smallint unsigned NOT NULL",
+                    "Type, varchar(10) DEFAULT NULL",
+                    "OrderedQty, float DEFAULT NULL",
+                    "ReceivedQty, float DEFAULT NULL",
+                    "NetQty, float DEFAULT NULL",
+                    "PODate, datetime DEFAULT NULL",
+                    "UpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+                    "PRIMARY KEY, HistoryEntryID"
+                };
                 ObjMySQLHelper.CreateTable("ProductStockHistory", TableColumns);
                 #endregion
             }
@@ -489,7 +554,7 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public void CreatePurchaseOrderInvoiceTables()
+        private void CreatePurchaseOrderInvoiceTables()
         {
             try
             {
@@ -531,13 +596,15 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public void CreateIDValueMasterTable()
+        private void CreateIDValueMasterTable()
         {
             try
             {
-                List<String> TableColumns = new List<String>();
-                TableColumns.Add("TableName, varchar(50) NOT NULL");
-                TableColumns.Add("IDValue, varchar(200) NOT NULL");
+                List<String> TableColumns = new List<String>()
+                {
+                    "TableName, varchar(50) NOT NULL",
+                    "IDValue, varchar(200) NOT NULL"
+                };
                 ObjMySQLHelper.CreateTable("IDValueMaster", TableColumns);
             }
             catch (Exception ex)
@@ -546,7 +613,7 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public void CreateOrderTables()
+        private void CreateOrderTables()
         {
             try
             {
@@ -587,23 +654,10 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public void CreateReportTables()
+        private void CreateReportTables()
         {
             try
             {
-                //List<String> TableColumns = new List<String>
-                //{
-                //    "ReportID, BIGINT unsigned NOT NULL AUTO_INCREMENT",
-                //    "ReportName, varchar(20) NULL",
-                //    "Description, varchar(1000) NULL",
-                //    "Query, varchar(100) NULL",
-                //    "PreDefinedParamID, Varchar(20) NULL DEFAULT NULL",
-                //    "UserDefinedParamID, Varchar(20) NULL DEFAULT NULL",
-                //    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
-                //    "LastUpdateDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
-                //    "Active, tinyint(4) NOT NULL DEFAULT '1'",
-                //    "PRIMARY KEY, ReportID"
-                //};
                 List<String> TableColumns = new List<String>
                 {
                     "ReportID, BIGINT unsigned NOT NULL AUTO_INCREMENT",
@@ -632,26 +686,14 @@ namespace SalesOrdersReport.CommonModules
                     "PRIMARY KEY, ParamID"
                 };
                 ObjMySQLHelper.CreateTable("ReportDefinedParams", TableColumns);
-
-                //TableColumns = new List<String>
-                //{
-                //    "UserDefinedParamID, smallint unsigned NOT NULL AUTO_INCREMENT",
-                //    "ParamName, varchar(20) Not NULL",
-                //    "ActualColumnName, varchar(20)Not NULL",
-                //    "Type, varchar(10) not NULL Default 'String'",
-                //     "ParamValue, varchar(30) Not NULL",
-                //    "DataType, varchar(10) not NULL Default 'String'",
-                //    "TableNameToLookInto, varchar(30) Not NULL",
-                //    "PRIMARY KEY, UserDefinedParamID"
-                //};
-                //ObjMySQLHelper.CreateTable("ReportUserDefinedParams", TableColumns);
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.CreateReportTables()", ex);
             }
         }
-        public void CreateInvoiceTables()
+
+        private void CreateInvoiceTables()
         {
             try
             {
@@ -699,7 +741,7 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public void CreateAccountsMasterTables()
+        private void CreateAccountsMasterTables()
         {
             try
             {
@@ -714,15 +756,6 @@ namespace SalesOrdersReport.CommonModules
                     "PRIMARY KEY, AccountID"
                 };
                 ObjMySQLHelper.CreateTable("ACCOUNTSMASTER", TableColumns);
-
-                //TableColumns = new List<String>
-                //{
-                //    "TransactionTypeID, smallint(5) unsigned NOT NULL AUTO_INCREMENT",
-                //    "TransactionType, varchar(20) NOT NULL",
-                //    "Description, varchar(100) NULL",
-                //    "PRIMARY KEY, TransactionTypeID"
-                //};
-                //ObjMySQLHelper.CreateTable("TransactionTypeMaster", TableColumns);
 
                 TableColumns = new List<String>
                 {
@@ -739,7 +772,7 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public void CreateTransactionTables()
+        private void CreateTransactionTables()
         {
             try
             {
@@ -761,7 +794,6 @@ namespace SalesOrdersReport.CommonModules
                 };
                 ObjMySQLHelper.CreateTable("PAYMENTS", TableColumns);
 
-
                 TableColumns = new List<String>
                 {
                     "ExpenseID, BIGINT unsigned NOT NULL AUTO_INCREMENT",
@@ -775,7 +807,6 @@ namespace SalesOrdersReport.CommonModules
                     "PRIMARY KEY, ExpenseID"
                 };
                 ObjMySQLHelper.CreateTable("EXPENSES", TableColumns);
-
 
                 TableColumns = new List<String>
                 {
@@ -794,16 +825,6 @@ namespace SalesOrdersReport.CommonModules
                     "PRIMARY KEY, HISTORYENTRYID"
                 };
                 ObjMySQLHelper.CreateTable("CUSTOMERACCOUNTHISTORY", TableColumns);
-
-                //TableColumns = new List<String>
-                //{
-                //    "UserTransactionID, BIGINT unsigned NOT NULL AUTO_INCREMENT",
-                //    "TransactionDate, datetime NOT NULL",
-                //    "UserID, Smallint unsigned NULL",
-                //    "Description, varchar(100) NULL",
-                //    "PRIMARY KEY, CashTransactionID"
-                //};
-                //ObjMySQLHelper.CreateTable("UserTransactions", TableColumns);
             }
             catch (Exception ex)
             {
@@ -811,7 +832,7 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public void CreateVendorMasterTables()
+        private void CreateVendorMasterTables()
         {
             try
             {
@@ -837,6 +858,7 @@ namespace SalesOrdersReport.CommonModules
                 CommonFunctions.ShowErrorDialog($"{this}.CreateVendorMasterTables()", ex);
             }
         }
+
         public void ExecuteOneTimeExecutionScript()
         {
             try

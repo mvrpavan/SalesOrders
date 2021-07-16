@@ -187,28 +187,32 @@ namespace SalesOrdersReport.Views
 
                 };
 
-                CustomerAccountHistoryDetails tmpCustomerAccountHistoryDetails = new CustomerAccountHistoryDetails()
-                {
-                    AccountID = ObjAccountDetails.AccountID,
-                    SaleAmount = Double.Parse(txtCreatePaymentSaleAmount.Text == string.Empty ? "0" : txtCreatePaymentSaleAmount.Text),
-                    DiscountAmount = Double.Parse(txtCreatePaymentSaleAmount.Text == string.Empty ? "0" : txtCreatePaymentSaleAmount.Text),
-                    CancelAmount = Double.Parse(txtCreatePaymentCancelAmt.Text == string.Empty ? "0" : txtCreatePaymentCancelAmt.Text),
-                    RefundAmount = Double.Parse((txtCreatePaymentRefundAmt.Text == string.Empty ? "0" : txtCreatePaymentRefundAmt.Text)),
-                    BalanceAmount = Double.Parse(txtCreatePaymentOB.Text == string.Empty ? "0" : txtCreatePaymentOB.Text),
-                    NewBalanceAmount = Double.Parse(txtCreatePaymentBA.Text == string.Empty ? "0" : txtCreatePaymentBA.Text),
-                    AmountReceived = Double.Parse(txtbxCreatePaymentAmount.Text == string.Empty ? "0" : txtbxCreatePaymentAmount.Text),
-                    NetSaleAmount = Double.Parse(txtCreatePaymentNetSaleAmt.Text == string.Empty ? "0" : txtCreatePaymentNetSaleAmt.Text),
-                    TotalTaxAmount = Double.Parse(txtCreatePaymentTotalTax.Text == string.Empty ? "0" : txtCreatePaymentTotalTax.Text)
-                };
-
-                int ResultVal = ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails, ref tmpCustomerAccountHistoryDetails);
-                if (ResultVal < 0) MessageBox.Show("Wasnt able to create new payment", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                int ResultVal = ObjPaymentsModel.CreateNewPaymentDetails(ref tmpPaymentDetails);
+                if (ResultVal < 0) MessageBox.Show("Unable to create new payment", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 else
                 {
-                    MessageBox.Show("New Payment for :: " + cmbxCreatePaymentCustomerNames.SelectedItem.ToString() + " added successfully", "Payment Added");
-                    btnReset.PerformClick();
+                    CustomerAccountHistoryDetails tmpCustomerAccountHistoryDetails = new CustomerAccountHistoryDetails()
+                    {
+                        AccountID = ObjAccountDetails.AccountID,
+                        SaleAmount = Double.Parse(txtCreatePaymentSaleAmount.Text == string.Empty ? "0" : txtCreatePaymentSaleAmount.Text),
+                        DiscountAmount = Double.Parse(txtCreatePaymentSaleAmount.Text == string.Empty ? "0" : txtCreatePaymentSaleAmount.Text),
+                        CancelAmount = Double.Parse(txtCreatePaymentCancelAmt.Text == string.Empty ? "0" : txtCreatePaymentCancelAmt.Text),
+                        RefundAmount = Double.Parse((txtCreatePaymentRefundAmt.Text == string.Empty ? "0" : txtCreatePaymentRefundAmt.Text)),
+                        BalanceAmount = Double.Parse(txtCreatePaymentOB.Text == string.Empty ? "0" : txtCreatePaymentOB.Text),
+                        NewBalanceAmount = Double.Parse(txtCreatePaymentBA.Text == string.Empty ? "0" : txtCreatePaymentBA.Text),
+                        AmountReceived = Double.Parse(txtbxCreatePaymentAmount.Text == string.Empty ? "0" : txtbxCreatePaymentAmount.Text),
+                        NetSaleAmount = Double.Parse(txtCreatePaymentNetSaleAmt.Text == string.Empty ? "0" : txtCreatePaymentNetSaleAmt.Text),
+                        TotalTaxAmount = Double.Parse(txtCreatePaymentTotalTax.Text == string.Empty ? "0" : txtCreatePaymentTotalTax.Text)
+                    };
+                    tmpCustomerAccountHistoryDetails.PaymentID = tmpPaymentDetails.PaymentId;
+                    ResultVal = ObjAccountsMasterModel.UpdateCustomerAccount(ref tmpCustomerAccountHistoryDetails);
+                    if (ResultVal < 0) MessageBox.Show("Unable to update OB in Customer Account", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    else
+                    {
+                        MessageBox.Show("New Payment for :: " + cmbxCreatePaymentCustomerNames.SelectedItem.ToString() + " added successfully", "Payment Added");
+                        btnReset.PerformClick();
+                    }
                 }
-
             }
             catch (Exception ex)
             {

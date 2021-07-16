@@ -76,6 +76,14 @@ namespace SalesOrdersReport.Models
         }
     }
 
+    class CustomerOrderInvoiceDetails
+    {
+        public String CustomerName;
+        public Int32 SellerRowIndex = -1, OrderItemCount = 0;
+        public OrderDetails CurrOrderDetails, CurrOrderDetailsOrig;
+        public InvoiceDetails CurrInvoiceDetails, CurrInvoiceDetailsOrig;
+    }
+
     class InvoicesModel
     {
         DataTable dtAllInvoices;
