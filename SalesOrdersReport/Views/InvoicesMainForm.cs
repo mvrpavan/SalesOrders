@@ -78,6 +78,7 @@ namespace SalesOrdersReport.Views
                     dtAllInvoices = GetInvoicesDataTable(FilterFromDate, FilterToDate, CurrInvoiceStatus, null);
                 else
                     dtAllInvoices = GetInvoicesDataTable(FilterFromDate, FilterToDate, CurrInvoiceStatus, cmbBoxLine.SelectedItem.ToString());
+
                 LoadInvoicesGridView();
 
                 dtGridViewInvoicedProducts.DataSource = null;
@@ -136,52 +137,55 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        void LoadInvoicesGridView()
+        async void LoadInvoicesGridView()
         {
             try
             {
-                dtGridViewInvoices.DataSource = dtAllInvoices.DefaultView;
-
-                for (int i = 0; i < dtGridViewInvoices.Columns.Count; i++)
+                await System.Threading.Tasks.Task.Run(() =>
                 {
-                    if (dtGridViewInvoices.Columns[i].Name.Equals("InvoiceID") || 
-                        dtGridViewInvoices.Columns[i].Name.Equals("OrderID") || dtGridViewInvoices.Columns[i].Name.Equals("CustomerID") || dtGridViewInvoices.Columns[i].Name.Equals("DeliveryLineID"))
-                        dtGridViewInvoices.Columns[i].Visible = false;
+                    dtGridViewInvoices.DataSource = dtAllInvoices.DefaultView;
 
-                    if (ListPaymentModes.Contains(dtGridViewInvoices.Columns[i].Name))
+                    for (int i = 0; i < dtGridViewInvoices.Columns.Count; i++)
                     {
-                        dtGridViewInvoices.Columns[i].DefaultCellStyle.Format = "F";
+                        if (dtGridViewInvoices.Columns[i].Name.Equals("InvoiceID") ||
+                            dtGridViewInvoices.Columns[i].Name.Equals("OrderID") ||
+                            dtGridViewInvoices.Columns[i].Name.Equals("CustomerID") ||
+                            dtGridViewInvoices.Columns[i].Name.Equals("DeliveryLineID"))
+                            dtGridViewInvoices.Columns[i].Visible = false;
+
+                        if (ListPaymentModes.Contains(dtGridViewInvoices.Columns[i].Name))
+                        {
+                            dtGridViewInvoices.Columns[i].DefaultCellStyle.Format = "F";
+                        }
                     }
-                }
 
-                //Add Totals Row at the bottom of Grid
-                dtGridViewInvoiceTotal.Rows.Clear();
-                dtGridViewInvoiceTotal.Columns.Clear();
-                dtGridViewInvoiceTotal.ColumnHeadersVisible = false;
-                CommonFunctions.SetDataGridViewProperties(dtGridViewInvoiceTotal);
-                dtGridViewInvoiceTotal.SelectionMode = DataGridViewSelectionMode.CellSelect;
-                dtGridViewInvoiceTotal.DefaultCellStyle.Font = new System.Drawing.Font(dtGridViewInvoices.Font, System.Drawing.FontStyle.Bold);
-                foreach (DataGridViewColumn item in dtGridViewInvoices.Columns)
-                {
-                    DataGridViewColumn newColumn = new DataGridViewColumn(item.CellTemplate);
-                    newColumn.Name = item.Name;
-                    newColumn.Width = item.Width;
-                    newColumn.Visible = item.Visible;
-                    dtGridViewInvoiceTotal.Columns.Add(newColumn);
-                }
+                    //Add Totals Row at the bottom of Grid
+                    dtGridViewInvoiceTotal.Rows.Clear();
+                    dtGridViewInvoiceTotal.Columns.Clear();
+                    dtGridViewInvoiceTotal.ColumnHeadersVisible = false;
+                    CommonFunctions.SetDataGridViewProperties(dtGridViewInvoiceTotal);
+                    dtGridViewInvoiceTotal.SelectionMode = DataGridViewSelectionMode.CellSelect;
+                    dtGridViewInvoiceTotal.DefaultCellStyle.Font = new System.Drawing.Font(dtGridViewInvoices.Font, System.Drawing.FontStyle.Bold);
+                    foreach (DataGridViewColumn item in dtGridViewInvoices.Columns)
+                    {
+                        DataGridViewColumn newColumn = new DataGridViewColumn(item.CellTemplate);
+                        newColumn.Name = item.Name;
+                        newColumn.Width = item.Width;
+                        newColumn.Visible = item.Visible;
+                        dtGridViewInvoiceTotal.Columns.Add(newColumn);
+                    }
 
-                Object[] ArrObjects = dtAllInvoices.NewRow().ItemArray;
-                ArrObjects[dtAllInvoices.Columns["Invoice Number"].Ordinal] = "Total";
-                List<String> ListSumColumns = new List<String>() { "Gross Invoice Amount", "Discount Amount", "Net Invoice Amount" };
-                ListSumColumns.AddRange(ListPaymentModes);
-                for (int i = 0; i < ListSumColumns.Count; i++)
-                {
-                    String Value = dtAllInvoices.Compute($"Sum([{ListSumColumns[i]}])", "").ToString();
-                    ArrObjects[dtAllInvoices.Columns[ListSumColumns[i]].Ordinal] = (String.IsNullOrEmpty(Value) ? 0.ToString("F") : Double.Parse(Value).ToString("F"));
-                }
-                dtGridViewInvoiceTotal.Rows.Add(ArrObjects);
-
-                dtGridViewInvoices.ClearSelection();
+                    Object[] ArrObjects = dtAllInvoices.NewRow().ItemArray;
+                    ArrObjects[dtAllInvoices.Columns["Invoice Number"].Ordinal] = "Total";
+                    List<String> ListSumColumns = new List<String>() { "Gross Invoice Amount", "Discount Amount", "Net Invoice Amount" };
+                    ListSumColumns.AddRange(ListPaymentModes);
+                    for (int i = 0; i < ListSumColumns.Count; i++)
+                    {
+                        String Value = dtAllInvoices.Compute($"Sum([{ListSumColumns[i]}])", "").ToString();
+                        ArrObjects[dtAllInvoices.Columns[ListSumColumns[i]].Ordinal] = (String.IsNullOrEmpty(Value) ? 0.ToString("F") : Double.Parse(Value).ToString("F"));
+                    }
+                    dtGridViewInvoiceTotal.Rows.Add(ArrObjects);
+                });
 
                 lblOrdersCount.Text = $"[Displaying {dtGridViewInvoices.Rows.Count} of {dtAllInvoices.Rows.Count} Invoices]";
             }
