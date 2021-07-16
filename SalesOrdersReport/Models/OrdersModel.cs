@@ -436,6 +436,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                ObjMySQLHelper.SetAutoCloseConnection(false);
                 OrderDetails NewOrderDetails = new OrderDetails()
                 {
                     OrderDate = OrderDate,
@@ -463,6 +464,11 @@ namespace SalesOrdersReport.Models
             {
                 CommonFunctions.ShowErrorDialog($"{this}.CreateNewOrderForCustomer()", ex);
                 throw;
+            }
+            finally
+            {
+                ObjMySQLHelper.SetAutoCloseConnection(true);
+                ObjMySQLHelper.CloseConnection();
             }
         }
 
@@ -514,6 +520,8 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                ObjMySQLHelper.SetAutoCloseConnection(false);
+
                 //Find Items Modified & Added
                 OrderDetails ObjOrderDetailsOrig = GetOrderDetailsForOrderID(ObjOrderDetails.OrderID);
                 List<OrderItemDetails> ListItemsModified = new List<OrderItemDetails>();
@@ -574,6 +582,11 @@ namespace SalesOrdersReport.Models
             {
                 CommonFunctions.ShowErrorDialog($"{this}.UpdateOrderDetails()", ex);
                 throw;
+            }
+            finally
+            {
+                ObjMySQLHelper.SetAutoCloseConnection(true);
+                ObjMySQLHelper.CloseConnection();
             }
         }
 

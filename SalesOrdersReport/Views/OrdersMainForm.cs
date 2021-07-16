@@ -200,6 +200,7 @@ namespace SalesOrdersReport.Views
 
         private void btnConvertInvoice_Click(object sender, EventArgs e)
         {
+            MySQLHelper ObjMySQLHelper = MySQLHelper.GetMySqlHelperObj();
             try
             {
                 //if (dtGridViewOrders.SelectedRows.Count == 0)
@@ -217,6 +218,7 @@ namespace SalesOrdersReport.Views
                 DialogResult dialogResult = MessageBox.Show(this, "All Orders which is not Completed/Cancelled below will be created as Invoice. Do you want to continue?", "Convert Order", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.No) return;
 
+                ObjMySQLHelper.SetAutoCloseConnection(false);
                 List<string> ListSuccessfulOrderIDs = new List<string>(), ListNotSuccessfulOrderIDs = new List<string>();
                 int CompletedRCancelledCount = 0;
                 for (int i = 0; i < dtGridViewOrders.Rows.Count; i++)
@@ -266,6 +268,11 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.btnConvertInvoice_Click()", ex);
+            }
+            finally
+            {
+                ObjMySQLHelper.SetAutoCloseConnection(true);
+                ObjMySQLHelper.CloseConnection();
             }
         }
 

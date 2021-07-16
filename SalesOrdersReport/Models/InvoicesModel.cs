@@ -485,6 +485,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                ObjMySQLHelper.SetAutoCloseConnection(false);
                 InvoiceDetails NewInvoiceDetails = new InvoiceDetails();
                 NewInvoiceDetails.InvoiceDate = InvoiceDate;
                 NewInvoiceDetails.InvoiceNumber = InvoiceNumber;
@@ -519,6 +520,11 @@ namespace SalesOrdersReport.Models
             {
                 CommonFunctions.ShowErrorDialog($"{this}.CreateNewInvoiceForCustomer()", ex);
                 throw;
+            }
+            finally
+            {
+                ObjMySQLHelper.SetAutoCloseConnection(true);
+                ObjMySQLHelper.CloseConnection();
             }
         }
 
@@ -748,6 +754,7 @@ namespace SalesOrdersReport.Models
         {
             try
             {
+                ObjMySQLHelper.SetAutoCloseConnection(false);
                 CurrInvoiceID = ObjInvoiceDetails.InvoiceID;
                //Find Items Modified & Added
                InvoiceDetails ObjInvoiceDetailsOrig = GetInvoiceDetailsForInvoiceID(ObjInvoiceDetails.InvoiceID);
@@ -830,6 +837,11 @@ namespace SalesOrdersReport.Models
             {
                 CommonFunctions.ShowErrorDialog($"{this}.UpdateInvoiceDetails()", ex);
                 throw;
+            }
+            finally
+            {
+                ObjMySQLHelper.SetAutoCloseConnection(true);
+                ObjMySQLHelper.CloseConnection();
             }
         }
 
