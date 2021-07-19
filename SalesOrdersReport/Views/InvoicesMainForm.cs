@@ -137,11 +137,17 @@ namespace SalesOrdersReport.Views
             }
         }
 
+#if DEBUG
+        void LoadInvoicesGridView()
+#else
         async void LoadInvoicesGridView()
+#endif
         {
             try
             {
+#if RELEASE
                 await System.Threading.Tasks.Task.Run(() =>
+#endif
                 {
                     dtGridViewInvoices.DataSource = dtAllInvoices.DefaultView;
 
@@ -185,8 +191,10 @@ namespace SalesOrdersReport.Views
                         ArrObjects[dtAllInvoices.Columns[ListSumColumns[i]].Ordinal] = (String.IsNullOrEmpty(Value) ? 0.ToString("F") : Double.Parse(Value).ToString("F"));
                     }
                     dtGridViewInvoiceTotal.Rows.Add(ArrObjects);
-                });
-
+                }
+#if RELEASE
+               );
+#endif
                 lblOrdersCount.Text = $"[Displaying {dtGridViewInvoices.Rows.Count} of {dtAllInvoices.Rows.Count} Invoices]";
             }
             catch (Exception ex)
@@ -644,7 +652,7 @@ namespace SalesOrdersReport.Views
                             ReportType EnumReportType = ReportType.INVOICE;
                             Boolean PrintOldBalance = false;
                             Boolean CreateSummary = false;
-                            Int32 PrintCopies = 1;
+                            Int32 PrintCopies = CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies;
 
                             Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
                             InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
@@ -656,7 +664,7 @@ namespace SalesOrdersReport.Views
                             ReportType EnumReportType = ReportType.QUOTATION;
                             Boolean PrintOldBalance = false;
                             Boolean CreateSummary = false;
-                            Int32 PrintCopies = 1;
+                            Int32 PrintCopies = CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies;
 
                             Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
                             InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);

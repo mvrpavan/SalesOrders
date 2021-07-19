@@ -61,6 +61,7 @@
             this.dtGridViewPaymentsSummaryTotal = new System.Windows.Forms.DataGridView();
             this.btnAddPaymentSummaryRow = new System.Windows.Forms.Button();
             this.backgroundWorkerPayments = new System.ComponentModel.BackgroundWorker();
+            this.chkListBoxDeliveryLines = new System.Windows.Forms.CheckedListBox();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtGridViewPayments)).BeginInit();
@@ -302,7 +303,6 @@
             this.dtGridViewPayments.Name = "dtGridViewPayments";
             this.dtGridViewPayments.Size = new System.Drawing.Size(1164, 228);
             this.dtGridViewPayments.TabIndex = 2;
-            this.dtGridViewPayments.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dtGridViewInvoices_CellMouseClick);
             // 
             // label1
             // 
@@ -334,16 +334,16 @@
             // cmbxDeliveryLine
             // 
             this.cmbxDeliveryLine.FormattingEnabled = true;
-            this.cmbxDeliveryLine.Location = new System.Drawing.Point(373, 394);
+            this.cmbxDeliveryLine.Location = new System.Drawing.Point(937, 391);
             this.cmbxDeliveryLine.Name = "cmbxDeliveryLine";
             this.cmbxDeliveryLine.Size = new System.Drawing.Size(121, 21);
             this.cmbxDeliveryLine.TabIndex = 6;
-            this.cmbxDeliveryLine.SelectedIndexChanged += new System.EventHandler(this.cmbxDeliveryLine_SelectedIndexChanged);
+            this.cmbxDeliveryLine.Visible = false;
             // 
             // lblSelectDeliveryLine
             // 
             this.lblSelectDeliveryLine.AutoSize = true;
-            this.lblSelectDeliveryLine.Location = new System.Drawing.Point(299, 397);
+            this.lblSelectDeliveryLine.Location = new System.Drawing.Point(299, 384);
             this.lblSelectDeliveryLine.Name = "lblSelectDeliveryLine";
             this.lblSelectDeliveryLine.Size = new System.Drawing.Size(68, 13);
             this.lblSelectDeliveryLine.TabIndex = 7;
@@ -413,7 +413,7 @@
             this.btnPaymentSummaryExportToExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPaymentSummaryExportToExcel.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnPaymentSummaryExportToExcel.Image = global::SalesOrdersReport.Properties.Resources.exporttoexcel321;
-            this.btnPaymentSummaryExportToExcel.Location = new System.Drawing.Point(598, 387);
+            this.btnPaymentSummaryExportToExcel.Location = new System.Drawing.Point(689, 384);
             this.btnPaymentSummaryExportToExcel.Name = "btnPaymentSummaryExportToExcel";
             this.btnPaymentSummaryExportToExcel.Size = new System.Drawing.Size(43, 32);
             this.btnPaymentSummaryExportToExcel.TabIndex = 14;
@@ -429,7 +429,7 @@
             this.btnSaveSummaryDB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSaveSummaryDB.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnSaveSummaryDB.Image = global::SalesOrdersReport.Properties.Resources.save_32;
-            this.btnSaveSummaryDB.Location = new System.Drawing.Point(549, 387);
+            this.btnSaveSummaryDB.Location = new System.Drawing.Point(640, 384);
             this.btnSaveSummaryDB.Name = "btnSaveSummaryDB";
             this.btnSaveSummaryDB.Size = new System.Drawing.Size(43, 32);
             this.btnSaveSummaryDB.TabIndex = 15;
@@ -455,7 +455,7 @@
             this.btnAddPaymentSummaryRow.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddPaymentSummaryRow.Font = new System.Drawing.Font("Calibri", 10F);
             this.btnAddPaymentSummaryRow.Image = global::SalesOrdersReport.Properties.Resources.math_add_icon_32;
-            this.btnAddPaymentSummaryRow.Location = new System.Drawing.Point(500, 387);
+            this.btnAddPaymentSummaryRow.Location = new System.Drawing.Point(591, 384);
             this.btnAddPaymentSummaryRow.Name = "btnAddPaymentSummaryRow";
             this.btnAddPaymentSummaryRow.Size = new System.Drawing.Size(43, 32);
             this.btnAddPaymentSummaryRow.TabIndex = 17;
@@ -470,6 +470,16 @@
             this.backgroundWorkerPayments.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorkerPayments_ProgressChanged);
             this.backgroundWorkerPayments.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerPayments_RunWorkerCompleted);
             // 
+            // chkListBoxDeliveryLines
+            // 
+            this.chkListBoxDeliveryLines.CheckOnClick = true;
+            this.chkListBoxDeliveryLines.FormattingEnabled = true;
+            this.chkListBoxDeliveryLines.Location = new System.Drawing.Point(373, 368);
+            this.chkListBoxDeliveryLines.Name = "chkListBoxDeliveryLines";
+            this.chkListBoxDeliveryLines.Size = new System.Drawing.Size(204, 49);
+            this.chkListBoxDeliveryLines.TabIndex = 18;
+            this.chkListBoxDeliveryLines.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkListBoxDeliveryLines_ItemCheck);
+            // 
             // PaymentsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -477,6 +487,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1184, 745);
+            this.Controls.Add(this.chkListBoxDeliveryLines);
             this.Controls.Add(this.btnAddPaymentSummaryRow);
             this.Controls.Add(this.dtGridViewPaymentsSummaryTotal);
             this.Controls.Add(this.btnSaveSummaryDB);
@@ -544,5 +555,6 @@
         private System.Windows.Forms.DataGridView dtGridViewPaymentsSummaryTotal;
         private System.Windows.Forms.Button btnAddPaymentSummaryRow;
         private System.ComponentModel.BackgroundWorker backgroundWorkerPayments;
+        private System.Windows.Forms.CheckedListBox chkListBoxDeliveryLines;
     }
 }

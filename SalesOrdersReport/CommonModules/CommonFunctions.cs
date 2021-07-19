@@ -1098,7 +1098,7 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        public static void PrintAfile(string ExcelFilePath)
+        public static void PrintAfile(string ExcelFilePath, Int32 PrintCopies = 1)
         {
             try
             {
@@ -1111,9 +1111,9 @@ namespace SalesOrdersReport.CommonModules
                     Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(ExcelFilePath);
 
                     if (!String.IsNullOrEmpty(ObjGeneralSettings.PrinterName))
-                        xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, 1, ActivePrinter: ObjGeneralSettings.PrinterName);
+                        xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, PrintCopies, ActivePrinter: ObjGeneralSettings.PrinterName);
                     else
-                        xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, 1);
+                        xlWorkbook.PrintOutEx(Type.Missing, Type.Missing, PrintCopies);
 
                     xlWorkbook.Close(false);
                     CommonFunctions.ReleaseCOMObject(xlWorkbook);
@@ -1168,7 +1168,7 @@ namespace SalesOrdersReport.CommonModules
                     //    xlApp.Quit();
                     //    CommonFunctions.ReleaseCOMObject(xlApp);
                     //}
-                    PrintAfile(ExcelFilePath);
+                    PrintAfile(ExcelFilePath, PrintCopies);
                 }
             }
             catch (Exception ex)

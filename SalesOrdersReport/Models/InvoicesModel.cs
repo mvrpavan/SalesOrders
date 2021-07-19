@@ -938,6 +938,7 @@ namespace SalesOrdersReport.Models
                 String ItemName;
                 for (int i = 0; i < ObjInvoiceDetails.ListInvoiceItems.Count; i++)
                 {
+                    if (ObjInvoiceDetails.ListInvoiceItems[i].InvoiceItemStatus == INVOICEITEMSTATUS.Cancelled) continue;
                     Counter++;
 
                     OrderQuantity = ObjInvoiceDetails.ListInvoiceItems[i].OrderQty.ToString();

@@ -14,7 +14,7 @@ namespace SalesOrdersReport.Views
         PaymentsModel ObjPaymentsModel;
         AccountsMasterModel ObjAccountsMasterModel;
         DataTable dtAllPayments;
-        DataTable dtPaymentSummary;
+        //DataTable dtPaymentSummary;
         MySQLHelper ObjMySQLHelper;
         InvoicesModel ObjInvoicesModel;
         List<string> ListPaymentModeNames;
@@ -22,6 +22,7 @@ namespace SalesOrdersReport.Views
         List<String> ListEditedInvoiceIDs = new List<String>();
         List<string> ListCustomerNamesAlreadyInGrid = new List<string>();
         Boolean ValueChanged = false;
+        List<String> ListLinesInPaymentSummary = null;
 
         public PaymentsForm()
         {
@@ -65,11 +66,15 @@ namespace SalesOrdersReport.Views
                 toolTipForEPaymentSummaryxportToExcel.SetToolTip(btnPaymentSummaryExportToExcel, "Export To Excel");
                 toolTipForEPaymentSummaryxportToExcel.SetToolTip(btnSaveSummaryDB, "Save Changes To DB");
                 toolTipForEPaymentSummaryxportToExcel.SetToolTip(btnAddPaymentSummaryRow, "Add Payment Summary Row");
-                LoadInputPaymentSummaryGridView();
+                //LoadInputPaymentSummaryGridView();
+
                 List<string> ListTempNames = new List<string>() { "All" };
                 ListTempNames.AddRange(CommonFunctions.ObjCustomerMasterModel.GetAllLineNames());
-                cmbxDeliveryLine.DataSource = ListTempNames;
-                cmbxDeliveryLine.SelectedItem = "All";
+                //cmbxDeliveryLine.DataSource = ListTempNames;
+                //cmbxDeliveryLine.SelectedItem = "All";
+
+                chkListBoxDeliveryLines.Items.AddRange(ListTempNames.ToArray());
+                chkListBoxDeliveryLines.SetItemChecked(0, true);
             }
             catch (Exception ex)
             {
@@ -150,12 +155,11 @@ namespace SalesOrdersReport.Views
             try
             {
                 DataTable dtPaymentSummary = new DataTable();
-                List<string> ListColumns = new List<string> { "Sl#", "CustomerID", "InvoiceID", "Line", "Invoice#", "Customer Name", "Sale", "Cancel", "Return", "Discount", "Total Tax", "Net Sale", "OB" };// Cash, UPI, Credit Card, Debit Card, Check};
+                List<string> ListColumns = new List<string> { "Sl#", "CustomerID", "InvoiceID", "Line", "Invoice#", "Customer Name", "Sale", "Cancel", "Return", "Discount", "Net Sale", "OB" };// Cash, UPI, Credit Card, Debit Card, Check};
                 ListColumns.AddRange(ListPaymentModeNames);
                 List<Type> ListColumnsType = new List<Type> { CommonFunctions.TypeInt32, CommonFunctions.TypeInt32, CommonFunctions.TypeInt32, CommonFunctions.TypeString,
                                                     CommonFunctions.TypeString,CommonFunctions.TypeString, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble,
-                                                    CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble,
-                                                    CommonFunctions.TypeDouble, CommonFunctions.TypeDouble
+                                                    CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble, CommonFunctions.TypeDouble
                                                    };
                 ListColumnsType.AddRange(ListPaymentModeColTypes);
 
@@ -181,7 +185,7 @@ namespace SalesOrdersReport.Views
                     ArrRowItems[col++] = (dr["CANCEL"].ToString() == null || dr["CANCEL"].ToString() == "") ? "0" : dr["CANCEL"].ToString();  //cancel
                     ArrRowItems[col++] = (dr["RETURN"].ToString() == null || dr["RETURN"].ToString() == "") ? "0" : dr["RETURN"].ToString();   //return
                     ArrRowItems[col++] = dr["DISCOUNT"].ToString();
-                    ArrRowItems[col++] = "0";  //total tax
+                    //ArrRowItems[col++] = "0";  //total tax
                     ArrRowItems[col++] = dr["NET SALE"].ToString();
                     ArrRowItems[col++] = dr["OB"].ToString();
                     for (int mn = 0; mn < ListPaymentModeNames.Count; mn++)
@@ -204,7 +208,7 @@ namespace SalesOrdersReport.Views
             try
             {
                 //Sl#	Line	Invoice#	Customer Name	Sale	Cancel	Return	Discount	Total Tax	Net Sale	OB	Cash
-                dtPaymentSummary = GetPaymentsSummaryDataTable();
+                DataTable dtPaymentSummary = GetPaymentsSummaryDataTable();
 
                 if (ListEditedInvoiceIDs.Count > 0)
                 {
@@ -222,11 +226,14 @@ namespace SalesOrdersReport.Views
                 if (DataFilter != null) dtPaymentSummary.DefaultView.RowFilter = DataFilter;
 
                 dgvPaymentSummary.DataSource = dtPaymentSummary.DefaultView;
+                ListLinesInPaymentSummary = (from r in dtPaymentSummary.AsEnumerable()
+                         select r["Line"]).Distinct().Select(e => e.ToString()).ToList();
 
                 foreach (DataGridViewColumn item in dgvPaymentSummary.Columns)
                 {
                     item.ReadOnly = true;
-                    if (item.HeaderText.Equals("InvoiceID") || item.HeaderText.Equals("Sl#")) item.Visible = false;
+                    if (item.HeaderText.Equals("InvoiceID") || item.HeaderText.Equals("Sl#") 
+                        || item.HeaderText.Equals("CustomerID")) item.Visible = false;
                     if (item.Name.Equals("Cancel") || item.Name.Equals("Return") || item.Name.Equals("Discount")
                         || ListPaymentModeNames.Contains(item.Name))
                     {
@@ -246,6 +253,47 @@ namespace SalesOrdersReport.Views
                 }
 
                 //Add Totals Row at the bottom of Grid
+                UpdatePaymentsSummaryTotalGridView(((DataView)dgvPaymentSummary.DataSource).ToTable());
+                /*dtGridViewPaymentsSummaryTotal.Rows.Clear();
+                dtGridViewPaymentsSummaryTotal.Columns.Clear();
+                dtGridViewPaymentsSummaryTotal.ColumnHeadersVisible = false;
+                CommonFunctions.SetDataGridViewProperties(dtGridViewPaymentsSummaryTotal);
+                dtGridViewPaymentsSummaryTotal.SelectionMode = DataGridViewSelectionMode.CellSelect;
+                dtGridViewPaymentsSummaryTotal.DefaultCellStyle.Font = new System.Drawing.Font(dgvPaymentSummary.Font, System.Drawing.FontStyle.Bold);
+                foreach (DataGridViewColumn item in dgvPaymentSummary.Columns)
+                {
+                    DataGridViewColumn newColumn = new DataGridViewColumn(item.CellTemplate);
+                    newColumn.Name = item.Name;
+                    newColumn.Width = item.Width;
+                    newColumn.Visible = item.Visible;
+                    dtGridViewPaymentsSummaryTotal.Columns.Add(newColumn);
+                }
+                // "Sl#", "InvoiceID", "Line", "Invoice#", "Customer Name", "Sale", "Cancel", "Return", "Discount", "Total Tax", "Net Sale", "OB" };// Cash, UPI, Credit Card, Debit Card, Check};
+                dtPaymentSummary = dtPaymentSummary.DefaultView.ToTable();
+                Object[] ArrObjects = dtPaymentSummary.NewRow().ItemArray;
+                ArrObjects[dtPaymentSummary.Columns["Customer Name"].Ordinal] = "Total";
+                List<String> ListSumColumns = new List<String>() { "Sale", "Cancel", "Return", "Discount", "Net Sale", "OB" };
+                ListSumColumns.AddRange(ListPaymentModeNames);
+                for (int i = 0; i < ListSumColumns.Count; i++)
+                {
+                    String Value = dtPaymentSummary.DefaultView.Table.Compute($"Sum([{ListSumColumns[i]}])", "").ToString();
+                    ArrObjects[dtPaymentSummary.Columns[ListSumColumns[i]].Ordinal] = (String.IsNullOrEmpty(Value) ? 0.ToString("F") : Double.Parse(Value).ToString("F"));
+                }
+                dtGridViewPaymentsSummaryTotal.Rows.Add(ArrObjects);*/
+
+                dgvPaymentSummary.ClearSelection();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.LoadInputPaymentSummaryGridView()", ex);
+            }
+        }
+
+        private void UpdatePaymentsSummaryTotalGridView(DataTable dtPaymentSummary)
+        {
+            try
+            {
+                //Add Totals Row at the bottom of Grid
                 dtGridViewPaymentsSummaryTotal.Rows.Clear();
                 dtGridViewPaymentsSummaryTotal.Columns.Clear();
                 dtGridViewPaymentsSummaryTotal.ColumnHeadersVisible = false;
@@ -263,20 +311,19 @@ namespace SalesOrdersReport.Views
                 // "Sl#", "InvoiceID", "Line", "Invoice#", "Customer Name", "Sale", "Cancel", "Return", "Discount", "Total Tax", "Net Sale", "OB" };// Cash, UPI, Credit Card, Debit Card, Check};
                 Object[] ArrObjects = dtPaymentSummary.NewRow().ItemArray;
                 ArrObjects[dtPaymentSummary.Columns["Customer Name"].Ordinal] = "Total";
-                List<String> ListSumColumns = new List<String>() { "Sale", "Cancel", "Return", "Discount", "Total Tax", "Net Sale", "OB" };
+                List<String> ListSumColumns = new List<String>() { "Sale", "Cancel", "Return", "Discount", "Net Sale", "OB" };
                 ListSumColumns.AddRange(ListPaymentModeNames);
                 for (int i = 0; i < ListSumColumns.Count; i++)
                 {
-                    String Value = dtPaymentSummary.Compute($"Sum([{ListSumColumns[i]}])", "").ToString();
+                    String Value = dtPaymentSummary.DefaultView.Table.Compute($"Sum([{ListSumColumns[i]}])", "").ToString();
                     ArrObjects[dtPaymentSummary.Columns[ListSumColumns[i]].Ordinal] = (String.IsNullOrEmpty(Value) ? 0.ToString("F") : Double.Parse(Value).ToString("F"));
                 }
                 dtGridViewPaymentsSummaryTotal.Rows.Add(ArrObjects);
-
-                dgvPaymentSummary.ClearSelection();
             }
             catch (Exception ex)
             {
-                CommonFunctions.ShowErrorDialog($"{this}.LoadInputPaymentSummaryGridView()", ex);
+                CommonFunctions.ShowErrorDialog($"{this}.UpdatePaymentsSummaryTotalGridView()", ex);
+                throw;
             }
         }
 
@@ -306,7 +353,6 @@ namespace SalesOrdersReport.Views
 
                     return -1;
                 }
-
 
                 dtCustomerSummary.DefaultView.RowFilter = "IsNull([Sl#], 0) > 0 AND Convert(IsNull([Cash], 0),'System.Double')>0 ";
                 DataRow[] drSellers = dtCustomerSummary.DefaultView.ToTable().Select("", "[Sl#] asc");
@@ -526,7 +572,8 @@ namespace SalesOrdersReport.Views
                         LoadPaymentsGridView(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
                         break;
                     case 2:
-                        LoadInputPaymentSummaryGridView((cmbxDeliveryLine.SelectedIndex > 0) ? $"LINE = '{cmbxDeliveryLine.SelectedItem.ToString()}'" : "");
+                        LoadForSelectedDeliveryLines(-1, CheckState.Checked);
+                        //LoadInputPaymentSummaryGridView((cmbxDeliveryLine.SelectedIndex > 0) ? $"LINE = '{cmbxDeliveryLine.SelectedItem.ToString()}'" : "");
                         break;
                     case 3:     //Reload 
                         break;
@@ -557,12 +604,6 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                //if ()
-                //{
-                //DataGridViewRow row = this.dtGridViewPayments.SelectedRows[0];
-                //string val = dtGridViewPayments.CurrentRow.Cells["PAYMENTID"].Value.ToString();
-                //row.Cells["PAYMENTID"].Value
-                // }
                 if (dtGridViewPayments.SelectedRows.Count == 0)
                 {
                     MessageBox.Show("Please Select a Payment Row To Edit!", "Error");
@@ -680,7 +721,8 @@ namespace SalesOrdersReport.Views
             {
                 checkBoxApplyFilterPayment.Checked = false;
                 LoadPaymentsGridView(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
-                LoadInputPaymentSummaryGridView();
+                //LoadInputPaymentSummaryGridView();
+                LoadForSelectedDeliveryLines(-1, CheckState.Checked);
             }
             catch (Exception ex)
             {
@@ -707,17 +749,6 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void dtGridViewInvoices_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.dtGridViewInvoices_CellMouseClick()", ex);
-            }
-        }
-
         private void btnImportFromExcel_Click(object sender, EventArgs e)
         {
             try
@@ -730,28 +761,28 @@ namespace SalesOrdersReport.Views
             }
         }
 
-        private void cmbxDeliveryLine_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (cmbxStaffName.SelectedIndex < 0) return;
+        //private void cmbxDeliveryLine_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        if (cmbxStaffName.SelectedIndex < 0) return;
 
-                if (cmbxDeliveryLine.SelectedItem.ToString() == "All")
-                    LoadInputPaymentSummaryGridView("");
-                else
-                    LoadInputPaymentSummaryGridView($"LINE = '{cmbxDeliveryLine.SelectedItem.ToString()}'");
-            }
-            catch (Exception ex)
-            {
-                CommonFunctions.ShowErrorDialog($"{this}.cmbBoxCategoryFilterList_SelectedIndexChanged()", ex);
-            }
-        }
+        //        if (cmbxDeliveryLine.SelectedItem.ToString() == "All")
+        //            LoadInputPaymentSummaryGridView("");
+        //        else
+        //            LoadInputPaymentSummaryGridView($"LINE = '{cmbxDeliveryLine.SelectedItem.ToString()}'");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CommonFunctions.ShowErrorDialog($"{this}.cmbBoxCategoryFilterList_SelectedIndexChanged()", ex);
+        //    }
+        //}
 
         private void dgvPaymentSummary_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
-                if (e.ColumnIndex < 7 || (e.ColumnIndex > 9 && e.ColumnIndex <= 12) || e.RowIndex < 0) return;
+                if (e.ColumnIndex < 7 || (e.ColumnIndex > 9 && e.ColumnIndex < 12) || e.RowIndex < 0) return;
 
                 Double result;
                 DataGridViewCell cell = dgvPaymentSummary.Rows[e.RowIndex].Cells[e.ColumnIndex];
@@ -774,7 +805,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
-                if (e.ColumnIndex < 7 || (e.ColumnIndex > 9 && e.ColumnIndex <= 12) || e.RowIndex < 0 || !ValueChanged) return;
+                if (e.ColumnIndex < 7 || (e.ColumnIndex > 9 && e.ColumnIndex < 12) || e.RowIndex < 0 || !ValueChanged) return;
 
                 Int32 CustomerID = Int32.Parse(dgvPaymentSummary["CustomerID", e.RowIndex].Value.ToString());
                 Int32 InvoiceID = Int32.Parse(dgvPaymentSummary["INVOICEID", e.RowIndex].Value.ToString());
@@ -787,6 +818,7 @@ namespace SalesOrdersReport.Views
                                                                     - Double.Parse(dgvPaymentSummary["Cancel", e.RowIndex].Value.ToString())
                                                                     - Double.Parse(dgvPaymentSummary["Return", e.RowIndex].Value.ToString());
                 }
+                UpdatePaymentsSummaryTotalGridView(((DataView)dgvPaymentSummary.DataSource).ToTable());
                 ValueChanged = false;
             }
             catch (Exception ex)
@@ -952,7 +984,8 @@ namespace SalesOrdersReport.Views
 
                 // ListEditedInvoiceIDs.Clear();
                 LoadPaymentsGridView(dTimePickerFromPayments.Value, dTimePickerToPayments.Value);
-                LoadInputPaymentSummaryGridView();
+                LoadForSelectedDeliveryLines(-1, CheckState.Checked);
+                //LoadInputPaymentSummaryGridView();
                 ReportProgressFunc(100);
 
                 MessageBox.Show(this, "Payments with either NetSale or Amount received are updated successfully", "Add Payments", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1060,6 +1093,9 @@ namespace SalesOrdersReport.Views
                 DataTable dtTempPayment = new DataTable();
                 List<string> ListOfColumnsToBeExcluded = new List<string>() { "InvoiceID", "Sl#", "CustomerID" };
                 List<int> ListOfColumnIndexesNotAdded = new List<int>();
+                List<String> ListOfColumnsToBeEmpty = new List<String>() { "Cancel", "Return", "Discount" };
+                ListOfColumnsToBeEmpty.AddRange(ListPaymentModeNames);
+                List<int> ListOfColumnIndexesToBeEmpty = new List<int>();
                 Double[] ArrTotalRowValues = new Double[dgvPaymentSummary.ColumnCount - ListOfColumnsToBeExcluded.Count - 3];
                 foreach (DataGridViewColumn col in dgvPaymentSummary.Columns)
                 {
@@ -1068,6 +1104,9 @@ namespace SalesOrdersReport.Views
                         dtTempPayment.Columns.Add(col.Name);
                     }
                     else ListOfColumnIndexesNotAdded.Add(col.Index);
+
+                    if (ListOfColumnsToBeEmpty.Contains(col.Name))
+                        ListOfColumnIndexesToBeEmpty.Add(col.Index);
                 }
 
                 foreach (DataGridViewRow row in dgvPaymentSummary.Rows)
@@ -1078,7 +1117,13 @@ namespace SalesOrdersReport.Views
                     {
                         if (!ListOfColumnIndexesNotAdded.Contains(cell.ColumnIndex))
                         {
-                            dRow[index] = cell.Value;
+                            if (ListOfColumnIndexesToBeEmpty.Contains(cell.ColumnIndex))
+                            {
+                                Double value = Double.Parse(cell.Value.ToString().Trim());
+                                if (value != 0.0) dRow[index] = value;
+                                else dRow[index] = DBNull.Value;
+                            }
+                            else dRow[index] = cell.Value;
                             if (index >= 3)
                             {
                                 ArrTotalRowValues[index - 3] += Double.Parse(cell.Value.ToString());
@@ -1284,6 +1329,124 @@ namespace SalesOrdersReport.Views
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.backgroundWorkerPayments_RunWorkerCompleted()", ex);
+                throw;
+            }
+        }
+
+        Boolean DisableMethodInvocation = false;
+        private void chkListBoxDeliveryLines_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            try
+            {
+                if (DisableMethodInvocation) return;
+                if (e.Index == 0)
+                {
+                    DisableMethodInvocation = true;
+                    for (int i = 1; i < chkListBoxDeliveryLines.Items.Count; i++)
+                    {
+                        chkListBoxDeliveryLines.SetItemCheckState(i, e.NewValue);
+                    }
+                    DisableMethodInvocation = false;
+                }
+                else if (e.NewValue == CheckState.Unchecked)
+                {
+                    DisableMethodInvocation = true;
+                    //Boolean containsChekcedItem = false;
+                    //for (int i = 1; i < chkListBoxDeliveryLines.Items.Count; i++)
+                    //{
+                    //    if (i == e.Index) continue;
+                    //    if (chkListBoxDeliveryLines.GetItemCheckState(i) == CheckState.Checked)
+                    //    {
+                    //        containsChekcedItem = true;
+                    //        break;
+                    //    }
+                    //}
+                    if (chkListBoxDeliveryLines.GetItemCheckState(0) == CheckState.Checked)
+                        chkListBoxDeliveryLines.SetItemChecked(0, false);
+                    //else if (!containsChekcedItem)
+                    //{
+                    //    DisableMethodInvocation = false;
+                    //    chkListBoxDeliveryLines.SetItemChecked(0, true);
+                    //}
+                    DisableMethodInvocation = false;
+                }
+                else if (e.NewValue == CheckState.Checked)
+                {
+                    DisableMethodInvocation = true;
+                    Boolean containsUnchekcedItem = false;
+                    for (int i = 1; i < chkListBoxDeliveryLines.Items.Count; i++)
+                    {
+                        if (i == e.Index) continue;
+                        if (chkListBoxDeliveryLines.GetItemCheckState(i) == CheckState.Unchecked)
+                        {
+                            containsUnchekcedItem = true;
+                            break;
+                        }
+                    }
+                    if (!containsUnchekcedItem && chkListBoxDeliveryLines.GetItemCheckState(0) == CheckState.Unchecked)
+                        chkListBoxDeliveryLines.SetItemChecked(0, true);
+                    DisableMethodInvocation = false;
+                }
+                LoadForSelectedDeliveryLines(e.Index, e.NewValue);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.chkListBoxDeliveryLines_ItemCheck()", ex);
+                throw;
+            }
+        }
+
+        List<String> PrevListSelectedLines = new List<String>();
+        private void LoadForSelectedDeliveryLines(Int32 ChangedItemIndex, CheckState state)
+        {
+            try
+            {
+                List<String> ListLines = new List<String>();
+                if (ChangedItemIndex == 0)
+                {
+                    if (state == CheckState.Checked)
+                        ListLines.AddRange(chkListBoxDeliveryLines.Items.Cast<String>());
+                    //LoadInputPaymentSummaryGridView("");
+                }
+
+                if (ChangedItemIndex != 0 && chkListBoxDeliveryLines.GetItemChecked(0))
+                {
+                    ListLines.AddRange(chkListBoxDeliveryLines.Items.Cast<String>());
+                    //LoadInputPaymentSummaryGridView("");
+                }
+                else
+                {
+                    for (int i = 1; i < chkListBoxDeliveryLines.Items.Count; i++)
+                    {
+                        if (i == ChangedItemIndex)
+                        {
+                            if (state == CheckState.Checked)
+                                ListLines.Add(chkListBoxDeliveryLines.Items[i].ToString());
+                        }
+                        else if (chkListBoxDeliveryLines.GetItemChecked(i))
+                            ListLines.Add(chkListBoxDeliveryLines.Items[i].ToString());
+                    }
+                }
+
+                if (ListLinesInPaymentSummary == null)
+                {
+                    LoadInputPaymentSummaryGridView();
+                    PrevListSelectedLines = ListLinesInPaymentSummary.ToList();
+                }
+                else
+                {
+                    ListLines = ListLines.Intersect(ListLinesInPaymentSummary).ToList();
+                    List<String> ListNewLines = ListLines.Except(PrevListSelectedLines).ToList();
+                    List<String> ListRemovedLines = PrevListSelectedLines.Except(ListLines).ToList();
+                    if (ListNewLines.Count > 0 || ListRemovedLines.Count > 0)
+                        LoadInputPaymentSummaryGridView($"LINE in ('{String.Join("','", ListLines)}')");
+                    //PrevListSelectedLines = ListLines.Intersect(ListLinesInPaymentSummary).ToList();
+                }
+                PrevListSelectedLines = ListLines;
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.LoadForSelectedDeliveryLines()", ex);
                 throw;
             }
         }

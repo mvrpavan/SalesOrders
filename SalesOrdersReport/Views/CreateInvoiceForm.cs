@@ -161,11 +161,11 @@ namespace SalesOrdersReport.Views
                 CurrInvoiceDetails = new CustomerOrderInvoiceDetails();
                 CurrInvoiceDetails.CustomerName = CurrCustomerDetails.CustomerName;
 
-                CurrCustomerDiscountGroup = ObjCustomerMasterModel.GetCustomerDiscount(CurrCustomerDetails.CustomerName);
-                if (CurrCustomerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
-                    DiscountPerc = CurrCustomerDiscountGroup.Discount;
-                else if (CurrCustomerDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
-                    DiscountValue = CurrCustomerDiscountGroup.Discount;
+                //CurrCustomerDiscountGroup = ObjCustomerMasterModel.GetCustomerDiscount(CurrCustomerDetails.CustomerName);
+                //if (CurrCustomerDiscountGroup.DiscountType == DiscountTypes.PERCENT)
+                //    DiscountPerc = CurrCustomerDiscountGroup.Discount;
+                //else if (CurrCustomerDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
+                //    DiscountValue = CurrCustomerDiscountGroup.Discount;
 
                 picBoxLoading.Visible = true;
                 lblStatus.Text = "Loading Invoice data. Please wait...";
@@ -471,6 +471,10 @@ namespace SalesOrdersReport.Views
                     cmbBxInvoiceDeliveryLine.SelectedItem = CurrInvoiceDetails.CurrInvoiceDetails.DeliveryLineName;
                     if (CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems == null || CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems.Count == 0)
                         ObjInvoicesModel.FillInvoiceItemDetails(CurrInvoiceDetails.CurrInvoiceDetails);
+                    if (CurrInvoiceDetails.CurrInvoiceDetails.DiscountAmount > 0)
+                    {
+                        DiscountPerc = (CurrInvoiceDetails.CurrInvoiceDetails.GrossInvoiceAmount != 0) ? CurrInvoiceDetails.CurrInvoiceDetails.DiscountAmount / CurrInvoiceDetails.CurrInvoiceDetails.GrossInvoiceAmount * 100 : 0;
+                    }
                     foreach (var item in CurrInvoiceDetails.CurrInvoiceDetails.ListInvoiceItems)
                     {
                         //if (item.OrderQty <= 0) continue;
@@ -556,7 +560,7 @@ namespace SalesOrdersReport.Views
                             InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
                             ObjInvoiceDetails.BalanceAmount = Double.Parse(lblBalanceAmountValue.Text);
                             ReportType EnumReportType = CommonFunctions.ObjGeneralSettings.IsCustomerBillPrintFormatQuotation ? ReportType.QUOTATION : ReportType.INVOICE;
-                            CommonFunctions.PrintOrderInvoiceQuotation(EnumReportType, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, 1, false, false, CommonFunctions.UpdateProgressBar);
+                            CommonFunctions.PrintOrderInvoiceQuotation(EnumReportType, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, CommonFunctions.ObjGeneralSettings.InvoiceQuotPrintCopies, false, false, CommonFunctions.UpdateProgressBar);
                         }
                         lblStatus.Text = "Choose a Customer to create Sales Invoice";
                         cmbBoxInvoiceNumber.Items.Clear();

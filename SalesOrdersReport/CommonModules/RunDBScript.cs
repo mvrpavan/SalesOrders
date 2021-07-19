@@ -143,8 +143,8 @@ namespace SalesOrdersReport.CommonModules
                     "Cancel, FLOAT DEFAULT 0",
                     "Return, FLOAT DEFAULT 0",
                     "Discount, FLOAT DEFAULT 0",
-                    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP"
-                    //"PRIMARY KEY, CustomerID"
+                    "CreationDate, timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+                    "PRIMARY KEY, CustomerID"
                 };
                 int val = ObjMySQLHelper.CreateTable("TempPaymentsSummary", ListTableCol, false, false, false);
                 if (val != 1) ObjMySQLHelper.AlterTblColBasedOnMultipleRowsFrmAnotherTbl("PaymentModeMaster", "TempPaymentsSummary", "PaymentMode","FLOAT");

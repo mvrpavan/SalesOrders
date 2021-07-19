@@ -27,7 +27,7 @@ Insert into ProductCategoryMaster (CategoryName, Description, Active) Values('De
 Insert into PaymentModeMaster (PaymentMode, Description) Values('Cash', 'Cash Payment');
 Insert into PaymentModeMaster (PaymentMode, Description) Values('Debit Card', 'Debit Card Payment');
 Insert into PaymentModeMaster (PaymentMode, Description) Values('Credit Card', 'Credit Card Payment');
-Insert into PaymentModeMaster (PaymentMode, Description) Values('Check', 'Check Payment');
+Insert into PaymentModeMaster (PaymentMode, Description) Values('Cheque', 'Cheque Payment');
 Insert into PaymentModeMaster (PaymentMode, Description) Values('UPI', 'UPI Payment');
 
 --CustomerTypeMaster

@@ -272,7 +272,7 @@
             // 
             this.txtBoxInvNumber.Location = new System.Drawing.Point(151, 43);
             this.txtBoxInvNumber.Name = "txtBoxInvNumber";
-            this.txtBoxInvNumber.Size = new System.Drawing.Size(84, 20);
+            this.txtBoxInvNumber.Size = new System.Drawing.Size(212, 20);
             this.txtBoxInvNumber.TabIndex = 13;
             // 
             // btnCreateInvoice
@@ -673,22 +673,22 @@
             // lblCustomerDetails
             // 
             this.lblCustomerDetails.AutoSize = true;
-            this.lblCustomerDetails.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCustomerDetails.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCustomerDetails.ForeColor = System.Drawing.Color.Gray;
             this.lblCustomerDetails.Location = new System.Drawing.Point(3, 35);
             this.lblCustomerDetails.Name = "lblCustomerDetails";
-            this.lblCustomerDetails.Size = new System.Drawing.Size(120, 15);
+            this.lblCustomerDetails.Size = new System.Drawing.Size(110, 16);
             this.lblCustomerDetails.TabIndex = 0;
             this.lblCustomerDetails.Text = "Customer Details";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.DarkOrange;
             this.label9.Location = new System.Drawing.Point(3, 8);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(145, 18);
+            this.label9.Size = new System.Drawing.Size(131, 20);
             this.label9.TabIndex = 0;
             this.label9.Text = "Customer Details";
             // 
@@ -844,7 +844,7 @@
             this.cmbBoxInvoiceNumber.FormattingEnabled = true;
             this.cmbBoxInvoiceNumber.Location = new System.Drawing.Point(504, 69);
             this.cmbBoxInvoiceNumber.Name = "cmbBoxInvoiceNumber";
-            this.cmbBoxInvoiceNumber.Size = new System.Drawing.Size(97, 21);
+            this.cmbBoxInvoiceNumber.Size = new System.Drawing.Size(151, 21);
             this.cmbBoxInvoiceNumber.TabIndex = 3;
             this.cmbBoxInvoiceNumber.Visible = false;
             this.cmbBoxInvoiceNumber.SelectedIndexChanged += new System.EventHandler(this.cmbBoxInvoiceNumber_SelectedIndexChanged);

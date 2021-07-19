@@ -540,18 +540,18 @@ namespace SalesOrdersReport.Views
                             //CommonFunctions.PrintOrderInvoiceQuotation(EnumReportType, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, PrintCopies, CreateSummary, PrintOldBalance, ReportProgressFunc);
                         }
                         break;
-                    case 2: //Print Quotation
-                        {
-                            ReportType EnumReportType = ReportType.QUOTATION;
-                            Boolean PrintOldBalance = false;
-                            Boolean CreateSummary = false;
-                            Int32 PrintCopies = 1;
+                    //case 2: //Print Quotation
+                    //    {
+                    //        ReportType EnumReportType = ReportType.QUOTATION;
+                    //        Boolean PrintOldBalance = false;
+                    //        Boolean CreateSummary = false;
+                    //        Int32 PrintCopies = 1;
 
-                            Int32 InvoiceID = Int32.Parse(dtGridViewBills.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
-                            InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
-                            CommonFunctions.PrintOrderInvoiceQuotation(EnumReportType, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, PrintCopies, CreateSummary, PrintOldBalance, ReportProgressFunc);
-                        }
-                        break;
+                    //        Int32 InvoiceID = Int32.Parse(dtGridViewBills.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
+                    //        InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
+                    //        CommonFunctions.PrintOrderInvoiceQuotation(EnumReportType, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, PrintCopies, CreateSummary, PrintOldBalance, ReportProgressFunc);
+                    //    }
+                    //    break;
                     case 3: //Export Invoices
                         {
                             ReportType EnumReportType = ReportType.INVOICE;
