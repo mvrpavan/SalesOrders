@@ -914,7 +914,7 @@ namespace SalesOrdersReport.Models
                 //else if (ObjDiscountGroup.DiscountType == DiscountTypes.ABSOLUTE)
                 //    DiscountValue = ObjDiscountGroup.Discount;
 
-                Double DiscountPerc = ObjInvoiceDetails.DiscountAmount / ObjInvoiceDetails.GrossInvoiceAmount * 100.0;
+                Double DiscountPerc = ((ObjInvoiceDetails.GrossInvoiceAmount != 0) ? ObjInvoiceDetails.DiscountAmount / ObjInvoiceDetails.GrossInvoiceAmount : 0) * 100.0;
 
                 Invoice ObjInvoice = CommonFunctions.GetInvoiceTemplate(EnumReportType);
                 ObjInvoice.SerialNumber = ObjInvoiceDetails.InvoiceNumber;

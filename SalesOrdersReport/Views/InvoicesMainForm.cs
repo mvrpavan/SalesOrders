@@ -59,6 +59,7 @@ namespace SalesOrdersReport.Views
                 ListPaymentModes = ObjPaymentsModel.GetPaymentModesList();
                 LoadGridView();
 
+                backgroundWorkerInvoices.WorkerSupportsCancellation = true;
                 if (OrderIDToEditInvoice > 0)
                 {
                     this.OrderIDToEditInvoice = OrderIDToEditInvoice;
@@ -213,6 +214,7 @@ namespace SalesOrdersReport.Views
                         btnReloadInvoices.PerformClick();
                         break;
                     case 2:     //Reload Invoices
+                        ObjInvoicesModel.UpdateInvoiceDetailsToCache((InvoiceDetails)ObjAddUpdatedDetails);
                         btnReloadInvoices.PerformClick();
                         break;
                     default:
@@ -277,13 +279,15 @@ namespace SalesOrdersReport.Views
                 }
 
                 BackgroundTask = 1;
+                PleaseWaitForm ObjPleaseWaitForm = new PleaseWaitForm("Print Invoice", "Printing Invoice, please wait...", backgroundWorkerInvoices);
 #if DEBUG
                 backgroundWorkerInvoices_DoWork(null, null);
                 backgroundWorkerInvoices_RunWorkerCompleted(null, null);
 #else
                 ReportProgress = backgroundWorkerInvoices.ReportProgress;
-                backgroundWorkerInvoices.RunWorkerAsync();
+                backgroundWorkerInvoices.RunWorkerAsync(ObjPleaseWaitForm);
                 backgroundWorkerInvoices.WorkerReportsProgress = true;
+                CommonFunctions.ShowDialog(ObjPleaseWaitForm, this);
 #endif
             }
             catch (Exception ex)
@@ -303,13 +307,15 @@ namespace SalesOrdersReport.Views
                 }
 
                 BackgroundTask = 2;
+                PleaseWaitForm ObjPleaseWaitForm = new PleaseWaitForm("Print Quotation", "Printing Quotation, please wait...", backgroundWorkerInvoices);
 #if DEBUG
                 backgroundWorkerInvoices_DoWork(null, null);
                 backgroundWorkerInvoices_RunWorkerCompleted(null, null);
 #else
                 ReportProgress = backgroundWorkerInvoices.ReportProgress;
-                backgroundWorkerInvoices.RunWorkerAsync();
+                backgroundWorkerInvoices.RunWorkerAsync(ObjPleaseWaitForm);
                 backgroundWorkerInvoices.WorkerReportsProgress = true;
+                CommonFunctions.ShowDialog(ObjPleaseWaitForm, this);
 #endif
             }
             catch (Exception ex)
@@ -564,13 +570,15 @@ namespace SalesOrdersReport.Views
                 }
 
                 BackgroundTask = 3;
+                PleaseWaitForm ObjPleaseWaitForm = new PleaseWaitForm("Export Invoice", "Exporting Invoices, please wait...", backgroundWorkerInvoices);
 #if DEBUG
                 backgroundWorkerInvoices_DoWork(null, null);
                 backgroundWorkerInvoices_RunWorkerCompleted(null, null);
 #else
                 ReportProgress = backgroundWorkerInvoices.ReportProgress;
-                backgroundWorkerInvoices.RunWorkerAsync();
+                backgroundWorkerInvoices.RunWorkerAsync(ObjPleaseWaitForm);
                 backgroundWorkerInvoices.WorkerReportsProgress = true;
+                CommonFunctions.ShowDialog(ObjPleaseWaitForm, this);
 #endif
                 return 0;
             }
@@ -614,13 +622,15 @@ namespace SalesOrdersReport.Views
                 }
 
                 BackgroundTask = 5;
+                PleaseWaitForm ObjPleaseWaitForm = new PleaseWaitForm("Export Quotation", "Exporting Quotations, please wait...", backgroundWorkerInvoices);
 #if DEBUG
                 backgroundWorkerInvoices_DoWork(null, null);
                 backgroundWorkerInvoices_RunWorkerCompleted(null, null);
 #else
                 ReportProgress = backgroundWorkerInvoices.ReportProgress;
-                backgroundWorkerInvoices.RunWorkerAsync();
+                backgroundWorkerInvoices.RunWorkerAsync(ObjPleaseWaitForm);
                 backgroundWorkerInvoices.WorkerReportsProgress = true;
+                CommonFunctions.ShowDialog(ObjPleaseWaitForm, this);
 #endif
                 return 0;
             }
@@ -645,6 +655,7 @@ namespace SalesOrdersReport.Views
         {
             try
             {
+                if (e != null) e.Result = e.Argument;
                 switch (BackgroundTask)
                 {
                     case 1: //Print Invoice
@@ -669,6 +680,7 @@ namespace SalesOrdersReport.Views
                             Int32 InvoiceID = Int32.Parse(dtGridViewInvoices.SelectedRows[0].Cells["InvoiceID"].Value.ToString());
                             InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
                             CommonFunctions.PrintOrderInvoiceQuotation(EnumReportType, false, ObjInvoicesModel, new List<Object>() { ObjInvoiceDetails }, ObjInvoiceDetails.InvoiceDate, PrintCopies, CreateSummary, PrintOldBalance, ReportProgressFunc);
+                            //if (e != null) ((Form)e.Argument).Close();
                         }
                         break;
                     case 3: //Export Invoices
@@ -762,9 +774,13 @@ namespace SalesOrdersReport.Views
                 {
                     case 1: //Print Invoice
                     case 2: //Print Quotation
-                        break;
                     case 3:
-                        ExportOption = -1; ExportFolderPath = "";
+                    case 5:
+                        if (e != null) ((Form)e.Result).Close();
+                        if (BackgroundTask == 3)
+                        {
+                            ExportOption = -1; ExportFolderPath = "";
+                        }
                         break;
                     default:
                         break;

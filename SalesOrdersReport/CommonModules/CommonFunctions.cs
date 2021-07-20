@@ -989,6 +989,8 @@ namespace SalesOrdersReport.CommonModules
                 ObjDataGridView.AllowUserToResizeColumns = true;
                 ObjDataGridView.AllowUserToResizeRows = false;
                 ObjDataGridView.ReadOnly = true;
+
+                SetDoubleBuffered(ObjDataGridView);
             }
             catch (Exception ex)
             {
@@ -1560,6 +1562,30 @@ namespace SalesOrdersReport.CommonModules
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog("CommonFunctions.GetPrinterList()", ex);
+                throw;
+            }
+        }
+
+        public static void SetDoubleBuffered(Control c)
+        {
+            try
+            {
+                //Taxes: Remote Desktop Connection and painting
+                //http://blogs.msdn.com/oldnewthing/archive/2006/01/03/508694.aspx
+                if (System.Windows.Forms.SystemInformation.TerminalServerSession)
+                    return;
+
+                System.Reflection.PropertyInfo aProp =
+                      typeof(Control).GetProperty(
+                            "DoubleBuffered",
+                            System.Reflection.BindingFlags.NonPublic |
+                            System.Reflection.BindingFlags.Instance);
+
+                aProp.SetValue(c, true, null);
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog("CommonFunctions.SetDoubleBuffered()", ex);
                 throw;
             }
         }

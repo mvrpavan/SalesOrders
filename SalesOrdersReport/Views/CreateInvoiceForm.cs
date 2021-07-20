@@ -15,7 +15,6 @@ namespace SalesOrdersReport.Views
         List<ProductDetails> ListAllProducts, ListProducts;
         List<String> ListCustomerNames;
         CustomerDetails CurrCustomerDetails;
-        DiscountGroupDetails CurrCustomerDiscountGroup;
         CustomerOrderInvoiceDetails CurrInvoiceDetails;
         Int32 CategoryColIndex = 0, ItemColIndex = 1, PriceColIndex = 2, QtyColIndex = 3, SelectColIndex = 4, OrdQtyColIndex = 3, SaleQtyColIndex = 4, ItemSelectionSelectColIndex = 5;
         Int32 PaddingSpace = 6;
@@ -121,7 +120,6 @@ namespace SalesOrdersReport.Views
 
                 CurrInvoiceDetails = null;
                 CurrCustomerDetails = null;
-                CurrCustomerDiscountGroup = null;
                 ResetControls();
 
                 if (CurrentInvoiceID > 0)
@@ -570,7 +568,6 @@ namespace SalesOrdersReport.Views
 
                         CurrInvoiceDetails = null;
                         CurrCustomerDetails = null;
-                        CurrCustomerDiscountGroup = null;
                         break;
                     default:
                         break;
@@ -849,7 +846,6 @@ namespace SalesOrdersReport.Views
                     cmbBoxInvoiceNumberIndex = -1;
                     CurrInvoiceDetails = null;
                     CurrCustomerDetails = null;
-                    CurrCustomerDiscountGroup = null;
                     lblCustomerDetails.Text = "";
                     return;
                 }
@@ -892,7 +888,6 @@ namespace SalesOrdersReport.Views
                 cmbBoxCustomerIndex = cmbBoxCustomers.SelectedIndex;
                 CurrInvoiceDetails = null;
                 CurrCustomerDetails = null;
-                CurrCustomerDiscountGroup = null;
                 CurrentInvoiceID = -1;
                 cmbBoxInvoiceNumber.Items.Clear();
                 cmbBoxInvoiceNumberIndex = -1;

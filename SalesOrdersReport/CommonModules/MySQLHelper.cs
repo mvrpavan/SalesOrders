@@ -866,7 +866,7 @@ namespace SalesOrdersReport.CommonModules
             }
         }
 
-        Boolean AutoCloseConnection = true;
+        Boolean AutoCloseConnection = false;
         public void SetAutoCloseConnection(bool close)
         {
             AutoCloseConnection = close;

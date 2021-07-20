@@ -43,7 +43,10 @@ namespace SalesOrdersReport.Models
                 xlRange.Value = "Name";
                 xlRange.WrapText = true;
                 xlRange.Font.Bold = true;
-                xlWorkSheet.Cells[CustDetailsStartRow, SlNoColNum + 1].Value = ObjSellerDetails.CustomerName;
+                xlRange = xlWorkSheet.Cells[CustDetailsStartRow, SlNoColNum + 1];
+                xlRange.Value = ObjSellerDetails.CustomerName;
+                xlRange.ColumnWidth = 20;
+                xlRange.WrapText = true;
 
                 xlRange = xlWorkSheet.Cells[CustDetailsStartRow + 1, SlNoColNum];
                 xlRange.Value = "Address";
@@ -104,6 +107,7 @@ namespace SalesOrdersReport.Models
                     SlNo++;
                     xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, SlNoColNum].Value = SlNo;
                     xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, ItemNameColNum].Value = CurrProd.Description;
+                    xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, ItemNameColNum].WrapText = true;
                     xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, OrdQtyColNum].NumberFormat = "@";
                     xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, OrdQtyColNum].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
                     xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1, OrdQtyColNum].Value = CurrProd.OrderQuantity;
@@ -151,7 +155,8 @@ namespace SalesOrdersReport.Models
                 xlRange.Font.Bold = true;
 
                 //DiscountGroupDetails ObjDiscountGroup = CommonFunctions.ObjCustomerMasterModel.GetCustomerDiscount(ObjSellerDetails.CustomerName);
-                DiscountGroupDetails ObjDiscountGroup = ListProducts[0].DiscountGroup;
+                DiscountGroupDetails ObjDiscountGroup = new DiscountGroupDetails() { Discount = 0, DiscountType = DiscountTypes.PERCENT };
+                if (ListProducts.Count > 0) ObjDiscountGroup = ListProducts[0].DiscountGroup;
 
                 xlRange = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + DiscountRowOffset, TotalColNum];
                 Excel.Range xlSalesTotal1 = xlWorkSheet.Cells[SlNo + InvoiceStartRow + 1 + SalesTotalRowOffset, TotalColNum];
