@@ -565,9 +565,10 @@ namespace SalesOrdersReport.Views
                             ReportType EnumReportType = ReportType.ORDER;
                             Boolean PrintOldBalance = true;
                             Boolean CreateSummary = (CommonFunctions.ObjGeneralSettings.SummaryLocation == 2) || ((ExportOption & 4) > 0);
+                            Boolean CreateOrders = ((ExportOption & 3) > 0);
 
                             List<Object> ListOrdersToExport = new List<Object>();
-                            if ((ExportOption & 1) > 0)      //Export all displayed Orders
+                            if ((ExportOption & 1) > 0 || (ExportOption & 4) > 0)      //Export all displayed Orders
                             {
                                 for (int i = 0; i < dtGridViewOrders.Rows.Count; i++)
                                 {
@@ -584,7 +585,7 @@ namespace SalesOrdersReport.Views
                             }
                             String ExportedFilePath = CommonFunctions.ExportOrdInvQuotToExcel(EnumReportType, true,
                                         ((OrderDetails)ListOrdersToExport[0]).OrderDate, ObjOrdersModel, ListOrdersToExport, ExportFolderPath,
-                                        CreateSummary, PrintOldBalance, ReportProgressFunc, true);
+                                        CreateSummary, PrintOldBalance, ReportProgressFunc, CreateOrders);
 
                             MessageBox.Show(this, $"Exported Orders file is created successfully at:{ExportedFilePath}", "Export Orders", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }

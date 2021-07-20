@@ -264,6 +264,7 @@ namespace SalesOrdersReport.Models
                 InvoicesModel ObjInvoicesModel = new InvoicesModel();
                 ObjInvoicesModel.Initialize();
 
+                CustomerDetails ObjCustomerDetails = CommonFunctions.ObjCustomerMasterModel.GetCustomerDetails(ObjOrderDetails.CustomerID);
                 List<InvoiceItemDetails> ListInvoiceItems = new List<InvoiceItemDetails>();
                 for (int i = 0; i < ObjOrderDetails.ListOrderItems.Count; i++)
                 {
@@ -280,7 +281,8 @@ namespace SalesOrdersReport.Models
                         OrderQty = tmpOrderItem.OrderQty.ToString(),
                         SaleQty = 0,
                         //SaleQty = tmpOrderItem.OrderQty,
-                        Price = tmpOrderItem.Price,
+                        //Price = tmpOrderItem.Price,
+                        Price = ObjProductMasterModel.GetPriceForProduct(tmpOrderItem.ProductName, ObjCustomerDetails.PriceGroupIndex),
                         InvoiceItemStatus = INVOICEITEMSTATUS.Invoiced
                         //TaxableValue = tmpOrderItem.Price * tmpOrderItem.OrderQty,
                         //NetTotal = tmpOrderItem.Price * tmpOrderItem.OrderQty
