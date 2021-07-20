@@ -367,7 +367,7 @@
             this.dtGridViewOrderedProducts.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dtGridViewOrderedProducts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Sunken;
             this.dtGridViewOrderedProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtGridViewOrderedProducts.Location = new System.Drawing.Point(0, 55);
+            this.dtGridViewOrderedProducts.Location = new System.Drawing.Point(0, 36);
             this.dtGridViewOrderedProducts.Name = "dtGridViewOrderedProducts";
             this.dtGridViewOrderedProducts.Size = new System.Drawing.Size(1330, 214);
             this.dtGridViewOrderedProducts.TabIndex = 2;
@@ -389,9 +389,9 @@
             this.groupBox1.Controls.Add(this.dtGridViewOrderedProducts);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(12, 456);
+            this.groupBox1.Location = new System.Drawing.Point(12, 475);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1330, 275);
+            this.groupBox1.Size = new System.Drawing.Size(1330, 256);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             // 

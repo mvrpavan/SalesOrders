@@ -550,11 +550,12 @@ namespace SalesOrdersReport.Views
                         picBoxLoading.Visible = false;
                         EnableItemsPanel(false);
                         cmbBoxCustomers.Enabled = true;
-                        DialogResult dialogResult =  MessageBox.Show(this, "Created Customer Invoice successfully.Do you want to Print Invoice?", "Sales Invoice", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                        DialogResult dialogResult =  MessageBox.Show(this, "Created/Updated Customer Invoice successfully.Do you want to Print Invoice?", "Sales Invoice", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 
                         if (dialogResult == DialogResult.Yes)
                         {
                             Int32 InvoiceID = ObjInvoicesModel.CurrInvoiceID;
+                            ObjInvoicesModel.Initialize();
 
                             InvoiceDetails ObjInvoiceDetails = ObjInvoicesModel.GetInvoiceDetailsForInvoiceID(InvoiceID);
                             ObjInvoiceDetails.BalanceAmount = Double.Parse(lblBalanceAmountValue.Text);

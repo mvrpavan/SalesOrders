@@ -577,7 +577,7 @@ namespace SalesOrdersReport.Models
                 }
 
                 Int32 Index = ListInvoices.FindIndex(e => e.InvoiceID == ObjInvoiceDetails.InvoiceID);
-                if (Index > 0)
+                if (Index >= 0)
                 {
                     ListInvoices[Index].InvoiceItemCount = ObjInvoiceDetails.InvoiceItemCount;
                     ListInvoices[Index].GrossInvoiceAmount = ObjInvoiceDetails.GrossInvoiceAmount;

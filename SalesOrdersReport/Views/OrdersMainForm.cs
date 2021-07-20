@@ -310,14 +310,27 @@ namespace SalesOrdersReport.Views
                 {
                     "Customer Name",
                     "Order Number",
-                    "Order Status",
-                    "Order Date"
+                    "Order Status"
+                    //"Order Date"
                 };
-                CommonFunctions.ShowDialog(new OrderInvQuotSearchForm(ListFindInFields, null, null), this);
+                CommonFunctions.ShowDialog(new OrderInvQuotSearchForm(ListFindInFields, PerformSearch, null), this);
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.btnSearchOrder_Click()", ex);
+            }
+        }
+
+        private void PerformSearch(SearchDetails ObjSearchDetails)
+        {
+            try
+            {
+                dtAllOrders.DefaultView.RowFilter = CommonFunctions.GetSearchStringBasedOnSearchDetailsForDT(ObjSearchDetails);
+                LoadOrdersGridView();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.PerformSearch()", ex);
             }
         }
 

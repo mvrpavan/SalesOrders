@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using SalesOrdersReport.CommonModules;
-using SalesOrdersReport.Models;
 
 namespace SalesOrdersReport.Views
 {
@@ -19,10 +13,10 @@ namespace SalesOrdersReport.Views
         UpdateOnCloseDel UpdateOnClose;
         PerformSearchDel PerformSearch;
         List<String> ListFindInFields = new List<String>();
-        String[] ArrMatchPatterns = new String[] { "Starts With", "Ends With", "Contains", "Whole" };
+        String[] ArrMatchPatterns = new String[] { "Starts With", "Ends With", "Contains", "Equals" };
         //SearchPatternModel ObjSearchPatternModel;
         public DataTable DtSearchResult;
-        public OrderInvQuotSearchForm(List<String> ListFindInFields, PerformSearchDel PerformSearch, UpdateOnCloseDel UpdateOnClose,SearchDetails ObjSearchDetails = null)
+        public OrderInvQuotSearchForm(List<String> ListFindInFields, PerformSearchDel PerformSearch, UpdateOnCloseDel UpdateOnClose, SearchDetails ObjSearchDetails = null)
         {
             try
             {
@@ -41,7 +35,15 @@ namespace SalesOrdersReport.Views
 
                 cmbBoxMatch.Items.Clear();
                 cmbBoxMatch.Items.AddRange(ArrMatchPatterns);
-                cmbBoxMatch.SelectedIndex = 0;               
+                cmbBoxMatch.SelectedIndex = 3;
+
+                //if (ObjSearchDetails != null)
+                //{
+                //    cmbBoxSearchIn.SelectedItem = ObjSearchDetails.SearchIn;
+                //    cmbBoxMatch.SelectedIndex = Array.FindIndex(ArrMatchPatterns, e => e.Replace(" ", "").Equals(ObjSearchDetails.MatchPattern.ToString()));
+                //    txtBoxSearchString.Text = ObjSearchDetails.SearchString;
+                //    chkMatchCase.Checked = ObjSearchDetails.MatchCase;
+                //}
             }
             catch (Exception ex)
             {
@@ -70,7 +72,6 @@ namespace SalesOrdersReport.Views
                 //MatchPatterns SelMatchPat = GetMatchPattern(cmbBoxMatch.SelectedItem.ToString());
                 //string ModifiedStr = GetModifiedStringBasedOnMatchPatterns(txtBoxSearchString.Text, SelMatchPat);
                 ////DtSearchResult = ObjSearchPatternModel.GetFilteredDataTable(ModifiedStr, "*", cmbBoxSearchIn.SelectedItem.ToString());
-                
             }
             catch (Exception ex)
             {
@@ -89,9 +90,8 @@ namespace SalesOrdersReport.Views
                 CommonFunctions.ShowErrorDialog($"{this}.btnClose_Click()", ex);
             }
         }
-
     
-       public  MatchPatterns GetMatchPattern(string SelectedPattern)
+        public  MatchPatterns GetMatchPattern(string SelectedPattern)
         {
             try
             {
@@ -103,8 +103,8 @@ namespace SalesOrdersReport.Views
                         return MatchPatterns.EndsWith;
                     case "Contains":
                         return MatchPatterns.Contains;
-                    case "Whole":
-                        return MatchPatterns.Whole;
+                    case "Equals":
+                        return MatchPatterns.Equals;
                     default:
                         return MatchPatterns.StartsWith;
                 }
@@ -115,12 +115,11 @@ namespace SalesOrdersReport.Views
                 return MatchPatterns.StartsWith;
             }
         }
-     
     }
 
     public enum MatchPatterns
     {
-        StartsWith = 0, EndsWith, Contains, Whole
+        StartsWith = 0, EndsWith, Contains, Equals
     }
 
     public class SearchDetails

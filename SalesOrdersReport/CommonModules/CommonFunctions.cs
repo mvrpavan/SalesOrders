@@ -457,6 +457,7 @@ namespace SalesOrdersReport.CommonModules
                 throw;
             }
         }
+
         public static string GetModifiedStringBasedOnMatchPatterns(string SearchStr, MatchPatterns MatchPttrn)
         {
             try
@@ -469,7 +470,7 @@ namespace SalesOrdersReport.CommonModules
                         return "%" + SearchStr;
                     case MatchPatterns.Contains:
                         return "%" + SearchStr + "%";
-                    case MatchPatterns.Whole:
+                    case MatchPatterns.Equals:
                         return SearchStr;
                 }
                 return SearchStr + "%";
@@ -480,6 +481,38 @@ namespace SalesOrdersReport.CommonModules
                 return SearchStr + "%";
             }
         }
+
+        public static String GetSearchStringBasedOnSearchDetailsForDT(SearchDetails ObjSearchDetails)
+        {
+            try
+            {
+                String SearchString = ObjSearchDetails.SearchString;
+                switch (ObjSearchDetails.MatchPattern)
+                {
+                    case MatchPatterns.StartsWith:
+                        SearchString = $"Like '{SearchString}*'";
+                        break;
+                    case MatchPatterns.EndsWith:
+                        SearchString = $"Like '*{SearchString}'";
+                        break;
+                    case MatchPatterns.Contains:
+                        SearchString = $"Like '*{SearchString}*'";
+                        break;
+                    case MatchPatterns.Equals:
+                        SearchString = $"= '{SearchString}'";
+                        break;
+                    default:
+                        break;
+                }
+                return $"[{ObjSearchDetails.SearchIn}] {SearchString}";
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("CommonFunctions.GetSearchStringBasedOnSearchDetailsForDT()", ex);
+                return $"[{ObjSearchDetails.SearchIn}] Like '*{ObjSearchDetails.MatchPattern}*'";
+            }
+        }
+
         public static void AddNewProductLine(String Name, Int32 UseSettingsOfProductLineIndex)
         {
             try

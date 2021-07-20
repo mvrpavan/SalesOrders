@@ -706,6 +706,7 @@ namespace SalesOrdersReport.Models
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.ExportOrder()", ex);
+                throw;
             }
         }
 
@@ -747,7 +748,6 @@ namespace SalesOrdersReport.Models
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.ExportItemSummary()", ex);
-
                 throw;
             }
         }

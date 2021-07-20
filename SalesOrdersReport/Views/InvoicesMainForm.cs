@@ -332,14 +332,27 @@ namespace SalesOrdersReport.Views
                 {
                     "Customer Name",
                     "Invoice Number",
-                    "Invoice Status",
-                    "Invoice Date"
+                    "Invoice Status"
+                    //"Invoice Date"
                 };
-                CommonFunctions.ShowDialog(new OrderInvQuotSearchForm(ListFindInFields, null, null), this);
+                CommonFunctions.ShowDialog(new OrderInvQuotSearchForm(ListFindInFields, PerformSearch, null), this);
             }
             catch (Exception ex)
             {
                 CommonFunctions.ShowErrorDialog($"{this}.btnSearchInvoice_Click()", ex);
+            }
+        }
+
+        private void PerformSearch(SearchDetails ObjSearchDetails)
+        {
+            try
+            {
+                dtAllInvoices.DefaultView.RowFilter = CommonFunctions.GetSearchStringBasedOnSearchDetailsForDT(ObjSearchDetails);
+                LoadInvoicesGridView();
+            }
+            catch (Exception ex)
+            {
+                CommonFunctions.ShowErrorDialog($"{this}.PerformSearch()", ex);
             }
         }
 
