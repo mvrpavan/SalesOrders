@@ -324,6 +324,7 @@ namespace SalesOrdersReport.Views
                 }
                 else
                 {
+                    CurrInvoiceDetails.CurrInvoiceDetails.DiscountAmount = Double.Parse(lblDiscount.Text.Replace(CurrencyChar, ' ').Trim());
                     AddUpdatedInvoiceDetails = ObjInvoicesModel.UpdateInvoiceDetails(CurrInvoiceDetails.CurrInvoiceDetails);
                     UpdateObjectOnClose(2, AddUpdatedInvoiceDetails);
                 }
